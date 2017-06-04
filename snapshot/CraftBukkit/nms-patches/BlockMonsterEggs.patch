@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/BlockMonsterEggs.java
 +++ b/net/minecraft/server/BlockMonsterEggs.java
-@@ -2,6 +2,8 @@
+@@ -2,13 +2,15 @@
  
  import java.util.Random;
  
@@ -9,6 +9,30 @@
  public class BlockMonsterEggs extends Block {
  
      public static final BlockStateEnum<BlockMonsterEggs.EnumMonsterEggVarient> VARIANT = BlockStateEnum.of("variant", BlockMonsterEggs.EnumMonsterEggVarient.class);
+ 
+     public BlockMonsterEggs() {
+         super(Material.CLAY);
+-        this.w(this.blockStateList.getBlockData().set(BlockMonsterEggs.VARIANT, BlockMonsterEggs.EnumMonsterEggVarient.STONE));
++        this.y(this.blockStateList.getBlockData().set(BlockMonsterEggs.VARIANT, BlockMonsterEggs.EnumMonsterEggVarient.STONE));
+         this.c(0.0F);
+         this.a(CreativeModeTab.c);
+     }
+@@ -17,13 +19,13 @@
+         return 0;
+     }
+ 
+-    public static boolean x(IBlockData iblockdata) {
++    public static boolean i(IBlockData iblockdata) {
+         Block block = iblockdata.getBlock();
+ 
+         return iblockdata == Blocks.STONE.getBlockData().set(BlockStone.VARIANT, BlockStone.EnumStoneVariant.STONE) || block == Blocks.COBBLESTONE || block == Blocks.STONEBRICK;
+     }
+ 
+-    protected ItemStack u(IBlockData iblockdata) {
++    protected ItemStack w(IBlockData iblockdata) {
+         switch ((BlockMonsterEggs.EnumMonsterEggVarient) iblockdata.get(BlockMonsterEggs.VARIANT)) {
+         case COBBLESTONE:
+             return new ItemStack(Blocks.COBBLESTONE);
 @@ -50,7 +52,7 @@
              EntitySilverfish entitysilverfish = new EntitySilverfish(world);
  

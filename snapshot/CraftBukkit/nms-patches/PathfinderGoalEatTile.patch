@@ -12,6 +12,15 @@
  public class PathfinderGoalEatTile extends PathfinderGoal {
  
      private static final Predicate<IBlockData> b = BlockStatePredicate.a((Block) Blocks.TALLGRASS).a(BlockLongGrass.TYPE, Predicates.equalTo(BlockLongGrass.EnumTallGrassType.GRASS));
+@@ -29,7 +34,7 @@
+     public void c() {
+         this.a = 40;
+         this.d.broadcastEntityEffect(this.c, (byte) 10);
+-        this.c.getNavigation().p();
++        this.c.getNavigation().o();
+     }
+ 
+     public void d() {
 @@ -50,7 +55,8 @@
              BlockPosition blockposition = new BlockPosition(this.c.locX, this.c.locY, this.c.locZ);
  

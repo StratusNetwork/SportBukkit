@@ -1,6 +1,7 @@
 package org.bukkit.event.vehicle;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EntityAction;
 import org.bukkit.event.HandlerList;

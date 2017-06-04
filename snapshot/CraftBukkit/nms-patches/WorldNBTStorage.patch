@@ -20,7 +20,41 @@
  
      public WorldNBTStorage(File file, String s, boolean flag, DataConverterManager dataconvertermanager) {
          this.a = dataconvertermanager;
-@@ -168,12 +174,46 @@
+@@ -137,9 +143,9 @@
+ 
+     public void save(EntityHuman entityhuman) {
+         try {
+-            NBTTagCompound nbttagcompound = entityhuman.save(new NBTTagCompound());
+-            File file = new File(this.playerDir, entityhuman.bl() + ".dat.tmp");
+-            File file1 = new File(this.playerDir, entityhuman.bl() + ".dat");
++            NBTTagCompound nbttagcompound = entityhuman.e(new NBTTagCompound());
++            File file = new File(this.playerDir, entityhuman.bf() + ".dat.tmp");
++            File file1 = new File(this.playerDir, entityhuman.bf() + ".dat");
+ 
+             NBTCompressedStreamTools.a(nbttagcompound, (OutputStream) (new FileOutputStream(file)));
+             if (file1.exists()) {
+@@ -148,7 +154,7 @@
+ 
+             file.renameTo(file1);
+         } catch (Exception exception) {
+-            WorldNBTStorage.b.warn("Failed to save player data for {}", entityhuman.getName());
++            WorldNBTStorage.b.warn("Failed to save player data for {}", new Object[] { entityhuman.getName()});
+         }
+ 
+     }
+@@ -158,22 +164,56 @@
+         NBTTagCompound nbttagcompound = null;
+ 
+         try {
+-            File file = new File(this.playerDir, entityhuman.bl() + ".dat");
++            File file = new File(this.playerDir, entityhuman.bf() + ".dat");
+ 
+             if (file.exists() && file.isFile()) {
+                 nbttagcompound = NBTCompressedStreamTools.a((InputStream) (new FileInputStream(file)));
+             }
+         } catch (Exception exception) {
+-            WorldNBTStorage.b.warn("Failed to load player data for {}", entityhuman.getName());
++            WorldNBTStorage.b.warn("Failed to load player data for {}", new Object[] { entityhuman.getName()});
          }
  
          if (nbttagcompound != null) {

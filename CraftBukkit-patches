@@ -97,7 +97,6 @@ Physical-interface
 Fix-self-damage-being-cancelled-by-FF-PvP-rules
 Fix-TNT-damage-being-cancelled-by-friendly-fire-rule
 Localize-inventory-titles
-Set-health-before-death-event
 Skull-skin-API
 Implement-minecraft-api
 Arrow-pickup-rule-API
@@ -108,7 +107,6 @@ Expose-sound-effect-classes
 Absorption-API
 Enhanced-boss-bar-API
 Empty-chunk-API
-Fix-missing-dropper-cases
 Fix-hotbar-text-formatting
 Registration-API
 Modernize-potion-API
@@ -156,8 +154,6 @@ More-ways-to-spawn-FallingBlocks
 FallingBlock-form-block-flag
 Server-suspend-API
 Add-AsyncClientConnectEvent
-Legacy-protocol-support
-Firework-entity-in-damage-event
 Fix-NPE-riding-non-vehicle-entity
 Do-things-inside-events
 Chest-lid-API
@@ -170,3 +166,4 @@ Add-id-specific-map-API
 Fix-player-leak-through-map-items
 Change-large-getCubes-error-to-warning
 SportBukkit
+temp-minor-changes-that-need-to-be-addressed

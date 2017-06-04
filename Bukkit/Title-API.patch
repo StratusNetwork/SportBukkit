@@ -6,7 +6,7 @@ Subject: [PATCH] Title API
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1529,4 +1529,57 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -1578,4 +1578,57 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
       * @param footer content for the bottom of the player list
       */
      public void setPlayerListHeaderFooter(net.md_5.bungee.api.chat.BaseComponent header, net.md_5.bungee.api.chat.BaseComponent footer);

@@ -13,7 +13,7 @@
  public abstract class EntityHanging extends Entity {
  
      private static final Predicate<Entity> c = new Predicate() {
-@@ -41,43 +47,52 @@
+@@ -41,53 +47,80 @@
          this.updateBoundingBox();
      }
  
@@ -98,7 +98,11 @@
          return i % 32 == 0 ? 0.5D : 0.0D;
      }
  
-@@ -88,6 +103,24 @@
+-    public void B_() {
++    public void A_() {
+         this.lastX = this.locX;
+         this.lastY = this.locY;
+         this.lastZ = this.locZ;
          if (this.d++ == 100 && !this.world.isClientSide) {
              this.d = 0;
              if (!this.dead && !this.survives()) {
@@ -123,7 +127,7 @@
                  this.die();
                  this.a((Entity) null);
              }
-@@ -140,6 +173,21 @@
+@@ -140,8 +173,23 @@
              return false;
          } else {
              if (!this.dead && !this.world.isClientSide) {
@@ -143,8 +147,11 @@
 +                // CraftBukkit end
 +
                  this.die();
-                 this.ap();
+-                this.av();
++                this.ap();
                  this.a(damagesource.getEntity());
+             }
+ 
 @@ -151,6 +199,18 @@
  
      public void move(EnumMoveType enummovetype, double d0, double d1, double d2) {
@@ -173,3 +180,21 @@
              this.die();
              this.a((Entity) null);
          }
+@@ -185,7 +245,7 @@
+ 
+     public abstract void a(@Nullable Entity entity);
+ 
+-    public abstract void p();
++    public abstract void o();
+ 
+     public EntityItem a(ItemStack itemstack, float f) {
+         EntityItem entityitem = new EntityItem(this.world, this.locX + (double) ((float) this.direction.getAdjacentX() * 0.15F), this.locY + (double) f, this.locZ + (double) ((float) this.direction.getAdjacentZ() * 0.15F), itemstack);
+@@ -195,7 +255,7 @@
+         return entityitem;
+     }
+ 
+-    protected boolean ay() {
++    protected boolean as() {
+         return false;
+     }
+ 

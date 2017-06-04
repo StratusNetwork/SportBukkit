@@ -6,7 +6,7 @@ Subject: [PATCH] Simplify junk login messages
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -213,7 +213,7 @@ public abstract class PlayerList {
+@@ -215,7 +215,7 @@ public abstract class PlayerList {
  
          entityplayer.syncInventory();
          // CraftBukkit - Moved from above, added world

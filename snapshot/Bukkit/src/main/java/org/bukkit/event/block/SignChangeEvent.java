@@ -62,7 +62,7 @@ public class SignChangeEvent extends BlockEvent implements Cancellable, PlayerAc
      * @throws IndexOutOfBoundsException thrown when the provided index is {@literal > 3
      *     or < 0}
      */
-    public BaseComponent line(int index) {
+    public BaseComponent line(int index) throws IndexOutOfBoundsException {
         return lines[index];
     }
 

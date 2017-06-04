@@ -1,14 +1,14 @@
 package org.bukkit.plugin;
 
-import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Provider;
-
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import org.bukkit.event.EventRegistry;
 import org.bukkit.permissions.Permission;
-import tc.oc.minecraft.api.event.ListenerContext;
 import tc.oc.exception.ExceptionHandler;
+import tc.oc.minecraft.api.event.ListenerContext;
+
+import java.util.Set;
 
 /**
  * Represents a base {@link Plugin}

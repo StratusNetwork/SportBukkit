@@ -6,7 +6,7 @@ Subject: [PATCH] Add invis override API
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1040,6 +1040,10 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -1041,6 +1041,10 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
       */
      public boolean canSee(Player player);
  
@@ -15,5 +15,5 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
 +    public void showInvisibles(boolean see);
 +
      /**
-      * Checks to see if this player is currently standing on a block. This
-      * information may not be reliable, as it is a state provided by the
+      * Checks to see if this player is currently flying or not.
+      *

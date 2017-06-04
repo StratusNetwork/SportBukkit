@@ -8,6 +8,20 @@
      }
  
      protected void i() {}
+@@ -77,11 +78,11 @@
+         this.au = 0;
+     }
+ 
+-    public void B_() {
++    public void A_() {
+         this.M = this.locX;
+         this.N = this.locY;
+         this.O = this.locZ;
+-        super.B_();
++        super.A_();
+         if (this.shake > 0) {
+             --this.shake;
+         }
 @@ -164,6 +165,11 @@
                  this.e(movingobjectposition.a());
              } else {

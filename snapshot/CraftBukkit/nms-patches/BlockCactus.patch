@@ -9,6 +9,15 @@
  public class BlockCactus extends Block {
  
      public static final BlockStateInteger AGE = BlockStateInteger.of("age", 0, 15);
+@@ -11,7 +13,7 @@
+ 
+     protected BlockCactus() {
+         super(Material.CACTUS);
+-        this.w(this.blockStateList.getBlockData().set(BlockCactus.AGE, Integer.valueOf(0)));
++        this.y(this.blockStateList.getBlockData().set(BlockCactus.AGE, Integer.valueOf(0)));
+         this.a(true);
+         this.a(CreativeModeTab.c);
+     }
 @@ -30,9 +32,10 @@
                  int j = ((Integer) iblockdata.get(BlockCactus.AGE)).intValue();
  
@@ -31,3 +40,12 @@
      }
  
      public IBlockData fromLegacyData(int i) {
+@@ -101,8 +106,4 @@
+     protected BlockStateList getStateList() {
+         return new BlockStateList(this, new IBlockState[] { BlockCactus.AGE});
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.UNDEFINED;
+-    }
+ }

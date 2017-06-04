@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 
 import org.bukkit.Warning.WarningState;
 import org.bukkit.boss.BarColor;
@@ -47,12 +46,14 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
 
-import com.avaje.ebean.config.ServerConfig;
 import com.google.common.collect.ImmutableList;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.generator.ChunkGenerator;
 
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import javax.annotation.Nullable;
 
 /**
  * Represents a server implementation.
@@ -95,19 +96,6 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
      * @return version of Bukkit
      */
     public String getBukkitVersion();
-
-    /**
-     * Gets an array copy of all currently logged in players.
-     * <p>
-     * This method exists for legacy reasons to provide backwards
-     * compatibility. It will not exist at runtime and should not be used
-     * under any circumstances.
-     *
-     * @deprecated superseded by {@link #getOnlinePlayers()}
-     * @return an array of Players that are currently online
-     */
-    @Deprecated
-    public Player[] _INVALID_getOnlinePlayers();
 
     /**
      * Gets a view of all currently logged in players. This {@linkplain
@@ -412,7 +400,7 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
     public List<Player> matchPlayer(String name, CommandSender viewer);
 
     /**
-     * Gets the PluginManager for interfacing with plugins
+     * Gets the plugin manager for interfacing with plugins.
      *
      * @return a plugin manager for this Server instance
      */
@@ -553,6 +541,12 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
     public void reload();
 
     /**
+     * Reload only the Minecraft data for the server. This includes custom
+     * advancements and loot tables.
+     */
+    public void reloadData();
+
+    /**
      * Returns the primary logger associated with this server instance.
      *
      * @return Logger associated with this server
@@ -583,14 +577,6 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
      *     fails with an unhandled exception
      */
     public boolean dispatchCommand(CommandSender sender, String commandLine) throws CommandException;
-
-    /**
-     * Populates a given {@link ServerConfig} with values attributes to this
-     * server.
-     *
-     * @param config the server config to populate
-     */
-    public void configureDbConfig(ServerConfig config);
 
     /**
      * Adds a recipe to the crafting manager.
@@ -1032,12 +1018,12 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
 
     /**
      * Create a ChunkData for use in a generator.
-     *
+     * 
      * See {@link ChunkGenerator#generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)}
-     *
+     * 
      * @param world the world to create the ChunkData for
      * @return a new ChunkData for the world
-     *
+     * 
      */
     public ChunkGenerator.ChunkData createChunkData(World world);
 
@@ -1052,6 +1038,30 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
      * @return the created boss bar
      */
     BossBar createBossBar(net.md_5.bungee.api.chat.BaseComponent title, BarColor color, BarStyle style, BarFlag ...flags);
+
+    /**
+     * Gets an entity on the server by its UUID
+     *
+     * @param uuid the UUID of the entity
+     * @return the entity with the given UUID, or null if it isn't found
+     */
+    Entity getEntity(UUID uuid);
+
+    /**
+     * Get the advancement specified by this key.
+     *
+     * @param key unique advancement key
+     * @return advancement or null if not exists
+     */
+    Advancement getAdvancement(NamespacedKey key);
+
+    /**
+     * Get an iterator through all advancements. Advancements cannot be removed
+     * from this iterator,
+     *
+     * @return an advancement iterator
+     */
+    Iterator<Advancement> advancementIterator();
 
     /**
      * @see UnsafeValues
@@ -1115,7 +1125,7 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
      *
      * @see org.bukkit.event.server.ServerSuspendEvent
      */
-    boolean setSuspended(boolean suspend);
+     boolean setSuspended(boolean suspend);
 
     /**
      * Can the server be suspended right now?

@@ -6,11 +6,10 @@ Subject: [PATCH] Player list header/footer API
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1509,4 +1509,20 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -1558,4 +1558,20 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
       * @param components the components to send
       */
      public void sendMessage(net.md_5.bungee.api.chat.BaseComponent... components);
-- }
 +
 +    /**
 +     * Set the text displayed in the player list header and footer for this player
@@ -27,4 +26,4 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
 +     * @param footer content for the bottom of the player list
 +     */
 +    public void setPlayerListHeaderFooter(net.md_5.bungee.api.chat.BaseComponent header, net.md_5.bungee.api.chat.BaseComponent footer);
-+}
+ }

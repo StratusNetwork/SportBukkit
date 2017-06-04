@@ -1,5 +1,14 @@
 --- a/net/minecraft/server/PathfinderGoalDefendVillage.java
 +++ b/net/minecraft/server/PathfinderGoalDefendVillage.java
+@@ -12,7 +12,7 @@
+     }
+ 
+     public boolean a() {
+-        Village village = this.a.p();
++        Village village = this.a.o();
+ 
+         if (village == null) {
+             return false;
 @@ -32,7 +32,7 @@
      }
  

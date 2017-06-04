@@ -1,5 +1,75 @@
 --- a/net/minecraft/server/EntitySpider.java
 +++ b/net/minecraft/server/EntitySpider.java
+@@ -28,7 +28,7 @@
+         this.targetSelector.a(3, new EntitySpider.PathfinderGoalSpiderNearestAttackableTarget(this, EntityIronGolem.class));
+     }
+ 
+-    public double aE() {
++    public double ay() {
+         return (double) (this.length * 0.5F);
+     }
+ 
+@@ -41,8 +41,8 @@
+         this.datawatcher.register(EntitySpider.a, Byte.valueOf((byte) 0));
+     }
+ 
+-    public void B_() {
+-        super.B_();
++    public void A_() {
++        super.A_();
+         if (!this.world.isClientSide) {
+             this.a(this.positionChanged);
+         }
+@@ -55,20 +55,20 @@
+         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.30000001192092896D);
+     }
+ 
+-    protected SoundEffect F() {
+-        return SoundEffects.hz;
++    protected SoundEffect G() {
++        return SoundEffects.gy;
+     }
+ 
+-    protected SoundEffect d(DamageSource damagesource) {
+-        return SoundEffects.hB;
++    protected SoundEffect bW() {
++        return SoundEffects.gA;
+     }
+ 
+-    protected SoundEffect cd() {
+-        return SoundEffects.hA;
++    protected SoundEffect bX() {
++        return SoundEffects.gz;
+     }
+ 
+     protected void a(BlockPosition blockposition, Block block) {
+-        this.a(SoundEffects.hC, 0.15F, 1.0F);
++        this.a(SoundEffects.gB, 0.15F, 1.0F);
+     }
+ 
+     @Nullable
+@@ -77,10 +77,10 @@
+     }
+ 
+     public boolean m_() {
+-        return this.p();
++        return this.o();
+     }
+ 
+-    public void aY() {}
++    public void aS() {}
+ 
+     public EnumMonsterType getMonsterType() {
+         return EnumMonsterType.ARTHROPOD;
+@@ -90,7 +90,7 @@
+         return mobeffect.getMobEffect() == MobEffects.POISON ? false : super.d(mobeffect);
+     }
+ 
+-    public boolean p() {
++    public boolean o() {
+         return (((Byte) this.datawatcher.get(EntitySpider.a)).byteValue() & 1) != 0;
+     }
+ 
 @@ -115,7 +115,7 @@
  
              entityskeleton.setPositionRotation(this.locX, this.locY, this.locZ, this.yaw, 0.0F);
@@ -9,3 +79,21 @@
              entityskeleton.startRiding(this);
          }
  
+@@ -148,7 +148,7 @@
+         }
+ 
+         public boolean a() {
+-            float f = this.e.f(1.0F);
++            float f = this.e.e(1.0F);
+ 
+             return f >= 0.5F ? false : super.a();
+         }
+@@ -161,7 +161,7 @@
+         }
+ 
+         public boolean b() {
+-            float f = this.b.f(1.0F);
++            float f = this.b.e(1.0F);
+ 
+             if (f >= 0.5F && this.b.getRandom().nextInt(100) == 0) {
+                 this.b.setGoalTarget((EntityLiving) null);

@@ -14,3 +14,23 @@
  
      public boolean a(InventoryCrafting inventorycrafting, World world) {
          int i = 0;
+@@ -70,6 +73,10 @@
+         }
+     }
+ 
++    public int a() {
++        return 9;
++    }
++
+     public ItemStack b() {
+         return ItemStack.a;
+     }
+@@ -91,8 +98,4 @@
+ 
+         return nonnulllist;
+     }
+-
+-    public boolean c() {
+-        return true;
+-    }
+ }

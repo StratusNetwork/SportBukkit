@@ -15,15 +15,16 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
  import java.util.Collection;
  import java.util.Collections;
  import java.util.Iterator;
-@@ -11,6 +13,7 @@ import java.util.Map;
- import java.util.Set;
- import java.util.UUID;
- import java.util.logging.Logger;
-+import javax.annotation.Nullable;
+@@ -51,6 +53,8 @@ import org.bukkit.generator.ChunkGenerator;
+ import org.bukkit.inventory.ItemFactory;
+ import org.bukkit.inventory.meta.ItemMeta;
  
- import org.bukkit.Warning.WarningState;
- import org.bukkit.boss.BarColor;
-@@ -138,6 +141,12 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
++import javax.annotation.Nullable;
++
+ /**
+  * Represents a server implementation.
+  */
+@@ -125,6 +129,12 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
      Map<UUID, Player> playersById();
  
      /**
@@ -36,7 +37,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
       * Get the maximum amount of players which can login to this server.
       *
       * @return the amount of players this server allows
-@@ -330,6 +339,13 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
+@@ -317,6 +327,13 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
      public int getTicksPerMonsterSpawns();
  
      /**
@@ -50,7 +51,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
       * Gets a player object by the given username.
       * <p>
       * This method may not return objects for offline players.
-@@ -1060,4 +1076,65 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
+@@ -1069,4 +1086,65 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
       *         false if it was added to the main thread queue
       */
      boolean runOnMainThread(Plugin plugin, boolean priority, Runnable task);
@@ -74,7 +75,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
 +     *
 +     * @see org.bukkit.event.server.ServerSuspendEvent
 +     */
-+    boolean setSuspended(boolean suspend);
++     boolean setSuspended(boolean suspend);
 +
 +    /**
 +     * Can the server be suspended right now?
@@ -189,15 +190,7 @@ index 0000000..2a844e6
 diff --git a/src/main/java/org/bukkit/event/SimpleEventBus.java b/src/main/java/org/bukkit/event/SimpleEventBus.java
 --- a/src/main/java/org/bukkit/event/SimpleEventBus.java
 +++ b/src/main/java/org/bukkit/event/SimpleEventBus.java
-@@ -1,19 +1,23 @@
- package org.bukkit.event;
- 
-+import java.util.concurrent.ExecutionException;
-+import java.util.concurrent.Executor;
- import javax.annotation.Nullable;
- 
-+import com.google.common.util.concurrent.SettableFuture;
-+
+@@ -9,15 +9,15 @@ import com.google.common.util.concurrent.SettableFuture;
  public class SimpleEventBus implements EventBus {
  
      private final Thread primaryThread;
@@ -216,7 +209,7 @@ diff --git a/src/main/java/org/bukkit/event/SimpleEventBus.java b/src/main/java/
      }
  
      @Override
-@@ -34,16 +38,30 @@ public class SimpleEventBus implements EventBus {
+@@ -38,16 +38,30 @@ public class SimpleEventBus implements EventBus {
      @Override
      public <T extends Event, X extends Throwable> void callEvent(T event, @Nullable EventPriority priority, @Nullable EventBody<? super T, X> body) throws X {
          if(event.isAsynchronous()) {
@@ -254,7 +247,7 @@ diff --git a/src/main/java/org/bukkit/event/SimpleEventBus.java b/src/main/java/
      }
 diff --git a/src/main/java/org/bukkit/event/server/ServerSuspendEvent.java b/src/main/java/org/bukkit/event/server/ServerSuspendEvent.java
 new file mode 100644
-index 0000000..aac9118
+index 0000000..bdd4123
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/server/ServerSuspendEvent.java
 @@ -0,0 +1,16 @@
@@ -265,7 +258,7 @@ index 0000000..aac9118
 +
 +/**
 + * Fired when the server transitions to a suspended state, which can happen from an
-+ * explicit call to {@link org.bukkit.Server#setSuspended(boolean)}, or automatically
++ * explicit call to {@link Server#setSuspended(boolean)}, or automatically
 + * due to {@link Server#getEmptyServerSuspendDelay()}.
 + *
 + * The suspension happens entirely within the event. A call to {@link #yield()}
@@ -277,7 +270,7 @@ index 0000000..aac9118
 diff --git a/src/test/java/org/bukkit/TestServer.java b/src/test/java/org/bukkit/TestServer.java
 --- a/src/test/java/org/bukkit/TestServer.java
 +++ b/src/test/java/org/bukkit/TestServer.java
-@@ -86,7 +86,7 @@ public class TestServer implements InvocationHandler {
+@@ -87,7 +87,7 @@ public class TestServer implements InvocationHandler {
              Server instance = Proxy.getProxyClass(Server.class.getClassLoader(), Server.class).asSubclass(Server.class).getConstructor(InvocationHandler.class).newInstance(server);
              Bukkit.setServer(instance);
              server.pluginManager = new SimplePluginManager(instance, new SimpleCommandMap(instance));
@@ -286,71 +279,3 @@ diff --git a/src/test/java/org/bukkit/TestServer.java b/src/test/java/org/bukkit
          } catch (Throwable t) {
              throw new Error(t);
          }
-diff --git a/src/test/java/org/bukkit/event/EventBusTest.java b/src/test/java/org/bukkit/event/EventBusTest.java
---- a/src/test/java/org/bukkit/event/EventBusTest.java
-+++ b/src/test/java/org/bukkit/event/EventBusTest.java
-@@ -20,13 +20,12 @@ public class EventBusTest {
-     static class Oops extends Exception {}
- 
-     ExceptionHandler exceptionHandler = new TestExceptionHandler();
--    Object lock;
-     SimpleEventBus bus;
-     List<String> flow;
- 
-     @Before
-     public void setUp() throws Exception {
--        bus = new SimpleEventBus(Thread.currentThread(), lock = new Object());
-+        bus = new SimpleEventBus(Thread.currentThread(), null);
-         flow = new ArrayList<>();
-     }
- 
-@@ -79,17 +78,6 @@ public class EventBusTest {
-     }
- 
-     @Test
--    public void asyncEventHoldingLockThrows() throws Throwable {
--        TestThread.join(() -> {
--            synchronized(lock) {
--                assertThrows(IllegalStateException.class, () ->
--                    bus.callEvent(new TestEvent(true))
--                );
--            }
--        });
--    }
--
--    @Test
-     public void eventWithBody() throws Exception {
-         bus.callEvent(new TestEvent(), event ->
-             flow("body")
-diff --git a/src/test/java/org/bukkit/plugin/PluginManagerTest.java b/src/test/java/org/bukkit/plugin/PluginManagerTest.java
---- a/src/test/java/org/bukkit/plugin/PluginManagerTest.java
-+++ b/src/test/java/org/bukkit/plugin/PluginManagerTest.java
-@@ -39,28 +39,6 @@ public class PluginManagerTest {
-     }
- 
-     @Test
--    public void testAsyncLocked() throws InterruptedException {
--        final Event event = new TestEvent(true);
--        Thread secondThread = new Thread(
--            new Runnable() {
--                public void run() {
--                    try {
--                        synchronized (pm) {
--                            pm.callEvent(event);
--                        }
--                    } catch (Throwable ex) {
--                        store.value = ex;
--                    }
--                }
--            }
--        );
--        secondThread.start();
--        secondThread.join();
--        assertThat(store.value, is(instanceOf(IllegalStateException.class)));
--        assertThat(event.getEventName() + " cannot be called asynchronously from inside synchronized code.", is(((Throwable) store.value).getMessage()));
--    }
--
--    @Test
-     public void testAsyncUnlocked() throws InterruptedException {
-         final Event event = new TestEvent(true);
-         Thread secondThread = new Thread(

@@ -9,11 +9,12 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.geometry.Direction;
 import org.bukkit.geometry.Ray;
+import org.bukkit.geometry.Vec3;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.NumberConversions;
-
-import org.bukkit.geometry.Vec3;
 import org.bukkit.util.Vector;
+
+import javax.annotation.Nullable;
 
 /**
  * Represents a 3-dimensional position in a world
@@ -51,12 +52,12 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
 
     public Location(World world, Ray ray) {
         this(world, ray.origin().fineX(), ray.origin().fineY(), ray.origin().fineZ(),
-             ray.direction().yawDegrees(), ray.direction().pitchDegrees());
+                ray.direction().yawDegrees(), ray.direction().pitchDegrees());
     }
 
     public Location(UUID world, Ray ray) {
         this(world, ray.origin().fineX(), ray.origin().fineY(), ray.origin().fineZ(),
-             ray.direction().yawDegrees(), ray.direction().pitchDegrees());
+                ray.direction().yawDegrees(), ray.direction().pitchDegrees());
     }
 
     /**
@@ -67,11 +68,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
      * @param y The y-coordinate of this new location
      * @param z The z-coordinate of this new location
      */
-    public Location(World world, double x, double y, double z) {
+    public Location(World world, final double x, final double y, final double z) {
         this(world, x, y, z, 0, 0);
     }
 
-    public Location(UUID world, double x, double y, double z) {
+    public Location(UUID world, final double x, final double y, final double z) {
         this(world, x, y, z, 0, 0);
     }
 
@@ -119,7 +120,6 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
      *
      * @return World that contains this location
      */
-    @Override
     public World getWorld() {
         return Bukkit.world(getWorldId());
     }
@@ -390,6 +390,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
         if (vec == null || vec.getWorld() != getWorld()) {
             throw new IllegalArgumentException("Cannot add Locations of differing worlds");
         }
+
         return add(vec.position());
     }
 
@@ -431,6 +432,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
         if (vec == null || vec.getWorld() != getWorld()) {
             throw new IllegalArgumentException("Cannot add Locations of differing worlds");
         }
+
         return subtract(vec.position());
     }
 
@@ -519,6 +521,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
         } else if (o.getWorld() != getWorld()) {
             throw new IllegalArgumentException("Cannot measure distance between " + getWorld().getName() + " and " + o.getWorld().getName());
         }
+
         return position.distanceSquared(o.position());
     }
 
@@ -554,6 +557,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
         return copyAngles(loc);
     }
 
+
     /**
      * Zero this location's components. Not world-aware.
      *
@@ -571,12 +575,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
         if(!(obj instanceof Location)) return false;
         final Location that = (Location) obj;
         return Objects.equals(worldId, that.getWorldId()) &&
-               Objects.equals(position, that.position()) &&
-               yaw == that.getYaw() &&
-               pitch == that.getPitch();
+                Objects.equals(position, that.position()) &&
+                yaw == that.getYaw() &&
+                pitch == that.getPitch();
     }
 
-    @Override
     public final int hashCode() {
         return Objects.hash(worldId, position, yaw, pitch);
     }
@@ -605,22 +608,46 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
         return new Location(worldId, position, yaw, pitch);
     }
 
+    /**
+     * Check if each component of this Location is finite.
+     *
+     * @throws IllegalArgumentException if any component is not finite
+     */
+    public void checkFinite() throws IllegalArgumentException {
+        NumberConversions.checkFinite(getX(), "x not finite");
+        NumberConversions.checkFinite(getY(), "y not finite");
+        NumberConversions.checkFinite(getZ(), "z not finite");
+        NumberConversions.checkFinite(pitch, "pitch not finite");
+        NumberConversions.checkFinite(yaw, "yaw not finite");
+    }
+
+    /**
+     * Safely converts a double (location coordinate) to an int (block
+     * coordinate)
+     *
+     * @param loc Precise coordinate
+     * @return Block coordinate
+     */
+    public static int locToBlock(double loc) {
+        return NumberConversions.floor(loc);
+    }
+
     @Utility
-	public Map<String, Object> serialize() {
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("world", this.worldId);
+    public Map<String, Object> serialize() {
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("world", this.worldId);
 
-		data.put("x", position.fineX());
-		data.put("y", position.fineY());
-		data.put("z", position.fineZ());
+        data.put("x", getX());
+        data.put("y", getY());
+        data.put("z", getZ());
 
-		data.put("yaw", this.yaw);
-		data.put("pitch", this.pitch);
+        data.put("yaw", this.yaw);
+        data.put("pitch", this.pitch);
 
-		return data;
-	}
-	
-	 /**
+        return data;
+    }
+
+    /**
      * Required method for deserialization
      *
      * @param args map to deserialize
@@ -628,12 +655,12 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
      * @throws IllegalArgumentException if the world don't exists
      * @see ConfigurationSerializable
      */
-	public static Location deserialize(Map<String, Object> args) {
-		World world = Bukkit.getWorld((String) args.get("world"));
-		if (world == null) {
-			throw new IllegalArgumentException("unknown world");
-		}
+    public static Location deserialize(Map<String, Object> args) {
+        World world = Bukkit.getWorld((String) args.get("world"));
+        if (world == null) {
+            throw new IllegalArgumentException("unknown world");
+        }
 
-		return new Location(world, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
-	}
+        return new Location(world, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
+    }
 }

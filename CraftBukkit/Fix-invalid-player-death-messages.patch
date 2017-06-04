@@ -7,7 +7,7 @@ This bug affects the /kill command and any plugin that sets a player's health to
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -410,7 +410,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -417,7 +417,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
              }
          }
  
@@ -16,9 +16,9 @@ diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/jav
  
          String deathmessage = chatmessage.toPlainText();
          org.bukkit.event.entity.PlayerDeathEvent event = CraftEventFactory.callPlayerDeathEvent(this, loot, deathmessage, keepInventory);
-@@ -456,7 +456,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -464,7 +464,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
-         EntityLiving entityliving = this.ca();
+         EntityLiving entityliving = this.cg();
  
 -        if (entityliving != null) {
 +        if (entityliving != null && damagesource != DamageSource.GENERIC) { // SportBukkit - can't have a combat tracked killer with a generic damage source

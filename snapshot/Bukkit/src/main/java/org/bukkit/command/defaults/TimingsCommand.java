@@ -37,7 +37,7 @@ public class TimingsCommand extends BukkitCommand {
             sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
             return false;
         }
-        if (!sender.getServer().pluginProfiling()) {
+        if (!sender.getServer().pluginProfiling() ) {
             sender.sendMessage("Please enable timings by setting \"settings.plugin-profiling\" to true in bukkit.yml");
             return true;
         }

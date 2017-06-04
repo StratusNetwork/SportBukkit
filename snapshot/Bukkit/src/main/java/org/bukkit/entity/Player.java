@@ -4,21 +4,9 @@ import java.net.InetSocketAddress;
 import java.util.Set;
 
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.Achievement;
-import org.bukkit.ChatColor;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Instrument;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Note;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Particle;
-import org.bukkit.Skin;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.Statistic;
-import org.bukkit.WeatherType;
+import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
@@ -538,7 +526,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param achievement Achievement to award
      * @throws IllegalArgumentException if achievement is null
+     * @deprecated future versions of Minecraft do not have achievements
      */
+    @Deprecated
     public void awardAchievement(Achievement achievement);
 
     /**
@@ -547,7 +537,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @param achievement Achievement to remove
      * @throws IllegalArgumentException if achievement is null
+     * @deprecated future versions of Minecraft do not have achievements
      */
+    @Deprecated
     public void removeAchievement(Achievement achievement);
 
     /**
@@ -556,7 +548,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * @param achievement the achievement to check
      * @return whether the player has the achievement
      * @throws IllegalArgumentException if achievement is null
+     * @deprecated future versions of Minecraft do not have achievements
      */
+    @Deprecated
     public boolean hasAchievement(Achievement achievement);
 
     /**
@@ -922,16 +916,22 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void setLevel(int level);
 
     /**
-     * Gets the players total experience points
+     * Gets the players total experience points.
+     * <br>
+     * This refers to the total amount of experience the player has collected
+     * over time and is only displayed as the player's "score" upon dying.
      *
      * @return Current total experience points
      */
     public int getTotalExperience();
 
     /**
-     * Sets the players current experience level
+     * Sets the players current experience points.
+     * <br>
+     * This refers to the total amount of experience the player has collected
+     * over time and is only displayed as the player's "score" upon dying.
      *
-     * @param exp New experience level
+     * @param exp New total experience points
      */
     public void setTotalExperience(int exp);
 
@@ -1060,18 +1060,6 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public void showInvisibles(boolean see);
 
     /**
-     * Checks to see if this player is currently standing on a block. This
-     * information may not be reliable, as it is a state provided by the
-     * client, and may therefore not be accurate.
-     *
-     * @return True if the player standing on a solid block, else false.
-     * @deprecated Inconsistent with {@link
-     *     org.bukkit.entity.Entity#isOnGround()}
-     */
-    @Deprecated
-    public boolean isOnGround();
-
-    /**
      * Checks to see if this player is currently flying or not.
      *
      * @return True if the player is flying, else false.
@@ -1137,18 +1125,23 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * The player's client will download the new texture pack asynchronously
      * in the background, and will automatically switch to it once the
      * download is complete. If the client has downloaded and cached the same
-     * texture pack in the past, it will perform a quick timestamp check over
-     * the network to determine if the texture pack has changed and needs to
-     * be downloaded again. When this request is sent for the very first time
-     * from a given server, the client will first display a confirmation GUI
-     * to the player before proceeding with the download.
+     * texture pack in the past, it will perform a file size check against
+     * the response content to determine if the texture pack has changed and
+     * needs to be downloaded again. When this request is sent for the very
+     * first time from a given server, the client will first display a
+     * confirmation GUI to the player before proceeding with the download.
      * <p>
      * Notes:
      * <ul>
      * <li>Players can disable server textures on their client, in which
-     *     case this method will have no affect on them.
+     *     case this method will have no affect on them. Use the
+     *     {@link PlayerResourcePackStatusEvent} to figure out whether or not
+     *     the player loaded the pack!
      * <li>There is no concept of resetting texture packs back to default
-     *     within Minecraft, so players will have to relog to do so.
+     *     within Minecraft, so players will have to relog to do so or you
+     *     have to send an empty pack.
+     * <li>The request is send with "null" as the hash. This might result
+     *     in newer versions not loading the pack correctly.
      * </ul>
      *
      * @param url The URL from which the client will download the texture
@@ -1168,8 +1161,8 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * The player's client will download the new resource pack asynchronously
      * in the background, and will automatically switch to it once the
      * download is complete. If the client has downloaded and cached the same
-     * resource pack in the past, it will perform a quick timestamp check
-     * over the network to determine if the resource pack has changed and
+     * resource pack in the past, it will perform a file size check against
+     * the response content to determine if the resource pack has changed and
      * needs to be downloaded again. When this request is sent for the very
      * first time from a given server, the client will first display a
      * confirmation GUI to the player before proceeding with the download.
@@ -1177,9 +1170,14 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * Notes:
      * <ul>
      * <li>Players can disable server resources on their client, in which
-     *     case this method will have no affect on them.
+     *     case this method will have no affect on them. Use the
+     *     {@link PlayerResourcePackStatusEvent} to figure out whether or not
+     *     the player loaded the pack!
      * <li>There is no concept of resetting resource packs back to default
-     *     within Minecraft, so players will have to relog to do so.
+     *     within Minecraft, so players will have to relog to do so or you
+     *     have to send an empty pack.
+     * <li>The request is send with "null" as the hash. This might result
+     *     in newer versions not loading the pack correctly.
      * </ul>
      *
      * @param url The URL from which the client will download the resource
@@ -1195,6 +1193,43 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
 
     @Deprecated
     public void setResourcePack(String url);
+
+    /**
+     * Request that the player's client download and switch resource packs.
+     * <p>
+     * The player's client will download the new resource pack asynchronously
+     * in the background, and will automatically switch to it once the
+     * download is complete. If the client has downloaded and cached a
+     * resource pack with the same hash in the past it will not download but
+     * directly apply the cached pack. When this request is sent for the very
+     * first time from a given server, the client will first display a
+     * confirmation GUI to the player before proceeding with the download.
+     * <p>
+     * Notes:
+     * <ul>
+     * <li>Players can disable server resources on their client, in which
+     *     case this method will have no affect on them. Use the
+     *     {@link PlayerResourcePackStatusEvent} to figure out whether or not
+     *     the player loaded the pack!
+     * <li>There is no concept of resetting resource packs back to default
+     *     within Minecraft, so players will have to relog to do so or you
+     *     have to send an empty pack.
+     * </ul>
+     *
+     * @param url The URL from which the client will download the resource
+     *     pack. The string must contain only US-ASCII characters and should
+     *     be encoded as per RFC 1738.
+     * @param hash The sha1 hash sum of the resource pack file which is used
+     *     to apply a cached version of the pack directly without downloading
+     *     if it is available. Hast to be 20 bytes long!
+     * @throws IllegalArgumentException Thrown if the URL is null.
+     * @throws IllegalArgumentException Thrown if the URL is too long. The
+     *     length restriction is an implementation specific arbitrary value.
+     * @throws IllegalArgumentException Thrown if the hash is null.
+     * @throws IllegalArgumentException Thrown if the hash is not 20 bytes
+     *     long.
+     */
+    public void setResourcePack(String url, byte[] hash);
 
     /**
      * @return the most recent resource pack status received from the player,
@@ -1521,20 +1556,23 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
     public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data);
 
     /**
-     * Gets the hostname (an IP or a DNS domain) and port the client has used
-     * to connect to this server. This is generated client-side, and it may
-     * return a blank string if the client didn't send it, or an invalid
-     * hostname, as the server doesn't check it.
+     * Return the player's progression on the specified advancement.
      *
-     * @return The hostname and port
+     * @param advancement advancement
+     * @return object detailing the player's progress
      */
-    public String getHostname();
+    public AdvancementProgress getAdvancementProgress(Advancement advancement);
 
     /**
-     * Gets the player's client-determined, ISO-standard locale.
+     * Gets the player's current locale.
      *
-     * If the player's locale has not been set, either by the client or the {@link #setLocale} method,
-     * the default locale will be returned, which is "en_US".
+     * The value of the locale String is not defined properly.
+     * <br>
+     * The vanilla Minecraft client will use lowercase language / country pairs
+     * separated by an underscore, but custom resource packs may use any format
+     * they wish.
+     *
+     * @return the player's locale
      */
     public String getLocale();
 
@@ -1543,6 +1581,16 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      * effectively setting it to the default of "en_US".
      */
     public void setLocale(String locale);
+
+    /**
+     * Gets the hostname (an IP or a DNS domain) and port the client has used
+     * to connect to this server. This is generated client-side, and it may
+     * return a blank string if the client didn't send it, or an invalid
+     * hostname, as the server doesn't check it.
+     *
+     * @return The hostname and port
+     */
+    public String getHostname();
 
     /**
      * Sends the component to the player

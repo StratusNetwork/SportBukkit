@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/PacketPlayOutPlayerListHeaderFooter.java
 +++ b/net/minecraft/server/PacketPlayOutPlayerListHeaderFooter.java
-@@ -4,6 +4,8 @@
+@@ -4,19 +4,36 @@
  
  public class PacketPlayOutPlayerListHeaderFooter implements Packet<PacketListenerPlayOut> {
  
@@ -9,7 +9,15 @@
      private IChatBaseComponent a;
      private IChatBaseComponent b;
  
-@@ -19,8 +21,19 @@
+     public PacketPlayOutPlayerListHeaderFooter() {}
+ 
++    public PacketPlayOutPlayerListHeaderFooter(IChatBaseComponent ichatbasecomponent) {
++        this.a = ichatbasecomponent;
++    }
++
+     public void a(PacketDataSerializer packetdataserializer) throws IOException {
+         this.a = packetdataserializer.f();
+         this.b = packetdataserializer.f();
      }
  
      public void b(PacketDataSerializer packetdataserializer) throws IOException {

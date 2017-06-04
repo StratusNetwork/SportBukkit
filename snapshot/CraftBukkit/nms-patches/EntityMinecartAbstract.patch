@@ -34,7 +34,16 @@
      public EntityMinecartAbstract(World world) {
          super(world);
          this.i = true;
-@@ -90,6 +110,8 @@
+@@ -73,7 +93,7 @@
+     }
+ 
+     @Nullable
+-    public AxisAlignedBB al() {
++    public AxisAlignedBB ag() {
+         return null;
+     }
+ 
+@@ -90,9 +110,11 @@
          this.lastX = d0;
          this.lastY = d1;
          this.lastZ = d2;
@@ -42,8 +51,12 @@
 +        this.world.getServer().getPluginManager().callEvent(new org.bukkit.event.vehicle.VehicleCreateEvent((Vehicle) this.getBukkitEntity())); // CraftBukkit
      }
  
-     public double ay() {
-@@ -101,6 +123,19 @@
+-    public double aE() {
++    public double ay() {
+         return 0.0D;
+     }
+ 
+@@ -101,14 +123,36 @@
              if (this.isInvulnerable(damagesource)) {
                  return false;
              } else {
@@ -62,11 +75,13 @@
 +                // CraftBukkit end
                  this.e(-this.u());
                  this.d(10);
-                 this.ap();
-@@ -108,6 +143,15 @@
+-                this.av();
++                this.ap();
+                 this.setDamage(this.getDamage() + f * 10.0F);
                  boolean flag = damagesource.getEntity() instanceof EntityHuman && ((EntityHuman) damagesource.getEntity()).abilities.canInstantlyBuild;
  
                  if (flag || this.getDamage() > 40.0F) {
+-                    this.ejectPassengers();
 +                    // CraftBukkit start
 +                    VehicleDestroyEvent destroyEvent = new VehicleDestroyEvent(vehicle, passenger);
 +                    this.world.getServer().getPluginManager().callEvent(destroyEvent);
@@ -76,13 +91,21 @@
 +                        return true;
 +                    }
 +                    // CraftBukkit end
-                     this.az();
++                    this.az();
                      if (flag && !this.hasCustomName()) {
                          this.die();
-@@ -146,6 +190,14 @@
+                     } else {
+@@ -141,11 +185,19 @@
+         return !this.dead;
      }
  
-     public void A_() {
+-    public EnumDirection bs() {
++    public EnumDirection bm() {
+         return this.g ? this.getDirection().opposite().e() : this.getDirection().e();
+     }
+ 
+-    public void B_() {
++    public void A_() {
 +        // CraftBukkit start
 +        double prevX = this.locX;
 +        double prevY = this.locY;
@@ -94,15 +117,40 @@
          if (this.getType() > 0) {
              this.d(this.getType() - 1);
          }
-@@ -166,7 +218,7 @@
+@@ -155,7 +207,7 @@
+         }
  
-             i = this.V();
+         if (this.locY < -64.0D) {
+-            this.ac();
++            this.Y();
+         }
+ 
+         int i;
+@@ -164,12 +216,12 @@
+             this.world.methodProfiler.a("portal");
+             MinecraftServer minecraftserver = this.world.getMinecraftServer();
+ 
+-            i = this.Z();
++            i = this.V();
              if (this.ak) {
 -                if (minecraftserver.getAllowNether()) {
 +                if (true || minecraftserver.getAllowNether()) { // CraftBukkit - multi-world should still allow teleport even if default vanilla nether disabled
                      if (!this.isPassenger() && this.al++ >= i) {
                          this.al = i;
-                         this.portalCooldown = this.aE();
+-                        this.portalCooldown = this.aK();
++                        this.portalCooldown = this.aE();
+                         byte b0;
+ 
+                         if (this.world.worldProvider.getDimensionManager().getDimensionID() == -1) {
+@@ -178,7 +230,7 @@
+                             b0 = -1;
+                         }
+ 
+-                        this.b(b0);
++                        this.c(b0);
+                     }
+ 
+                     this.ak = false;
 @@ -266,6 +318,18 @@
              }
  
@@ -147,7 +195,7 @@
                              entity.collide(this);
                          }
                      }
-@@ -287,6 +367,14 @@
+@@ -287,37 +367,49 @@
                      Entity entity1 = (Entity) iterator.next();
  
                      if (!this.w(entity1) && entity1.isCollidable() && entity1 instanceof EntityMinecartAbstract) {
@@ -162,16 +210,25 @@
                          entity1.collide(this);
                      }
                  }
-@@ -297,7 +385,7 @@
+             }
+ 
+-            this.aq();
++            this.ak();
+         }
      }
  
-     protected double o() {
+-    protected double p() {
 -        return 0.4D;
++    protected double o() {
 +        return this.maxSpeed; // CraftBukkit
      }
  
      public void a(int i, int j, int k, boolean flag) {}
-@@ -308,16 +396,20 @@
+ 
+     protected void q() {
+-        double d0 = this.p();
++        double d0 = this.o();
+ 
          this.motX = MathHelper.a(this.motX, -d0, d0);
          this.motZ = MathHelper.a(this.motZ, -d0, d0);
          if (this.onGround) {
@@ -198,6 +255,52 @@
          }
  
      }
+@@ -379,14 +471,14 @@
+ 
+         this.motX = d5 * d1 / d3;
+         this.motZ = d5 * d2 / d3;
+-        Entity entity = this.bD().isEmpty() ? null : (Entity) this.bD().get(0);
++        Entity entity = this.bx().isEmpty() ? null : (Entity) this.bx().get(0);
+         double d6;
+         double d7;
+         double d8;
+         double d9;
+ 
+         if (entity instanceof EntityLiving) {
+-            d6 = (double) ((EntityLiving) entity).bg;
++            d6 = (double) ((EntityLiving) entity).bf;
+             if (d6 > 0.0D) {
+                 d7 = -Math.sin((double) (entity.yaw * 0.017453292F));
+                 d8 = Math.cos((double) (entity.yaw * 0.017453292F));
+@@ -444,7 +536,7 @@
+             d12 *= 0.75D;
+         }
+ 
+-        double d13 = this.p();
++        double d13 = this.o();
+ 
+         d11 = MathHelper.a(d11, -d13, d13);
+         d12 = MathHelper.a(d12, -d13, d13);
+@@ -488,15 +580,15 @@
+                 this.motX += this.motX / d15 * 0.06D;
+                 this.motZ += this.motZ / d15 * 0.06D;
+             } else if (blockminecarttrackabstract_enumtrackposition == BlockMinecartTrackAbstract.EnumTrackPosition.EAST_WEST) {
+-                if (this.world.getType(blockposition.west()).l()) {
++                if (this.world.getType(blockposition.west()).m()) {
+                     this.motX = 0.02D;
+-                } else if (this.world.getType(blockposition.east()).l()) {
++                } else if (this.world.getType(blockposition.east()).m()) {
+                     this.motX = -0.02D;
+                 }
+             } else if (blockminecarttrackabstract_enumtrackposition == BlockMinecartTrackAbstract.EnumTrackPosition.NORTH_SOUTH) {
+-                if (this.world.getType(blockposition.north()).l()) {
++                if (this.world.getType(blockposition.north()).m()) {
+                     this.motZ = 0.02D;
+-                } else if (this.world.getType(blockposition.south()).l()) {
++                } else if (this.world.getType(blockposition.south()).m()) {
+                     this.motZ = -0.02D;
+                 }
+             }
 @@ -505,7 +597,7 @@
      }
  

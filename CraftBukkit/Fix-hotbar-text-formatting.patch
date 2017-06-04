@@ -6,22 +6,18 @@ Subject: [PATCH] Fix hotbar text formatting
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -21,11 +21,14 @@ import java.util.Set;
- import java.util.UUID;
+@@ -15,7 +15,10 @@ import java.util.*;
  import java.util.logging.Level;
  import java.util.logging.Logger;
-+
+ 
 +import net.md_5.bungee.api.ChatMessageType;
  import net.md_5.bungee.api.chat.BaseComponent;
- 
- import java.util.WeakHashMap;
- import java.util.Arrays;
- 
 +import net.md_5.bungee.api.chat.TextComponent;
++
  import net.minecraft.server.*;
  import net.minecraft.server.PacketPlayOutTitle.EnumTitleAction;
  
-@@ -1842,7 +1845,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1819,7 +1822,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          if ( getHandle().playerConnection == null ) return;
  
          PacketPlayOutChat packet = new PacketPlayOutChat(null, (byte) position.ordinal());

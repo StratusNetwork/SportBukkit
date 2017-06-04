@@ -6,7 +6,7 @@ Subject: [PATCH] Implement minecraft-api
 diff --git a/pom.xml b/pom.xml
 --- a/pom.xml
 +++ b/pom.xml
-@@ -95,10 +95,8 @@
+@@ -89,10 +89,8 @@
          </dependency>
          <dependency>
              <groupId>tc.oc</groupId>
@@ -164,7 +164,7 @@ diff --git a/src/main/java/org/bukkit/configuration/MemorySection.java b/src/mai
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -29,7 +29,7 @@ import org.bukkit.util.RayBlockIntersection;
+@@ -17,7 +17,7 @@ import org.bukkit.util.RayBlockIntersection;
  /**
   * Represents a player, connected or not
   */
@@ -197,7 +197,7 @@ diff --git a/src/main/java/org/bukkit/permissions/Permissible.java b/src/main/ja
 diff --git a/src/main/java/org/bukkit/plugin/Plugin.java b/src/main/java/org/bukkit/plugin/Plugin.java
 --- a/src/main/java/org/bukkit/plugin/Plugin.java
 +++ b/src/main/java/org/bukkit/plugin/Plugin.java
-@@ -16,7 +16,7 @@ import com.avaje.ebean.EbeanServer;
+@@ -14,7 +14,7 @@ import org.bukkit.generator.ChunkGenerator;
   * <p>
   * The use of {@link PluginBase} is recommended for actual Implementation
   */
@@ -209,7 +209,7 @@ diff --git a/src/main/java/org/bukkit/plugin/Plugin.java b/src/main/java/org/buk
 diff --git a/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java b/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
 --- a/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
 +++ b/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
-@@ -174,7 +174,7 @@ import com.google.common.collect.ImmutableSet;
+@@ -169,7 +169,7 @@ import com.google.common.collect.ImmutableSet;
   *      inferno.burningdeaths: true
   *</pre></blockquote>
   */
@@ -251,7 +251,7 @@ diff --git a/src/main/java/org/bukkit/plugin/PluginManager.java b/src/main/java/
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -365,6 +365,11 @@ public final class SimplePluginManager implements PluginManager {
+@@ -362,6 +362,11 @@ public final class SimplePluginManager implements PluginManager {
          return plugins.toArray(new Plugin[0]);
      }
  
@@ -263,7 +263,7 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
      /**
       * Checks if the given plugin is enabled or not
       * <p>
-@@ -537,6 +542,21 @@ public final class SimplePluginManager implements PluginManager {
+@@ -534,6 +539,21 @@ public final class SimplePluginManager implements PluginManager {
          }
      }
  

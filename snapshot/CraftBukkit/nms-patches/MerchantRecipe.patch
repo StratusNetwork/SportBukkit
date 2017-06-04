@@ -27,6 +27,15 @@
  
      public MerchantRecipe(NBTTagCompound nbttagcompound) {
          this.buyingItem1 = ItemStack.a;
+@@ -64,7 +78,7 @@
+         return this.maxUses;
+     }
+ 
+-    public void increaseUses() {
++    public void g() {
+         ++this.uses;
+     }
+ 
 @@ -87,6 +101,16 @@
          NBTTagCompound nbttagcompound2 = nbttagcompound.getCompound("sell");
  

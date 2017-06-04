@@ -29,3 +29,12 @@
      }
  
      public void a(TileEntityEnderChest tileentityenderchest) {
+@@ -62,7 +78,7 @@
+ 
+     public void closeContainer(EntityHuman entityhuman) {
+         if (this.a != null) {
+-            this.a.f();
++            this.a.e();
+         }
+ 
+         super.closeContainer(entityhuman);

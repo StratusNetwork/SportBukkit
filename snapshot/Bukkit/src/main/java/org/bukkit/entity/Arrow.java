@@ -62,18 +62,34 @@ public interface Arrow extends Projectile {
     public void setCritical(boolean critical);
 
     /**
-     * Which players can pickup this arrow as an item?
+     * Gets the current pickup status of this arrow.
      *
-     * This is generally true only if the arrow was NOT fired from a bow with the infinity enchantment.
+     * @return the pickup status of this arrow.
      */
-    PickupRule getPickupRule();
+    public PickupStatus getPickupStatus();
 
     /**
-     * Set the rule for which players can pickup this arrow as an item.
+     * Sets the current pickup status of this arrow.
+     *
+     * @param status new pickup status of this arrow.
      */
-    void setPickupRule(PickupRule rule);
+    public void setPickupStatus(PickupStatus status);
 
-    enum PickupRule {
-        DISALLOWED, ALLOWED, CREATIVE_ONLY
+    /**
+     * Represents the pickup status of this arrow.
+     */
+    public enum PickupStatus {
+        /**
+         * The arrow cannot be picked up.
+         */
+        DISALLOWED,
+        /**
+         * The arrow can be picked up.
+         */
+        ALLOWED,
+        /**
+         * The arrow can only be picked up by players in creative mode.
+         */
+        CREATIVE_ONLY
     }
 }

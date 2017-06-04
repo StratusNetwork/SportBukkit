@@ -8,8 +8,8 @@ diff --git a/src/main/java/net/minecraft/server/MobEffectList.java b/src/main/ja
 +++ b/src/main/java/net/minecraft/server/MobEffectList.java
 @@ -224,10 +224,5 @@ public class MobEffectList {
          MobEffectList.REGISTRY.a(25, new MinecraftKey("levitation"), (new MobEffectList(true, 13565951)).c("effect.levitation").b(3, 2));
-         MobEffectList.REGISTRY.a(26, new MinecraftKey("luck"), (new MobEffectList(false, 3381504)).c("effect.luck").b(5, 2).j().a(GenericAttributes.i, "03C3C89D-7037-4B42-869F-B146BCB64D2E", 1.0D, 0));
-         MobEffectList.REGISTRY.a(27, new MinecraftKey("unluck"), (new MobEffectList(true, 12624973)).c("effect.unluck").b(6, 2).a(GenericAttributes.i, "CC5AF142-2BD2-4215-B636-2605AED11727", -1.0D, 0));
+         MobEffectList.REGISTRY.a(26, new MinecraftKey("luck"), (new MobEffectList(false, 3381504)).c("effect.luck").b(5, 2).j().a(GenericAttributes.j, "03C3C89D-7037-4B42-869F-B146BCB64D2E", 1.0D, 0));
+         MobEffectList.REGISTRY.a(27, new MinecraftKey("unluck"), (new MobEffectList(true, 12624973)).c("effect.unluck").b(6, 2).a(GenericAttributes.j, "CC5AF142-2BD2-4215-B636-2605AED11727", -1.0D, 0));
 -        // CraftBukkit start
 -        for (Object effect : REGISTRY) {
 -            org.bukkit.potion.PotionEffectType.registerPotionEffectType(new org.bukkit.craftbukkit.potion.CraftPotionEffectType((MobEffectList) effect));
@@ -24,11 +24,11 @@ diff --git a/src/main/java/org/bukkit/CraftBukkitRuntime.java b/src/main/java/or
  
  import net.minecraft.server.DispenserRegistry;
  import org.bukkit.craftbukkit.inventory.CraftItemFactory;
-+import org.bukkit.craftbukkit.potion.CraftPotionEffectRegistry;
 +import org.bukkit.craftbukkit.potion.CraftPotionBrewRegistry;
++import org.bukkit.craftbukkit.potion.CraftPotionEffectRegistry;
  import org.bukkit.craftbukkit.registry.CraftKey;
-+import org.bukkit.potion.PotionEffectRegistry;
 +import org.bukkit.potion.PotionBrewRegistry;
++import org.bukkit.potion.PotionEffectRegistry;
  import org.bukkit.registry.Key;
  
  public class CraftBukkitRuntime implements BukkitRuntime {
@@ -60,7 +60,7 @@ diff --git a/src/main/java/org/bukkit/CraftBukkitRuntime.java b/src/main/java/or
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
-@@ -10,10 +10,13 @@ import net.minecraft.server.NBTTagInt;
+@@ -10,15 +10,13 @@ import net.minecraft.server.NBTTagInt;
  import net.minecraft.server.NBTTagList;
  
  import org.apache.commons.lang.Validate;
@@ -68,13 +68,17 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
  import org.bukkit.Color;
  import org.bukkit.Material;
  import org.bukkit.configuration.serialization.DelegateDeserialization;
+ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
  import org.bukkit.inventory.meta.PotionMeta;
-+import org.bukkit.potion.PotionBrew;
-+import org.bukkit.potion.PotionBrewRegistry;
- import org.bukkit.potion.PotionData;
- import org.bukkit.potion.PotionEffect;
- import org.bukkit.potion.PotionEffectType;
-@@ -35,9 +38,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+-import org.bukkit.potion.PotionData;
+-import org.bukkit.potion.PotionEffect;
+-import org.bukkit.potion.PotionEffectType;
+-import org.bukkit.potion.PotionType;
++import org.bukkit.potion.*;
+ import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
+ import org.bukkit.craftbukkit.potion.CraftPotionUtil;
+ 
+@@ -36,9 +34,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
      static final ItemMetaKey ID = new ItemMetaKey("Id", "potion-id");
      static final ItemMetaKey DEFAULT_POTION = new ItemMetaKey("Potion", "potion-type");
  
@@ -85,7 +89,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
      private List<PotionEffect> customEffects;
      private Color color;
  
-@@ -70,6 +71,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+@@ -71,6 +67,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
              for (int i = 0; i < length; i++) {
                  NBTTagCompound effect = list.get(i);
                  PotionEffectType type = PotionEffectType.getById(effect.getByte(ID.NBT));
@@ -93,7 +97,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
                  int amp = effect.getByte(AMPLIFIER.NBT);
                  int duration = effect.getInt(DURATION.NBT);
                  boolean ambient = effect.getBoolean(AMBIENT.NBT);
-@@ -133,7 +135,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+@@ -134,7 +131,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
      }
  
      boolean isPotionEmpty() {
@@ -102,7 +106,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
      }
  
      @Override
-@@ -170,6 +172,19 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+@@ -171,6 +168,19 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
          return type;
      }
  
@@ -122,18 +126,16 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
      public boolean hasCustomEffects() {
          return customEffects != null;
      }
-@@ -283,8 +298,8 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+@@ -284,7 +294,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
      int applyHash() {
          final int original;
          int hash = original = super.applyHash();
 -        if (type.getType() != PotionType.UNCRAFTABLE) {
--            hash = 73 * hash + type.hashCode();
 +        if (type.getType() != CraftPotionUtil.DEFAULT.getType()) {
-+        	hash = 73 * hash + type.hashCode();
+             hash = 73 * hash + type.hashCode();
          }
          if (hasColor()) {
-             hash = 73 * hash + color.hashCode();
-@@ -318,7 +333,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
+@@ -319,7 +329,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
      @Override
      Builder<String, Object> serialize(Builder<String, Object> builder) {
          super.serialize(builder);
@@ -144,22 +146,22 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrew.java b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrew.java
 new file mode 100644
-index 0000000..be7b0d2
+index 0000000..a8a5c1e
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrew.java
 @@ -0,0 +1,36 @@
 +package org.bukkit.craftbukkit.potion;
-+
-+import java.util.List;
 +
 +import com.google.common.base.Function;
 +import com.google.common.collect.Lists;
 +import net.minecraft.server.MobEffect;
 +import net.minecraft.server.PotionRegistry;
 +import org.bukkit.craftbukkit.registry.CraftKey;
-+import org.bukkit.potion.PotionEffect;
 +import org.bukkit.potion.PotionBrew;
++import org.bukkit.potion.PotionEffect;
 +import org.bukkit.registry.Key;
++
++import java.util.List;
 +
 +public class CraftPotionBrew implements PotionBrew {
 +
@@ -260,13 +262,11 @@ index 0000000..94e0a5f
 diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionEffectType.java b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionEffectType.java
 --- a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionEffectType.java
 +++ b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionEffectType.java
-@@ -1,15 +1,15 @@
- package org.bukkit.craftbukkit.potion;
- 
+@@ -3,13 +3,14 @@ package org.bukkit.craftbukkit.potion;
  import net.minecraft.server.MobEffectList;
--
-+import org.bukkit.craftbukkit.registry.CraftKey;
+ 
  import org.bukkit.Color;
++import org.bukkit.craftbukkit.registry.CraftKey;
  import org.bukkit.potion.PotionEffectType;
 +import org.bukkit.registry.Key;
  
@@ -278,7 +278,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionEffectType.j
          this.handle = handle;
      }
  
-@@ -23,6 +23,16 @@ public class CraftPotionEffectType extends PotionEffectType {
+@@ -23,6 +24,16 @@ public class CraftPotionEffectType extends PotionEffectType {
      }
  
      @Override

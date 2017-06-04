@@ -8,7 +8,7 @@
  
  public class EntityTNTPrimed extends Entity {
  
-@@ -8,6 +9,8 @@
+@@ -8,12 +9,13 @@
      @Nullable
      private EntityLiving source;
      private int c;
@@ -17,7 +17,22 @@
  
      public EntityTNTPrimed(World world) {
          super(world);
-@@ -63,10 +66,13 @@
+         this.c = 80;
+         this.i = true;
+-        this.fireProof = true;
+         this.setSize(0.98F, 0.98F);
+     }
+ 
+@@ -44,7 +46,7 @@
+         return !this.dead;
+     }
+ 
+-    public void B_() {
++    public void A_() {
+         this.lastX = this.locX;
+         this.lastY = this.locY;
+         this.lastZ = this.locZ;
+@@ -64,21 +66,66 @@
  
          --this.c;
          if (this.c <= 0) {
@@ -30,9 +45,10 @@
 +            this.die();
 +            // CraftBukkit end
          } else {
-             this.ak();
+-            this.aq();
++            this.ak();
              this.world.addParticle(EnumParticle.SMOKE_NORMAL, this.locX, this.locY + 0.5D, this.locZ, 0.0D, 0.0D, 0.0D, new int[0]);
-@@ -74,10 +80,52 @@
+         }
  
      }
  
@@ -87,7 +103,7 @@
      }
  
      protected void b(NBTTagCompound nbttagcompound) {
-@@ -94,7 +142,7 @@
+@@ -95,7 +142,7 @@
      }
  
      public float getHeadHeight() {

@@ -1,22 +1,36 @@
 --- a/net/minecraft/server/EntityHorse.java
 +++ b/net/minecraft/server/EntityHorse.java
-@@ -6,8 +6,8 @@
+@@ -5,15 +5,15 @@
+ 
  public class EntityHorse extends EntityHorseAbstract {
  
-     private static final UUID bG = UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
--    private static final DataWatcherObject<Integer> bH = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
+-    private static final UUID bH = UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
 -    private static final DataWatcherObject<Integer> bI = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
+-    private static final DataWatcherObject<Integer> bJ = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
+-    private static final String[] bK = new String[] { "textures/entity/horse/horse_white.png", "textures/entity/horse/horse_creamy.png", "textures/entity/horse/horse_chestnut.png", "textures/entity/horse/horse_brown.png", "textures/entity/horse/horse_black.png", "textures/entity/horse/horse_gray.png", "textures/entity/horse/horse_darkbrown.png"};
+-    private static final String[] bL = new String[] { "hwh", "hcr", "hch", "hbr", "hbl", "hgr", "hdb"};
+-    private static final String[] bM = new String[] { null, "textures/entity/horse/horse_markings_white.png", "textures/entity/horse/horse_markings_whitefield.png", "textures/entity/horse/horse_markings_whitedots.png", "textures/entity/horse/horse_markings_blackdots.png"};
+-    private static final String[] bN = new String[] { "", "wo_", "wmo", "wdo", "bdo"};
+-    private String bO;
+-    private final String[] bP = new String[3];
++    private static final UUID bG = UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
 +    private static final DataWatcherObject<Integer> bH = META_HORSE_VARIANT; // SportBukkit
 +    private static final DataWatcherObject<Integer> bI = META_ARMOR; // SportBukkit
-     private static final String[] bJ = new String[] { "textures/entity/horse/horse_white.png", "textures/entity/horse/horse_creamy.png", "textures/entity/horse/horse_chestnut.png", "textures/entity/horse/horse_brown.png", "textures/entity/horse/horse_black.png", "textures/entity/horse/horse_gray.png", "textures/entity/horse/horse_darkbrown.png"};
-     private static final String[] bK = new String[] { "hwh", "hcr", "hch", "hbr", "hbl", "hgr", "hdb"};
-     private static final String[] bL = new String[] { null, "textures/entity/horse/horse_markings_white.png", "textures/entity/horse/horse_markings_whitefield.png", "textures/entity/horse/horse_markings_whitedots.png", "textures/entity/horse/horse_markings_blackdots.png"};
++    private static final String[] bJ = new String[] { "textures/entity/horse/horse_white.png", "textures/entity/horse/horse_creamy.png", "textures/entity/horse/horse_chestnut.png", "textures/entity/horse/horse_brown.png", "textures/entity/horse/horse_black.png", "textures/entity/horse/horse_gray.png", "textures/entity/horse/horse_darkbrown.png"};
++    private static final String[] bK = new String[] { "hwh", "hcr", "hch", "hbr", "hbl", "hgr", "hdb"};
++    private static final String[] bL = new String[] { null, "textures/entity/horse/horse_markings_white.png", "textures/entity/horse/horse_markings_whitefield.png", "textures/entity/horse/horse_markings_whitedots.png", "textures/entity/horse/horse_markings_blackdots.png"};
++    private static final String[] bM = new String[] { "", "wo_", "wmo", "wdo", "bdo"};
++    private String bN;
++    private final String[] bO = new String[3];
+ 
+     public EntityHorse(World world) {
+         super(world);
 @@ -21,8 +21,10 @@
  
      protected void i() {
          super.i();
--        this.datawatcher.register(EntityHorse.bH, Integer.valueOf(0));
--        this.datawatcher.register(EntityHorse.bI, Integer.valueOf(EnumHorseArmor.NONE.a()));
+-        this.datawatcher.register(EntityHorse.bI, Integer.valueOf(0));
+-        this.datawatcher.register(EntityHorse.bJ, Integer.valueOf(EnumHorseArmor.NONE.a()));
 +        // SportBukkit start - registered already in superclass
 +        //this.datawatcher.register(EntityHorse.bH, Integer.valueOf(0));
 +        //this.datawatcher.register(EntityHorse.bI, Integer.valueOf(EnumHorseArmor.NONE.a()));
@@ -24,3 +38,187 @@
      }
  
      public static void a(DataConverterManager dataconvertermanager) {
+@@ -50,55 +52,55 @@
+             }
+         }
+ 
+-        this.dB();
++        this.dy();
+     }
+ 
+     public void setVariant(int i) {
+-        this.datawatcher.set(EntityHorse.bI, Integer.valueOf(i));
+-        this.dO();
++        this.datawatcher.set(EntityHorse.bH, Integer.valueOf(i));
++        this.dM();
+     }
+ 
+     public int getVariant() {
+-        return ((Integer) this.datawatcher.get(EntityHorse.bI)).intValue();
++        return ((Integer) this.datawatcher.get(EntityHorse.bH)).intValue();
+     }
+ 
+-    private void dO() {
+-        this.bO = null;
++    private void dM() {
++        this.bN = null;
+     }
+ 
+-    protected void dB() {
+-        super.dB();
++    protected void dy() {
++        super.dy();
+         this.g(this.inventoryChest.getItem(1));
+     }
+ 
+     public void g(ItemStack itemstack) {
+         EnumHorseArmor enumhorsearmor = EnumHorseArmor.a(itemstack);
+ 
+-        this.datawatcher.set(EntityHorse.bJ, Integer.valueOf(enumhorsearmor.a()));
+-        this.dO();
++        this.datawatcher.set(EntityHorse.bI, Integer.valueOf(enumhorsearmor.a()));
++        this.dM();
+         if (!this.world.isClientSide) {
+-            this.getAttributeInstance(GenericAttributes.h).b(EntityHorse.bH);
++            this.getAttributeInstance(GenericAttributes.g).b(EntityHorse.bG);
+             int i = enumhorsearmor.c();
+ 
+             if (i != 0) {
+-                this.getAttributeInstance(GenericAttributes.h).b((new AttributeModifier(EntityHorse.bH, "Horse armor bonus", (double) i, 0)).a(false));
++                this.getAttributeInstance(GenericAttributes.g).b((new AttributeModifier(EntityHorse.bG, "Horse armor bonus", (double) i, 0)).a(false));
+             }
+         }
+ 
+     }
+ 
+-    public EnumHorseArmor dr() {
+-        return EnumHorseArmor.a(((Integer) this.datawatcher.get(EntityHorse.bJ)).intValue());
++    public EnumHorseArmor dL() {
++        return EnumHorseArmor.a(((Integer) this.datawatcher.get(EntityHorse.bI)).intValue());
+     }
+ 
+     public void a(IInventory iinventory) {
+-        EnumHorseArmor enumhorsearmor = this.dr();
++        EnumHorseArmor enumhorsearmor = this.dL();
+ 
+         super.a(iinventory);
+-        EnumHorseArmor enumhorsearmor1 = this.dr();
++        EnumHorseArmor enumhorsearmor1 = this.dL();
+ 
+         if (this.ticksLived > 20 && enumhorsearmor != enumhorsearmor1 && enumhorsearmor1 != EnumHorseArmor.NONE) {
+-            this.a(SoundEffects.cH, 0.5F, 1.0F);
++            this.a(SoundEffects.cB, 0.5F, 1.0F);
+         }
+ 
+     }
+@@ -106,45 +108,45 @@
+     protected void a(SoundEffectType soundeffecttype) {
+         super.a(soundeffecttype);
+         if (this.random.nextInt(10) == 0) {
+-            this.a(SoundEffects.cI, soundeffecttype.a() * 0.6F, soundeffecttype.b());
++            this.a(SoundEffects.cC, soundeffecttype.a() * 0.6F, soundeffecttype.b());
+         }
+ 
+     }
+ 
+     protected void initAttributes() {
+         super.initAttributes();
+-        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dK());
+-        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.dM());
+-        this.getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(this.dL());
++        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dH());
++        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.dJ());
++        this.getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(this.dI());
+     }
+ 
+-    public void B_() {
+-        super.B_();
++    public void A_() {
++        super.A_();
+         if (this.world.isClientSide && this.datawatcher.a()) {
+             this.datawatcher.e();
+-            this.dO();
++            this.dM();
+         }
+ 
+     }
+ 
+-    protected SoundEffect F() {
+-        super.F();
+-        return SoundEffects.cF;
++    protected SoundEffect G() {
++        super.G();
++        return SoundEffects.cz;
+     }
+ 
+-    protected SoundEffect cd() {
+-        super.cd();
+-        return SoundEffects.cJ;
++    protected SoundEffect bX() {
++        super.bX();
++        return SoundEffects.cD;
+     }
+ 
+-    protected SoundEffect d(DamageSource damagesource) {
+-        super.d(damagesource);
+-        return SoundEffects.cM;
++    protected SoundEffect bW() {
++        super.bW();
++        return SoundEffects.cG;
+     }
+ 
+-    protected SoundEffect dm() {
+-        super.dm();
+-        return SoundEffects.cG;
++    protected SoundEffect dj() {
++        super.dj();
++        return SoundEffects.cA;
+     }
+ 
+     protected MinecraftKey J() {
+@@ -160,7 +162,7 @@
+         } else {
+             if (!this.isBaby()) {
+                 if (this.isTamed() && entityhuman.isSneaking()) {
+-                    this.c(entityhuman);
++                    this.f(entityhuman);
+                     return true;
+                 }
+ 
+@@ -183,15 +185,15 @@
+                 }
+ 
+                 if (!this.isTamed()) {
+-                    this.dI();
++                    this.dF();
+                     return true;
+                 }
+ 
+                 boolean flag1 = EnumHorseArmor.a(itemstack) != EnumHorseArmor.NONE;
+-                boolean flag2 = !this.isBaby() && !this.dE() && itemstack.getItem() == Items.SADDLE;
++                boolean flag2 = !this.isBaby() && !this.dB() && itemstack.getItem() == Items.SADDLE;
+ 
+                 if (flag1 || flag2) {
+-                    this.c(entityhuman);
++                    this.f(entityhuman);
+                     return true;
+                 }
+             }
+@@ -206,7 +208,7 @@
+     }
+ 
+     public boolean mate(EntityAnimal entityanimal) {
+-        return entityanimal == this ? false : (!(entityanimal instanceof EntityHorseDonkey) && !(entityanimal instanceof EntityHorse) ? false : this.dJ() && ((EntityHorseAbstract) entityanimal).dJ());
++        return entityanimal == this ? false : (!(entityanimal instanceof EntityHorseDonkey) && !(entityanimal instanceof EntityHorse) ? false : this.dG() && ((EntityHorseAbstract) entityanimal).dG());
+     }
+ 
+     public EntityAgeable createChild(EntityAgeable entityageable) {
+@@ -246,7 +248,7 @@
+         return (EntityAgeable) object;
+     }
+ 
+-    public boolean dN() {
++    public boolean dK() {
+         return true;
+     }
+ 

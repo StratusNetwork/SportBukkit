@@ -11,7 +11,7 @@
  public class ContainerBrewingStand extends Container {
  
      private final IInventory brewingStand;
-@@ -7,7 +12,13 @@
+@@ -7,11 +12,17 @@
      private int g;
      private int h;
  
@@ -23,8 +23,15 @@
      public ContainerBrewingStand(PlayerInventory playerinventory, IInventory iinventory) {
 +        player = playerinventory; // CraftBukkit
          this.brewingStand = iinventory;
-         this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(playerinventory.player, iinventory, 0, 56, 51)));
-         this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(playerinventory.player, iinventory, 1, 79, 58)));
+-        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(iinventory, 0, 56, 51)));
+-        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(iinventory, 1, 79, 58)));
+-        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(iinventory, 2, 102, 51)));
++        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(playerinventory.player, iinventory, 0, 56, 51)));
++        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(playerinventory.player, iinventory, 1, 79, 58)));
++        this.a((Slot) (new ContainerBrewingStand.SlotPotionBottle(playerinventory.player, iinventory, 2, 102, 51)));
+         this.f = this.a((Slot) (new ContainerBrewingStand.SlotBrewing(iinventory, 3, 79, 17)));
+         this.a((Slot) (new ContainerBrewingStand.a(iinventory, 4, 17, 17)));
+ 
 @@ -54,6 +65,7 @@
      }
  
@@ -33,7 +40,31 @@
          return this.brewingStand.a(entityhuman);
      }
  
-@@ -181,4 +193,17 @@
+@@ -149,8 +161,11 @@
+ 
+     static class SlotPotionBottle extends Slot {
+ 
+-        public SlotPotionBottle(IInventory iinventory, int i, int j, int k) {
++        private final EntityHuman a;
++
++        public SlotPotionBottle(EntityHuman entityhuman, IInventory iinventory, int i, int j, int k) {
+             super(iinventory, i, j, k);
++            this.a = entityhuman;
+         }
+ 
+         public boolean isAllowed(ItemStack itemstack) {
+@@ -164,8 +179,8 @@
+         public ItemStack a(EntityHuman entityhuman, ItemStack itemstack) {
+             PotionRegistry potionregistry = PotionUtil.d(itemstack);
+ 
+-            if (entityhuman instanceof EntityPlayer) {
+-                CriterionTriggers.j.a((EntityPlayer) entityhuman, potionregistry);
++            if (potionregistry != Potions.b && potionregistry != Potions.EMPTY) {
++                this.a.b((Statistic) AchievementList.B);
+             }
+ 
+             super.a(entityhuman, itemstack);
+@@ -178,4 +193,17 @@
              return item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE;
          }
      }

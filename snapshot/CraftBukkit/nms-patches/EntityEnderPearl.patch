@@ -13,7 +13,18 @@
  public class EntityEnderPearl extends EntityProjectile {
  
      private EntityLiving d;
-@@ -55,21 +62,35 @@
+@@ -36,10 +43,6 @@
+                 TileEntityEndGateway tileentityendgateway = (TileEntityEndGateway) tileentity;
+ 
+                 if (entityliving != null) {
+-                    if (entityliving instanceof EntityPlayer) {
+-                        CriterionTriggers.d.a((EntityPlayer) entityliving, this.world.getType(blockposition));
+-                    }
+-
+                     tileentityendgateway.a((Entity) entityliving);
+                     this.die();
+                     return;
+@@ -59,21 +62,35 @@
                  EntityPlayer entityplayer = (EntityPlayer) entityliving;
  
                  if (entityplayer.playerConnection.a().isConnected() && entityplayer.world == this.world && !entityplayer.isSleeping()) {
@@ -63,3 +74,19 @@
                  }
              } else if (entityliving != null) {
                  entityliving.enderTeleportTo(this.locX, this.locY, this.locZ);
+@@ -85,13 +102,13 @@
+ 
+     }
+ 
+-    public void B_() {
++    public void A_() {
+         EntityLiving entityliving = this.getShooter();
+ 
+         if (entityliving != null && entityliving instanceof EntityHuman && !entityliving.isAlive()) {
+             this.die();
+         } else {
+-            super.B_();
++            super.A_();
+         }
+ 
+     }

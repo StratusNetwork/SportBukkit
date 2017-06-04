@@ -59,7 +59,16 @@
      public EntityMinecartContainer(World world) {
          super(world);
          this.items = NonNullList.a(36, ItemStack.a);
-@@ -93,7 +136,7 @@
+@@ -31,7 +74,7 @@
+ 
+     }
+ 
+-    public boolean x_() {
++    public boolean w_() {
+         Iterator iterator = this.items.iterator();
+ 
+         ItemStack itemstack;
+@@ -93,13 +136,13 @@
      }
  
      public int getMaxStackSize() {
@@ -68,6 +77,14 @@
      }
  
      @Nullable
+-    public Entity b(int i) {
++    public Entity c(int i) {
+         this.b = false;
+-        return super.b(i);
++        return super.c(i);
+     }
+ 
+     public void die() {
 @@ -134,7 +177,7 @@
  
      protected void a(NBTTagCompound nbttagcompound) {
@@ -77,3 +94,30 @@
          if (nbttagcompound.hasKeyOfType("LootTable", 8)) {
              this.c = new MinecraftKey(nbttagcompound.getString("LootTable"));
              this.d = nbttagcompound.getLong("LootTableSeed");
+@@ -180,7 +223,7 @@
+         return false;
+     }
+ 
+-    public void setLock(ChestLock chestlock) {}
++    public void a(ChestLock chestlock) {}
+ 
+     public ChestLock getLock() {
+         return ChestLock.a;
+@@ -188,7 +231,7 @@
+ 
+     public void f(@Nullable EntityHuman entityhuman) {
+         if (this.c != null) {
+-            LootTable loottable = this.world.getLootTableRegistry().a(this.c);
++            LootTable loottable = this.world.ak().a(this.c);
+ 
+             this.c = null;
+             Random random;
+@@ -202,7 +245,7 @@
+             LootTableInfo.a loottableinfo_a = new LootTableInfo.a((WorldServer) this.world);
+ 
+             if (entityhuman != null) {
+-                loottableinfo_a.a(entityhuman.ds());
++                loottableinfo_a.a(entityhuman.dj());
+             }
+ 
+             loottable.a(this, random, loottableinfo_a.a());

@@ -29,12 +29,14 @@ import org.bukkit.event.PlayerAction;
  */
 public class BlockBreakEvent extends BlockExpEvent implements Cancellable, PlayerAction {
     private final Player player;
+    private boolean dropItems;
     private boolean cancel;
 
     public BlockBreakEvent(final Block theBlock, final Player player) {
         super(theBlock, 0);
 
         this.player = player;
+        this.dropItems = true; // Defaults to dropping items as it normally would
     }
 
     /**
@@ -49,6 +51,24 @@ public class BlockBreakEvent extends BlockExpEvent implements Cancellable, Playe
     @Override
     public Player getActor() {
         return getPlayer();
+    }
+
+    /**
+     * Sets whether or not the block will drop items as it normally would.
+     *
+     * @param dropItems Whether or not the block will drop items
+     */
+    public void setDropItems(boolean dropItems) {
+        this.dropItems = dropItems;
+    }
+
+    /**
+     * Gets whether or not the block will drop items.
+     *
+     * @return Whether or not the block will drop items
+     */
+    public boolean isDropItems() {
+        return this.dropItems;
     }
 
     public boolean isCancelled() {

@@ -25,6 +25,10 @@ public enum Attribute {
      */
     GENERIC_MOVEMENT_SPEED("generic.movementSpeed"),
     /**
+     * Flying speed of an Entity.
+     */
+    GENERIC_FLYING_SPEED("generic.flyingSpeed"),
+    /**
      * Attack damage of an Entity.
      */
     GENERIC_ATTACK_DAMAGE("generic.attackDamage"),
@@ -37,7 +41,7 @@ public enum Attribute {
      */
     GENERIC_ARMOR("generic.armor"),
     /**
-     * Armor bonus of an Entity.
+     * Armor durability bonus of an Entity.
      */
     GENERIC_ARMOR_TOUGHNESS("generic.armorToughness"),
     /**

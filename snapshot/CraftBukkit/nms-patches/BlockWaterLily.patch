@@ -9,3 +9,12 @@
              world.setAir(new BlockPosition(blockposition), true);
          }
  
+@@ -30,7 +30,7 @@
+         return BlockWaterLily.a;
+     }
+ 
+-    protected boolean x(IBlockData iblockdata) {
++    protected boolean i(IBlockData iblockdata) {
+         return iblockdata.getBlock() == Blocks.WATER || iblockdata.getMaterial() == Material.ICE;
+     }
+ 

@@ -122,7 +122,16 @@
  
              if (flag) {
                  this.saveChunkNOP(chunk);
-@@ -183,10 +253,12 @@
+@@ -170,7 +240,7 @@
+     }
+ 
+     public void c() {
+-        this.chunkLoader.c();
++        this.chunkLoader.b();
+     }
+ 
+     public boolean unloadChunks() {
+@@ -183,21 +253,67 @@
                      Chunk chunk = (Chunk) this.chunks.get(olong);
  
                      if (chunk != null && chunk.d) {
@@ -139,7 +148,12 @@
                          ++i;
                      }
                  }
-@@ -198,6 +270,50 @@
+             }
+ 
+-            this.chunkLoader.b();
++            this.chunkLoader.a();
+         }
+ 
          return false;
      }
  
@@ -190,3 +204,22 @@
      public boolean e() {
          return !this.world.savingDisabled;
      }
+@@ -215,10 +331,6 @@
+         return this.chunkGenerator.findNearestMapFeature(world, s, blockposition, flag);
+     }
+ 
+-    public boolean a(World world, String s, BlockPosition blockposition) {
+-        return this.chunkGenerator.a(world, s, blockposition);
+-    }
+-
+     public int g() {
+         return this.chunks.size();
+     }
+@@ -228,6 +340,6 @@
+     }
+ 
+     public boolean e(int i, int j) {
+-        return this.chunks.containsKey(ChunkCoordIntPair.a(i, j)) || this.chunkLoader.chunkExists(i, j);
++        return this.chunks.containsKey(ChunkCoordIntPair.a(i, j)) || this.chunkLoader.a(i, j);
+     }
+ }

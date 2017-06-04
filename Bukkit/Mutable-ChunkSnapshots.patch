@@ -33,7 +33,7 @@ diff --git a/src/main/java/org/bukkit/ChunkSnapshot.java b/src/main/java/org/buk
       * Get sky light level for block at corresponding coordinate in the chunk
       *
       * @param x 0-15
-@@ -126,4 +139,38 @@ public interface ChunkSnapshot {
+@@ -128,4 +141,38 @@ public interface ChunkSnapshot {
       * @return true if empty, false if not
       */
      boolean isSectionEmpty(int sy);

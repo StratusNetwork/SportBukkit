@@ -6,18 +6,12 @@ Subject: [PATCH] Fix no knockback from zero-damage projectiles
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -1382,12 +1382,9 @@ public abstract class EntityLiving extends Entity {
-                 if (!human) {
-                     this.setAbsorptionHearts(this.getAbsorptionHearts() - f);
+@@ -1418,7 +1418,7 @@ public abstract class EntityLiving extends Entity {
+ 
+                     return false;
+                 } else {
+-                    return originalDamage > 0;
++                    return true;
                  }
--
--                return true;
--            } else {
--                return originalDamage > 0;
--                // CraftBukkit end
+                 // CraftBukkit end
              }
-+            return true;
-+            // CraftBukkit end
-         }
-         return false; // CraftBukkit
-     }

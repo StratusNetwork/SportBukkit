@@ -45,3 +45,12 @@
                  world.setTypeAndData(blockposition, Blocks.REDSTONE_LAMP.getBlockData(), 2);
              }
  
+@@ -54,7 +71,7 @@
+         return new ItemStack(Blocks.REDSTONE_LAMP);
+     }
+ 
+-    protected ItemStack u(IBlockData iblockdata) {
++    protected ItemStack w(IBlockData iblockdata) {
+         return new ItemStack(Blocks.REDSTONE_LAMP);
+     }
+ }

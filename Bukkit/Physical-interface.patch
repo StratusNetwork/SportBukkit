@@ -29,7 +29,7 @@ index 0000000..1cb686d
 diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
 --- a/src/main/java/org/bukkit/Location.java
 +++ b/src/main/java/org/bukkit/Location.java
-@@ -12,7 +12,7 @@ import org.bukkit.util.Vector;
+@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
  /**
   * Represents a 3-dimensional position in a world
   */

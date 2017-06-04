@@ -6,7 +6,7 @@ Subject: [PATCH] Relative teleport API
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1582,4 +1582,12 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -1631,4 +1631,12 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
       * Hide any title that is currently visible to the player
       */
      public void hideTitle();

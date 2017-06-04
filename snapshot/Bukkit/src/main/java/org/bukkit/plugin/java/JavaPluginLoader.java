@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.jar.JarEntry;
@@ -22,16 +20,25 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.HashCode;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
+import org.bukkit.Warning;
+import org.bukkit.Warning.WarningState;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventException;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.AuthorNagException;
+import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.RegisteredListener;
+import org.bukkit.plugin.TimedRegisteredListener;
 import org.bukkit.plugin.UnknownDependencyException;
 import org.yaml.snakeyaml.error.YAMLException;
 
@@ -130,6 +137,7 @@ public final class JavaPluginLoader implements PluginLoader {
             loaderLock.readLock().unlock();
         }
 
+
         final PluginClassLoader loader;
         try {
             loader = new PluginClassLoader(this, getClass().getClassLoader(), dependencies, description, dataFolder, file);
@@ -138,6 +146,7 @@ public final class JavaPluginLoader implements PluginLoader {
         }
 
         loaderLock.writeLock().lock();
+
         try {
             loaders.put(description.getName(), loader);
         }
@@ -199,8 +208,8 @@ public final class JavaPluginLoader implements PluginLoader {
     public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, final Plugin plugin) {
         final Map<Class<? extends Event>, Set<RegisteredListener>> result = new HashMap<>();
         plugin.eventRegistry().bindHandlers(listener).forEach(
-            handler -> result.computeIfAbsent(handler.meta().event(), event -> new HashSet<>())
-                             .add((RegisteredListener) handler)
+                handler -> result.computeIfAbsent(handler.meta().event(), event -> new HashSet<>())
+                        .add((RegisteredListener) handler)
         );
         return result;
     }
@@ -214,6 +223,7 @@ public final class JavaPluginLoader implements PluginLoader {
             JavaPlugin jPlugin = (JavaPlugin) plugin;
 
             String pluginName = jPlugin.getDescription().getName();
+
 
             loaderLock.writeLock().lock();
             try {

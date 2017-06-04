@@ -1,5 +1,6 @@
 package org.bukkit.event.entity;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;

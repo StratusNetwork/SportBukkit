@@ -19,6 +19,32 @@
  public class BlockPiston extends BlockDirectional {
  
      public static final BlockStateBoolean EXTENDED = BlockStateBoolean.of("extended");
+@@ -18,14 +30,14 @@
+ 
+     public BlockPiston(boolean flag) {
+         super(Material.PISTON);
+-        this.w(this.blockStateList.getBlockData().set(BlockPiston.FACING, EnumDirection.NORTH).set(BlockPiston.EXTENDED, Boolean.valueOf(false)));
++        this.y(this.blockStateList.getBlockData().set(BlockPiston.FACING, EnumDirection.NORTH).set(BlockPiston.EXTENDED, Boolean.valueOf(false)));
+         this.sticky = flag;
+         this.a(SoundEffectType.d);
+         this.c(0.5F);
+         this.a(CreativeModeTab.d);
+     }
+ 
+-    public boolean t(IBlockData iblockdata) {
++    public boolean u(IBlockData iblockdata) {
+         return !((Boolean) iblockdata.get(BlockPiston.EXTENDED)).booleanValue();
+     }
+ 
+@@ -61,7 +73,7 @@
+     }
+ 
+     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> list, @Nullable Entity entity, boolean flag) {
+-        a(blockposition, axisalignedbb, list, iblockdata.e(world, blockposition));
++        a(blockposition, axisalignedbb, list, iblockdata.d(world, blockposition));
+     }
+ 
+     public boolean b(IBlockData iblockdata) {
 @@ -103,6 +115,18 @@
                  world.playBlockAction(blockposition, this, 0, enumdirection.a());
              }
@@ -38,7 +64,7 @@
              world.playBlockAction(blockposition, this, 1, enumdirection.a());
          }
  
-@@ -159,6 +183,11 @@
+@@ -159,21 +183,32 @@
          }
  
          if (i == 0) {
@@ -50,7 +76,17 @@
              if (!this.a(world, blockposition, enumdirection, true)) {
                  return false;
              }
-@@ -174,6 +203,12 @@
+ 
+             world.setTypeAndData(blockposition, iblockdata.set(BlockPiston.EXTENDED, Boolean.valueOf(true)), 3);
+-            world.a((EntityHuman) null, blockposition, SoundEffects.fu, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.25F + 0.6F);
++            world.a((EntityHuman) null, blockposition, SoundEffects.ev, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.25F + 0.6F);
+         } else if (i == 1) {
+             TileEntity tileentity = world.getTileEntity(blockposition.shift(enumdirection));
+ 
+             if (tileentity instanceof TileEntityPiston) {
+-                ((TileEntityPiston) tileentity).j();
++                ((TileEntityPiston) tileentity).i();
+             }
  
              world.setTypeAndData(blockposition, Blocks.PISTON_EXTENSION.getBlockData().set(BlockPistonMoving.FACING, enumdirection).set(BlockPistonMoving.TYPE, this.sticky ? BlockPistonExtension.EnumPistonType.STICKY : BlockPistonExtension.EnumPistonType.DEFAULT), 3);
              world.setTileEntity(blockposition, BlockPistonMoving.a(this.fromLegacyData(j), enumdirection, false, true));
@@ -63,16 +99,76 @@
              if (this.sticky) {
                  BlockPosition blockposition1 = blockposition.a(enumdirection.getAdjacentX() * 2, enumdirection.getAdjacentY() * 2, enumdirection.getAdjacentZ() * 2);
                  IBlockData iblockdata1 = world.getType(blockposition1);
-@@ -193,7 +228,7 @@
+@@ -186,21 +221,21 @@
+                     if (tileentity1 instanceof TileEntityPiston) {
+                         TileEntityPiston tileentitypiston = (TileEntityPiston) tileentity1;
+ 
+-                        if (tileentitypiston.h() == enumdirection && tileentitypiston.f()) {
+-                            tileentitypiston.j();
++                        if (tileentitypiston.f() == enumdirection && tileentitypiston.e()) {
++                            tileentitypiston.i();
+                             flag1 = true;
+                         }
                      }
                  }
  
--                if (!flag1 && iblockdata1.getMaterial() != Material.AIR && a(iblockdata1, world, blockposition1, enumdirection.opposite(), false) && (iblockdata1.p() == EnumPistonReaction.NORMAL || block == Blocks.PISTON || block == Blocks.STICKY_PISTON)) {
+-                if (!flag1 && iblockdata1.getMaterial() != Material.AIR && a(iblockdata1, world, blockposition1, enumdirection.opposite(), false, enumdirection) && (iblockdata1.o() == EnumPistonReaction.NORMAL || block == Blocks.PISTON || block == Blocks.STICKY_PISTON)) {
 +                if (!flag1 && a(iblockdata1, world, blockposition1, enumdirection.opposite(), false) && (iblockdata1.p() == EnumPistonReaction.NORMAL || block == Blocks.PISTON || block == Blocks.STICKY_PISTON)) { // CraftBukkit - remove 'block.getMaterial() != Material.AIR' condition
                      this.a(world, blockposition, enumdirection, false);
                  }
              } else {
-@@ -274,6 +309,50 @@
+                 world.setAir(blockposition.shift(enumdirection));
+             }
+ 
+-            world.a((EntityHuman) null, blockposition, SoundEffects.ft, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.15F + 0.6F);
++            world.a((EntityHuman) null, blockposition, SoundEffects.eu, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.15F + 0.6F);
+         }
+ 
+         return true;
+@@ -211,13 +246,13 @@
+     }
+ 
+     @Nullable
+-    public static EnumDirection b(int i) {
++    public static EnumDirection e(int i) {
+         int j = i & 7;
+ 
+         return j > 5 ? null : EnumDirection.fromType1(j);
+     }
+ 
+-    public static boolean a(IBlockData iblockdata, World world, BlockPosition blockposition, EnumDirection enumdirection, boolean flag, EnumDirection enumdirection1) {
++    public static boolean a(IBlockData iblockdata, World world, BlockPosition blockposition, EnumDirection enumdirection, boolean flag) {
+         Block block = iblockdata.getBlock();
+ 
+         if (block == Blocks.OBSIDIAN) {
+@@ -231,15 +266,12 @@
+                         return false;
+                     }
+ 
+-                    switch (iblockdata.o()) {
+-                    case BLOCK:
++                    if (iblockdata.p() == EnumPistonReaction.BLOCK) {
+                         return false;
++                    }
+ 
+-                    case DESTROY:
++                    if (iblockdata.p() == EnumPistonReaction.DESTROY) {
+                         return flag;
+-
+-                    case PUSH_ONLY:
+-                        return enumdirection == enumdirection1;
+                     }
+                 } else if (((Boolean) iblockdata.get(BlockPiston.EXTENDED)).booleanValue()) {
+                     return false;
+@@ -270,13 +302,57 @@
+             for (int i = 0; i < list.size(); ++i) {
+                 BlockPosition blockposition1 = (BlockPosition) list.get(i);
+ 
+-                arraylist.add(world.getType(blockposition1).c(world, blockposition1));
++                arraylist.add(world.getType(blockposition1).b((IBlockAccess) world, blockposition1));
+             }
+ 
+             List list1 = pistonextendschecker.getBrokenBlocks();
              int j = list.size() + list1.size();
              IBlockData[] aiblockdata = new IBlockData[j];
              EnumDirection enumdirection1 = flag ? enumdirection : enumdirection.opposite();
@@ -123,3 +219,22 @@
  
              int k;
              BlockPosition blockposition2;
+@@ -333,7 +409,7 @@
+     }
+ 
+     public IBlockData fromLegacyData(int i) {
+-        return this.getBlockData().set(BlockPiston.FACING, b(i)).set(BlockPiston.EXTENDED, Boolean.valueOf((i & 8) > 0));
++        return this.getBlockData().set(BlockPiston.FACING, e(i)).set(BlockPiston.EXTENDED, Boolean.valueOf((i & 8) > 0));
+     }
+ 
+     public int toLegacyData(IBlockData iblockdata) {
+@@ -358,9 +434,4 @@
+     protected BlockStateList getStateList() {
+         return new BlockStateList(this, new IBlockState[] { BlockPiston.FACING, BlockPiston.EXTENDED});
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        iblockdata = this.updateState(iblockdata, iblockaccess, blockposition);
+-        return iblockdata.get(BlockPiston.FACING) != enumdirection.opposite() && ((Boolean) iblockdata.get(BlockPiston.EXTENDED)).booleanValue() ? EnumBlockFaceShape.UNDEFINED : EnumBlockFaceShape.SOLID;
+-    }
+ }

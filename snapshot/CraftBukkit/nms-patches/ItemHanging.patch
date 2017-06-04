@@ -11,10 +11,20 @@
  
  public class ItemHanging extends Item {
  
-@@ -20,6 +24,18 @@
+@@ -8,7 +12,7 @@
+ 
+     public ItemHanging(Class<? extends EntityHanging> oclass) {
+         this.a = oclass;
+-        this.b(CreativeModeTab.c);
++        this.a(CreativeModeTab.c);
+     }
+ 
+     public EnumInteractionResult a(EntityHuman entityhuman, World world, BlockPosition blockposition, EnumHand enumhand, EnumDirection enumdirection, float f, float f1, float f2) {
+@@ -20,7 +24,19 @@
  
              if (entityhanging != null && entityhanging.survives()) {
                  if (!world.isClientSide) {
+-                    entityhanging.p();
 +                    // CraftBukkit start - fire HangingPlaceEvent
 +                    Player who = (entityhuman == null) ? null : (Player) entityhuman.getBukkitEntity();
 +                    org.bukkit.block.Block blockClicked = world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
@@ -27,6 +37,7 @@
 +                        return EnumInteractionResult.FAIL;
 +                    }
 +                    // CraftBukkit end
-                     entityhanging.o();
++                    entityhanging.o();
                      world.addEntity(entityhanging);
                  }
+ 

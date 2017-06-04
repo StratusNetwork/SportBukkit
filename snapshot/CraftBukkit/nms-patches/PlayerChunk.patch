@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/PlayerChunk.java
 +++ b/net/minecraft/server/PlayerChunk.java
-@@ -8,32 +8,75 @@
+@@ -8,49 +8,109 @@
  import javax.annotation.Nullable;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -78,9 +78,11 @@
 -    public void a(EntityPlayer entityplayer) {
 +    public void a(final EntityPlayer entityplayer) { // CraftBukkit - added final to argument
          if (this.c.contains(entityplayer)) {
-             PlayerChunk.a.debug("Failed to add player. {} already is in chunk {}, {}", new Object[] { entityplayer, Integer.valueOf(this.location.x), Integer.valueOf(this.location.z)});
+-            PlayerChunk.a.debug("Failed to add player. {} already is in chunk {}, {}", entityplayer, Integer.valueOf(this.location.x), Integer.valueOf(this.location.z));
++            PlayerChunk.a.debug("Failed to add player. {} already is in chunk {}, {}", new Object[] { entityplayer, Integer.valueOf(this.location.x), Integer.valueOf(this.location.z)});
          } else {
-@@ -42,15 +85,32 @@
+             if (this.c.isEmpty()) {
+                 this.i = this.playerChunkMap.getWorld().getTime();
              }
  
              this.c.add(entityplayer);

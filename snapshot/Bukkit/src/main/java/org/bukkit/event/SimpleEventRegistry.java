@@ -19,7 +19,7 @@ public class SimpleEventRegistry implements EventRegistry {
 
     @Inject public SimpleEventRegistry(@Nullable ExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler != null ? exceptionHandler
-                                                         : LoggingExceptionHandler.forGlobalLogger();
+                : LoggingExceptionHandler.forGlobalLogger();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class SimpleEventRegistry implements EventRegistry {
     @Override
     public Stream<BoundEventHandler<?>> bindHandlers(Listener listener) {
         return createHandlers(listener.getClass())
-            .map(unbound -> bindHandler(listener, unbound));
+                .map(unbound -> bindHandler(listener, unbound));
     }
 
     @Override
@@ -61,14 +61,14 @@ public class SimpleEventRegistry implements EventRegistry {
     @Override
     public void unregisterListener(Listener listener) {
         HandlerList.unregisterAll(handler -> handler instanceof OwnedEventHandler &&
-                                             this == ((OwnedEventHandler) handler).registry() &&
-                                             listener == ((OwnedEventHandler) handler).listener());
+                this == ((OwnedEventHandler) handler).registry() &&
+                listener == ((OwnedEventHandler) handler).listener());
     }
 
     @Override
     public void unregisterAll() {
         HandlerList.unregisterAll(handler -> handler instanceof OwnedEventHandler &&
-                                             this == ((OwnedEventHandler) handler).registry());
+                this == ((OwnedEventHandler) handler).registry());
     }
 
     private class OwnedEventHandler<T extends Event> extends BoundEventHandler<T> {

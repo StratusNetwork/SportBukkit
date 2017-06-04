@@ -1,5 +1,47 @@
 --- a/net/minecraft/server/EntityOcelot.java
 +++ b/net/minecraft/server/EntityOcelot.java
+@@ -5,9 +5,9 @@
+ 
+ public class EntityOcelot extends EntityTameableAnimal {
+ 
+-    private static final DataWatcherObject<Integer> bB = DataWatcher.a(EntityOcelot.class, DataWatcherRegistry.b);
+-    private PathfinderGoalAvoidTarget<EntityHuman> bC;
+-    private PathfinderGoalTempt bD;
++    private static final DataWatcherObject<Integer> bA = DataWatcher.a(EntityOcelot.class, DataWatcherRegistry.b);
++    private PathfinderGoalAvoidTarget<EntityHuman> bB;
++    private PathfinderGoalTempt bC;
+ 
+     public EntityOcelot(World world) {
+         super(world);
+@@ -16,10 +16,10 @@
+ 
+     protected void r() {
+         this.goalSit = new PathfinderGoalSit(this);
+-        this.bD = new PathfinderGoalTempt(this, 0.6D, Items.FISH, true);
++        this.bC = new PathfinderGoalTempt(this, 0.6D, Items.FISH, true);
+         this.goalSelector.a(1, new PathfinderGoalFloat(this));
+         this.goalSelector.a(2, this.goalSit);
+-        this.goalSelector.a(3, this.bD);
++        this.goalSelector.a(3, this.bC);
+         this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, 1.0D, 10.0F, 5.0F));
+         this.goalSelector.a(6, new PathfinderGoalJumpOnBlock(this, 0.8D));
+         this.goalSelector.a(7, new PathfinderGoalLeapAtTarget(this, 0.3F));
+@@ -32,12 +32,12 @@
+ 
+     protected void i() {
+         super.i();
+-        this.datawatcher.register(EntityOcelot.bB, Integer.valueOf(0));
++        this.datawatcher.register(EntityOcelot.bA, Integer.valueOf(0));
+     }
+ 
+     public void M() {
+-        if (this.getControllerMove().b()) {
+-            double d0 = this.getControllerMove().c();
++        if (this.getControllerMove().a()) {
++            double d0 = this.getControllerMove().b();
+ 
+             if (d0 == 0.6D) {
+                 this.setSneaking(true);
 @@ -57,7 +57,7 @@
      }
  
@@ -9,6 +51,33 @@
      }
  
      protected void initAttributes() {
+@@ -83,19 +83,19 @@
+     }
+ 
+     @Nullable
+-    protected SoundEffect F() {
+-        return this.isTamed() ? (this.isInLove() ? SoundEffects.Y : (this.random.nextInt(4) == 0 ? SoundEffects.Z : SoundEffects.U)) : null;
++    protected SoundEffect G() {
++        return this.isTamed() ? (this.isInLove() ? SoundEffects.V : (this.random.nextInt(4) == 0 ? SoundEffects.W : SoundEffects.R)) : null;
+     }
+ 
+-    protected SoundEffect d(DamageSource damagesource) {
+-        return SoundEffects.X;
++    protected SoundEffect bW() {
++        return SoundEffects.U;
+     }
+ 
+-    protected SoundEffect cd() {
+-        return SoundEffects.V;
++    protected SoundEffect bX() {
++        return SoundEffects.S;
+     }
+ 
+-    protected float co() {
++    protected float ci() {
+         return 0.4F;
+     }
+ 
 @@ -103,6 +103,9 @@
          return entity.damageEntity(DamageSource.mobAttack(this), 3.0F);
      }
@@ -27,17 +96,75 @@
  
      @Nullable
      protected MinecraftKey J() {
-@@ -133,7 +137,8 @@
+@@ -127,15 +131,17 @@
+             if (this.e((EntityLiving) entityhuman) && !this.world.isClientSide && !this.e(itemstack)) {
+                 this.goalSit.setSitting(!this.isSitting());
+             }
+-        } else if ((this.bD == null || this.bD.f()) && itemstack.getItem() == Items.FISH && entityhuman.h(this) < 9.0D) {
++        } else if ((this.bC == null || this.bC.f()) && itemstack.getItem() == Items.FISH && entityhuman.h(this) < 9.0D) {
+             if (!entityhuman.abilities.canInstantlyBuild) {
+                 itemstack.subtract(1);
              }
  
              if (!this.world.isClientSide) {
 -                if (this.random.nextInt(3) == 0) {
+-                    this.c(entityhuman);
 +                // CraftBukkit - added event call and isCancelled check
 +                if (this.random.nextInt(3) == 0 && !org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled()) {
-                     this.setTamed(true);
++                    this.setTamed(true);
                      this.setCatType(1 + this.world.random.nextInt(3));
-                     this.setOwnerUUID(entityhuman.getUniqueID());
-@@ -238,7 +243,7 @@
++                    this.setOwnerUUID(entityhuman.getUniqueID());
+                     this.p(true);
+                     this.goalSit.setSitting(true);
+                     this.world.broadcastEntityEffect(this, (byte) 7);
+@@ -182,14 +188,14 @@
+     }
+ 
+     public int getCatType() {
+-        return ((Integer) this.datawatcher.get(EntityOcelot.bB)).intValue();
++        return ((Integer) this.datawatcher.get(EntityOcelot.bA)).intValue();
+     }
+ 
+     public void setCatType(int i) {
+-        this.datawatcher.set(EntityOcelot.bB, Integer.valueOf(i));
++        this.datawatcher.set(EntityOcelot.bA, Integer.valueOf(i));
+     }
+ 
+-    public boolean P() {
++    public boolean cM() {
+         return this.world.random.nextInt(3) != 0;
+     }
+ 
+@@ -197,7 +203,7 @@
+         if (this.world.a(this.getBoundingBox(), (Entity) this) && this.world.getCubes(this, this.getBoundingBox()).isEmpty() && !this.world.containsLiquid(this.getBoundingBox())) {
+             BlockPosition blockposition = new BlockPosition(this.locX, this.getBoundingBox().b, this.locZ);
+ 
+-            if (blockposition.getY() < this.world.getSeaLevel()) {
++            if (blockposition.getY() < this.world.K()) {
+                 return false;
+             }
+ 
+@@ -216,14 +222,14 @@
+         return this.hasCustomName() ? this.getCustomName() : (this.isTamed() ? LocaleI18n.get("entity.Cat.name") : super.getName());
+     }
+ 
+-    protected void dk() {
+-        if (this.bC == null) {
+-            this.bC = new PathfinderGoalAvoidTarget(this, EntityHuman.class, 16.0F, 0.8D, 1.33D);
++    protected void di() {
++        if (this.bB == null) {
++            this.bB = new PathfinderGoalAvoidTarget(this, EntityHuman.class, 16.0F, 0.8D, 1.33D);
+         }
+ 
+-        this.goalSelector.a((PathfinderGoal) this.bC);
++        this.goalSelector.a((PathfinderGoal) this.bB);
+         if (!this.isTamed()) {
+-            this.goalSelector.a(4, this.bC);
++            this.goalSelector.a(4, this.bB);
+         }
+ 
+     }
+@@ -237,7 +243,7 @@
  
                  entityocelot.setPositionRotation(this.locX, this.locY, this.locZ, this.yaw, 0.0F);
                  entityocelot.setAgeRaw(-24000);

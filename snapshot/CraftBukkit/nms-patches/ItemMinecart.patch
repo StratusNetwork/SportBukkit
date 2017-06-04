@@ -59,3 +59,12 @@
              return itemstack;
          }
  
+@@ -57,7 +93,7 @@
+     public ItemMinecart(EntityMinecartAbstract.EnumMinecartType entityminecartabstract_enumminecarttype) {
+         this.maxStackSize = 1;
+         this.b = entityminecartabstract_enumminecarttype;
+-        this.b(CreativeModeTab.e);
++        this.a(CreativeModeTab.e);
+         BlockDispenser.REGISTRY.a(this, ItemMinecart.a);
+     }
+ 

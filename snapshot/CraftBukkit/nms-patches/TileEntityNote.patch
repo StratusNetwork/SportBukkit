@@ -1,15 +1,46 @@
 --- a/net/minecraft/server/TileEntityNote.java
 +++ b/net/minecraft/server/TileEntityNote.java
-@@ -47,7 +47,12 @@
+@@ -28,8 +28,7 @@
+ 
+     public void play(World world, BlockPosition blockposition) {
+         if (world.getType(blockposition.up()).getMaterial() == Material.AIR) {
+-            IBlockData iblockdata = world.getType(blockposition.down());
+-            Material material = iblockdata.getMaterial();
++            Material material = world.getType(blockposition.down()).getMaterial();
+             byte b0 = 0;
+ 
+             if (material == Material.STONE) {
+@@ -48,29 +47,12 @@
                  b0 = 4;
              }
  
--            world.playBlockAction(blockposition, Blocks.NOTEBLOCK, b0, this.note);
+-            Block block = iblockdata.getBlock();
+-
+-            if (block == Blocks.CLAY) {
+-                b0 = 5;
+-            }
+-
+-            if (block == Blocks.GOLD_BLOCK) {
+-                b0 = 6;
+-            }
+-
+-            if (block == Blocks.WOOL) {
+-                b0 = 7;
 +            // CraftBukkit start
 +            org.bukkit.event.block.NotePlayEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callNotePlayEvent(this.world, blockposition.getX(), blockposition.getY(), blockposition.getZ(), b0, this.note);
 +            if (!event.isCancelled()) {
 +                world.playBlockAction(blockposition, Blocks.NOTEBLOCK, event.getInstrument().getType(), event.getNote().getId());
-+            }
+             }
+-
+-            if (block == Blocks.PACKED_ICE) {
+-                b0 = 8;
+-            }
+-
+-            if (block == Blocks.di) {
+-                b0 = 9;
+-            }
+-
+-            world.playBlockAction(blockposition, Blocks.NOTEBLOCK, b0, this.note);
 +            // CraftBukkit end
          }
      }

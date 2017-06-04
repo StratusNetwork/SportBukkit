@@ -1,32 +1,52 @@
 --- a/net/minecraft/server/PacketEncoder.java
 +++ b/net/minecraft/server/PacketEncoder.java
-@@ -20,7 +20,10 @@
+@@ -20,35 +20,33 @@
      }
  
      protected void a(ChannelHandlerContext channelhandlercontext, Packet<?> packet, ByteBuf bytebuf) throws Exception {
--        Integer integer = ((EnumProtocol) channelhandlercontext.channel().attr(NetworkManager.c).get()).a(this.c, packet);
+-        EnumProtocol enumprotocol = (EnumProtocol) channelhandlercontext.channel().attr(NetworkManager.c).get();
 +        // SportBukiit start
 +        final NetworkManager networkManager = channelhandlercontext.pipeline().get(NetworkManager.class);
 +        Integer integer = ((EnumProtocol) channelhandlercontext.channel().attr(NetworkManager.c).get()).a(this.c, packet, networkManager.protocolVersion);
 +        // SportBukiit end
  
-         if (PacketEncoder.a.isDebugEnabled()) {
-             PacketEncoder.a.debug(PacketEncoder.b, "OUT: [{}:{}] {}", new Object[] { channelhandlercontext.channel().attr(NetworkManager.c).get(), integer, packet.getClass().getName()});
-@@ -30,19 +33,20 @@
-             throw new IOException("Can\'t serialize unregistered packet");
-         } else {
-             PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf);
+-        if (enumprotocol == null) {
+-            throw new RuntimeException("ConnectionProtocol unknown: " + packet.toString());
+-        } else {
+-            Integer integer = enumprotocol.a(this.c, packet);
++        if (PacketEncoder.a.isDebugEnabled()) {
++            PacketEncoder.a.debug(PacketEncoder.b, "OUT: [{}:{}] {}", new Object[] { channelhandlercontext.channel().attr(NetworkManager.c).get(), integer, packet.getClass().getName()});
++        }
+ 
+-            if (PacketEncoder.a.isDebugEnabled()) {
+-                PacketEncoder.a.debug(PacketEncoder.b, "OUT: [{}:{}] {}", channelhandlercontext.channel().attr(NetworkManager.c).get(), integer, packet.getClass().getName());
+-            }
++        if (integer == null) {
++            throw new IOException("Can\'t serialize unregistered packet");
++        } else {
++            PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf);
 +            packetdataserializer.protocolVersion = networkManager.protocolVersion; // SportBukkit - set proto
  
-             packetdataserializer.d(integer.intValue());
+-            if (integer == null) {
+-                throw new IOException("Can\'t serialize unregistered packet");
+-            } else {
+-                PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf);
+-
+-                packetdataserializer.d(integer.intValue());
+-
+-                try {
+-                    packet.b(packetdataserializer);
+-                } catch (Throwable throwable) {
+-                    PacketEncoder.a.error(throwable);
+-                }
++            packetdataserializer.d(integer.intValue());
  
-             try {
-                 packet.b(packetdataserializer);
-             } catch (Throwable throwable) {
--                PacketEncoder.a.error(throwable);
++            try {
++                packet.b(packetdataserializer);
++            } catch (Throwable throwable) {
 +                PacketEncoder.a.error("Exception serializing packet " + packet, throwable); // SportBukkit - better error message
              }
- 
++
          }
      }
  

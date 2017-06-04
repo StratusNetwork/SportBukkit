@@ -1,6 +1,14 @@
 --- a/net/minecraft/server/DedicatedServer.java
 +++ b/net/minecraft/server/DedicatedServer.java
-@@ -18,11 +18,21 @@
+@@ -10,7 +10,6 @@
+ import java.io.InputStreamReader;
+ import java.net.InetAddress;
+ import java.net.Proxy;
+-import java.nio.charset.StandardCharsets;
+ import java.util.Collections;
+ import java.util.List;
+ import java.util.Random;
+@@ -19,11 +18,21 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -23,7 +31,7 @@
      private RemoteStatusListener n;
      public final RemoteControlCommandListener remoteControlCommandListener = new RemoteControlCommandListener(this);
      private RemoteControlListener p;
-@@ -32,8 +42,10 @@
+@@ -33,8 +42,10 @@
      private EnumGamemode t;
      private boolean u;
  
@@ -36,7 +44,7 @@
          Thread thread = new Thread("Server Infinisleeper") {
              {
                  this.setDaemon(true);
-@@ -52,16 +64,30 @@
+@@ -53,16 +64,30 @@
          };
      }
  
@@ -44,7 +52,7 @@
 +    public boolean init() throws IOException {
          Thread thread = new Thread("Server console handler") {
              public void run() {
--                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in));
+-                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 +                // CraftBukkit start
 +                if (!org.bukkit.craftbukkit.Main.useConsole) {
 +                    return;
@@ -71,7 +79,7 @@
                      }
                  } catch (IOException ioexception) {
                      DedicatedServer.LOGGER.error("Exception handling console input", ioexception);
-@@ -70,6 +96,27 @@
+@@ -71,17 +96,38 @@
              }
          };
  
@@ -98,8 +106,10 @@
 +
          thread.setDaemon(true);
          thread.start();
-         DedicatedServer.LOGGER.info("Starting minecraft server version 1.11.1");
-@@ -78,9 +125,9 @@
+-        DedicatedServer.LOGGER.info("Starting minecraft server version 1.12-pre6");
++        DedicatedServer.LOGGER.info("Starting minecraft server version 1.11.1");
+         if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L) {
+             DedicatedServer.LOGGER.warn("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
          }
  
          DedicatedServer.LOGGER.info("Loading properties");
@@ -111,7 +121,30 @@
              DedicatedServer.LOGGER.info("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.");
              this.r.b();
              return false;
-@@ -128,6 +175,11 @@
+@@ -98,7 +144,7 @@
+             this.setSpawnNPCs(this.propertyManager.getBoolean("spawn-npcs", true));
+             this.setPVP(this.propertyManager.getBoolean("pvp", true));
+             this.setAllowFlight(this.propertyManager.getBoolean("allow-flight", false));
+-            this.setResourcePack(this.propertyManager.getString("resource-pack", ""), this.aO());
++            this.setResourcePack(this.propertyManager.getString("resource-pack", ""), this.aL());
+             this.setMotd(this.propertyManager.getString("motd", "A Minecraft Server"));
+             this.setForceGamemode(this.propertyManager.getBoolean("force-gamemode", false));
+             this.setIdleTimeout(this.propertyManager.getInt("player-idle-timeout", 0));
+@@ -112,7 +158,7 @@
+             int i = this.propertyManager.getInt("gamemode", EnumGamemode.SURVIVAL.getId());
+ 
+             this.t = WorldSettings.a(i);
+-            DedicatedServer.LOGGER.info("Default game type: {}", this.t);
++            DedicatedServer.LOGGER.info("Default game type: {}", new Object[] { this.t});
+             InetAddress inetaddress = null;
+ 
+             if (!this.getServerIp().isEmpty()) {
+@@ -125,17 +171,24 @@
+ 
+             DedicatedServer.LOGGER.info("Generating keypair");
+             this.a(MinecraftEncryption.b());
+-            DedicatedServer.LOGGER.info("Starting Minecraft server on {}:{}", this.getServerIp().isEmpty() ? "*" : this.getServerIp(), Integer.valueOf(this.P()));
++            DedicatedServer.LOGGER.info("Starting Minecraft server on {}:{}", new Object[] { this.getServerIp().isEmpty() ? "*" : this.getServerIp(), Integer.valueOf(this.P())});
  
              try {
                  this.an().a(inetaddress, this.P());
@@ -122,8 +155,9 @@
 +                // SportBukkit end
              } catch (IOException ioexception) {
                  DedicatedServer.LOGGER.warn("**** FAILED TO BIND TO PORT!");
-                 DedicatedServer.LOGGER.warn("The exception was: {}", new Object[] { ioexception.toString()});
-@@ -135,6 +187,8 @@
+-                DedicatedServer.LOGGER.warn("The exception was: {}", ioexception.toString());
++                DedicatedServer.LOGGER.warn("The exception was: {}", new Object[] { ioexception.toString()});
+                 DedicatedServer.LOGGER.warn("Perhaps a server is already running on that port?");
                  return false;
              }
  
@@ -132,7 +166,15 @@
              if (!this.getOnlineMode()) {
                  DedicatedServer.LOGGER.warn("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
                  DedicatedServer.LOGGER.warn("The server will make no attempt to authenticate usernames. Beware.");
-@@ -149,7 +203,7 @@
+@@ -143,14 +196,14 @@
+                 DedicatedServer.LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
+             }
+ 
+-            if (this.aS()) {
++            if (this.aP()) {
+                 this.getUserCache().c();
+             }
+ 
              if (!NameReferencingFileConverter.a(this.propertyManager)) {
                  return false;
              } else {
@@ -141,7 +183,36 @@
                  long j = System.nanoTime();
  
                  if (this.S() == null) {
-@@ -207,7 +261,18 @@
+@@ -180,6 +233,7 @@
+                     worldtype = WorldType.NORMAL;
+                 }
+ 
++                this.ay();
+                 this.getEnableCommandBlock();
+                 this.q();
+                 this.getSnooperEnabled();
+@@ -191,18 +245,12 @@
+                 TileEntitySkull.a(this.getUserCache());
+                 TileEntitySkull.a(this.az());
+                 UserCache.a(this.getOnlineMode());
+-                DedicatedServer.LOGGER.info("Preparing level \"{}\"", this.S());
++                DedicatedServer.LOGGER.info("Preparing level \"{}\"", new Object[] { this.S()});
+                 this.a(this.S(), this.S(), k, worldtype, s2);
+                 long i1 = System.nanoTime() - j;
+                 String s3 = String.format("%.3fs", new Object[] { Double.valueOf((double) i1 / 1.0E9D)});
+ 
+-                DedicatedServer.LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", s3);
+-                if (this.propertyManager.a("announce-player-achievements")) {
+-                    this.worldServer[0].getGameRules().set("announceAdvancements", this.propertyManager.getBoolean("announce-player-achievements", true) ? "true" : "false");
+-                    this.propertyManager.b("announce-player-achievements");
+-                    this.propertyManager.savePropertiesFile();
+-                }
+-
++                DedicatedServer.LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", new Object[] { s3});
+                 if (this.propertyManager.getBoolean("enable-query", false)) {
+                     DedicatedServer.LOGGER.info("Starting GS4 status listener");
+                     this.n = new RemoteStatusListener(this);
+@@ -213,14 +261,26 @@
                      DedicatedServer.LOGGER.info("Starting remote control listener");
                      this.p = new RemoteControlListener(this);
                      this.p.a();
@@ -158,9 +229,10 @@
                  }
 +                // CraftBukkit end
  
-                 if (this.aQ() > 0L) {
+-                if (this.aT() > 0L) {
++                if (this.aQ() > 0L) {
                      Thread thread1 = new Thread(new ThreadWatchdog(this));
-@@ -215,6 +280,7 @@
+ 
                      thread1.setName("Server Watchdog");
                      thread1.setDaemon(true);
                      thread1.start();
@@ -168,7 +240,16 @@
                  }
  
                  return true;
-@@ -292,13 +358,13 @@
+@@ -228,7 +288,7 @@
+         }
+     }
+ 
+-    public String aO() {
++    public String aL() {
+         if (this.propertyManager.a("resource-pack-hash")) {
+             if (this.propertyManager.a("resource-pack-sha1")) {
+                 DedicatedServer.LOGGER.warn("resource-pack-hash is deprecated and found along side resource-pack-sha1. resource-pack-hash will be ignored.");
+@@ -298,13 +358,13 @@
          return crashreport;
      }
  
@@ -181,28 +262,40 @@
 -    protected void D() {
 +    public void D() { // CraftBukkit - fix decompile error
          super.D();
--        this.aM();
+-        this.aP();
 +        // this.aM(); // SportBukkit - moved to processTasks()
      }
  
      public boolean getAllowNether() {
-@@ -321,13 +387,31 @@
+@@ -316,8 +376,8 @@
+     }
+ 
+     public void a(MojangStatisticsGenerator mojangstatisticsgenerator) {
+-        mojangstatisticsgenerator.a("whitelist_enabled", Boolean.valueOf(this.aQ().getHasWhitelist()));
+-        mojangstatisticsgenerator.a("whitelist_count", Integer.valueOf(this.aQ().getWhitelisted().length));
++        mojangstatisticsgenerator.a("whitelist_enabled", Boolean.valueOf(this.aN().getHasWhitelist()));
++        mojangstatisticsgenerator.a("whitelist_count", Integer.valueOf(this.aN().getWhitelisted().length));
+         super.a(mojangstatisticsgenerator);
+     }
+ 
+@@ -327,13 +387,31 @@
  
      public void issueCommand(String s, ICommandListener icommandlistener) {
          this.serverCommandQueue.add(new ServerCommand(s, icommandlistener));
 +        interrupt(); // SportBukkit
-     }
- 
++    }
++
 +    // SportBukkit start
 +    @Override
 +    protected void processTasks() {
 +        super.processTasks();
 +        processCommands();
-+    }
+     }
 +    // SportBukkit end
-+
+ 
+-    public void aP() {
 +    public void processCommands() { aM(); } // SportBukkit - alias
-     public void aM() {
++    public void aM() {
          while (!this.serverCommandQueue.isEmpty()) {
              ServerCommand servercommand = (ServerCommand) this.serverCommandQueue.remove(0);
  
@@ -219,7 +312,16 @@
          }
  
      }
-@@ -375,7 +459,7 @@
+@@ -346,7 +424,7 @@
+         return this.propertyManager.getBoolean("use-native-transport", true);
+     }
+ 
+-    public DedicatedPlayerList aQ() {
++    public DedicatedPlayerList aN() {
+         return (DedicatedPlayerList) super.getPlayerList();
+     }
+ 
+@@ -381,14 +459,14 @@
      }
  
      public int e_() {
@@ -228,7 +330,107 @@
      }
  
      public String f_() {
-@@ -534,16 +618,70 @@
+         return this.getMotd();
+     }
+ 
+-    public void aR() {
++    public void aO() {
+         ServerGUI.a(this);
+         this.u = true;
+     }
+@@ -412,9 +490,9 @@
+     public boolean a(World world, BlockPosition blockposition, EntityHuman entityhuman) {
+         if (world.worldProvider.getDimensionManager().getDimensionID() != 0) {
+             return false;
+-        } else if (this.aQ().getOPs().isEmpty()) {
++        } else if (this.aN().getOPs().isEmpty()) {
+             return false;
+-        } else if (this.aQ().isOp(entityhuman.getProfile())) {
++        } else if (this.aN().isOp(entityhuman.getProfile())) {
+             return false;
+         } else if (this.getSpawnProtection() <= 0) {
+             return false;
+@@ -446,6 +524,10 @@
+         return this.propertyManager.getBoolean("broadcast-console-to-ops", true);
+     }
+ 
++    public boolean ay() {
++        return this.propertyManager.getBoolean("announce-player-achievements", true);
++    }
++
+     public int aE() {
+         int i = this.propertyManager.getInt("max-world-size", super.aE());
+ 
+@@ -462,7 +544,7 @@
+         return this.propertyManager.getInt("network-compression-threshold", super.aG());
+     }
+ 
+-    protected boolean aS() {
++    protected boolean aP() {
+         boolean flag = false;
+ 
+         int i;
+@@ -470,7 +552,7 @@
+         for (i = 0; !flag && i <= 2; ++i) {
+             if (i > 0) {
+                 DedicatedServer.LOGGER.warn("Encountered a problem while converting the user banlist, retrying in a few seconds");
+-                this.aV();
++                this.aS();
+             }
+ 
+             flag = NameReferencingFileConverter.a((MinecraftServer) this);
+@@ -481,7 +563,7 @@
+         for (i = 0; !flag1 && i <= 2; ++i) {
+             if (i > 0) {
+                 DedicatedServer.LOGGER.warn("Encountered a problem while converting the ip banlist, retrying in a few seconds");
+-                this.aV();
++                this.aS();
+             }
+ 
+             flag1 = NameReferencingFileConverter.b((MinecraftServer) this);
+@@ -492,7 +574,7 @@
+         for (i = 0; !flag2 && i <= 2; ++i) {
+             if (i > 0) {
+                 DedicatedServer.LOGGER.warn("Encountered a problem while converting the op list, retrying in a few seconds");
+-                this.aV();
++                this.aS();
+             }
+ 
+             flag2 = NameReferencingFileConverter.c((MinecraftServer) this);
+@@ -503,7 +585,7 @@
+         for (i = 0; !flag3 && i <= 2; ++i) {
+             if (i > 0) {
+                 DedicatedServer.LOGGER.warn("Encountered a problem while converting the whitelist, retrying in a few seconds");
+-                this.aV();
++                this.aS();
+             }
+ 
+             flag3 = NameReferencingFileConverter.d((MinecraftServer) this);
+@@ -514,7 +596,7 @@
+         for (i = 0; !flag4 && i <= 2; ++i) {
+             if (i > 0) {
+                 DedicatedServer.LOGGER.warn("Encountered a problem while converting the player save files, retrying in a few seconds");
+-                this.aV();
++                this.aS();
+             }
+ 
+             flag4 = NameReferencingFileConverter.a(this, this.propertyManager);
+@@ -523,7 +605,7 @@
+         return flag || flag1 || flag2 || flag3 || flag4;
+     }
+ 
+-    private void aV() {
++    private void aS() {
+         try {
+             Thread.sleep(5000L);
+         } catch (InterruptedException interruptedexception) {
+@@ -531,21 +613,75 @@
+         }
+     }
+ 
+-    public long aT() {
++    public long aQ() {
+         return this.propertyManager.getLong("max-tick-time", TimeUnit.MINUTES.toMillis(1L));
      }
  
      public String getPlugins() {
@@ -295,13 +497,14 @@
      }
  
      public PlayerList getPlayerList() {
-         return this.aN();
-     }
+-        return this.aQ();
++        return this.aN();
++    }
 +
 +    // CraftBukkit start
 +    @Override
 +    public PropertyManager getPropertyManager() {
 +        return this.propertyManager;
-+    }
+     }
 +    // CraftBukkit end
  }

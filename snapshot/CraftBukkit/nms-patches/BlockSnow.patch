@@ -1,6 +1,47 @@
 --- a/net/minecraft/server/BlockSnow.java
 +++ b/net/minecraft/server/BlockSnow.java
-@@ -81,6 +81,11 @@
+@@ -10,7 +10,7 @@
+ 
+     protected BlockSnow() {
+         super(Material.PACKED_ICE);
+-        this.w(this.blockStateList.getBlockData().set(BlockSnow.LAYERS, Integer.valueOf(1)));
++        this.y(this.blockStateList.getBlockData().set(BlockSnow.LAYERS, Integer.valueOf(1)));
+         this.a(true);
+         this.a(CreativeModeTab.c);
+     }
+@@ -27,15 +27,11 @@
+         return ((Integer) iblockdata.get(BlockSnow.LAYERS)).intValue() == 8;
+     }
+ 
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return enumdirection == EnumDirection.DOWN ? EnumBlockFaceShape.SOLID : EnumBlockFaceShape.UNDEFINED;
+-    }
+-
+     @Nullable
+     public AxisAlignedBB a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
+         int i = ((Integer) iblockdata.get(BlockSnow.LAYERS)).intValue() - 1;
+         float f = 0.125F;
+-        AxisAlignedBB axisalignedbb = iblockdata.e(iblockaccess, blockposition);
++        AxisAlignedBB axisalignedbb = iblockdata.d(iblockaccess, blockposition);
+ 
+         return new AxisAlignedBB(axisalignedbb.a, axisalignedbb.b, axisalignedbb.c, axisalignedbb.d, (double) ((float) i * 0.125F), axisalignedbb.f);
+     }
+@@ -52,13 +48,7 @@
+         IBlockData iblockdata = world.getType(blockposition.down());
+         Block block = iblockdata.getBlock();
+ 
+-        if (block != Blocks.ICE && block != Blocks.PACKED_ICE && block != Blocks.BARRIER) {
+-            EnumBlockFaceShape enumblockfaceshape = iblockdata.d(world, blockposition.down(), EnumDirection.UP);
+-
+-            return enumblockfaceshape == EnumBlockFaceShape.SOLID || iblockdata.getMaterial() == Material.LEAVES || block == this && ((Integer) iblockdata.get(BlockSnow.LAYERS)).intValue() == 8;
+-        } else {
+-            return false;
+-        }
++        return block != Blocks.ICE && block != Blocks.PACKED_ICE ? (iblockdata.getMaterial() == Material.LEAVES ? true : (block == this && ((Integer) iblockdata.get(BlockSnow.LAYERS)).intValue() == 8 ? true : iblockdata.q() && iblockdata.getMaterial().isSolid())) : false;
+     }
+ 
+     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1) {
+@@ -91,6 +81,11 @@
  
      public void b(World world, BlockPosition blockposition, IBlockData iblockdata, Random random) {
          if (world.getBrightness(EnumSkyBlock.BLOCK, blockposition) > 11) {

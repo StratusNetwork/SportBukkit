@@ -4,9 +4,17 @@
                  boolean flag;
  
                  if (s1 == null) {
--                    DataInspectorBlockEntity.a.warn("Unable to resolve BlockEntity for ItemInstance: {}", new Object[] { s});
+-                    DataInspectorBlockEntity.a.warn("Unable to resolve BlockEntity for ItemInstance: {}", s);
 +                    // CraftBukkit - Remove unnecessary warning (occurs when deserializing a Shulker Box item)
 +                    // DataInspectorBlockEntity.a.warn("Unable to resolve BlockEntity for ItemInstance: {}", new Object[] { s});
                      flag = false;
                  } else {
                      flag = !nbttagcompound2.hasKey("id");
+@@ -126,7 +127,6 @@
+         map.put("minecraft:green_shulker_box", "minecraft:shulker_box");
+         map.put("minecraft:red_shulker_box", "minecraft:shulker_box");
+         map.put("minecraft:black_shulker_box", "minecraft:shulker_box");
+-        map.put("minecraft:bed", "minecraft:bed");
+         map.put("minecraft:standing_sign", "minecraft:sign");
+         map.put("minecraft:wall_sign", "minecraft:sign");
+         map.put("minecraft:piston_head", "minecraft:piston");

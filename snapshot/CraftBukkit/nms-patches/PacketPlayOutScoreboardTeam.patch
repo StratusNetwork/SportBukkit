@@ -30,3 +30,12 @@
      public PacketPlayOutScoreboardTeam() {
          this.e = ScoreboardTeamBase.EnumNameTagVisibility.ALWAYS.e;
          this.f = ScoreboardTeamBase.EnumTeamPush.ALWAYS.e;
+@@ -39,7 +62,7 @@
+             this.j = scoreboardteam.packOptionData();
+             this.e = scoreboardteam.getNameTagVisibility().e;
+             this.f = scoreboardteam.getCollisionRule().e;
+-            this.g = scoreboardteam.getColor().b();
++            this.g = scoreboardteam.m().b();
+         }
+ 
+         if (i == 0) {

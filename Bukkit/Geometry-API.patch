@@ -6,15 +6,15 @@ Subject: [PATCH] Geometry API
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -50,6 +50,7 @@ import org.bukkit.generator.ChunkGenerator;
- 
- import org.bukkit.inventory.ItemFactory;
- import org.bukkit.inventory.meta.ItemMeta;
+@@ -26,6 +26,7 @@ import org.bukkit.entity.Entity;
+ import org.bukkit.entity.Player;
+ import org.bukkit.event.inventory.InventoryType;
+ import org.bukkit.event.server.ServerListPingEvent;
 +import org.bukkit.geometry.VectorFactory;
- 
- /**
-  * Represents the Bukkit core, for version and Server singleton handling
-@@ -586,6 +587,10 @@ public final class Bukkit {
+ import org.bukkit.help.HelpMap;
+ import org.bukkit.inventory.Inventory;
+ import org.bukkit.inventory.InventoryHolder;
+@@ -571,6 +572,10 @@ public final class Bukkit {
          return server.getWorld(uid);
      }
  
@@ -25,7 +25,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
      /**
       * Gets the map from the given item ID.
       *
-@@ -1256,6 +1261,8 @@ public final class Bukkit {
+@@ -1269,6 +1274,8 @@ public final class Bukkit {
          return runtime().key(id);
      }
  
@@ -37,14 +37,13 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
 diff --git a/src/main/java/org/bukkit/BukkitRuntime.java b/src/main/java/org/bukkit/BukkitRuntime.java
 --- a/src/main/java/org/bukkit/BukkitRuntime.java
 +++ b/src/main/java/org/bukkit/BukkitRuntime.java
-@@ -5,6 +5,7 @@ import org.bukkit.inventory.meta.ItemMeta;
- import org.bukkit.potion.PotionEffectRegistry;
- import org.bukkit.potion.PotionBrewRegistry;
- import org.bukkit.registry.Key;
+@@ -1,5 +1,6 @@
+ package org.bukkit;
+ 
 +import org.bukkit.geometry.VectorFactory;
- 
- public interface BukkitRuntime {
- 
+ import org.bukkit.inventory.ItemFactory;
+ import org.bukkit.inventory.meta.ItemMeta;
+ import org.bukkit.potion.PotionEffectRegistry;
 @@ -12,6 +13,8 @@ public interface BukkitRuntime {
  
      Key key(String key);
@@ -57,25 +56,24 @@ diff --git a/src/main/java/org/bukkit/BukkitRuntime.java b/src/main/java/org/buk
 diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
 --- a/src/main/java/org/bukkit/Location.java
 +++ b/src/main/java/org/bukkit/Location.java
-@@ -2,24 +2,64 @@ package org.bukkit;
+@@ -2,23 +2,64 @@ package org.bukkit;
  
  import java.util.HashMap;
  import java.util.Map;
 +import java.util.Objects;
 +import java.util.UUID;
-+import javax.annotation.Nullable;
  
  import org.bukkit.block.Block;
  import org.bukkit.configuration.serialization.ConfigurationSerializable;
 +import org.bukkit.geometry.Direction;
 +import org.bukkit.geometry.Ray;
++import org.bukkit.geometry.Vec3;
 +import org.bukkit.util.BlockVector;
  import org.bukkit.util.NumberConversions;
--import static org.bukkit.util.NumberConversions.checkFinite;
-+
-+import org.bukkit.geometry.Vec3;
  import org.bukkit.util.Vector;
  
++import javax.annotation.Nullable;
++
  /**
   * Represents a 3-dimensional position in a world
   */
@@ -116,31 +114,31 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
 +
 +    public Location(World world, Ray ray) {
 +        this(world, ray.origin().fineX(), ray.origin().fineY(), ray.origin().fineZ(),
-+             ray.direction().yawDegrees(), ray.direction().pitchDegrees());
++                ray.direction().yawDegrees(), ray.direction().pitchDegrees());
 +    }
 +
 +    public Location(UUID world, Ray ray) {
 +        this(world, ray.origin().fineX(), ray.origin().fineY(), ray.origin().fineZ(),
-+             ray.direction().yawDegrees(), ray.direction().pitchDegrees());
++                ray.direction().yawDegrees(), ray.direction().pitchDegrees());
 +    }
 +
      /**
       * Constructs a new Location with the given coordinates
       *
-@@ -28,7 +68,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -27,7 +68,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param y The y-coordinate of this new location
       * @param z The z-coordinate of this new location
       */
 -    public Location(final World world, final double x, final double y, final double z) {
-+    public Location(World world, double x, double y, double z) {
++    public Location(World world, final double x, final double y, final double z) {
 +        this(world, x, y, z, 0, 0);
 +    }
 +
-+    public Location(UUID world, double x, double y, double z) {
++    public Location(UUID world, final double x, final double y, final double z) {
          this(world, x, y, z, 0, 0);
      }
  
-@@ -42,11 +86,13 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -41,11 +86,13 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param yaw The absolute rotation on the x-plane, in degrees
       * @param pitch The absolute rotation on the y-plane, in degrees
       */
@@ -159,7 +157,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          this.pitch = pitch;
          this.yaw = yaw;
      }
-@@ -57,7 +103,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -56,7 +103,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param world New world that this location resides in
       */
      public void setWorld(World world) {
@@ -172,7 +170,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -66,7 +116,23 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -65,7 +116,24 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return World that contains this location
       */
      public World getWorld() {
@@ -188,7 +186,8 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
 +        return getWorldIfLoaded(Bukkit.getServer());
 +    }
 +
-+    public @Nullable World getWorldIfLoaded(Server server) {
++    public @Nullable
++    World getWorldIfLoaded(Server server) {
 +        return server.getWorld(getWorldId());
 +    }
 +
@@ -197,7 +196,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -75,7 +141,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -74,7 +142,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return Chunk at the represented location
       */
      public Chunk getChunk() {
@@ -206,7 +205,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -84,7 +150,19 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -83,7 +151,19 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return Block at the represented location
       */
      public Block getBlock() {
@@ -227,7 +226,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -93,7 +171,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -92,7 +172,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param x X-coordinate
       */
      public void setX(double x) {
@@ -236,7 +235,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -102,7 +180,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -101,7 +181,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return x-coordinate
       */
      public double getX() {
@@ -245,7 +244,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -112,7 +190,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -111,7 +191,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return block X
       */
      public int getBlockX() {
@@ -254,7 +253,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -121,7 +199,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -120,7 +200,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param y y-coordinate
       */
      public void setY(double y) {
@@ -263,7 +262,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -130,7 +208,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -129,7 +209,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return y-coordinate
       */
      public double getY() {
@@ -272,7 +271,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -140,7 +218,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -139,7 +219,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return block y
       */
      public int getBlockY() {
@@ -281,7 +280,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -149,7 +227,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -148,7 +228,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param z z-coordinate
       */
      public void setZ(double z) {
@@ -290,7 +289,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -158,7 +236,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -157,7 +237,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return z-coordinate
       */
      public double getZ() {
@@ -299,7 +298,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -168,7 +246,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -167,7 +247,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return block z
       */
      public int getBlockZ() {
@@ -308,7 +307,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -239,6 +317,14 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -238,6 +318,14 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
          return pitch;
      }
  
@@ -323,11 +322,10 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      /**
       * Gets a unit-vector pointing in the direction that this Location is
       * facing.
-@@ -310,11 +396,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
-         if (vec == null || vec.getWorld() != getWorld()) {
+@@ -310,10 +398,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
              throw new IllegalArgumentException("Cannot add Locations of differing worlds");
          }
--
+ 
 -        x += vec.x;
 -        y += vec.y;
 -        z += vec.z;
@@ -336,7 +334,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -325,9 +407,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -324,9 +409,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location add(Vector vec) {
@@ -347,7 +345,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          return this;
      }
  
-@@ -341,9 +421,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -340,9 +423,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location add(double x, double y, double z) {
@@ -358,11 +356,10 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          return this;
      }
  
-@@ -359,11 +437,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
-         if (vec == null || vec.getWorld() != getWorld()) {
+@@ -359,10 +440,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
              throw new IllegalArgumentException("Cannot add Locations of differing worlds");
          }
--
+ 
 -        x -= vec.x;
 -        y -= vec.y;
 -        z -= vec.z;
@@ -371,7 +368,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -374,9 +448,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -373,9 +451,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location subtract(Vector vec) {
@@ -382,7 +379,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          return this;
      }
  
-@@ -391,9 +463,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -390,9 +466,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location subtract(double x, double y, double z) {
@@ -393,7 +390,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          return this;
      }
  
-@@ -409,7 +479,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -408,7 +482,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the magnitude
       */
      public double length() {
@@ -402,7 +399,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -420,7 +490,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -419,7 +493,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the magnitude
       */
      public double lengthSquared() {
@@ -411,17 +408,16 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -455,8 +525,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
-         } else if (o.getWorld() != getWorld()) {
+@@ -455,7 +529,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
              throw new IllegalArgumentException("Cannot measure distance between " + getWorld().getName() + " and " + o.getWorld().getName());
          }
--
+ 
 -        return NumberConversions.square(x - o.x) + NumberConversions.square(y - o.y) + NumberConversions.square(z - o.z);
 +        return position.distanceSquared(o.position());
      }
  
      /**
-@@ -468,72 +537,59 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -467,72 +541,59 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location multiply(double m) {
@@ -429,20 +425,20 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
 -        y *= m;
 -        z *= m;
 +        position.multiply(m);
-         return this;
-     }
- 
-     /**
++        return this;
++    }
++
++    /**
 +     * Copy yaw and pitch from the given {@link Location} to this one.
 +     * @return this object
 +     */
 +    public Location copyAngles(Location loc) {
 +        this.yaw = loc.getYaw();
 +        this.pitch = loc.getPitch();
-+        return this;
-+    }
-+
-+    /**
+         return this;
+     }
+ 
+     /**
 +     * Copy position and angles from the given {@link Location} to this one.
 +     * @return this object
 +     */
@@ -450,6 +446,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
 +        position.set(loc.position());
 +        return copyAngles(loc);
 +    }
++
 +
 +    /**
       * Zero this location's components. Not world-aware.
@@ -499,12 +496,12 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
 +        if(!(obj instanceof Location)) return false;
 +        final Location that = (Location) obj;
 +        return Objects.equals(worldId, that.getWorldId()) &&
-+               Objects.equals(position, that.position()) &&
-+               yaw == that.getYaw() &&
-+               pitch == that.getPitch();
++                Objects.equals(position, that.position()) &&
++                yaw == that.getYaw() &&
++                pitch == that.getPitch();
      }
  
-     @Override
+-    @Override
 -    public int hashCode() {
 -        int hash = 3;
 -
@@ -526,59 +523,62 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -543,37 +599,26 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -542,16 +603,16 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       *     Location
       */
      public Vector toVector() {
 -        return new Vector(x, y, z);
 +        return position.mutableCopy();
++    }
++
++    public BlockVector toBlockVector() {
++        return position.toBlockVector();
      }
  
--    @Override
--    public Location clone() {
+     @Override
+     public Location clone() {
 -        try {
 -            return (Location) super.clone();
 -        } catch (CloneNotSupportedException e) {
 -            throw new Error(e);
 -        }
-+    public BlockVector toBlockVector() {
-+        return position.toBlockVector();
-     }
- 
--    /**
--     * Safely converts a double (location coordinate) to an int (block
--     * coordinate)
--     *
--     * @param loc Precise coordinate
--     * @return Block coordinate
--     */
--    public static int locToBlock(double loc) {
--        return NumberConversions.floor(loc);
-+    @Override
-+    public Location clone() {
 +        return new Location(worldId, position, yaw, pitch);
      }
  
--	@Utility
-+    @Utility
- 	public Map<String, Object> serialize() {
- 		Map<String, Object> data = new HashMap<String, Object>();
--		data.put("world", this.world.getName());
-+		data.put("world", this.worldId);
+     /**
+@@ -560,9 +621,9 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+      * @throws IllegalArgumentException if any component is not finite
+      */
+     public void checkFinite() throws IllegalArgumentException {
+-        NumberConversions.checkFinite(x, "x not finite");
+-        NumberConversions.checkFinite(y, "y not finite");
+-        NumberConversions.checkFinite(z, "z not finite");
++        NumberConversions.checkFinite(getX(), "x not finite");
++        NumberConversions.checkFinite(getY(), "y not finite");
++        NumberConversions.checkFinite(getZ(), "z not finite");
+         NumberConversions.checkFinite(pitch, "pitch not finite");
+         NumberConversions.checkFinite(yaw, "yaw not finite");
+     }
+@@ -581,11 +642,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+     @Utility
+     public Map<String, Object> serialize() {
+         Map<String, Object> data = new HashMap<String, Object>();
+-        data.put("world", this.world.getName());
++        data.put("world", this.worldId);
  
--		data.put("x", this.x);
--		data.put("y", this.y);
--		data.put("z", this.z);
-+		data.put("x", position.fineX());
-+		data.put("y", position.fineY());
-+		data.put("z", position.fineZ());
+-        data.put("x", this.x);
+-        data.put("y", this.y);
+-        data.put("z", this.z);
++        data.put("x", getX());
++        data.put("y", getY());
++        data.put("z", getZ());
  
- 		data.put("yaw", this.yaw);
- 		data.put("pitch", this.pitch);
+         data.put("yaw", this.yaw);
+         data.put("pitch", this.pitch);
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -479,6 +479,8 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
+@@ -466,6 +466,8 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
       */
      public World getWorld(UUID uid);
  
@@ -593,14 +593,14 @@ diff --git a/src/main/java/org/bukkit/block/BlockFace.java b/src/main/java/org/b
 @@ -1,43 +1,79 @@
  package org.bukkit.block;
  
-+import java.util.Arrays;
-+import java.util.List;
-+
 +import org.bukkit.geometry.MutableVec3;
 +import org.bukkit.geometry.Vec3;
 +import org.bukkit.geometry.Vec3Coarse;
 +import org.bukkit.util.ImVector;
 +import org.bukkit.util.NumberConversions;
++
++import java.util.Arrays;
++import java.util.List;
 +
  /**
   * Represents the face of a block
@@ -750,24 +750,24 @@ diff --git a/src/main/java/org/bukkit/block/BlockFace.java b/src/main/java/org/b
 +    }
 +
 +    private static final BlockFace[] DIAGONAL = new BlockFace[] {
-+        SOUTH_EAST,
-+        SOUTH_WEST,
-+        NORTH_EAST,
-+        NORTH_WEST,
++            SOUTH_EAST,
++            SOUTH_WEST,
++            NORTH_EAST,
++            NORTH_WEST,
 +    };
 +
 +    private static final BlockFace[] DIAGONAL_Z = new BlockFace[] {
-+        SOUTH_SOUTH_EAST,
-+        SOUTH_SOUTH_WEST,
-+        NORTH_NORTH_EAST,
-+        NORTH_NORTH_WEST,
++            SOUTH_SOUTH_EAST,
++            SOUTH_SOUTH_WEST,
++            NORTH_NORTH_EAST,
++            NORTH_NORTH_WEST,
 +    };
 +
 +    private static final BlockFace[] DIAGONAL_X = new BlockFace[] {
-+        EAST_SOUTH_EAST,
-+        WEST_SOUTH_WEST,
-+        EAST_NORTH_EAST,
-+        WEST_NORTH_WEST,
++            EAST_SOUTH_EAST,
++            WEST_SOUTH_WEST,
++            EAST_NORTH_EAST,
++            WEST_NORTH_WEST,
 +    };
 +
 +    /**
@@ -797,8 +797,8 @@ diff --git a/src/main/java/org/bukkit/block/BlockFace.java b/src/main/java/org/b
 +    public static BlockFace byDirection(Vec3 direction) {
 +        if(direction instanceof BlockFace) return (BlockFace) direction;
 +        return byDirection(direction.fineX(),
-+                           direction.fineY(),
-+                           direction.fineZ());
++                direction.fineY(),
++                direction.fineZ());
 +    }
 +
 +    public static BlockFace byDirection(double x, double y, double z) {
@@ -806,7 +806,7 @@ diff --git a/src/main/java/org/bukkit/block/BlockFace.java b/src/main/java/org/b
 +            // vertical
 +            if(x != 0 || z != 0) {
 +                throw new IllegalArgumentException("No " + BlockFace.class.getSimpleName() +
-+                                                   " for direction " + x + ", " + y + ", " + z);
++                        " for direction " + x + ", " + y + ", " + z);
 +            }
 +            return y > 0 ? UP : DOWN;
 +        } else if(z == 0) {
@@ -5867,33 +5867,6 @@ diff --git a/src/main/java/org/bukkit/util/NumberConversions.java b/src/main/jav
 +        return n < min ? min : n > max ? max : n;
 +    }
  }
-diff --git a/src/main/java/org/bukkit/util/RayBlockIntersection.java b/src/main/java/org/bukkit/util/RayBlockIntersection.java
---- a/src/main/java/org/bukkit/util/RayBlockIntersection.java
-+++ b/src/main/java/org/bukkit/util/RayBlockIntersection.java
-@@ -2,6 +2,7 @@ package org.bukkit.util;
- 
- import org.bukkit.block.Block;
- import org.bukkit.block.BlockFace;
-+import org.bukkit.geometry.Vec3;
- 
- /**
-  * Result of a ray-block intersection test
-@@ -9,12 +10,12 @@ import org.bukkit.block.BlockFace;
- public class RayBlockIntersection {
-     private final Block block;
-     private final BlockFace face;
--    private final Vector position;
-+    private final ImVector position;
- 
--    public RayBlockIntersection(Block block, BlockFace face, Vector position) {
-+    public RayBlockIntersection(Block block, BlockFace face, Vec3 position) {
-         this.block = block;
-         this.face = face;
--        this.position = position;
-+        this.position = ImVector.copyOf(position);
-     }
- 
-     /**
 diff --git a/src/main/java/org/bukkit/util/SetBase.java b/src/main/java/org/bukkit/util/SetBase.java
 new file mode 100644
 index 0000000..036df35
@@ -5963,7 +5936,7 @@ index 0000000..036df35
 diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukkit/util/Vector.java
 --- a/src/main/java/org/bukkit/util/Vector.java
 +++ b/src/main/java/org/bukkit/util/Vector.java
-@@ -3,11 +3,14 @@ package org.bukkit.util;
+@@ -3,10 +3,14 @@ package org.bukkit.util;
  import java.util.LinkedHashMap;
  import java.util.Map;
  import java.util.Random;
@@ -5973,13 +5946,12 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
  import org.bukkit.World;
  import org.bukkit.configuration.serialization.ConfigurationSerializable;
  import org.bukkit.configuration.serialization.SerializableAs;
--import static org.bukkit.util.NumberConversions.checkFinite;
 +import org.bukkit.geometry.Cuboid;
 +import org.bukkit.geometry.Vec3;
  
  /**
   * Represents a mutable vector. Because the components of Vectors are mutable,
-@@ -16,7 +19,7 @@ import static org.bukkit.util.NumberConversions.checkFinite;
+@@ -15,7 +19,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
   * <code>clone()</code> in order to get a copy.
   */
  @SerializableAs("Vector")
@@ -5988,7 +5960,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      private static final long serialVersionUID = -2657651106777219169L;
  
      private static Random random = new Random();
-@@ -26,17 +29,11 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -25,17 +29,11 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       */
      private static final double epsilon = 0.000001;
  
@@ -6007,7 +5979,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -47,9 +44,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -46,9 +44,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @param z Z component
       */
      public Vector(int x, int y, int z) {
@@ -6018,7 +5990,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -60,9 +55,14 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -59,9 +55,14 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @param z Z component
       */
      public Vector(double x, double y, double z) {
@@ -6036,7 +6008,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -73,9 +73,63 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -72,9 +73,63 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @param z Z component
       */
      public Vector(float x, float y, float z) {
@@ -6103,7 +6075,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -85,10 +139,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -84,10 +139,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector add(Vector vec) {
@@ -6115,7 +6087,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -98,10 +149,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -97,10 +149,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector subtract(Vector vec) {
@@ -6127,7 +6099,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -111,10 +159,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -110,10 +159,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector multiply(Vector vec) {
@@ -6139,7 +6111,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -124,10 +169,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -123,10 +169,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector divide(Vector vec) {
@@ -6151,7 +6123,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -137,10 +179,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -136,10 +179,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector copy(Vector vec) {
@@ -6163,7 +6135,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -153,7 +192,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -152,7 +192,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the magnitude
       */
      public double length() {
@@ -6172,7 +6144,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -162,7 +201,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -161,7 +201,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the magnitude
       */
      public double lengthSquared() {
@@ -6181,7 +6153,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -176,7 +215,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -175,7 +215,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the distance
       */
      public double distance(Vector o) {
@@ -6190,7 +6162,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -186,7 +225,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -185,7 +225,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the distance
       */
      public double distanceSquared(Vector o) {
@@ -6199,7 +6171,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -208,10 +247,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -207,10 +247,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return this same vector (now a midpoint)
       */
      public Vector midpoint(Vector other) {
@@ -6208,12 +6180,12 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
 -        z = (z + other.z) / 2;
 -        return this;
 +        return set((fineX() + other.fineX()) / 2,
-+                   (fineY() + other.fineY()) / 2,
-+                   (fineZ() + other.fineZ()) / 2);
++                (fineY() + other.fineY()) / 2,
++                (fineZ() + other.fineZ()) / 2);
      }
  
      /**
-@@ -221,9 +259,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -220,9 +259,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return a new midpoint vector
       */
      public Vector getMidpoint(Vector other) {
@@ -6226,7 +6198,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
          return new Vector(x, y, z);
      }
  
-@@ -235,10 +273,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -234,10 +273,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector multiply(int m) {
@@ -6238,7 +6210,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -249,10 +284,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -248,10 +284,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector multiply(double m) {
@@ -6250,7 +6222,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -263,10 +295,11 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -262,10 +295,11 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector multiply(float m) {
@@ -6266,7 +6238,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -277,7 +310,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -276,7 +310,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return dot product
       */
      public double dot(Vector other) {
@@ -6275,7 +6247,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -293,14 +326,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -292,14 +326,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector crossProduct(Vector o) {
@@ -6288,12 +6260,12 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
 -        z = newZ;
 -        return this;
 +        return set(fineY() * o.fineZ() - o.fineY() * fineZ(),
-+                   fineZ() * o.fineX() - o.fineZ() * fineX(),
-+                   fineX() * o.fineY() - o.fineX() * fineY());
++                fineZ() * o.fineX() - o.fineZ() * fineX(),
++                fineX() * o.fineY() - o.fineX() * fineY());
      }
  
      /**
-@@ -316,9 +344,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -315,9 +344,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return a new vector
       */
      public Vector getCrossProduct(Vector o) {
@@ -6306,7 +6278,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
          return new Vector(x, y, z);
      }
  
-@@ -328,13 +356,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -327,13 +356,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector normalize() {
@@ -6321,7 +6293,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -343,10 +365,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -342,10 +365,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the same vector
       */
      public Vector zero() {
@@ -6333,7 +6305,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -360,7 +379,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -359,7 +379,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return whether this vector is in the AABB
       */
      public boolean isInAABB(Vector min, Vector max) {
@@ -6342,7 +6314,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -371,7 +390,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -370,7 +390,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return whether this vector is in the sphere
       */
      public boolean isInSphere(Vector origin, double radius) {
@@ -6351,7 +6323,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -380,7 +399,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -379,7 +399,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return The X component.
       */
      public double getX() {
@@ -6360,7 +6332,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -390,7 +409,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -389,7 +409,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return block X
       */
      public int getBlockX() {
@@ -6369,7 +6341,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -399,7 +418,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -398,7 +418,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return The Y component.
       */
      public double getY() {
@@ -6378,7 +6350,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -409,7 +428,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -408,7 +428,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return block y
       */
      public int getBlockY() {
@@ -6387,7 +6359,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -418,7 +437,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -417,7 +437,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return The Z component.
       */
      public double getZ() {
@@ -6396,7 +6368,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -428,7 +447,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -427,7 +447,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return block z
       */
      public int getBlockZ() {
@@ -6405,29 +6377,25 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -437,8 +456,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
-      * @param x The new X component.
+@@ -437,7 +457,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
-+    @Override
      public Vector setX(int x) {
 -        this.x = x;
 +        setX((double) x);
          return this;
      }
  
-@@ -448,8 +468,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
-      * @param x The new X component.
+@@ -448,7 +468,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
-+    @Override
      public Vector setX(double x) {
 -        this.x = x;
 +        super.setX(x);
          return this;
      }
  
-@@ -460,7 +481,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -459,7 +479,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
      public Vector setX(float x) {
@@ -6436,29 +6404,25 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
          return this;
      }
  
-@@ -470,8 +491,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
-      * @param y The new Y component.
+@@ -470,7 +490,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
-+    @Override
      public Vector setY(int y) {
 -        this.y = y;
 +        setY((double) y);
          return this;
      }
  
-@@ -481,8 +503,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
-      * @param y The new Y component.
+@@ -481,7 +501,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
-+    @Override
      public Vector setY(double y) {
 -        this.y = y;
 +        super.setY(y);
          return this;
      }
  
-@@ -493,7 +516,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -492,7 +512,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
      public Vector setY(float y) {
@@ -6467,29 +6431,25 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
          return this;
      }
  
-@@ -503,8 +526,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
-      * @param z The new Z component.
+@@ -503,7 +523,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
-+    @Override
      public Vector setZ(int z) {
 -        this.z = z;
 +        setZ((double) z);
          return this;
      }
  
-@@ -514,8 +538,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
-      * @param z The new Z component.
+@@ -514,7 +534,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
-+    @Override
      public Vector setZ(double z) {
 -        this.z = z;
 +        super.setZ(z);
          return this;
      }
  
-@@ -526,26 +551,13 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -525,26 +545,13 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return This vector.
       */
      public Vector setZ(float z) {
@@ -6518,7 +6478,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -555,12 +567,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -554,12 +561,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       */
      @Override
      public int hashCode() {
@@ -6532,7 +6492,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -582,7 +589,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -581,7 +583,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       */
      @Override
      public String toString() {
@@ -6541,7 +6501,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -592,7 +599,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -591,7 +593,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the location
       */
      public Location toLocation(World world) {
@@ -6550,7 +6510,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -604,7 +611,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -603,7 +605,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the location
       */
      public Location toLocation(World world, float yaw, float pitch) {
@@ -6559,7 +6519,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -613,7 +620,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -612,7 +614,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return A block vector.
       */
      public BlockVector toBlockVector() {
@@ -6568,7 +6528,20 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -633,7 +640,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -621,9 +623,9 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+      * @throws IllegalArgumentException if any component is not finite
+      */
+     public void checkFinite() throws IllegalArgumentException {
+-        NumberConversions.checkFinite(x, "x not finite");
+-        NumberConversions.checkFinite(y, "y not finite");
+-        NumberConversions.checkFinite(z, "z not finite");
++        NumberConversions.checkFinite(getX(), "x not finite");
++        NumberConversions.checkFinite(getY(), "y not finite");
++        NumberConversions.checkFinite(getZ(), "z not finite");
+     }
+ 
+     /**
+@@ -643,7 +645,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return minimum
       */
      public static Vector getMinimum(Vector v1, Vector v2) {
@@ -6577,7 +6550,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -644,7 +651,19 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -654,7 +656,19 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return maximum
       */
      public static Vector getMaximum(Vector v1, Vector v2) {
@@ -6587,14 +6560,14 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
 +
 +    public static Vector minimum(Vec3 a, Vec3 b) {
 +        return new Vector(Math.min(a.fineX(), b.fineX()),
-+                          Math.min(a.fineY(), b.fineY()),
-+                          Math.min(a.fineZ(), b.fineZ()));
++                Math.min(a.fineY(), b.fineY()),
++                Math.min(a.fineZ(), b.fineZ()));
 +    }
 +
 +    public static Vector maximum(Vec3 a, Vec3 b) {
 +        return new Vector(Math.max(a.fineX(), b.fineX()),
-+                          Math.max(a.fineY(), b.fineY()),
-+                          Math.max(a.fineZ(), b.fineZ()));
++                Math.max(a.fineY(), b.fineY()),
++                Math.max(a.fineZ(), b.fineZ()));
      }
  
      /**
@@ -6661,23 +6634,3 @@ index 0000000..ab193d3
 +        return (M) this;
 +    }
 +}
-diff --git a/src/test/java/org/bukkit/LocationTest.java b/src/test/java/org/bukkit/LocationTest.java
---- a/src/test/java/org/bukkit/LocationTest.java
-+++ b/src/test/java/org/bukkit/LocationTest.java
-@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
- 
- import java.util.List;
- import java.util.Random;
-+import java.util.UUID;
- 
- import org.bukkit.util.Vector;
- import org.junit.Test;
-@@ -184,7 +185,7 @@ public class LocationTest {
-     }
- 
-     private static Location getEmptyLocation() {
--        return new Location(null, 0, 0, 0);
-+        return new Location(new UUID(0, 0), 0, 0, 0);
-     }
- 
-     private Location getLocation() {

@@ -12,6 +12,15 @@
  public class BlockSkull extends BlockTileEntity {
  
      public static final BlockStateDirection FACING = BlockDirectional.FACING;
+@@ -28,7 +33,7 @@
+ 
+     protected BlockSkull() {
+         super(Material.ORIENTABLE);
+-        this.w(this.blockStateList.getBlockData().set(BlockSkull.FACING, EnumDirection.NORTH).set(BlockSkull.NODROP, Boolean.valueOf(false)));
++        this.y(this.blockStateList.getBlockData().set(BlockSkull.FACING, EnumDirection.NORTH).set(BlockSkull.NODROP, Boolean.valueOf(false)));
+     }
+ 
+     public String getName() {
 @@ -82,7 +87,29 @@
          return new ItemStack(Items.SKULL, 1, i);
      }
@@ -94,18 +103,25 @@
                      }
                  }
  
-@@ -157,14 +199,16 @@
-                 entitywither.o();
-                 Iterator iterator = world.a(EntityHuman.class, entitywither.getBoundingBox().g(50.0D)).iterator();
+@@ -154,17 +196,19 @@
  
+                 entitywither.setPositionRotation((double) blockposition2.getX() + 0.5D, (double) blockposition2.getY() + 0.55D, (double) blockposition2.getZ() + 0.5D, shapedetector_shapedetectorcollection.getFacing().k() == EnumDirection.EnumAxis.X ? 0.0F : 90.0F, 0.0F);
+                 entitywither.aN = shapedetector_shapedetectorcollection.getFacing().k() == EnumDirection.EnumAxis.X ? 0.0F : 90.0F;
+-                entitywither.p();
+-                Iterator iterator = world.a(EntityPlayer.class, entitywither.getBoundingBox().g(50.0D)).iterator();
++                entitywither.o();
++                Iterator iterator = world.a(EntityHuman.class, entitywither.getBoundingBox().g(50.0D)).iterator();
++
 +                // CraftBukkit start
 +                if (world.addEntity(entitywither, SpawnReason.BUILD_WITHER)) {
 +                    blockList.updateList();
-+
-                 while (iterator.hasNext()) {
-                     EntityHuman entityhuman = (EntityHuman) iterator.next();
  
-                     entityhuman.b((Statistic) AchievementList.I);
+                 while (iterator.hasNext()) {
+-                    EntityPlayer entityplayer = (EntityPlayer) iterator.next();
++                    EntityHuman entityhuman = (EntityHuman) iterator.next();
+ 
+-                    CriterionTriggers.m.a(entityplayer, (Entity) entitywither);
++                    entityhuman.b((Statistic) AchievementList.I);
                  }
  
 -                world.addEntity(entitywither);
@@ -121,3 +137,12 @@
  
              }
          }
+@@ -225,8 +270,4 @@
+ 
+         return this.D;
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.UNDEFINED;
+-    }
+ }

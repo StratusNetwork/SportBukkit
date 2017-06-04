@@ -76,7 +76,7 @@ diff --git a/src/main/java/org/bukkit/block/Block.java b/src/main/java/org/bukki
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerResourcePackStatusEvent;
+@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerResourcePackStatusEvent;
  import org.bukkit.map.MapView;
  import org.bukkit.plugin.messaging.PluginMessageRecipient;
  import org.bukkit.scoreboard.Scoreboard;
@@ -84,7 +84,7 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
  
  /**
   * Represents a player, connected or not
-@@ -1619,4 +1620,29 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -1667,4 +1668,29 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
       * or null if they are not digging any block.
       */
      public org.bukkit.block.Block getDiggingBlock();

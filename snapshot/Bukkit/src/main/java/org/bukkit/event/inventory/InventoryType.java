@@ -37,13 +37,13 @@ public enum InventoryType {
     /**
      * A brewing stand inventory, with one FUEL slot and three CRAFTING slots.
      */
-    BREWING(5,"Brewing", "container.brewing"),
+    BREWING(5, "Brewing", "container.brewing"),
     /**
      * A player's inventory, with 9 QUICKBAR slots, 27 CONTAINER slots, 4 ARMOR
      * slots and 1 offhand slot. The ARMOR and offhand slots may not be visible
      * to the player, though.
      */
-    PLAYER(41,"Player", "container.inventory"),
+    PLAYER(41, "Player", "container.inventory"),
     /**
      * The creative mode inventory, with only 9 QUICKBAR slots and nothing
      * else. (The actual creative interface with the items is client-side and
@@ -65,11 +65,15 @@ public enum InventoryType {
     /**
      * A beacon inventory, with 1 CRAFTING slot
      */
-    BEACON(1, "Beacon", "container.beacon"),
+    BEACON(1, "container.beacon", "container.beacon"),
     /**
      * A hopper inventory, with 5 slots of type CONTAINER.
      */
     HOPPER(5, "Item Hopper", "container.hopper"),
+    /**
+     * A shulker box inventory, with 27 slots of type CONTAINER.
+     */
+    SHULKER_BOX(27, "Shulker Box", "container.hopper"),
     ;
 
     private final int size;

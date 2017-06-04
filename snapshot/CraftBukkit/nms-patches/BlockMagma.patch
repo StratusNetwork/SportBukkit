@@ -1,6 +1,14 @@
 --- a/net/minecraft/server/BlockMagma.java
 +++ b/net/minecraft/server/BlockMagma.java
-@@ -17,7 +17,9 @@
+@@ -11,13 +11,15 @@
+         this.a(true);
+     }
+ 
+-    public MaterialMapColor c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
+-        return MaterialMapColor.L;
++    public MaterialMapColor r(IBlockData iblockdata) {
++        return MaterialMapColor.K;
+     }
  
      public void stepOn(World world, BlockPosition blockposition, Entity entity) {
          if (!entity.isFireProof() && entity instanceof EntityLiving && !EnchantmentManager.i((EntityLiving) entity)) {
@@ -10,3 +18,12 @@
          }
  
          super.stepOn(world, blockposition, entity);
+@@ -29,7 +31,7 @@
+ 
+         if (iblockdata1.getBlock() == Blocks.WATER || iblockdata1.getBlock() == Blocks.FLOWING_WATER) {
+             world.setAir(blockposition1);
+-            world.a((EntityHuman) null, blockposition, SoundEffects.bN, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
++            world.a((EntityHuman) null, blockposition, SoundEffects.bH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+             if (world instanceof WorldServer) {
+                 ((WorldServer) world).a(EnumParticle.SMOKE_LARGE, (double) blockposition1.getX() + 0.5D, (double) blockposition1.getY() + 0.25D, (double) blockposition1.getZ() + 0.5D, 8, 0.5D, 0.25D, 0.5D, 0.0D, new int[0]);
+             }

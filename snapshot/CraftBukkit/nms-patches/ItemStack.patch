@@ -94,9 +94,9 @@
 -                this.item.a(nbttagcompound);
 +                this.item.a(this.tag);
 +                // CraftBukkit end
-+            }
-+        }
-+
+             }
+         }
+ 
 +        // SportBukkit start - convert legacy potions
 +        if(this.item == Items.POTION && this.damage != 0 && (tag == null || !tag.hasKey("Potion"))) {
 +            // Calculate a Potion from the damage value, and then set it to 0
@@ -121,11 +121,11 @@
 +                    key = type.baseKey();
 +                }
 +                tag.setString("Potion", key.toString());
-             }
-         }
++            }
++        }
 +        // SportBukkit end
 +    }
- 
++
 +    public ItemStack(NBTTagCompound nbttagcompound) {
 +        this.load(nbttagcompound);
 +        // CraftBukkit end
@@ -281,7 +281,16 @@
          }
  
          return nbttagcompound;
-@@ -157,11 +368,30 @@
+@@ -141,7 +352,7 @@
+     }
+ 
+     public boolean usesData() {
+-        return this.getItem().k();
++        return this.getItem().l();
+     }
+ 
+     public boolean h() {
+@@ -157,18 +368,37 @@
      }
  
      public void setData(int i) {
@@ -314,9 +323,31 @@
      }
  
      public int k() {
-@@ -198,6 +428,11 @@
+         return this.getItem().getMaxDurability();
+     }
+ 
+-    public boolean isDamaged(int i, Random random, @Nullable EntityPlayer entityplayer) {
++    public boolean isDamaged(int i, Random random) {
+         if (!this.f()) {
+             return false;
+         } else {
+@@ -188,10 +418,6 @@
+                 }
+             }
+ 
+-            if (entityplayer != null && i != 0) {
+-                CriterionTriggers.s.a(entityplayer, this, this.damage + i);
+-            }
+-
+             this.damage += i;
+             return this.damage > this.k();
+         }
+@@ -200,8 +426,13 @@
+     public void damage(int i, EntityLiving entityliving) {
+         if (!(entityliving instanceof EntityHuman) || !((EntityHuman) entityliving).abilities.canInstantlyBuild) {
              if (this.f()) {
-                 if (this.isDamaged(i, entityliving.getRandom())) {
+-                if (this.isDamaged(i, entityliving.getRandom(), entityliving instanceof EntityPlayer ? (EntityPlayer) entityliving : null)) {
++                if (this.isDamaged(i, entityliving.getRandom())) {
                      entityliving.b(this);
 +                    // CraftBukkit start - Check for item breaking
 +                    if (this.count == 1 && entityliving instanceof EntityHuman) {
@@ -326,7 +357,35 @@
                      this.subtract(1);
                      if (entityliving instanceof EntityHuman) {
                          EntityHuman entityhuman = (EntityHuman) entityliving;
-@@ -509,6 +744,12 @@
+@@ -245,7 +476,6 @@
+     public ItemStack cloneItemStack() {
+         ItemStack itemstack = new ItemStack(this.item, this.count, this.damage);
+ 
+-        itemstack.d(this.D());
+         if (this.tag != null) {
+             itemstack.tag = this.tag.g();
+         }
+@@ -349,8 +579,9 @@
+ 
+     }
+ 
++    @Nullable
+     public NBTTagList getEnchantments() {
+-        return this.tag != null ? this.tag.getList("ench", 10) : new NBTTagList();
++        return this.tag == null ? null : this.tag.getList("ench", 10);
+     }
+ 
+     public void setTag(@Nullable NBTTagCompound nbttagcompound) {
+@@ -443,7 +674,7 @@
+     }
+ 
+     public boolean y() {
+-        return this.getItem().s();
++        return this.getItem().t();
+     }
+ 
+     public boolean z() {
+@@ -513,6 +744,12 @@
          nbttaglist.add(nbttagcompound);
      }
  
@@ -339,3 +398,14 @@
      public IChatBaseComponent C() {
          ChatComponentText chatcomponenttext = new ChatComponentText(this.getName());
  
+@@ -578,10 +815,6 @@
+         }
+     }
+ 
+-    public int D() {
+-        return this.d;
+-    }
+-
+     public void d(int i) {
+         this.d = i;
+     }

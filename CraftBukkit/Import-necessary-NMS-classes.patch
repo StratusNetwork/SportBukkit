@@ -1,11 +1,11 @@
-From: Jedediah Smith <jedediah@silencegreys.com>
-Date: Tue, 1 Mar 2016 04:32:08 -0500
+From: ShinyDialga <shinydialga45@gmail.com>
+Date: Wed, 7 Jun 2017 16:54:30 -0500
 Subject: [PATCH] Import necessary NMS classes
 
 
 diff --git a/src/main/java/net/minecraft/server/BlockFalling.java b/src/main/java/net/minecraft/server/BlockFalling.java
 new file mode 100644
-index 0000000..dcdae99
+index 0000000..6743957
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/BlockFalling.java
 @@ -0,0 +1,77 @@
@@ -36,13 +36,13 @@ index 0000000..dcdae99
 +
 +    public void b(World world, BlockPosition blockposition, IBlockData iblockdata, Random random) {
 +        if (!world.isClientSide) {
-+            this.c(world, blockposition);
++            this.b(world, blockposition);
 +        }
 +
 +    }
 +
-+    private void c(World world, BlockPosition blockposition) {
-+        if (i(world.getType(blockposition.down())) && blockposition.getY() >= 0) {
++    private void b(World world, BlockPosition blockposition) {
++        if (x(world.getType(blockposition.down())) && blockposition.getY() >= 0) {
 +            boolean flag = true;
 +
 +            if (!BlockFalling.instaFall && world.areChunksLoadedBetween(blockposition.a(-32, -32, -32), blockposition.a(32, 32, 32))) {
@@ -57,7 +57,7 @@ index 0000000..dcdae99
 +
 +                BlockPosition blockposition1;
 +
-+                for (blockposition1 = blockposition.down(); i(world.getType(blockposition1)) && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
++                for (blockposition1 = blockposition.down(); x(world.getType(blockposition1)) && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
 +                    ;
 +                }
 +
@@ -75,20 +75,20 @@ index 0000000..dcdae99
 +        return 2;
 +    }
 +
-+    public static boolean i(IBlockData iblockdata) {
++    public static boolean x(IBlockData iblockdata) {
 +        Block block = iblockdata.getBlock();
 +        Material material = iblockdata.getMaterial();
 +
 +        return block == Blocks.FIRE || material == Material.AIR || material == Material.WATER || material == Material.LAVA;
 +    }
 +
-+    public void a_(World world, BlockPosition blockposition) {}
++    public void a(World world, BlockPosition blockposition, IBlockData iblockdata, IBlockData iblockdata1) {}
 +
-+    public void b(World world, BlockPosition blockposition) {}
++    public void a_(World world, BlockPosition blockposition) {}
 +}
 diff --git a/src/main/java/net/minecraft/server/BlockPosition.java b/src/main/java/net/minecraft/server/BlockPosition.java
 new file mode 100644
-index 0000000..67b476b
+index 0000000..8155f81
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/BlockPosition.java
 @@ -0,0 +1,421 @@
@@ -291,22 +291,22 @@ index 0000000..67b476b
 +        return this;
 +    }
 +
-+    public static Iterable<BlockPosition.MutableBlockPosition> b(BlockPosition blockposition, BlockPosition blockposition1) {
++    public static Iterable<MutableBlockPosition> b(BlockPosition blockposition, BlockPosition blockposition1) {
 +        return b(Math.min(blockposition.getX(), blockposition1.getX()), Math.min(blockposition.getY(), blockposition1.getY()), Math.min(blockposition.getZ(), blockposition1.getZ()), Math.max(blockposition.getX(), blockposition1.getX()), Math.max(blockposition.getY(), blockposition1.getY()), Math.max(blockposition.getZ(), blockposition1.getZ()));
 +    }
 +
-+    public static Iterable<BlockPosition.MutableBlockPosition> b(final int i, final int j, final int k, final int l, final int i1, final int j1) {
++    public static Iterable<MutableBlockPosition> b(final int i, final int j, final int k, final int l, final int i1, final int j1) {
 +        return new Iterable() {
-+            public Iterator<BlockPosition.MutableBlockPosition> iterator() {
++            public Iterator<MutableBlockPosition> iterator() {
 +                return new AbstractIterator() {
-+                    private BlockPosition.MutableBlockPosition b;
++                    private MutableBlockPosition b;
 +
-+                    protected BlockPosition.MutableBlockPosition a() {
++                    protected MutableBlockPosition a() {
 +                        if (this.b == null) {
-+                            this.b = new BlockPosition.MutableBlockPosition(i, j, k);
++                            this.b = new MutableBlockPosition(i, j, k);
 +                            return this.b;
 +                        } else if (this.b.b == l && this.b.c == i1 && this.b.d == j1) {
-+                            return (BlockPosition.MutableBlockPosition) this.endOfData();
++                            return (MutableBlockPosition) this.endOfData();
 +                        } else {
 +                            if (this.b.b < l) {
 +                                ++this.b.b;
@@ -335,29 +335,29 @@ index 0000000..67b476b
 +        return this.c(baseblockposition);
 +    }
 +
-+    public static final class PooledBlockPosition extends BlockPosition.MutableBlockPosition {
++    public static final class PooledBlockPosition extends MutableBlockPosition {
 +
 +        private boolean f;
-+        private static final List<BlockPosition.PooledBlockPosition> g = Lists.newArrayList();
++        private static final List<PooledBlockPosition> g = Lists.newArrayList();
 +
 +        private PooledBlockPosition(int i, int j, int k) {
 +            super(i, j, k);
 +        }
 +
-+        public static BlockPosition.PooledBlockPosition s() {
++        public static PooledBlockPosition s() {
 +            return e(0, 0, 0);
 +        }
 +
-+        public static BlockPosition.PooledBlockPosition d(double d0, double d1, double d2) {
++        public static PooledBlockPosition d(double d0, double d1, double d2) {
 +            return e(MathHelper.floor(d0), MathHelper.floor(d1), MathHelper.floor(d2));
 +        }
 +
-+        public static BlockPosition.PooledBlockPosition e(int i, int j, int k) {
-+            List list = BlockPosition.PooledBlockPosition.g;
++        public static PooledBlockPosition e(int i, int j, int k) {
++            List list = PooledBlockPosition.g;
 +
-+            synchronized (BlockPosition.PooledBlockPosition.g) {
-+                if (!BlockPosition.PooledBlockPosition.g.isEmpty()) {
-+                    BlockPosition.PooledBlockPosition blockposition_pooledblockposition = (BlockPosition.PooledBlockPosition) BlockPosition.PooledBlockPosition.g.remove(BlockPosition.PooledBlockPosition.g.size() - 1);
++            synchronized (PooledBlockPosition.g) {
++                if (!PooledBlockPosition.g.isEmpty()) {
++                    PooledBlockPosition blockposition_pooledblockposition = (PooledBlockPosition) PooledBlockPosition.g.remove(PooledBlockPosition.g.size() - 1);
 +
 +                    if (blockposition_pooledblockposition != null && blockposition_pooledblockposition.f) {
 +                        blockposition_pooledblockposition.f = false;
@@ -367,63 +367,63 @@ index 0000000..67b476b
 +                }
 +            }
 +
-+            return new BlockPosition.PooledBlockPosition(i, j, k);
++            return new PooledBlockPosition(i, j, k);
 +        }
 +
 +        public void t() {
-+            List list = BlockPosition.PooledBlockPosition.g;
++            List list = PooledBlockPosition.g;
 +
-+            synchronized (BlockPosition.PooledBlockPosition.g) {
-+                if (BlockPosition.PooledBlockPosition.g.size() < 100) {
-+                    BlockPosition.PooledBlockPosition.g.add(this);
++            synchronized (PooledBlockPosition.g) {
++                if (PooledBlockPosition.g.size() < 100) {
++                    PooledBlockPosition.g.add(this);
 +                }
 +
 +                this.f = true;
 +            }
 +        }
 +
-+        public BlockPosition.PooledBlockPosition f(int i, int j, int k) {
++        public PooledBlockPosition f(int i, int j, int k) {
 +            if (this.f) {
 +                BlockPosition.b.error("PooledMutableBlockPosition modified after it was released.", new Throwable());
 +                this.f = false;
 +            }
 +
-+            return (BlockPosition.PooledBlockPosition) super.c(i, j, k);
++            return (PooledBlockPosition) super.c(i, j, k);
 +        }
 +
-+        public BlockPosition.PooledBlockPosition e(double d0, double d1, double d2) {
-+            return (BlockPosition.PooledBlockPosition) super.c(d0, d1, d2);
++        public PooledBlockPosition e(double d0, double d1, double d2) {
++            return (PooledBlockPosition) super.c(d0, d1, d2);
 +        }
 +
-+        public BlockPosition.PooledBlockPosition j(BaseBlockPosition baseblockposition) {
-+            return (BlockPosition.PooledBlockPosition) super.g(baseblockposition);
++        public PooledBlockPosition j(BaseBlockPosition baseblockposition) {
++            return (PooledBlockPosition) super.g(baseblockposition);
 +        }
 +
-+        public BlockPosition.PooledBlockPosition d(EnumDirection enumdirection) {
-+            return (BlockPosition.PooledBlockPosition) super.c(enumdirection);
++        public PooledBlockPosition d(EnumDirection enumdirection) {
++            return (PooledBlockPosition) super.c(enumdirection);
 +        }
 +
-+        public BlockPosition.PooledBlockPosition d(EnumDirection enumdirection, int i) {
-+            return (BlockPosition.PooledBlockPosition) super.c(enumdirection, i);
++        public PooledBlockPosition d(EnumDirection enumdirection, int i) {
++            return (PooledBlockPosition) super.c(enumdirection, i);
 +        }
 +
-+        public BlockPosition.MutableBlockPosition c(EnumDirection enumdirection, int i) {
++        public MutableBlockPosition c(EnumDirection enumdirection, int i) {
 +            return this.d(enumdirection, i);
 +        }
 +
-+        public BlockPosition.MutableBlockPosition c(EnumDirection enumdirection) {
++        public MutableBlockPosition c(EnumDirection enumdirection) {
 +            return this.d(enumdirection);
 +        }
 +
-+        public BlockPosition.MutableBlockPosition g(BaseBlockPosition baseblockposition) {
++        public MutableBlockPosition g(BaseBlockPosition baseblockposition) {
 +            return this.j(baseblockposition);
 +        }
 +
-+        public BlockPosition.MutableBlockPosition c(double d0, double d1, double d2) {
++        public MutableBlockPosition c(double d0, double d1, double d2) {
 +            return this.e(d0, d1, d2);
 +        }
 +
-+        public BlockPosition.MutableBlockPosition c(int i, int j, int k) {
++        public MutableBlockPosition c(int i, int j, int k) {
 +            return this.f(i, j, k);
 +        }
 +    }
@@ -477,26 +477,26 @@ index 0000000..67b476b
 +            return this.d;
 +        }
 +
-+        public BlockPosition.MutableBlockPosition c(int i, int j, int k) {
++        public MutableBlockPosition c(int i, int j, int k) {
 +            this.b = i;
 +            this.c = j;
 +            this.d = k;
 +            return this;
 +        }
 +
-+        public BlockPosition.MutableBlockPosition c(double d0, double d1, double d2) {
++        public MutableBlockPosition c(double d0, double d1, double d2) {
 +            return this.c(MathHelper.floor(d0), MathHelper.floor(d1), MathHelper.floor(d2));
 +        }
 +
-+        public BlockPosition.MutableBlockPosition g(BaseBlockPosition baseblockposition) {
++        public MutableBlockPosition g(BaseBlockPosition baseblockposition) {
 +            return this.c(baseblockposition.getX(), baseblockposition.getY(), baseblockposition.getZ());
 +        }
 +
-+        public BlockPosition.MutableBlockPosition c(EnumDirection enumdirection) {
++        public MutableBlockPosition c(EnumDirection enumdirection) {
 +            return this.c(enumdirection, 1);
 +        }
 +
-+        public BlockPosition.MutableBlockPosition c(EnumDirection enumdirection, int i) {
++        public MutableBlockPosition c(EnumDirection enumdirection, int i) {
 +            return this.c(this.b + enumdirection.getAdjacentX() * i, this.c + enumdirection.getAdjacentY() * i, this.d + enumdirection.getAdjacentZ() * i);
 +        }
 +
@@ -1035,7 +1035,7 @@ index 0000000..201f560
 +}
 diff --git a/src/main/java/net/minecraft/server/EntityHorse.java b/src/main/java/net/minecraft/server/EntityHorse.java
 new file mode 100644
-index 0000000..7eaa95a
+index 0000000..9830cb3
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/EntityHorse.java
 @@ -0,0 +1,281 @@
@@ -1046,15 +1046,15 @@ index 0000000..7eaa95a
 +
 +public class EntityHorse extends EntityHorseAbstract {
 +
-+    private static final UUID bG = UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
-+    private static final DataWatcherObject<Integer> bH = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
++    private static final UUID bH = UUID.fromString("556E1665-8B10-40C8-8F9D-CF9B1667F295");
 +    private static final DataWatcherObject<Integer> bI = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
-+    private static final String[] bJ = new String[] { "textures/entity/horse/horse_white.png", "textures/entity/horse/horse_creamy.png", "textures/entity/horse/horse_chestnut.png", "textures/entity/horse/horse_brown.png", "textures/entity/horse/horse_black.png", "textures/entity/horse/horse_gray.png", "textures/entity/horse/horse_darkbrown.png"};
-+    private static final String[] bK = new String[] { "hwh", "hcr", "hch", "hbr", "hbl", "hgr", "hdb"};
-+    private static final String[] bL = new String[] { null, "textures/entity/horse/horse_markings_white.png", "textures/entity/horse/horse_markings_whitefield.png", "textures/entity/horse/horse_markings_whitedots.png", "textures/entity/horse/horse_markings_blackdots.png"};
-+    private static final String[] bM = new String[] { "", "wo_", "wmo", "wdo", "bdo"};
-+    private String bN;
-+    private final String[] bO = new String[3];
++    private static final DataWatcherObject<Integer> bJ = DataWatcher.a(EntityHorse.class, DataWatcherRegistry.b);
++    private static final String[] bK = new String[] { "textures/entity/horse/horse_white.png", "textures/entity/horse/horse_creamy.png", "textures/entity/horse/horse_chestnut.png", "textures/entity/horse/horse_brown.png", "textures/entity/horse/horse_black.png", "textures/entity/horse/horse_gray.png", "textures/entity/horse/horse_darkbrown.png"};
++    private static final String[] bL = new String[] { "hwh", "hcr", "hch", "hbr", "hbl", "hgr", "hdb"};
++    private static final String[] bM = new String[] { null, "textures/entity/horse/horse_markings_white.png", "textures/entity/horse/horse_markings_whitefield.png", "textures/entity/horse/horse_markings_whitedots.png", "textures/entity/horse/horse_markings_blackdots.png"};
++    private static final String[] bN = new String[] { "", "wo_", "wmo", "wdo", "bdo"};
++    private String bO;
++    private final String[] bP = new String[3];
 +
 +    public EntityHorse(World world) {
 +        super(world);
@@ -1062,8 +1062,8 @@ index 0000000..7eaa95a
 +
 +    protected void i() {
 +        super.i();
-+        this.datawatcher.register(EntityHorse.bH, Integer.valueOf(0));
-+        this.datawatcher.register(EntityHorse.bI, Integer.valueOf(EnumHorseArmor.NONE.a()));
++        this.datawatcher.register(EntityHorse.bI, Integer.valueOf(0));
++        this.datawatcher.register(EntityHorse.bJ, Integer.valueOf(EnumHorseArmor.NONE.a()));
 +    }
 +
 +    public static void a(DataConverterManager dataconvertermanager) {
@@ -1091,55 +1091,55 @@ index 0000000..7eaa95a
 +            }
 +        }
 +
-+        this.dy();
++        this.dB();
 +    }
 +
 +    public void setVariant(int i) {
-+        this.datawatcher.set(EntityHorse.bH, Integer.valueOf(i));
-+        this.dM();
++        this.datawatcher.set(EntityHorse.bI, Integer.valueOf(i));
++        this.dO();
 +    }
 +
 +    public int getVariant() {
-+        return ((Integer) this.datawatcher.get(EntityHorse.bH)).intValue();
++        return ((Integer) this.datawatcher.get(EntityHorse.bI)).intValue();
 +    }
 +
-+    private void dM() {
-+        this.bN = null;
++    private void dO() {
++        this.bO = null;
 +    }
 +
-+    protected void dy() {
-+        super.dy();
++    protected void dB() {
++        super.dB();
 +        this.g(this.inventoryChest.getItem(1));
 +    }
 +
 +    public void g(ItemStack itemstack) {
 +        EnumHorseArmor enumhorsearmor = EnumHorseArmor.a(itemstack);
 +
-+        this.datawatcher.set(EntityHorse.bI, Integer.valueOf(enumhorsearmor.a()));
-+        this.dM();
++        this.datawatcher.set(EntityHorse.bJ, Integer.valueOf(enumhorsearmor.a()));
++        this.dO();
 +        if (!this.world.isClientSide) {
-+            this.getAttributeInstance(GenericAttributes.g).b(EntityHorse.bG);
++            this.getAttributeInstance(GenericAttributes.h).b(EntityHorse.bH);
 +            int i = enumhorsearmor.c();
 +
 +            if (i != 0) {
-+                this.getAttributeInstance(GenericAttributes.g).b((new AttributeModifier(EntityHorse.bG, "Horse armor bonus", (double) i, 0)).a(false));
++                this.getAttributeInstance(GenericAttributes.h).b((new AttributeModifier(EntityHorse.bH, "Horse armor bonus", (double) i, 0)).a(false));
 +            }
 +        }
 +
 +    }
 +
-+    public EnumHorseArmor dL() {
-+        return EnumHorseArmor.a(((Integer) this.datawatcher.get(EntityHorse.bI)).intValue());
++    public EnumHorseArmor dr() {
++        return EnumHorseArmor.a(((Integer) this.datawatcher.get(EntityHorse.bJ)).intValue());
 +    }
 +
 +    public void a(IInventory iinventory) {
-+        EnumHorseArmor enumhorsearmor = this.dL();
++        EnumHorseArmor enumhorsearmor = this.dr();
 +
 +        super.a(iinventory);
-+        EnumHorseArmor enumhorsearmor1 = this.dL();
++        EnumHorseArmor enumhorsearmor1 = this.dr();
 +
 +        if (this.ticksLived > 20 && enumhorsearmor != enumhorsearmor1 && enumhorsearmor1 != EnumHorseArmor.NONE) {
-+            this.a(SoundEffects.cB, 0.5F, 1.0F);
++            this.a(SoundEffects.cH, 0.5F, 1.0F);
 +        }
 +
 +    }
@@ -1147,45 +1147,45 @@ index 0000000..7eaa95a
 +    protected void a(SoundEffectType soundeffecttype) {
 +        super.a(soundeffecttype);
 +        if (this.random.nextInt(10) == 0) {
-+            this.a(SoundEffects.cC, soundeffecttype.a() * 0.6F, soundeffecttype.b());
++            this.a(SoundEffects.cI, soundeffecttype.a() * 0.6F, soundeffecttype.b());
 +        }
 +
 +    }
 +
 +    protected void initAttributes() {
 +        super.initAttributes();
-+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dH());
-+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.dJ());
-+        this.getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(this.dI());
++        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dK());
++        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.dM());
++        this.getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(this.dL());
 +    }
 +
-+    public void A_() {
-+        super.A_();
++    public void B_() {
++        super.B_();
 +        if (this.world.isClientSide && this.datawatcher.a()) {
 +            this.datawatcher.e();
-+            this.dM();
++            this.dO();
 +        }
 +
 +    }
 +
-+    protected SoundEffect G() {
-+        super.G();
-+        return SoundEffects.cz;
++    protected SoundEffect F() {
++        super.F();
++        return SoundEffects.cF;
 +    }
 +
-+    protected SoundEffect bX() {
-+        super.bX();
-+        return SoundEffects.cD;
++    protected SoundEffect cd() {
++        super.cd();
++        return SoundEffects.cJ;
 +    }
 +
-+    protected SoundEffect bW() {
-+        super.bW();
++    protected SoundEffect d(DamageSource damagesource) {
++        super.d(damagesource);
++        return SoundEffects.cM;
++    }
++
++    protected SoundEffect dm() {
++        super.dm();
 +        return SoundEffects.cG;
-+    }
-+
-+    protected SoundEffect dj() {
-+        super.dj();
-+        return SoundEffects.cA;
 +    }
 +
 +    protected MinecraftKey J() {
@@ -1201,7 +1201,7 @@ index 0000000..7eaa95a
 +        } else {
 +            if (!this.isBaby()) {
 +                if (this.isTamed() && entityhuman.isSneaking()) {
-+                    this.f(entityhuman);
++                    this.c(entityhuman);
 +                    return true;
 +                }
 +
@@ -1224,15 +1224,15 @@ index 0000000..7eaa95a
 +                }
 +
 +                if (!this.isTamed()) {
-+                    this.dF();
++                    this.dI();
 +                    return true;
 +                }
 +
 +                boolean flag1 = EnumHorseArmor.a(itemstack) != EnumHorseArmor.NONE;
-+                boolean flag2 = !this.isBaby() && !this.dB() && itemstack.getItem() == Items.SADDLE;
++                boolean flag2 = !this.isBaby() && !this.dE() && itemstack.getItem() == Items.SADDLE;
 +
 +                if (flag1 || flag2) {
-+                    this.f(entityhuman);
++                    this.c(entityhuman);
 +                    return true;
 +                }
 +            }
@@ -1247,7 +1247,7 @@ index 0000000..7eaa95a
 +    }
 +
 +    public boolean mate(EntityAnimal entityanimal) {
-+        return entityanimal == this ? false : (!(entityanimal instanceof EntityHorseDonkey) && !(entityanimal instanceof EntityHorse) ? false : this.dG() && ((EntityHorseAbstract) entityanimal).dG());
++        return entityanimal == this ? false : (!(entityanimal instanceof EntityHorseDonkey) && !(entityanimal instanceof EntityHorse) ? false : this.dJ() && ((EntityHorseAbstract) entityanimal).dJ());
 +    }
 +
 +    public EntityAgeable createChild(EntityAgeable entityageable) {
@@ -1287,7 +1287,7 @@ index 0000000..7eaa95a
 +        return (EntityAgeable) object;
 +    }
 +
-+    public boolean dK() {
++    public boolean dN() {
 +        return true;
 +    }
 +
@@ -1304,7 +1304,7 @@ index 0000000..7eaa95a
 +            i = ((EntityHorse.a) object).a;
 +        } else {
 +            i = this.random.nextInt(7);
-+            object = new EntityHorse.a(i);
++            object = new a(i);
 +        }
 +
 +        this.setVariant(i | this.random.nextInt(5) << 8);
@@ -1322,7 +1322,7 @@ index 0000000..7eaa95a
 +}
 diff --git a/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java b/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java
 new file mode 100644
-index 0000000..22aa68d
+index 0000000..c831725
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java
 @@ -0,0 +1,192 @@
@@ -1330,44 +1330,44 @@ index 0000000..22aa68d
 +
 +public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
 +
-+    private static final DataWatcherObject<Boolean> bG = DataWatcher.a(EntityHorseChestedAbstract.class, DataWatcherRegistry.h);
++    private static final DataWatcherObject<Boolean> bH = DataWatcher.a(EntityHorseChestedAbstract.class, DataWatcherRegistry.h);
 +
 +    public EntityHorseChestedAbstract(World world) {
 +        super(world);
-+        this.bE = false;
++        this.bF = false;
 +    }
 +
 +    protected void i() {
 +        super.i();
-+        this.datawatcher.register(EntityHorseChestedAbstract.bG, Boolean.valueOf(false));
++        this.datawatcher.register(EntityHorseChestedAbstract.bH, Boolean.valueOf(false));
 +    }
 +
 +    protected void initAttributes() {
 +        super.initAttributes();
-+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dH());
++        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dK());
 +        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.17499999701976776D);
 +        this.getAttributeInstance(EntityHorseChestedAbstract.attributeJumpStrength).setValue(0.5D);
 +    }
 +
 +    public boolean isCarryingChest() {
-+        return ((Boolean) this.datawatcher.get(EntityHorseChestedAbstract.bG)).booleanValue();
++        return ((Boolean) this.datawatcher.get(EntityHorseChestedAbstract.bH)).booleanValue();
 +    }
 +
 +    public void setCarryingChest(boolean flag) {
-+        this.datawatcher.set(EntityHorseChestedAbstract.bG, Boolean.valueOf(flag));
++        this.datawatcher.set(EntityHorseChestedAbstract.bH, Boolean.valueOf(flag));
 +    }
 +
-+    protected int di() {
-+        return this.isCarryingChest() ? 17 : super.di();
++    protected int dl() {
++        return this.isCarryingChest() ? 17 : super.dl();
 +    }
 +
-+    public double ay() {
-+        return super.ay() - 0.25D;
++    public double aE() {
++        return super.aE() - 0.25D;
 +    }
 +
-+    protected SoundEffect dj() {
-+        super.dj();
-+        return SoundEffects.aA;
++    protected SoundEffect dm() {
++        super.dm();
++        return SoundEffects.aD;
 +    }
 +
 +    public void die(DamageSource damagesource) {
@@ -1416,7 +1416,7 @@ index 0000000..22aa68d
 +        if (this.isCarryingChest()) {
 +            NBTTagList nbttaglist = nbttagcompound.getList("Items", 10);
 +
-+            this.dx();
++            this.loadChest();
 +
 +            for (int i = 0; i < nbttaglist.size(); ++i) {
 +                NBTTagCompound nbttagcompound1 = nbttaglist.get(i);
@@ -1428,20 +1428,20 @@ index 0000000..22aa68d
 +            }
 +        }
 +
-+        this.dy();
++        this.dB();
 +    }
 +
 +    public boolean c(int i, ItemStack itemstack) {
 +        if (i == 499) {
 +            if (this.isCarryingChest() && itemstack.isEmpty()) {
 +                this.setCarryingChest(false);
-+                this.dx();
++                this.loadChest();
 +                return true;
 +            }
 +
 +            if (!this.isCarryingChest() && itemstack.getItem() == Item.getItemOf(Blocks.CHEST)) {
 +                this.setCarryingChest(true);
-+                this.dx();
++                this.loadChest();
 +                return true;
 +            }
 +        }
@@ -1457,7 +1457,7 @@ index 0000000..22aa68d
 +        } else {
 +            if (!this.isBaby()) {
 +                if (this.isTamed() && entityhuman.isSneaking()) {
-+                    this.f(entityhuman);
++                    this.c(entityhuman);
 +                    return true;
 +                }
 +
@@ -1474,19 +1474,19 @@ index 0000000..22aa68d
 +                        return true;
 +                    }
 +
-+                    this.dF();
++                    this.dI();
 +                    return true;
 +                }
 +
 +                if (!flag && !this.isCarryingChest() && itemstack.getItem() == Item.getItemOf(Blocks.CHEST)) {
 +                    this.setCarryingChest(true);
-+                    this.dk();
++                    this.dn();
 +                    flag = true;
-+                    this.dx();
++                    this.loadChest();
 +                }
 +
-+                if (!flag && !this.isBaby() && !this.dB() && itemstack.getItem() == Items.SADDLE) {
-+                    this.f(entityhuman);
++                if (!flag && !this.isBaby() && !this.dE() && itemstack.getItem() == Items.SADDLE) {
++                    this.c(entityhuman);
 +                    return true;
 +                }
 +
@@ -1510,20 +1510,20 @@ index 0000000..22aa68d
 +        }
 +    }
 +
-+    protected void dk() {
-+        this.a(SoundEffects.aB, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
++    protected void dn() {
++        this.a(SoundEffects.aE, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
 +    }
 +
-+    public int dl() {
++    public int dr() {
 +        return 5;
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/EnumProtocol.java b/src/main/java/net/minecraft/server/EnumProtocol.java
 new file mode 100644
-index 0000000..6e35b48
+index 0000000..1d04959
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/EnumProtocol.java
-@@ -0,0 +1,236 @@
+@@ -0,0 +1,242 @@
 +package net.minecraft.server;
 +
 +import com.google.common.collect.BiMap;
@@ -1579,10 +1579,10 @@ index 0000000..6e35b48
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutWorldParticles.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutLogin.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutMap.class);
++        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntity.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntity.PacketPlayOutRelEntityMove.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntity.PacketPlayOutEntityLook.class);
-+        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntity.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutVehicleMove.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutOpenSignEditor.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutAbilities.class);
@@ -1590,11 +1590,13 @@ index 0000000..6e35b48
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutPlayerInfo.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutPosition.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutBed.class);
++        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutRecipes.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntityDestroy.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutRemoveEntityEffect.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutResourcePackSend.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutRespawn.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntityHeadRotation.class);
++        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutSelectAdvancementTab.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutWorldBorder.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutCamera.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutHeldItemSlot.class);
@@ -1616,9 +1618,11 @@ index 0000000..6e35b48
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutPlayerListHeaderFooter.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutCollect.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntityTeleport.class);
++        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutAdvancements.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutUpdateAttributes.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntityEffect.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInTeleportAccept.class);
++        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInAutoRecipe.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInTabComplete.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInChat.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInClientCommand.class);
@@ -1630,17 +1634,19 @@ index 0000000..6e35b48
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInCustomPayload.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInUseEntity.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInKeepAlive.class);
++        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInFlying.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInFlying.PacketPlayInPosition.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInFlying.PacketPlayInPositionLook.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInFlying.PacketPlayInLook.class);
-+        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInFlying.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInVehicleMove.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInBoatMove.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInAbilities.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInBlockDig.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInEntityAction.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInSteerVehicle.class);
++        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInRecipeDisplayed.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInResourcePackStatus.class);
++        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInAdvancements.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInHeldItemSlot.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInSetCreativeSlot.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInUpdateSign.class);
@@ -1696,7 +1702,7 @@ index 0000000..6e35b48
 +        }
 +    }
 +
-+    public Integer a(EnumProtocolDirection enumprotocoldirection, Packet<?> packet) {
++    public Integer a(EnumProtocolDirection enumprotocoldirection, Packet<?> packet) throws Exception {
 +        return (Integer) ((BiMap) this.h.get(enumprotocoldirection)).inverse().get(packet.getClass());
 +    }
 +
@@ -1826,10 +1832,10 @@ index 0000000..737035b
 +}
 diff --git a/src/main/java/net/minecraft/server/GenericAttributes.java b/src/main/java/net/minecraft/server/GenericAttributes.java
 new file mode 100644
-index 0000000..15ad9fa
+index 0000000..d60cc23
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/GenericAttributes.java
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,120 @@
 +package net.minecraft.server;
 +
 +import java.util.Collection;
@@ -1841,16 +1847,17 @@ index 0000000..15ad9fa
 +
 +public class GenericAttributes {
 +
-+    private static final Logger j = LogManager.getLogger();
++    private static final Logger k = LogManager.getLogger();
 +    public static final IAttribute maxHealth = (new AttributeRanged((IAttribute) null, "generic.maxHealth", 20.0D, 0.0D, 1024.0D)).a("Max Health").a(true);
 +    public static final IAttribute FOLLOW_RANGE = (new AttributeRanged((IAttribute) null, "generic.followRange", 32.0D, 0.0D, 2048.0D)).a("Follow Range");
 +    public static final IAttribute c = (new AttributeRanged((IAttribute) null, "generic.knockbackResistance", 0.0D, 0.0D, 1.0D)).a("Knockback Resistance");
 +    public static final IAttribute MOVEMENT_SPEED = (new AttributeRanged((IAttribute) null, "generic.movementSpeed", 0.699999988079071D, 0.0D, 1024.0D)).a("Movement Speed").a(true);
++    public static final IAttribute e = (new AttributeRanged((IAttribute) null, "generic.flyingSpeed", 0.4000000059604645D, 0.0D, 1024.0D)).a("Flying Speed").a(true);
 +    public static final IAttribute ATTACK_DAMAGE = new AttributeRanged((IAttribute) null, "generic.attackDamage", 2.0D, 0.0D, 2048.0D);
-+    public static final IAttribute f = (new AttributeRanged((IAttribute) null, "generic.attackSpeed", 4.0D, 0.0D, 1024.0D)).a(true);
-+    public static final IAttribute g = (new AttributeRanged((IAttribute) null, "generic.armor", 0.0D, 0.0D, 30.0D)).a(true);
-+    public static final IAttribute h = (new AttributeRanged((IAttribute) null, "generic.armorToughness", 0.0D, 0.0D, 20.0D)).a(true);
-+    public static final IAttribute i = (new AttributeRanged((IAttribute) null, "generic.luck", 0.0D, -1024.0D, 1024.0D)).a(true);
++    public static final IAttribute g = (new AttributeRanged((IAttribute) null, "generic.attackSpeed", 4.0D, 0.0D, 1024.0D)).a(true);
++    public static final IAttribute h = (new AttributeRanged((IAttribute) null, "generic.armor", 0.0D, 0.0D, 30.0D)).a(true);
++    public static final IAttribute i = (new AttributeRanged((IAttribute) null, "generic.armorToughness", 0.0D, 0.0D, 20.0D)).a(true);
++    public static final IAttribute j = (new AttributeRanged((IAttribute) null, "generic.luck", 0.0D, -1024.0D, 1024.0D)).a(true);
 +
 +    public static NBTTagList a(AttributeMapBase attributemapbase) {
 +        NBTTagList nbttaglist = new NBTTagList();
@@ -1907,7 +1914,7 @@ index 0000000..15ad9fa
 +            AttributeInstance attributeinstance = attributemapbase.a(nbttagcompound.getString("Name"));
 +
 +            if (attributeinstance == null) {
-+                GenericAttributes.j.warn("Ignoring unknown attribute \'{}\'", new Object[] { nbttagcompound.getString("Name")});
++                GenericAttributes.k.warn("Ignoring unknown attribute \'{}\'", nbttagcompound.getString("Name"));
 +            } else {
 +                a(attributeinstance, nbttagcompound);
 +            }
@@ -1944,17 +1951,17 @@ index 0000000..15ad9fa
 +        try {
 +            return new AttributeModifier(uuid, nbttagcompound.getString("Name"), nbttagcompound.getDouble("Amount"), nbttagcompound.getInt("Operation"));
 +        } catch (Exception exception) {
-+            GenericAttributes.j.warn("Unable to create attribute: {}", new Object[] { exception.getMessage()});
++            GenericAttributes.k.warn("Unable to create attribute: {}", exception.getMessage());
 +            return null;
 +        }
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/Item.java b/src/main/java/net/minecraft/server/Item.java
 new file mode 100644
-index 0000000..081bf91
+index 0000000..aa1afe1
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/Item.java
-@@ -0,0 +1,785 @@
+@@ -0,0 +1,804 @@
 +package net.minecraft.server;
 +
 +import com.google.common.collect.HashMultimap;
@@ -2060,7 +2067,7 @@ index 0000000..081bf91
 +        return 0;
 +    }
 +
-+    public boolean l() {
++    public boolean k() {
 +        return this.m;
 +    }
 +
@@ -2103,7 +2110,7 @@ index 0000000..081bf91
 +        return false;
 +    }
 +
-+    public Item o() {
++    public Item n() {
 +        this.l = true;
 +        return this;
 +    }
@@ -2130,16 +2137,16 @@ index 0000000..081bf91
 +        return this;
 +    }
 +
-+    public boolean q() {
++    public boolean p() {
 +        return true;
 +    }
 +
 +    @Nullable
-+    public Item r() {
++    public Item q() {
 +        return this.craftingResult;
 +    }
 +
-+    public boolean s() {
++    public boolean r() {
 +        return this.craftingResult != null;
 +    }
 +
@@ -2196,12 +2203,12 @@ index 0000000..081bf91
 +        return 0;
 +    }
 +
-+    public Item a(CreativeModeTab creativemodetab) {
++    public Item b(CreativeModeTab creativemodetab) {
 +        this.n = creativemodetab;
 +        return this;
 +    }
 +
-+    public boolean t() {
++    public boolean s() {
 +        return false;
 +    }
 +
@@ -2213,7 +2220,7 @@ index 0000000..081bf91
 +        return HashMultimap.create();
 +    }
 +
-+    public static void u() {
++    public static void t() {
 +        a(Blocks.AIR, (Item) (new ItemAir(Blocks.AIR)));
 +        a(Blocks.STONE, (new ItemMultiTexture(Blocks.STONE, Blocks.STONE, new ItemMultiTexture.a() {
 +            public String a(ItemStack itemstack) {
@@ -2465,48 +2472,66 @@ index 0000000..081bf91
 +        a(Blocks.dy, (Item) (new ItemShulkerBox(Blocks.dy)));
 +        a(Blocks.dz, (Item) (new ItemShulkerBox(Blocks.dz)));
 +        a(Blocks.dA, (Item) (new ItemShulkerBox(Blocks.dA)));
++        b(Blocks.dB);
++        b(Blocks.dC);
++        b(Blocks.dD);
++        b(Blocks.dE);
++        b(Blocks.dF);
++        b(Blocks.dG);
++        b(Blocks.dH);
++        b(Blocks.dI);
++        b(Blocks.dJ);
++        b(Blocks.dK);
++        b(Blocks.dL);
++        b(Blocks.dM);
++        b(Blocks.dN);
++        b(Blocks.dO);
++        b(Blocks.dP);
++        b(Blocks.dQ);
++        a(Blocks.dR, (new ItemCloth(Blocks.dR)).c("concrete"));
++        a(Blocks.dS, (new ItemCloth(Blocks.dS)).c("concrete_powder"));
 +        b(Blocks.STRUCTURE_BLOCK);
-+        a(256, "iron_shovel", (new ItemSpade(Item.EnumToolMaterial.IRON)).c("shovelIron"));
-+        a(257, "iron_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.IRON)).c("pickaxeIron"));
-+        a(258, "iron_axe", (new ItemAxe(Item.EnumToolMaterial.IRON)).c("hatchetIron"));
++        a(256, "iron_shovel", (new ItemSpade(EnumToolMaterial.IRON)).c("shovelIron"));
++        a(257, "iron_pickaxe", (new ItemPickaxe(EnumToolMaterial.IRON)).c("pickaxeIron"));
++        a(258, "iron_axe", (new ItemAxe(EnumToolMaterial.IRON)).c("hatchetIron"));
 +        a(259, "flint_and_steel", (new ItemFlintAndSteel()).c("flintAndSteel"));
 +        a(260, "apple", (new ItemFood(4, 0.3F, false)).c("apple"));
 +        a(261, "bow", (new ItemBow()).c("bow"));
 +        a(262, "arrow", (new ItemArrow()).c("arrow"));
 +        a(263, "coal", (new ItemCoal()).c("coal"));
-+        a(264, "diamond", (new Item()).c("diamond").a(CreativeModeTab.l));
-+        a(265, "iron_ingot", (new Item()).c("ingotIron").a(CreativeModeTab.l));
-+        a(266, "gold_ingot", (new Item()).c("ingotGold").a(CreativeModeTab.l));
-+        a(267, "iron_sword", (new ItemSword(Item.EnumToolMaterial.IRON)).c("swordIron"));
-+        a(268, "wooden_sword", (new ItemSword(Item.EnumToolMaterial.WOOD)).c("swordWood"));
-+        a(269, "wooden_shovel", (new ItemSpade(Item.EnumToolMaterial.WOOD)).c("shovelWood"));
-+        a(270, "wooden_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.WOOD)).c("pickaxeWood"));
-+        a(271, "wooden_axe", (new ItemAxe(Item.EnumToolMaterial.WOOD)).c("hatchetWood"));
-+        a(272, "stone_sword", (new ItemSword(Item.EnumToolMaterial.STONE)).c("swordStone"));
-+        a(273, "stone_shovel", (new ItemSpade(Item.EnumToolMaterial.STONE)).c("shovelStone"));
-+        a(274, "stone_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.STONE)).c("pickaxeStone"));
-+        a(275, "stone_axe", (new ItemAxe(Item.EnumToolMaterial.STONE)).c("hatchetStone"));
-+        a(276, "diamond_sword", (new ItemSword(Item.EnumToolMaterial.DIAMOND)).c("swordDiamond"));
-+        a(277, "diamond_shovel", (new ItemSpade(Item.EnumToolMaterial.DIAMOND)).c("shovelDiamond"));
-+        a(278, "diamond_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.DIAMOND)).c("pickaxeDiamond"));
-+        a(279, "diamond_axe", (new ItemAxe(Item.EnumToolMaterial.DIAMOND)).c("hatchetDiamond"));
-+        a(280, "stick", (new Item()).o().c("stick").a(CreativeModeTab.l));
-+        a(281, "bowl", (new Item()).c("bowl").a(CreativeModeTab.l));
++        a(264, "diamond", (new Item()).c("diamond").b(CreativeModeTab.l));
++        a(265, "iron_ingot", (new Item()).c("ingotIron").b(CreativeModeTab.l));
++        a(266, "gold_ingot", (new Item()).c("ingotGold").b(CreativeModeTab.l));
++        a(267, "iron_sword", (new ItemSword(EnumToolMaterial.IRON)).c("swordIron"));
++        a(268, "wooden_sword", (new ItemSword(EnumToolMaterial.WOOD)).c("swordWood"));
++        a(269, "wooden_shovel", (new ItemSpade(EnumToolMaterial.WOOD)).c("shovelWood"));
++        a(270, "wooden_pickaxe", (new ItemPickaxe(EnumToolMaterial.WOOD)).c("pickaxeWood"));
++        a(271, "wooden_axe", (new ItemAxe(EnumToolMaterial.WOOD)).c("hatchetWood"));
++        a(272, "stone_sword", (new ItemSword(EnumToolMaterial.STONE)).c("swordStone"));
++        a(273, "stone_shovel", (new ItemSpade(EnumToolMaterial.STONE)).c("shovelStone"));
++        a(274, "stone_pickaxe", (new ItemPickaxe(EnumToolMaterial.STONE)).c("pickaxeStone"));
++        a(275, "stone_axe", (new ItemAxe(EnumToolMaterial.STONE)).c("hatchetStone"));
++        a(276, "diamond_sword", (new ItemSword(EnumToolMaterial.DIAMOND)).c("swordDiamond"));
++        a(277, "diamond_shovel", (new ItemSpade(EnumToolMaterial.DIAMOND)).c("shovelDiamond"));
++        a(278, "diamond_pickaxe", (new ItemPickaxe(EnumToolMaterial.DIAMOND)).c("pickaxeDiamond"));
++        a(279, "diamond_axe", (new ItemAxe(EnumToolMaterial.DIAMOND)).c("hatchetDiamond"));
++        a(280, "stick", (new Item()).n().c("stick").b(CreativeModeTab.l));
++        a(281, "bowl", (new Item()).c("bowl").b(CreativeModeTab.l));
 +        a(282, "mushroom_stew", (new ItemSoup(6)).c("mushroomStew"));
-+        a(283, "golden_sword", (new ItemSword(Item.EnumToolMaterial.GOLD)).c("swordGold"));
-+        a(284, "golden_shovel", (new ItemSpade(Item.EnumToolMaterial.GOLD)).c("shovelGold"));
-+        a(285, "golden_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.GOLD)).c("pickaxeGold"));
-+        a(286, "golden_axe", (new ItemAxe(Item.EnumToolMaterial.GOLD)).c("hatchetGold"));
-+        a(287, "string", (new ItemReed(Blocks.TRIPWIRE)).c("string").a(CreativeModeTab.l));
-+        a(288, "feather", (new Item()).c("feather").a(CreativeModeTab.l));
-+        a(289, "gunpowder", (new Item()).c("sulphur").a(CreativeModeTab.l));
-+        a(290, "wooden_hoe", (new ItemHoe(Item.EnumToolMaterial.WOOD)).c("hoeWood"));
-+        a(291, "stone_hoe", (new ItemHoe(Item.EnumToolMaterial.STONE)).c("hoeStone"));
-+        a(292, "iron_hoe", (new ItemHoe(Item.EnumToolMaterial.IRON)).c("hoeIron"));
-+        a(293, "diamond_hoe", (new ItemHoe(Item.EnumToolMaterial.DIAMOND)).c("hoeDiamond"));
-+        a(294, "golden_hoe", (new ItemHoe(Item.EnumToolMaterial.GOLD)).c("hoeGold"));
++        a(283, "golden_sword", (new ItemSword(EnumToolMaterial.GOLD)).c("swordGold"));
++        a(284, "golden_shovel", (new ItemSpade(EnumToolMaterial.GOLD)).c("shovelGold"));
++        a(285, "golden_pickaxe", (new ItemPickaxe(EnumToolMaterial.GOLD)).c("pickaxeGold"));
++        a(286, "golden_axe", (new ItemAxe(EnumToolMaterial.GOLD)).c("hatchetGold"));
++        a(287, "string", (new ItemReed(Blocks.TRIPWIRE)).c("string").b(CreativeModeTab.l));
++        a(288, "feather", (new Item()).c("feather").b(CreativeModeTab.l));
++        a(289, "gunpowder", (new Item()).c("sulphur").b(CreativeModeTab.l));
++        a(290, "wooden_hoe", (new ItemHoe(EnumToolMaterial.WOOD)).c("hoeWood"));
++        a(291, "stone_hoe", (new ItemHoe(EnumToolMaterial.STONE)).c("hoeStone"));
++        a(292, "iron_hoe", (new ItemHoe(EnumToolMaterial.IRON)).c("hoeIron"));
++        a(293, "diamond_hoe", (new ItemHoe(EnumToolMaterial.DIAMOND)).c("hoeDiamond"));
++        a(294, "golden_hoe", (new ItemHoe(EnumToolMaterial.GOLD)).c("hoeGold"));
 +        a(295, "wheat_seeds", (new ItemSeeds(Blocks.WHEAT, Blocks.FARMLAND)).c("seeds"));
-+        a(296, "wheat", (new Item()).c("wheat").a(CreativeModeTab.l));
++        a(296, "wheat", (new Item()).c("wheat").b(CreativeModeTab.l));
 +        a(297, "bread", (new ItemFood(5, 0.6F, false)).c("bread"));
 +        a(298, "leather_helmet", (new ItemArmor(ItemArmor.EnumArmorMaterial.LEATHER, 0, EnumItemSlot.HEAD)).c("helmetCloth"));
 +        a(299, "leather_chestplate", (new ItemArmor(ItemArmor.EnumArmorMaterial.LEATHER, 0, EnumItemSlot.CHEST)).c("chestplateCloth"));
@@ -2528,7 +2553,7 @@ index 0000000..081bf91
 +        a(315, "golden_chestplate", (new ItemArmor(ItemArmor.EnumArmorMaterial.GOLD, 4, EnumItemSlot.CHEST)).c("chestplateGold"));
 +        a(316, "golden_leggings", (new ItemArmor(ItemArmor.EnumArmorMaterial.GOLD, 4, EnumItemSlot.LEGS)).c("leggingsGold"));
 +        a(317, "golden_boots", (new ItemArmor(ItemArmor.EnumArmorMaterial.GOLD, 4, EnumItemSlot.FEET)).c("bootsGold"));
-+        a(318, "flint", (new Item()).c("flint").a(CreativeModeTab.l));
++        a(318, "flint", (new Item()).c("flint").b(CreativeModeTab.l));
 +        a(319, "porkchop", (new ItemFood(3, 0.3F, true)).c("porkchopRaw"));
 +        a(320, "cooked_porkchop", (new ItemFood(8, 0.8F, true)).c("porkchopCooked"));
 +        a(321, "painting", (new ItemHanging(EntityPainting.class)).c("painting"));
@@ -2546,29 +2571,29 @@ index 0000000..081bf91
 +        a(331, "redstone", (new ItemRedstone()).c("redstone"));
 +        a(332, "snowball", (new ItemSnowball()).c("snowball"));
 +        a(333, "boat", new ItemBoat(EntityBoat.EnumBoatType.OAK));
-+        a(334, "leather", (new Item()).c("leather").a(CreativeModeTab.l));
++        a(334, "leather", (new Item()).c("leather").b(CreativeModeTab.l));
 +        a(335, "milk_bucket", (new ItemMilkBucket()).c("milk").b(item));
-+        a(336, "brick", (new Item()).c("brick").a(CreativeModeTab.l));
-+        a(337, "clay_ball", (new Item()).c("clay").a(CreativeModeTab.l));
-+        a(338, "reeds", (new ItemReed(Blocks.REEDS)).c("reeds").a(CreativeModeTab.l));
-+        a(339, "paper", (new Item()).c("paper").a(CreativeModeTab.f));
-+        a(340, "book", (new ItemBook()).c("book").a(CreativeModeTab.f));
-+        a(341, "slime_ball", (new Item()).c("slimeball").a(CreativeModeTab.f));
++        a(336, "brick", (new Item()).c("brick").b(CreativeModeTab.l));
++        a(337, "clay_ball", (new Item()).c("clay").b(CreativeModeTab.l));
++        a(338, "reeds", (new ItemReed(Blocks.REEDS)).c("reeds").b(CreativeModeTab.l));
++        a(339, "paper", (new Item()).c("paper").b(CreativeModeTab.f));
++        a(340, "book", (new ItemBook()).c("book").b(CreativeModeTab.f));
++        a(341, "slime_ball", (new Item()).c("slimeball").b(CreativeModeTab.f));
 +        a(342, "chest_minecart", (new ItemMinecart(EntityMinecartAbstract.EnumMinecartType.CHEST)).c("minecartChest"));
 +        a(343, "furnace_minecart", (new ItemMinecart(EntityMinecartAbstract.EnumMinecartType.FURNACE)).c("minecartFurnace"));
 +        a(344, "egg", (new ItemEgg()).c("egg"));
-+        a(345, "compass", (new ItemCompass()).c("compass").a(CreativeModeTab.i));
++        a(345, "compass", (new ItemCompass()).c("compass").b(CreativeModeTab.i));
 +        a(346, "fishing_rod", (new ItemFishingRod()).c("fishingRod"));
-+        a(347, "clock", (new ItemClock()).c("clock").a(CreativeModeTab.i));
-+        a(348, "glowstone_dust", (new Item()).c("yellowDust").a(CreativeModeTab.l));
++        a(347, "clock", (new ItemClock()).c("clock").b(CreativeModeTab.i));
++        a(348, "glowstone_dust", (new Item()).c("yellowDust").b(CreativeModeTab.l));
 +        a(349, "fish", (new ItemFish(false)).c("fish").a(true));
 +        a(350, "cooked_fish", (new ItemFish(true)).c("fish").a(true));
 +        a(351, "dye", (new ItemDye()).c("dyePowder"));
-+        a(352, "bone", (new Item()).c("bone").o().a(CreativeModeTab.f));
-+        a(353, "sugar", (new Item()).c("sugar").a(CreativeModeTab.l));
-+        a(354, "cake", (new ItemReed(Blocks.CAKE)).d(1).c("cake").a(CreativeModeTab.h));
++        a(352, "bone", (new Item()).c("bone").n().b(CreativeModeTab.f));
++        a(353, "sugar", (new Item()).c("sugar").b(CreativeModeTab.l));
++        a(354, "cake", (new ItemReed(Blocks.CAKE)).d(1).c("cake").b(CreativeModeTab.h));
 +        a(355, "bed", (new ItemBed()).d(1).c("bed"));
-+        a(356, "repeater", (new ItemReed(Blocks.UNPOWERED_REPEATER)).c("diode").a(CreativeModeTab.d));
++        a(356, "repeater", (new ItemReed(Blocks.UNPOWERED_REPEATER)).c("diode").b(CreativeModeTab.d));
 +        a(357, "cookie", (new ItemFood(2, 0.1F, false)).c("cookie"));
 +        a(358, "filled_map", (new ItemWorldMap()).c("map"));
 +        a(359, "shears", (new ItemShears()).c("shears"));
@@ -2581,62 +2606,62 @@ index 0000000..081bf91
 +        a(366, "cooked_chicken", (new ItemFood(6, 0.6F, true)).c("chickenCooked"));
 +        a(367, "rotten_flesh", (new ItemFood(4, 0.1F, true)).a(new MobEffect(MobEffects.HUNGER, 600, 0), 0.8F).c("rottenFlesh"));
 +        a(368, "ender_pearl", (new ItemEnderPearl()).c("enderPearl"));
-+        a(369, "blaze_rod", (new Item()).c("blazeRod").a(CreativeModeTab.l).o());
-+        a(370, "ghast_tear", (new Item()).c("ghastTear").a(CreativeModeTab.k));
-+        a(371, "gold_nugget", (new Item()).c("goldNugget").a(CreativeModeTab.l));
++        a(369, "blaze_rod", (new Item()).c("blazeRod").b(CreativeModeTab.l).n());
++        a(370, "ghast_tear", (new Item()).c("ghastTear").b(CreativeModeTab.k));
++        a(371, "gold_nugget", (new Item()).c("goldNugget").b(CreativeModeTab.l));
 +        a(372, "nether_wart", (new ItemSeeds(Blocks.NETHER_WART, Blocks.SOUL_SAND)).c("netherStalkSeeds"));
 +        a(373, "potion", (new ItemPotion()).c("potion"));
 +        Item item1 = (new ItemGlassBottle()).c("glassBottle");
 +
 +        a(374, "glass_bottle", item1);
 +        a(375, "spider_eye", (new ItemFood(2, 0.8F, false)).a(new MobEffect(MobEffects.POISON, 100, 0), 1.0F).c("spiderEye"));
-+        a(376, "fermented_spider_eye", (new Item()).c("fermentedSpiderEye").a(CreativeModeTab.k));
-+        a(377, "blaze_powder", (new Item()).c("blazePowder").a(CreativeModeTab.k));
-+        a(378, "magma_cream", (new Item()).c("magmaCream").a(CreativeModeTab.k));
-+        a(379, "brewing_stand", (new ItemReed(Blocks.BREWING_STAND)).c("brewingStand").a(CreativeModeTab.k));
-+        a(380, "cauldron", (new ItemReed(Blocks.cauldron)).c("cauldron").a(CreativeModeTab.k));
++        a(376, "fermented_spider_eye", (new Item()).c("fermentedSpiderEye").b(CreativeModeTab.k));
++        a(377, "blaze_powder", (new Item()).c("blazePowder").b(CreativeModeTab.k));
++        a(378, "magma_cream", (new Item()).c("magmaCream").b(CreativeModeTab.k));
++        a(379, "brewing_stand", (new ItemReed(Blocks.BREWING_STAND)).c("brewingStand").b(CreativeModeTab.k));
++        a(380, "cauldron", (new ItemReed(Blocks.cauldron)).c("cauldron").b(CreativeModeTab.k));
 +        a(381, "ender_eye", (new ItemEnderEye()).c("eyeOfEnder"));
-+        a(382, "speckled_melon", (new Item()).c("speckledMelon").a(CreativeModeTab.k));
++        a(382, "speckled_melon", (new Item()).c("speckledMelon").b(CreativeModeTab.k));
 +        a(383, "spawn_egg", (new ItemMonsterEgg()).c("monsterPlacer"));
 +        a(384, "experience_bottle", (new ItemExpBottle()).c("expBottle"));
 +        a(385, "fire_charge", (new ItemFireball()).c("fireball"));
-+        a(386, "writable_book", (new ItemBookAndQuill()).c("writingBook").a(CreativeModeTab.f));
++        a(386, "writable_book", (new ItemBookAndQuill()).c("writingBook").b(CreativeModeTab.f));
 +        a(387, "written_book", (new ItemWrittenBook()).c("writtenBook").d(16));
-+        a(388, "emerald", (new Item()).c("emerald").a(CreativeModeTab.l));
++        a(388, "emerald", (new Item()).c("emerald").b(CreativeModeTab.l));
 +        a(389, "item_frame", (new ItemHanging(EntityItemFrame.class)).c("frame"));
-+        a(390, "flower_pot", (new ItemReed(Blocks.FLOWER_POT)).c("flowerPot").a(CreativeModeTab.c));
++        a(390, "flower_pot", (new ItemReed(Blocks.FLOWER_POT)).c("flowerPot").b(CreativeModeTab.c));
 +        a(391, "carrot", (new ItemSeedFood(3, 0.6F, Blocks.CARROTS, Blocks.FARMLAND)).c("carrots"));
 +        a(392, "potato", (new ItemSeedFood(1, 0.3F, Blocks.POTATOES, Blocks.FARMLAND)).c("potato"));
 +        a(393, "baked_potato", (new ItemFood(5, 0.6F, false)).c("potatoBaked"));
 +        a(394, "poisonous_potato", (new ItemFood(2, 0.3F, false)).a(new MobEffect(MobEffects.POISON, 100, 0), 0.6F).c("potatoPoisonous"));
 +        a(395, "map", (new ItemMapEmpty()).c("emptyMap"));
-+        a(396, "golden_carrot", (new ItemFood(6, 1.2F, false)).c("carrotGolden").a(CreativeModeTab.k));
++        a(396, "golden_carrot", (new ItemFood(6, 1.2F, false)).c("carrotGolden").b(CreativeModeTab.k));
 +        a(397, "skull", (new ItemSkull()).c("skull"));
 +        a(398, "carrot_on_a_stick", (new ItemCarrotStick()).c("carrotOnAStick"));
-+        a(399, "nether_star", (new ItemNetherStar()).c("netherStar").a(CreativeModeTab.l));
-+        a(400, "pumpkin_pie", (new ItemFood(8, 0.3F, false)).c("pumpkinPie").a(CreativeModeTab.h));
++        a(399, "nether_star", (new ItemNetherStar()).c("netherStar").b(CreativeModeTab.l));
++        a(400, "pumpkin_pie", (new ItemFood(8, 0.3F, false)).c("pumpkinPie").b(CreativeModeTab.h));
 +        a(401, "fireworks", (new ItemFireworks()).c("fireworks"));
-+        a(402, "firework_charge", (new ItemFireworksCharge()).c("fireworksCharge").a(CreativeModeTab.f));
++        a(402, "firework_charge", (new ItemFireworksCharge()).c("fireworksCharge").b(CreativeModeTab.f));
 +        a(403, "enchanted_book", (new ItemEnchantedBook()).d(1).c("enchantedBook"));
-+        a(404, "comparator", (new ItemReed(Blocks.UNPOWERED_COMPARATOR)).c("comparator").a(CreativeModeTab.d));
-+        a(405, "netherbrick", (new Item()).c("netherbrick").a(CreativeModeTab.l));
-+        a(406, "quartz", (new Item()).c("netherquartz").a(CreativeModeTab.l));
++        a(404, "comparator", (new ItemReed(Blocks.UNPOWERED_COMPARATOR)).c("comparator").b(CreativeModeTab.d));
++        a(405, "netherbrick", (new Item()).c("netherbrick").b(CreativeModeTab.l));
++        a(406, "quartz", (new Item()).c("netherquartz").b(CreativeModeTab.l));
 +        a(407, "tnt_minecart", (new ItemMinecart(EntityMinecartAbstract.EnumMinecartType.TNT)).c("minecartTnt"));
 +        a(408, "hopper_minecart", (new ItemMinecart(EntityMinecartAbstract.EnumMinecartType.HOPPER)).c("minecartHopper"));
-+        a(409, "prismarine_shard", (new Item()).c("prismarineShard").a(CreativeModeTab.l));
-+        a(410, "prismarine_crystals", (new Item()).c("prismarineCrystals").a(CreativeModeTab.l));
++        a(409, "prismarine_shard", (new Item()).c("prismarineShard").b(CreativeModeTab.l));
++        a(410, "prismarine_crystals", (new Item()).c("prismarineCrystals").b(CreativeModeTab.l));
 +        a(411, "rabbit", (new ItemFood(3, 0.3F, true)).c("rabbitRaw"));
 +        a(412, "cooked_rabbit", (new ItemFood(5, 0.6F, true)).c("rabbitCooked"));
 +        a(413, "rabbit_stew", (new ItemSoup(10)).c("rabbitStew"));
-+        a(414, "rabbit_foot", (new Item()).c("rabbitFoot").a(CreativeModeTab.k));
-+        a(415, "rabbit_hide", (new Item()).c("rabbitHide").a(CreativeModeTab.l));
++        a(414, "rabbit_foot", (new Item()).c("rabbitFoot").b(CreativeModeTab.k));
++        a(415, "rabbit_hide", (new Item()).c("rabbitHide").b(CreativeModeTab.l));
 +        a(416, "armor_stand", (new ItemArmorStand()).c("armorStand").d(16));
-+        a(417, "iron_horse_armor", (new Item()).c("horsearmormetal").d(1).a(CreativeModeTab.f));
-+        a(418, "golden_horse_armor", (new Item()).c("horsearmorgold").d(1).a(CreativeModeTab.f));
-+        a(419, "diamond_horse_armor", (new Item()).c("horsearmordiamond").d(1).a(CreativeModeTab.f));
++        a(417, "iron_horse_armor", (new Item()).c("horsearmormetal").d(1).b(CreativeModeTab.f));
++        a(418, "golden_horse_armor", (new Item()).c("horsearmorgold").d(1).b(CreativeModeTab.f));
++        a(419, "diamond_horse_armor", (new Item()).c("horsearmordiamond").d(1).b(CreativeModeTab.f));
 +        a(420, "lead", (new ItemLeash()).c("leash"));
 +        a(421, "name_tag", (new ItemNameTag()).c("nameTag"));
-+        a(422, "command_block_minecart", (new ItemMinecart(EntityMinecartAbstract.EnumMinecartType.COMMAND_BLOCK)).c("minecartCommandBlock").a((CreativeModeTab) null));
++        a(422, "command_block_minecart", (new ItemMinecart(EntityMinecartAbstract.EnumMinecartType.COMMAND_BLOCK)).c("minecartCommandBlock").b((CreativeModeTab) null));
 +        a(423, "mutton", (new ItemFood(2, 0.3F, true)).c("muttonRaw"));
 +        a(424, "cooked_mutton", (new ItemFood(6, 0.8F, true)).c("muttonCooked"));
 +        a(425, "banner", (new ItemBanner()).c("banner"));
@@ -2646,12 +2671,12 @@ index 0000000..081bf91
 +        a(429, "jungle_door", (new ItemDoor(Blocks.JUNGLE_DOOR)).c("doorJungle"));
 +        a(430, "acacia_door", (new ItemDoor(Blocks.ACACIA_DOOR)).c("doorAcacia"));
 +        a(431, "dark_oak_door", (new ItemDoor(Blocks.DARK_OAK_DOOR)).c("doorDarkOak"));
-+        a(432, "chorus_fruit", (new ItemChorusFruit(4, 0.3F)).h().c("chorusFruit").a(CreativeModeTab.l));
-+        a(433, "chorus_fruit_popped", (new Item()).c("chorusFruitPopped").a(CreativeModeTab.l));
++        a(432, "chorus_fruit", (new ItemChorusFruit(4, 0.3F)).h().c("chorusFruit").b(CreativeModeTab.l));
++        a(433, "chorus_fruit_popped", (new Item()).c("chorusFruitPopped").b(CreativeModeTab.l));
 +        a(434, "beetroot", (new ItemFood(1, 0.6F, false)).c("beetroot"));
 +        a(435, "beetroot_seeds", (new ItemSeeds(Blocks.BEETROOT, Blocks.FARMLAND)).c("beetroot_seeds"));
 +        a(436, "beetroot_soup", (new ItemSoup(6)).c("beetroot_soup"));
-+        a(437, "dragon_breath", (new Item()).a(CreativeModeTab.k).c("dragon_breath").b(item1));
++        a(437, "dragon_breath", (new Item()).b(CreativeModeTab.k).c("dragon_breath").b(item1));
 +        a(438, "splash_potion", (new ItemSplashPotion()).c("splash_potion"));
 +        a(439, "spectral_arrow", (new ItemSpectralArrow()).c("spectral_arrow"));
 +        a(440, "tipped_arrow", (new ItemTippedArrow()).c("tipped_arrow"));
@@ -2663,21 +2688,22 @@ index 0000000..081bf91
 +        a(446, "jungle_boat", new ItemBoat(EntityBoat.EnumBoatType.JUNGLE));
 +        a(447, "acacia_boat", new ItemBoat(EntityBoat.EnumBoatType.ACACIA));
 +        a(448, "dark_oak_boat", new ItemBoat(EntityBoat.EnumBoatType.DARK_OAK));
-+        a(449, "totem_of_undying", (new Item()).c("totem").d(1).a(CreativeModeTab.j));
-+        a(450, "shulker_shell", (new Item()).c("shulkerShell").a(CreativeModeTab.l));
-+        a(452, "iron_nugget", (new Item()).c("ironNugget").a(CreativeModeTab.l));
-+        a(2256, "record_13", (new ItemRecord("13", SoundEffects.fa)).c("record"));
-+        a(2257, "record_cat", (new ItemRecord("cat", SoundEffects.fc)).c("record"));
-+        a(2258, "record_blocks", (new ItemRecord("blocks", SoundEffects.fb)).c("record"));
-+        a(2259, "record_chirp", (new ItemRecord("chirp", SoundEffects.fd)).c("record"));
-+        a(2260, "record_far", (new ItemRecord("far", SoundEffects.fe)).c("record"));
-+        a(2261, "record_mall", (new ItemRecord("mall", SoundEffects.ff)).c("record"));
-+        a(2262, "record_mellohi", (new ItemRecord("mellohi", SoundEffects.fg)).c("record"));
-+        a(2263, "record_stal", (new ItemRecord("stal", SoundEffects.fh)).c("record"));
-+        a(2264, "record_strad", (new ItemRecord("strad", SoundEffects.fi)).c("record"));
-+        a(2265, "record_ward", (new ItemRecord("ward", SoundEffects.fk)).c("record"));
-+        a(2266, "record_11", (new ItemRecord("11", SoundEffects.eZ)).c("record"));
-+        a(2267, "record_wait", (new ItemRecord("wait", SoundEffects.fj)).c("record"));
++        a(449, "totem_of_undying", (new Item()).c("totem").d(1).b(CreativeModeTab.j));
++        a(450, "shulker_shell", (new Item()).c("shulkerShell").b(CreativeModeTab.l));
++        a(452, "iron_nugget", (new Item()).c("ironNugget").b(CreativeModeTab.l));
++        a(453, "knowledge_book", (new ItemKnowledgeBook()).c("knowledgeBook"));
++        a(2256, "record_13", (new ItemRecord("13", SoundEffects.gb)).c("record"));
++        a(2257, "record_cat", (new ItemRecord("cat", SoundEffects.gd)).c("record"));
++        a(2258, "record_blocks", (new ItemRecord("blocks", SoundEffects.gc)).c("record"));
++        a(2259, "record_chirp", (new ItemRecord("chirp", SoundEffects.ge)).c("record"));
++        a(2260, "record_far", (new ItemRecord("far", SoundEffects.gf)).c("record"));
++        a(2261, "record_mall", (new ItemRecord("mall", SoundEffects.gg)).c("record"));
++        a(2262, "record_mellohi", (new ItemRecord("mellohi", SoundEffects.gh)).c("record"));
++        a(2263, "record_stal", (new ItemRecord("stal", SoundEffects.gi)).c("record"));
++        a(2264, "record_strad", (new ItemRecord("strad", SoundEffects.gj)).c("record"));
++        a(2265, "record_ward", (new ItemRecord("ward", SoundEffects.gl)).c("record"));
++        a(2266, "record_11", (new ItemRecord("11", SoundEffects.ga)).c("record"));
++        a(2267, "record_wait", (new ItemRecord("wait", SoundEffects.gk)).c("record"));
 +    }
 +
 +    private static void b(Block block) {
@@ -2736,7 +2762,7 @@ index 0000000..081bf91
 +        }
 +
 +        public Item f() {
-+            return this == Item.EnumToolMaterial.WOOD ? Item.getItemOf(Blocks.PLANKS) : (this == Item.EnumToolMaterial.STONE ? Item.getItemOf(Blocks.COBBLESTONE) : (this == Item.EnumToolMaterial.GOLD ? Items.GOLD_INGOT : (this == Item.EnumToolMaterial.IRON ? Items.IRON_INGOT : (this == Item.EnumToolMaterial.DIAMOND ? Items.DIAMOND : null))));
++            return this == EnumToolMaterial.WOOD ? Item.getItemOf(Blocks.PLANKS) : (this == EnumToolMaterial.STONE ? Item.getItemOf(Blocks.COBBLESTONE) : (this == EnumToolMaterial.GOLD ? Items.GOLD_INGOT : (this == EnumToolMaterial.IRON ? Items.IRON_INGOT : (this == EnumToolMaterial.DIAMOND ? Items.DIAMOND : null))));
 +        }
 +    }
 +}
@@ -2814,7 +2840,7 @@ index 0000000..e5f457b
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketDecoder.java b/src/main/java/net/minecraft/server/PacketDecoder.java
 new file mode 100644
-index 0000000..fc22c20
+index 0000000..0f7cdac
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketDecoder.java
 @@ -0,0 +1,45 @@
@@ -2855,7 +2881,7 @@ index 0000000..fc22c20
 +                } else {
 +                    list.add(packet);
 +                    if (PacketDecoder.a.isDebugEnabled()) {
-+                        PacketDecoder.a.debug(PacketDecoder.b, " IN: [{}:{}] {}", new Object[] { channelhandlercontext.channel().attr(NetworkManager.c).get(), Integer.valueOf(i), packet.getClass().getName()});
++                        PacketDecoder.a.debug(PacketDecoder.b, " IN: [{}:{}] {}", channelhandlercontext.channel().attr(NetworkManager.c).get(), Integer.valueOf(i), packet.getClass().getName());
 +                    }
 +
 +                }
@@ -2865,10 +2891,10 @@ index 0000000..fc22c20
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketEncoder.java b/src/main/java/net/minecraft/server/PacketEncoder.java
 new file mode 100644
-index 0000000..a79fa01
+index 0000000..a6da6f5
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketEncoder.java
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,54 @@
 +package net.minecraft.server;
 +
 +import io.netty.buffer.ByteBuf;
@@ -2891,25 +2917,31 @@ index 0000000..a79fa01
 +    }
 +
 +    protected void a(ChannelHandlerContext channelhandlercontext, Packet<?> packet, ByteBuf bytebuf) throws Exception {
-+        Integer integer = ((EnumProtocol) channelhandlercontext.channel().attr(NetworkManager.c).get()).a(this.c, packet);
++        EnumProtocol enumprotocol = (EnumProtocol) channelhandlercontext.channel().attr(NetworkManager.c).get();
 +
-+        if (PacketEncoder.a.isDebugEnabled()) {
-+            PacketEncoder.a.debug(PacketEncoder.b, "OUT: [{}:{}] {}", new Object[] { channelhandlercontext.channel().attr(NetworkManager.c).get(), integer, packet.getClass().getName()});
-+        }
-+
-+        if (integer == null) {
-+            throw new IOException("Can\'t serialize unregistered packet");
++        if (enumprotocol == null) {
++            throw new RuntimeException("ConnectionProtocol unknown: " + packet.toString());
 +        } else {
-+            PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf);
++            Integer integer = enumprotocol.a(this.c, packet);
 +
-+            packetdataserializer.d(integer.intValue());
-+
-+            try {
-+                packet.b(packetdataserializer);
-+            } catch (Throwable throwable) {
-+                PacketEncoder.a.error(throwable);
++            if (PacketEncoder.a.isDebugEnabled()) {
++                PacketEncoder.a.debug(PacketEncoder.b, "OUT: [{}:{}] {}", channelhandlercontext.channel().attr(NetworkManager.c).get(), integer, packet.getClass().getName());
 +            }
 +
++            if (integer == null) {
++                throw new IOException("Can\'t serialize unregistered packet");
++            } else {
++                PacketDataSerializer packetdataserializer = new PacketDataSerializer(bytebuf);
++
++                packetdataserializer.d(integer.intValue());
++
++                try {
++                    packet.b(packetdataserializer);
++                } catch (Throwable throwable) {
++                    PacketEncoder.a.error(throwable);
++                }
++
++            }
 +        }
 +    }
 +
@@ -2964,7 +2996,7 @@ index 0000000..1cb9d60
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayInResourcePackStatus.java b/src/main/java/net/minecraft/server/PacketPlayInResourcePackStatus.java
 new file mode 100644
-index 0000000..512b3e4
+index 0000000..a9d3bfc
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayInResourcePackStatus.java
 @@ -0,0 +1,33 @@
@@ -2974,16 +3006,16 @@ index 0000000..512b3e4
 +
 +public class PacketPlayInResourcePackStatus implements Packet<PacketListenerPlayIn> {
 +
-+    public PacketPlayInResourcePackStatus.EnumResourcePackStatus status;
++    public EnumResourcePackStatus status;
 +
 +    public PacketPlayInResourcePackStatus() {}
 +
-+    public PacketPlayInResourcePackStatus(PacketPlayInResourcePackStatus.EnumResourcePackStatus packetplayinresourcepackstatus_enumresourcepackstatus) {
++    public PacketPlayInResourcePackStatus(EnumResourcePackStatus packetplayinresourcepackstatus_enumresourcepackstatus) {
 +        this.status = packetplayinresourcepackstatus_enumresourcepackstatus;
 +    }
 +
 +    public void a(PacketDataSerializer packetdataserializer) throws IOException {
-+        this.status = (PacketPlayInResourcePackStatus.EnumResourcePackStatus) packetdataserializer.a(PacketPlayInResourcePackStatus.EnumResourcePackStatus.class);
++        this.status = (EnumResourcePackStatus) packetdataserializer.a(EnumResourcePackStatus.class);
 +    }
 +
 +    public void b(PacketDataSerializer packetdataserializer) throws IOException {
@@ -3003,7 +3035,7 @@ index 0000000..512b3e4
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java b/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java
 new file mode 100644
-index 0000000..c67cb54
+index 0000000..7c9389a
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java
 @@ -0,0 +1,75 @@
@@ -3015,7 +3047,7 @@ index 0000000..c67cb54
 +public class PacketPlayInUseEntity implements Packet<PacketListenerPlayIn> {
 +
 +    private int a;
-+    private PacketPlayInUseEntity.EnumEntityUseAction action;
++    private EnumEntityUseAction action;
 +    private Vec3D c;
 +    private EnumHand d;
 +
@@ -3023,17 +3055,17 @@ index 0000000..c67cb54
 +
 +    public PacketPlayInUseEntity(Entity entity) {
 +        this.a = entity.getId();
-+        this.action = PacketPlayInUseEntity.EnumEntityUseAction.ATTACK;
++        this.action = EnumEntityUseAction.ATTACK;
 +    }
 +
 +    public void a(PacketDataSerializer packetdataserializer) throws IOException {
 +        this.a = packetdataserializer.g();
-+        this.action = (PacketPlayInUseEntity.EnumEntityUseAction) packetdataserializer.a(PacketPlayInUseEntity.EnumEntityUseAction.class);
-+        if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
++        this.action = (EnumEntityUseAction) packetdataserializer.a(EnumEntityUseAction.class);
++        if (this.action == EnumEntityUseAction.INTERACT_AT) {
 +            this.c = new Vec3D((double) packetdataserializer.readFloat(), (double) packetdataserializer.readFloat(), (double) packetdataserializer.readFloat());
 +        }
 +
-+        if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT || this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
++        if (this.action == EnumEntityUseAction.INTERACT || this.action == EnumEntityUseAction.INTERACT_AT) {
 +            this.d = (EnumHand) packetdataserializer.a(EnumHand.class);
 +        }
 +
@@ -3042,13 +3074,13 @@ index 0000000..c67cb54
 +    public void b(PacketDataSerializer packetdataserializer) throws IOException {
 +        packetdataserializer.d(this.a);
 +        packetdataserializer.a((Enum) this.action);
-+        if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
++        if (this.action == EnumEntityUseAction.INTERACT_AT) {
 +            packetdataserializer.writeFloat((float) this.c.x);
 +            packetdataserializer.writeFloat((float) this.c.y);
 +            packetdataserializer.writeFloat((float) this.c.z);
 +        }
 +
-+        if (this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT || this.action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT_AT) {
++        if (this.action == EnumEntityUseAction.INTERACT || this.action == EnumEntityUseAction.INTERACT_AT) {
 +            packetdataserializer.a((Enum) this.d);
 +        }
 +
@@ -3063,7 +3095,7 @@ index 0000000..c67cb54
 +        return world.getEntity(this.a);
 +    }
 +
-+    public PacketPlayInUseEntity.EnumEntityUseAction a() {
++    public EnumEntityUseAction a() {
 +        return this.action;
 +    }
 +
@@ -3188,7 +3220,7 @@ index 0000000..9d23a64
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutChat.java b/src/main/java/net/minecraft/server/PacketPlayOutChat.java
 new file mode 100644
-index 0000000..24462f1
+index 0000000..b1fddee
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutChat.java
 @@ -0,0 +1,42 @@
@@ -3199,27 +3231,27 @@ index 0000000..24462f1
 +public class PacketPlayOutChat implements Packet<PacketListenerPlayOut> {
 +
 +    private IChatBaseComponent a;
-+    private byte b;
++    private ChatMessageType b;
 +
 +    public PacketPlayOutChat() {}
 +
 +    public PacketPlayOutChat(IChatBaseComponent ichatbasecomponent) {
-+        this(ichatbasecomponent, (byte) 1);
++        this(ichatbasecomponent, ChatMessageType.SYSTEM);
 +    }
 +
-+    public PacketPlayOutChat(IChatBaseComponent ichatbasecomponent, byte b0) {
++    public PacketPlayOutChat(IChatBaseComponent ichatbasecomponent, ChatMessageType chatmessagetype) {
 +        this.a = ichatbasecomponent;
-+        this.b = b0;
++        this.b = chatmessagetype;
 +    }
 +
 +    public void a(PacketDataSerializer packetdataserializer) throws IOException {
 +        this.a = packetdataserializer.f();
-+        this.b = packetdataserializer.readByte();
++        this.b = ChatMessageType.a(packetdataserializer.readByte());
 +    }
 +
 +    public void b(PacketDataSerializer packetdataserializer) throws IOException {
 +        packetdataserializer.a(this.a);
-+        packetdataserializer.writeByte(this.b);
++        packetdataserializer.writeByte(this.b.a());
 +    }
 +
 +    public void a(PacketListenerPlayOut packetlistenerplayout) {
@@ -3227,10 +3259,10 @@ index 0000000..24462f1
 +    }
 +
 +    public boolean b() {
-+        return this.b == 1 || this.b == 2;
++        return this.b == ChatMessageType.SYSTEM || this.b == ChatMessageType.GAME_INFO;
 +    }
 +
-+    public byte c() {
++    public ChatMessageType c() {
 +        return this.b;
 +    }
 +}
@@ -3700,7 +3732,7 @@ index 0000000..d16669b
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMount.java b/src/main/java/net/minecraft/server/PacketPlayOutMount.java
 new file mode 100644
-index 0000000..9891622
+index 0000000..06d8960
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMount.java
 @@ -0,0 +1,38 @@
@@ -3718,7 +3750,7 @@ index 0000000..9891622
 +
 +    public PacketPlayOutMount(Entity entity) {
 +        this.a = entity.getId();
-+        List list = entity.bx();
++        List list = entity.bD();
 +
 +        this.b = new int[list.size()];
 +
@@ -3927,13 +3959,13 @@ index 0000000..e9f24b3
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
 new file mode 100644
-index 0000000..4fb32f1
+index 0000000..fc255ab
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
 @@ -0,0 +1,218 @@
 +package net.minecraft.server;
 +
-+import com.google.common.base.Objects;
++import com.google.common.base.MoreObjects;
 +import com.google.common.collect.Lists;
 +import com.mojang.authlib.GameProfile;
 +import com.mojang.authlib.properties.Property;
@@ -3944,12 +3976,12 @@ index 0000000..4fb32f1
 +
 +public class PacketPlayOutPlayerInfo implements Packet<PacketListenerPlayOut> {
 +
-+    private PacketPlayOutPlayerInfo.EnumPlayerInfoAction a;
-+    private final List<PacketPlayOutPlayerInfo.PlayerInfoData> b = Lists.newArrayList();
++    private EnumPlayerInfoAction a;
++    private final List<PlayerInfoData> b = Lists.newArrayList();
 +
 +    public PacketPlayOutPlayerInfo() {}
 +
-+    public PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, EntityPlayer... aentityplayer) {
++    public PacketPlayOutPlayerInfo(EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, EntityPlayer... aentityplayer) {
 +        this.a = packetplayoutplayerinfo_enumplayerinfoaction;
 +        EntityPlayer[] aentityplayer1 = aentityplayer;
 +        int i = aentityplayer.length;
@@ -3957,25 +3989,25 @@ index 0000000..4fb32f1
 +        for (int j = 0; j < i; ++j) {
 +            EntityPlayer entityplayer = aentityplayer1[j];
 +
-+            this.b.add(new PacketPlayOutPlayerInfo.PlayerInfoData(entityplayer.getProfile(), entityplayer.ping, entityplayer.playerInteractManager.getGameMode(), entityplayer.getPlayerListName()));
++            this.b.add(new PlayerInfoData(entityplayer.getProfile(), entityplayer.ping, entityplayer.playerInteractManager.getGameMode(), entityplayer.getPlayerListName()));
 +        }
 +
 +    }
 +
-+    public PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, Iterable<EntityPlayer> iterable) {
++    public PacketPlayOutPlayerInfo(EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, Iterable<EntityPlayer> iterable) {
 +        this.a = packetplayoutplayerinfo_enumplayerinfoaction;
 +        Iterator iterator = iterable.iterator();
 +
 +        while (iterator.hasNext()) {
 +            EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 +
-+            this.b.add(new PacketPlayOutPlayerInfo.PlayerInfoData(entityplayer.getProfile(), entityplayer.ping, entityplayer.playerInteractManager.getGameMode(), entityplayer.getPlayerListName()));
++            this.b.add(new PlayerInfoData(entityplayer.getProfile(), entityplayer.ping, entityplayer.playerInteractManager.getGameMode(), entityplayer.getPlayerListName()));
 +        }
 +
 +    }
 +
 +    public void a(PacketDataSerializer packetdataserializer) throws IOException {
-+        this.a = (PacketPlayOutPlayerInfo.EnumPlayerInfoAction) packetdataserializer.a(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.class);
++        this.a = (EnumPlayerInfoAction) packetdataserializer.a(EnumPlayerInfoAction.class);
 +        int i = packetdataserializer.g();
 +
 +        for (int j = 0; j < i; ++j) {
@@ -4028,7 +4060,7 @@ index 0000000..4fb32f1
 +                gameprofile = new GameProfile(packetdataserializer.i(), (String) null);
 +            }
 +
-+            this.b.add(new PacketPlayOutPlayerInfo.PlayerInfoData(gameprofile, k, enumgamemode, ichatbasecomponent));
++            this.b.add(new PlayerInfoData(gameprofile, k, enumgamemode, ichatbasecomponent));
 +        }
 +
 +    }
@@ -4039,7 +4071,7 @@ index 0000000..4fb32f1
 +        Iterator iterator = this.b.iterator();
 +
 +        while (iterator.hasNext()) {
-+            PacketPlayOutPlayerInfo.PlayerInfoData packetplayoutplayerinfo_playerinfodata = (PacketPlayOutPlayerInfo.PlayerInfoData) iterator.next();
++            PlayerInfoData packetplayoutplayerinfo_playerinfodata = (PlayerInfoData) iterator.next();
 +
 +            switch (this.a) {
 +            case ADD_PLAYER:
@@ -4103,7 +4135,7 @@ index 0000000..4fb32f1
 +    }
 +
 +    public String toString() {
-+        return Objects.toStringHelper(this).add("action", this.a).add("entries", this.b).toString();
++        return MoreObjects.toStringHelper(this).add("action", this.a).add("entries", this.b).toString();
 +    }
 +
 +    public class PlayerInfoData {
@@ -4138,7 +4170,7 @@ index 0000000..4fb32f1
 +        }
 +
 +        public String toString() {
-+            return Objects.toStringHelper(this).add("latency", this.b).add("gameMode", this.c).add("profile", this.d).add("displayName", this.e == null ? null : IChatBaseComponent.ChatSerializer.a(this.e)).toString();
++            return MoreObjects.toStringHelper(this).add("latency", this.b).add("gameMode", this.c).add("profile", this.d).add("displayName", this.e == null ? null : IChatBaseComponent.ChatSerializer.a(this.e)).toString();
 +        }
 +    }
 +
@@ -4151,10 +4183,10 @@ index 0000000..4fb32f1
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerListHeaderFooter.java b/src/main/java/net/minecraft/server/PacketPlayOutPlayerListHeaderFooter.java
 new file mode 100644
-index 0000000..5f5b382
+index 0000000..0663b07
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutPlayerListHeaderFooter.java
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,25 @@
 +package net.minecraft.server;
 +
 +import java.io.IOException;
@@ -4165,10 +4197,6 @@ index 0000000..5f5b382
 +    private IChatBaseComponent b;
 +
 +    public PacketPlayOutPlayerListHeaderFooter() {}
-+
-+    public PacketPlayOutPlayerListHeaderFooter(IChatBaseComponent ichatbasecomponent) {
-+        this.a = ichatbasecomponent;
-+    }
 +
 +    public void a(PacketDataSerializer packetdataserializer) throws IOException {
 +        this.a = packetdataserializer.f();
@@ -4186,7 +4214,7 @@ index 0000000..5f5b382
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java b/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java
 new file mode 100644
-index 0000000..d8ec504
+index 0000000..549d4e8
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java
 @@ -0,0 +1,119 @@
@@ -4231,7 +4259,7 @@ index 0000000..d8ec504
 +            this.j = scoreboardteam.packOptionData();
 +            this.e = scoreboardteam.getNameTagVisibility().e;
 +            this.f = scoreboardteam.getCollisionRule().e;
-+            this.g = scoreboardteam.m().b();
++            this.g = scoreboardteam.getColor().b();
 +        }
 +
 +        if (i == 0) {
@@ -4565,7 +4593,7 @@ index 0000000..b30c97e
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutTitle.java b/src/main/java/net/minecraft/server/PacketPlayOutTitle.java
 new file mode 100644
-index 0000000..7bcafa8
+index 0000000..22564b7
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutTitle.java
 @@ -0,0 +1,101 @@
@@ -4577,7 +4605,7 @@ index 0000000..7bcafa8
 +
 +public class PacketPlayOutTitle implements Packet<PacketListenerPlayOut> {
 +
-+    private PacketPlayOutTitle.EnumTitleAction a;
++    private EnumTitleAction a;
 +    private IChatBaseComponent b;
 +    private int c;
 +    private int d;
@@ -4585,15 +4613,15 @@ index 0000000..7bcafa8
 +
 +    public PacketPlayOutTitle() {}
 +
-+    public PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction packetplayouttitle_enumtitleaction, IChatBaseComponent ichatbasecomponent) {
++    public PacketPlayOutTitle(EnumTitleAction packetplayouttitle_enumtitleaction, IChatBaseComponent ichatbasecomponent) {
 +        this(packetplayouttitle_enumtitleaction, ichatbasecomponent, -1, -1, -1);
 +    }
 +
 +    public PacketPlayOutTitle(int i, int j, int k) {
-+        this(PacketPlayOutTitle.EnumTitleAction.TIMES, (IChatBaseComponent) null, i, j, k);
++        this(EnumTitleAction.TIMES, (IChatBaseComponent) null, i, j, k);
 +    }
 +
-+    public PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction packetplayouttitle_enumtitleaction, @Nullable IChatBaseComponent ichatbasecomponent, int i, int j, int k) {
++    public PacketPlayOutTitle(EnumTitleAction packetplayouttitle_enumtitleaction, @Nullable IChatBaseComponent ichatbasecomponent, int i, int j, int k) {
 +        this.a = packetplayouttitle_enumtitleaction;
 +        this.b = ichatbasecomponent;
 +        this.c = i;
@@ -4602,12 +4630,12 @@ index 0000000..7bcafa8
 +    }
 +
 +    public void a(PacketDataSerializer packetdataserializer) throws IOException {
-+        this.a = (PacketPlayOutTitle.EnumTitleAction) packetdataserializer.a(PacketPlayOutTitle.EnumTitleAction.class);
-+        if (this.a == PacketPlayOutTitle.EnumTitleAction.TITLE || this.a == PacketPlayOutTitle.EnumTitleAction.SUBTITLE || this.a == PacketPlayOutTitle.EnumTitleAction.ACTIONBAR) {
++        this.a = (EnumTitleAction) packetdataserializer.a(EnumTitleAction.class);
++        if (this.a == EnumTitleAction.TITLE || this.a == EnumTitleAction.SUBTITLE || this.a == EnumTitleAction.ACTIONBAR) {
 +            this.b = packetdataserializer.f();
 +        }
 +
-+        if (this.a == PacketPlayOutTitle.EnumTitleAction.TIMES) {
++        if (this.a == EnumTitleAction.TIMES) {
 +            this.c = packetdataserializer.readInt();
 +            this.d = packetdataserializer.readInt();
 +            this.e = packetdataserializer.readInt();
@@ -4617,11 +4645,11 @@ index 0000000..7bcafa8
 +
 +    public void b(PacketDataSerializer packetdataserializer) throws IOException {
 +        packetdataserializer.a((Enum) this.a);
-+        if (this.a == PacketPlayOutTitle.EnumTitleAction.TITLE || this.a == PacketPlayOutTitle.EnumTitleAction.SUBTITLE || this.a == PacketPlayOutTitle.EnumTitleAction.ACTIONBAR) {
++        if (this.a == EnumTitleAction.TITLE || this.a == EnumTitleAction.SUBTITLE || this.a == EnumTitleAction.ACTIONBAR) {
 +            packetdataserializer.a(this.b);
 +        }
 +
-+        if (this.a == PacketPlayOutTitle.EnumTitleAction.TIMES) {
++        if (this.a == EnumTitleAction.TIMES) {
 +            packetdataserializer.writeInt(this.c);
 +            packetdataserializer.writeInt(this.d);
 +            packetdataserializer.writeInt(this.e);
@@ -4639,29 +4667,29 @@ index 0000000..7bcafa8
 +
 +        private EnumTitleAction() {}
 +
-+        public static PacketPlayOutTitle.EnumTitleAction a(String s) {
-+            PacketPlayOutTitle.EnumTitleAction[] apacketplayouttitle_enumtitleaction = values();
++        public static EnumTitleAction a(String s) {
++            EnumTitleAction[] apacketplayouttitle_enumtitleaction = values();
 +            int i = apacketplayouttitle_enumtitleaction.length;
 +
 +            for (int j = 0; j < i; ++j) {
-+                PacketPlayOutTitle.EnumTitleAction packetplayouttitle_enumtitleaction = apacketplayouttitle_enumtitleaction[j];
++                EnumTitleAction packetplayouttitle_enumtitleaction = apacketplayouttitle_enumtitleaction[j];
 +
 +                if (packetplayouttitle_enumtitleaction.name().equalsIgnoreCase(s)) {
 +                    return packetplayouttitle_enumtitleaction;
 +                }
 +            }
 +
-+            return PacketPlayOutTitle.EnumTitleAction.TITLE;
++            return EnumTitleAction.TITLE;
 +        }
 +
 +        public static String[] a() {
 +            String[] astring = new String[values().length];
 +            int i = 0;
-+            PacketPlayOutTitle.EnumTitleAction[] apacketplayouttitle_enumtitleaction = values();
++            EnumTitleAction[] apacketplayouttitle_enumtitleaction = values();
 +            int j = apacketplayouttitle_enumtitleaction.length;
 +
 +            for (int k = 0; k < j; ++k) {
-+                PacketPlayOutTitle.EnumTitleAction packetplayouttitle_enumtitleaction = apacketplayouttitle_enumtitleaction[k];
++                EnumTitleAction packetplayouttitle_enumtitleaction = apacketplayouttitle_enumtitleaction[k];
 +
 +                astring[i++] = packetplayouttitle_enumtitleaction.name().toLowerCase(Locale.ROOT);
 +            }
@@ -4707,13 +4735,13 @@ index 0000000..df9b08b
 +}
 diff --git a/src/main/java/net/minecraft/server/PotionUtil.java b/src/main/java/net/minecraft/server/PotionUtil.java
 new file mode 100644
-index 0000000..1aeb53d
+index 0000000..2eeda14
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PotionUtil.java
 @@ -0,0 +1,155 @@
 +package net.minecraft.server;
 +
-+import com.google.common.base.Objects;
++import com.google.common.base.MoreObjects;
 +import com.google.common.collect.Lists;
 +import java.util.ArrayList;
 +import java.util.Collection;
@@ -4850,7 +4878,7 @@ index 0000000..1aeb53d
 +        if (collection.isEmpty()) {
 +            return itemstack;
 +        } else {
-+            NBTTagCompound nbttagcompound = (NBTTagCompound) Objects.firstNonNull(itemstack.getTag(), new NBTTagCompound());
++            NBTTagCompound nbttagcompound = (NBTTagCompound) MoreObjects.firstNonNull(itemstack.getTag(), new NBTTagCompound());
 +            NBTTagList nbttaglist = nbttagcompound.getList("CustomPotionEffects", 9);
 +            Iterator iterator = collection.iterator();
 +
@@ -4868,7 +4896,7 @@ index 0000000..1aeb53d
 +}
 diff --git a/src/main/java/net/minecraft/server/ServerConnection.java b/src/main/java/net/minecraft/server/ServerConnection.java
 new file mode 100644
-index 0000000..07016aa
+index 0000000..b85c1c5
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/ServerConnection.java
 @@ -0,0 +1,174 @@
@@ -5022,7 +5050,7 @@ index 0000000..07016aa
 +                                throw new ReportedException(crashreport);
 +                            }
 +
-+                            ServerConnection.e.warn("Failed to handle packet for {}", new Object[] { networkmanager.getSocketAddress(), exception});
++                            ServerConnection.e.warn("Failed to handle packet for {}", networkmanager.getSocketAddress(), exception);
 +                            final ChatComponentText chatcomponenttext = new ChatComponentText("Internal server error");
 +
 +                            networkmanager.sendPacket(new PacketPlayOutKickDisconnect(chatcomponenttext), new GenericFutureListener() {
@@ -5048,10 +5076,10 @@ index 0000000..07016aa
 +}
 diff --git a/src/main/java/net/minecraft/server/SoundEffect.java b/src/main/java/net/minecraft/server/SoundEffect.java
 new file mode 100644
-index 0000000..46acdcb
+index 0000000..573fa07
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/SoundEffect.java
-@@ -0,0 +1,514 @@
+@@ -0,0 +1,567 @@
 +package net.minecraft.server;
 +
 +public class SoundEffect {
@@ -5091,6 +5119,8 @@ index 0000000..46acdcb
 +        a("block.dispenser.launch");
 +        a("block.enchantment_table.use");
 +        a("block.end_gateway.spawn");
++        a("block.end_portal.spawn");
++        a("block.end_portal_frame.fill");
 +        a("block.enderchest.close");
 +        a("block.enderchest.open");
 +        a("block.fence_gate.close");
@@ -5135,10 +5165,15 @@ index 0000000..46acdcb
 +        a("block.metal_pressureplate.click_on");
 +        a("block.note.basedrum");
 +        a("block.note.bass");
++        a("block.note.bell");
++        a("block.note.chime");
++        a("block.note.flute");
++        a("block.note.guitar");
 +        a("block.note.harp");
 +        a("block.note.hat");
 +        a("block.note.pling");
 +        a("block.note.snare");
++        a("block.note.xylophone");
 +        a("block.piston.contract");
 +        a("block.piston.extend");
 +        a("block.portal.ambient");
@@ -5208,6 +5243,9 @@ index 0000000..46acdcb
 +        a("entity.blaze.death");
 +        a("entity.blaze.hurt");
 +        a("entity.blaze.shoot");
++        a("entity.boat.paddle_land");
++        a("entity.boat.paddle_water");
++        a("entity.bobber.retrieve");
 +        a("entity.bobber.splash");
 +        a("entity.bobber.throw");
 +        a("entity.cat.ambient");
@@ -5240,8 +5278,8 @@ index 0000000..46acdcb
 +        a("entity.elder_guardian.curse");
 +        a("entity.elder_guardian.death");
 +        a("entity.elder_guardian.death_land");
-+        a("entity.elder_guardian.hurt");
 +        a("entity.elder_guardian.flop");
++        a("entity.elder_guardian.hurt");
 +        a("entity.elder_guardian.hurt_land");
 +        a("entity.enderdragon.ambient");
 +        a("entity.enderdragon.death");
@@ -5250,6 +5288,7 @@ index 0000000..46acdcb
 +        a("entity.enderdragon.hurt");
 +        a("entity.enderdragon.shoot");
 +        a("entity.enderdragon_fireball.explode");
++        a("entity.endereye.death");
 +        a("entity.endereye.launch");
 +        a("entity.endermen.ambient");
 +        a("entity.endermen.death");
@@ -5328,6 +5367,13 @@ index 0000000..46acdcb
 +        a("entity.husk.death");
 +        a("entity.husk.hurt");
 +        a("entity.husk.step");
++        a("entity.illusion_illager.ambient");
++        a("entity.illusion_illager.cast_spell");
++        a("entity.illusion_illager.death");
++        a("entity.illusion_illager.hurt");
++        a("entity.illusion_illager.mirror_move");
++        a("entity.illusion_illager.prepare_blindness");
++        a("entity.illusion_illager.prepare_mirror");
 +        a("entity.irongolem.attack");
 +        a("entity.irongolem.death");
 +        a("entity.irongolem.hurt");
@@ -5366,6 +5412,39 @@ index 0000000..46acdcb
 +        a("entity.mule.hurt");
 +        a("entity.painting.break");
 +        a("entity.painting.place");
++        a("entity.parrot.ambient");
++        a("entity.parrot.death");
++        a("entity.parrot.eat");
++        a("entity.parrot.fly");
++        a("entity.parrot.hurt");
++        a("entity.parrot.imitate.blaze");
++        a("entity.parrot.imitate.creeper");
++        a("entity.parrot.imitate.elder_guardian");
++        a("entity.parrot.imitate.enderdragon");
++        a("entity.parrot.imitate.enderman");
++        a("entity.parrot.imitate.endermite");
++        a("entity.parrot.imitate.evocation_illager");
++        a("entity.parrot.imitate.ghast");
++        a("entity.parrot.imitate.husk");
++        a("entity.parrot.imitate.illusion_illager");
++        a("entity.parrot.imitate.magmacube");
++        a("entity.parrot.imitate.polar_bear");
++        a("entity.parrot.imitate.shulker");
++        a("entity.parrot.imitate.silverfish");
++        a("entity.parrot.imitate.skeleton");
++        a("entity.parrot.imitate.slime");
++        a("entity.parrot.imitate.spider");
++        a("entity.parrot.imitate.stray");
++        a("entity.parrot.imitate.vex");
++        a("entity.parrot.imitate.vindication_illager");
++        a("entity.parrot.imitate.witch");
++        a("entity.parrot.imitate.wither");
++        a("entity.parrot.imitate.wither_skeleton");
++        a("entity.parrot.imitate.wolf");
++        a("entity.parrot.imitate.zombie");
++        a("entity.parrot.imitate.zombie_pigman");
++        a("entity.parrot.imitate.zombie_villager");
++        a("entity.parrot.step");
 +        a("entity.pig.ambient");
 +        a("entity.pig.death");
 +        a("entity.pig.hurt");
@@ -5382,6 +5461,8 @@ index 0000000..46acdcb
 +        a("entity.player.burp");
 +        a("entity.player.death");
 +        a("entity.player.hurt");
++        a("entity.player.hurt_drown");
++        a("entity.player.hurt_on_fire");
 +        a("entity.player.levelup");
 +        a("entity.player.small_fall");
 +        a("entity.player.splash");
@@ -5568,7 +5649,7 @@ index 0000000..46acdcb
 +}
 diff --git a/src/main/java/net/minecraft/server/SoundEffectType.java b/src/main/java/net/minecraft/server/SoundEffectType.java
 new file mode 100644
-index 0000000..219653c
+index 0000000..c5cb28b
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/SoundEffectType.java
 @@ -0,0 +1,54 @@
@@ -5576,18 +5657,18 @@ index 0000000..219653c
 +
 +public class SoundEffectType {
 +
-+    public static final SoundEffectType a = new SoundEffectType(1.0F, 1.0F, SoundEffects.hV, SoundEffects.id, SoundEffects.ia, SoundEffects.hZ, SoundEffects.hY);
-+    public static final SoundEffectType b = new SoundEffectType(1.0F, 1.0F, SoundEffects.cl, SoundEffects.cp, SoundEffects.co, SoundEffects.cn, SoundEffects.cm);
-+    public static final SoundEffectType c = new SoundEffectType(1.0F, 1.0F, SoundEffects.cg, SoundEffects.ck, SoundEffects.cj, SoundEffects.ci, SoundEffects.ch);
-+    public static final SoundEffectType d = new SoundEffectType(1.0F, 1.0F, SoundEffects.gH, SoundEffects.gP, SoundEffects.gM, SoundEffects.gL, SoundEffects.gK);
-+    public static final SoundEffectType e = new SoundEffectType(1.0F, 1.5F, SoundEffects.dM, SoundEffects.dS, SoundEffects.dP, SoundEffects.dO, SoundEffects.dN);
-+    public static final SoundEffectType f = new SoundEffectType(1.0F, 1.0F, SoundEffects.cb, SoundEffects.cf, SoundEffects.ce, SoundEffects.cd, SoundEffects.cc);
-+    public static final SoundEffectType g = new SoundEffectType(1.0F, 1.0F, SoundEffects.ai, SoundEffects.am, SoundEffects.al, SoundEffects.ak, SoundEffects.aj);
-+    public static final SoundEffectType h = new SoundEffectType(1.0F, 1.0F, SoundEffects.fm, SoundEffects.fq, SoundEffects.fp, SoundEffects.fo, SoundEffects.fn);
-+    public static final SoundEffectType i = new SoundEffectType(1.0F, 1.0F, SoundEffects.gt, SoundEffects.gx, SoundEffects.gw, SoundEffects.gv, SoundEffects.gu);
-+    public static final SoundEffectType j = new SoundEffectType(1.0F, 1.0F, SoundEffects.dl, SoundEffects.dp, SoundEffects.do, SoundEffects.dn, SoundEffects.dm);
++    public static final SoundEffectType a = new SoundEffectType(1.0F, 1.0F, SoundEffects.iW, SoundEffects.je, SoundEffects.jb, SoundEffects.ja, SoundEffects.iZ);
++    public static final SoundEffectType b = new SoundEffectType(1.0F, 1.0F, SoundEffects.cr, SoundEffects.cv, SoundEffects.cu, SoundEffects.ct, SoundEffects.cs);
++    public static final SoundEffectType c = new SoundEffectType(1.0F, 1.0F, SoundEffects.cm, SoundEffects.cq, SoundEffects.cp, SoundEffects.co, SoundEffects.cn);
++    public static final SoundEffectType d = new SoundEffectType(1.0F, 1.0F, SoundEffects.hI, SoundEffects.hQ, SoundEffects.hN, SoundEffects.hM, SoundEffects.hL);
++    public static final SoundEffectType e = new SoundEffectType(1.0F, 1.5F, SoundEffects.dZ, SoundEffects.ef, SoundEffects.ec, SoundEffects.eb, SoundEffects.ea);
++    public static final SoundEffectType f = new SoundEffectType(1.0F, 1.0F, SoundEffects.ch, SoundEffects.cl, SoundEffects.ck, SoundEffects.cj, SoundEffects.ci);
++    public static final SoundEffectType g = new SoundEffectType(1.0F, 1.0F, SoundEffects.al, SoundEffects.ap, SoundEffects.ao, SoundEffects.an, SoundEffects.am);
++    public static final SoundEffectType h = new SoundEffectType(1.0F, 1.0F, SoundEffects.gn, SoundEffects.gr, SoundEffects.gq, SoundEffects.gp, SoundEffects.go);
++    public static final SoundEffectType i = new SoundEffectType(1.0F, 1.0F, SoundEffects.hu, SoundEffects.hy, SoundEffects.hx, SoundEffects.hw, SoundEffects.hv);
++    public static final SoundEffectType j = new SoundEffectType(1.0F, 1.0F, SoundEffects.dy, SoundEffects.dC, SoundEffects.dB, SoundEffects.dA, SoundEffects.dz);
 +    public static final SoundEffectType k = new SoundEffectType(0.3F, 1.0F, SoundEffects.b, SoundEffects.h, SoundEffects.g, SoundEffects.e, SoundEffects.d);
-+    public static final SoundEffectType l = new SoundEffectType(1.0F, 1.0F, SoundEffects.fY, SoundEffects.gg, SoundEffects.ge, SoundEffects.gb, SoundEffects.ga);
++    public static final SoundEffectType l = new SoundEffectType(1.0F, 1.0F, SoundEffects.gZ, SoundEffects.hh, SoundEffects.hf, SoundEffects.hc, SoundEffects.hb);
 +    public final float m;
 +    public final float n;
 +    private final SoundEffect o;
@@ -5628,10 +5709,10 @@ index 0000000..219653c
 +}
 diff --git a/src/main/java/net/minecraft/server/SoundEffects.java b/src/main/java/net/minecraft/server/SoundEffects.java
 new file mode 100644
-index 0000000..2cafa4c
+index 0000000..da98701
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/SoundEffects.java
-@@ -0,0 +1,1008 @@
+@@ -0,0 +1,1114 @@
 +package net.minecraft.server;
 +
 +public class SoundEffects {
@@ -5858,7 +5939,7 @@ index 0000000..2cafa4c
 +    public static final SoundEffect dl;
 +    public static final SoundEffect dm;
 +    public static final SoundEffect dn;
-+    public static final SoundEffect do;
++    public static final SoundEffect do_;
 +    public static final SoundEffect dp;
 +    public static final SoundEffect dq;
 +    public static final SoundEffect dr;
@@ -5886,7 +5967,7 @@ index 0000000..2cafa4c
 +    public static final SoundEffect dN;
 +    public static final SoundEffect dO;
 +    public static final SoundEffect dP;
-+    public static final SoundEffect BLOCK_METAL_PRESSUREPLATE_CLICK_OFF;
++    public static final SoundEffect dQ;
 +    public static final SoundEffect dR;
 +    public static final SoundEffect dS;
 +    public static final SoundEffect dT;
@@ -5918,7 +5999,7 @@ index 0000000..2cafa4c
 +    public static final SoundEffect et;
 +    public static final SoundEffect eu;
 +    public static final SoundEffect ev;
-+    public static final SoundEffect ENTITY_PLAYER_ATTACK_CRIT;
++    public static final SoundEffect ew;
 +    public static final SoundEffect ex;
 +    public static final SoundEffect ey;
 +    public static final SoundEffect ez;
@@ -5928,7 +6009,7 @@ index 0000000..2cafa4c
 +    public static final SoundEffect eD;
 +    public static final SoundEffect eE;
 +    public static final SoundEffect eF;
-+    public static final SoundEffect ENTITY_PLAYER_HURT;
++    public static final SoundEffect eG;
 +    public static final SoundEffect eH;
 +    public static final SoundEffect eI;
 +    public static final SoundEffect eJ;
@@ -6109,7 +6190,7 @@ index 0000000..2cafa4c
 +    public static final SoundEffect ic;
 +    public static final SoundEffect id;
 +    public static final SoundEffect ie;
-+    public static final SoundEffect if;
++    public static final SoundEffect if_;
 +    public static final SoundEffect ig;
 +    public static final SoundEffect ih;
 +    public static final SoundEffect ii;
@@ -6129,6 +6210,59 @@ index 0000000..2cafa4c
 +    public static final SoundEffect iw;
 +    public static final SoundEffect ix;
 +    public static final SoundEffect iy;
++    public static final SoundEffect iz;
++    public static final SoundEffect iA;
++    public static final SoundEffect iB;
++    public static final SoundEffect iC;
++    public static final SoundEffect iD;
++    public static final SoundEffect iE;
++    public static final SoundEffect iF;
++    public static final SoundEffect iG;
++    public static final SoundEffect iH;
++    public static final SoundEffect iI;
++    public static final SoundEffect iJ;
++    public static final SoundEffect iK;
++    public static final SoundEffect iL;
++    public static final SoundEffect iM;
++    public static final SoundEffect iN;
++    public static final SoundEffect iO;
++    public static final SoundEffect iP;
++    public static final SoundEffect iQ;
++    public static final SoundEffect iR;
++    public static final SoundEffect iS;
++    public static final SoundEffect iT;
++    public static final SoundEffect iU;
++    public static final SoundEffect iV;
++    public static final SoundEffect iW;
++    public static final SoundEffect iX;
++    public static final SoundEffect iY;
++    public static final SoundEffect iZ;
++    public static final SoundEffect ja;
++    public static final SoundEffect jb;
++    public static final SoundEffect jc;
++    public static final SoundEffect jd;
++    public static final SoundEffect je;
++    public static final SoundEffect jf;
++    public static final SoundEffect jg;
++    public static final SoundEffect jh;
++    public static final SoundEffect ji;
++    public static final SoundEffect jj;
++    public static final SoundEffect jk;
++    public static final SoundEffect jl;
++    public static final SoundEffect jm;
++    public static final SoundEffect jn;
++    public static final SoundEffect jo;
++    public static final SoundEffect jp;
++    public static final SoundEffect jq;
++    public static final SoundEffect jr;
++    public static final SoundEffect js;
++    public static final SoundEffect jt;
++    public static final SoundEffect ju;
++    public static final SoundEffect jv;
++    public static final SoundEffect jw;
++    public static final SoundEffect jx;
++    public static final SoundEffect jy;
++    public static final SoundEffect jz;
 +
 +    private static SoundEffect a(String s) {
 +        SoundEffect soundeffect = (SoundEffect) SoundEffect.a.get(new MinecraftKey(s));
@@ -6177,472 +6311,525 @@ index 0000000..2cafa4c
 +            E = a("entity.blaze.death");
 +            F = a("entity.blaze.hurt");
 +            G = a("entity.blaze.shoot");
-+            H = a("entity.bobber.splash");
-+            I = a("entity.bobber.throw");
-+            J = a("item.bottle.empty");
-+            K = a("item.bottle.fill");
-+            L = a("item.bottle.fill_dragonbreath");
-+            M = a("block.brewing_stand.brew");
-+            N = a("item.bucket.empty");
-+            O = a("item.bucket.empty_lava");
-+            P = a("item.bucket.fill");
-+            Q = a("item.bucket.fill_lava");
-+            R = a("entity.cat.ambient");
-+            S = a("entity.cat.death");
-+            T = a("entity.cat.hiss");
-+            U = a("entity.cat.hurt");
-+            V = a("entity.cat.purr");
-+            W = a("entity.cat.purreow");
-+            X = a("block.chest.close");
-+            Y = a("block.chest.locked");
-+            Z = a("block.chest.open");
-+            aa = a("entity.chicken.ambient");
-+            ab = a("entity.chicken.death");
-+            ac = a("entity.chicken.egg");
-+            ad = a("entity.chicken.hurt");
-+            ae = a("entity.chicken.step");
-+            af = a("block.chorus_flower.death");
-+            ag = a("block.chorus_flower.grow");
-+            ah = a("item.chorus_fruit.teleport");
-+            ai = a("block.cloth.break");
-+            aj = a("block.cloth.fall");
-+            ak = a("block.cloth.hit");
-+            al = a("block.cloth.place");
-+            am = a("block.cloth.step");
-+            an = a("block.comparator.click");
-+            ao = a("entity.cow.ambient");
-+            ap = a("entity.cow.death");
-+            aq = a("entity.cow.hurt");
-+            ar = a("entity.cow.milk");
-+            as = a("entity.cow.step");
-+            at = a("entity.creeper.death");
-+            au = a("entity.creeper.hurt");
-+            av = a("entity.creeper.primed");
-+            aw = a("block.dispenser.dispense");
-+            ax = a("block.dispenser.fail");
-+            ay = a("block.dispenser.launch");
-+            az = a("entity.donkey.ambient");
-+            aA = a("entity.donkey.angry");
-+            aB = a("entity.donkey.chest");
-+            aC = a("entity.donkey.death");
-+            aD = a("entity.donkey.hurt");
-+            aE = a("entity.egg.throw");
-+            aF = a("entity.elder_guardian.ambient");
-+            aG = a("entity.elder_guardian.ambient_land");
-+            aH = a("entity.elder_guardian.curse");
-+            aI = a("entity.elder_guardian.death");
-+            aJ = a("entity.elder_guardian.death_land");
-+            aK = a("entity.elder_guardian.flop");
-+            aL = a("entity.elder_guardian.hurt");
-+            aM = a("entity.elder_guardian.hurt_land");
-+            aN = a("item.elytra.flying");
-+            aO = a("block.enchantment_table.use");
-+            aP = a("block.enderchest.close");
-+            aQ = a("block.enderchest.open");
-+            aR = a("entity.enderdragon.ambient");
-+            aS = a("entity.enderdragon.death");
-+            aT = a("entity.enderdragon_fireball.explode");
-+            aU = a("entity.enderdragon.flap");
-+            aV = a("entity.enderdragon.growl");
-+            aW = a("entity.enderdragon.hurt");
-+            aX = a("entity.enderdragon.shoot");
-+            aY = a("entity.endereye.launch");
-+            aZ = a("entity.endermen.ambient");
-+            ba = a("entity.endermen.death");
-+            bb = a("entity.endermen.hurt");
-+            bc = a("entity.endermen.scream");
-+            bd = a("entity.endermen.stare");
-+            be = a("entity.endermen.teleport");
-+            bf = a("entity.endermite.ambient");
-+            bg = a("entity.endermite.death");
-+            bh = a("entity.endermite.hurt");
-+            bi = a("entity.endermite.step");
-+            bj = a("entity.enderpearl.throw");
-+            bk = a("block.end_gateway.spawn");
-+            bl = a("entity.evocation_fangs.attack");
-+            bm = a("entity.evocation_illager.ambient");
-+            bn = a("entity.evocation_illager.cast_spell");
-+            bo = a("entity.evocation_illager.death");
-+            bp = a("entity.evocation_illager.hurt");
-+            bq = a("entity.evocation_illager.prepare_attack");
-+            br = a("entity.evocation_illager.prepare_summon");
-+            bs = a("entity.evocation_illager.prepare_wololo");
-+            bt = a("entity.experience_bottle.throw");
-+            bu = a("entity.experience_orb.pickup");
-+            bv = a("block.fence_gate.close");
-+            bw = a("block.fence_gate.open");
-+            bx = a("item.firecharge.use");
-+            by = a("entity.firework.blast");
-+            bz = a("entity.firework.blast_far");
-+            bA = a("entity.firework.large_blast");
-+            bB = a("entity.firework.large_blast_far");
-+            bC = a("entity.firework.launch");
-+            bD = a("entity.firework.shoot");
-+            bE = a("entity.firework.twinkle");
-+            bF = a("entity.firework.twinkle_far");
-+            bG = a("block.fire.ambient");
-+            bH = a("block.fire.extinguish");
-+            bI = a("item.flintandsteel.use");
-+            bJ = a("block.furnace.fire_crackle");
-+            bK = a("entity.generic.big_fall");
-+            bL = a("entity.generic.burn");
-+            bM = a("entity.generic.death");
-+            bN = a("entity.generic.drink");
-+            bO = a("entity.generic.eat");
-+            bP = a("entity.generic.explode");
-+            bQ = a("entity.generic.extinguish_fire");
-+            bR = a("entity.generic.hurt");
-+            bS = a("entity.generic.small_fall");
-+            bT = a("entity.generic.splash");
-+            bU = a("entity.generic.swim");
-+            bV = a("entity.ghast.ambient");
-+            bW = a("entity.ghast.death");
-+            bX = a("entity.ghast.hurt");
-+            bY = a("entity.ghast.scream");
-+            bZ = a("entity.ghast.shoot");
-+            ca = a("entity.ghast.warn");
-+            cb = a("block.glass.break");
-+            cc = a("block.glass.fall");
-+            cd = a("block.glass.hit");
-+            ce = a("block.glass.place");
-+            cf = a("block.glass.step");
-+            cg = a("block.grass.break");
-+            ch = a("block.grass.fall");
-+            ci = a("block.grass.hit");
-+            cj = a("block.grass.place");
-+            ck = a("block.grass.step");
-+            cl = a("block.gravel.break");
-+            cm = a("block.gravel.fall");
-+            cn = a("block.gravel.hit");
-+            co = a("block.gravel.place");
-+            cp = a("block.gravel.step");
-+            cq = a("entity.guardian.ambient");
-+            cr = a("entity.guardian.ambient_land");
-+            cs = a("entity.guardian.attack");
-+            ct = a("entity.guardian.death");
-+            cu = a("entity.guardian.death_land");
-+            cv = a("entity.guardian.flop");
-+            cw = a("entity.guardian.hurt");
-+            cx = a("entity.guardian.hurt_land");
-+            cy = a("item.hoe.till");
-+            cz = a("entity.horse.ambient");
-+            cA = a("entity.horse.angry");
-+            cB = a("entity.horse.armor");
-+            cC = a("entity.horse.breathe");
-+            cD = a("entity.horse.death");
-+            cE = a("entity.horse.eat");
-+            cF = a("entity.horse.gallop");
-+            cG = a("entity.horse.hurt");
-+            cH = a("entity.horse.jump");
-+            cI = a("entity.horse.land");
-+            cJ = a("entity.horse.saddle");
-+            cK = a("entity.horse.step");
-+            cL = a("entity.horse.step_wood");
-+            cM = a("entity.hostile.big_fall");
-+            cN = a("entity.hostile.death");
-+            cO = a("entity.hostile.hurt");
-+            cP = a("entity.hostile.small_fall");
-+            cQ = a("entity.hostile.splash");
-+            cR = a("entity.hostile.swim");
-+            cS = a("entity.husk.ambient");
-+            cT = a("entity.husk.death");
-+            cU = a("entity.husk.hurt");
-+            cV = a("entity.husk.step");
-+            cW = a("entity.irongolem.attack");
-+            cX = a("entity.irongolem.death");
-+            cY = a("entity.irongolem.hurt");
-+            cZ = a("entity.irongolem.step");
-+            da = a("block.iron_door.close");
-+            db = a("block.iron_door.open");
-+            dc = a("block.iron_trapdoor.close");
-+            dd = a("block.iron_trapdoor.open");
-+            de = a("entity.itemframe.add_item");
-+            df = a("entity.itemframe.break");
-+            dg = a("entity.itemframe.place");
-+            dh = a("entity.itemframe.remove_item");
-+            di = a("entity.itemframe.rotate_item");
-+            dj = a("entity.item.break");
-+            dk = a("entity.item.pickup");
-+            dl = a("block.ladder.break");
-+            dm = a("block.ladder.fall");
-+            dn = a("block.ladder.hit");
-+            do = a("block.ladder.place");
-+            dp = a("block.ladder.step");
-+            dq = a("block.lava.ambient");
-+            dr = a("block.lava.extinguish");
-+            ds = a("block.lava.pop");
-+            dt = a("entity.leashknot.break");
-+            du = a("entity.leashknot.place");
-+            dv = a("block.lever.click");
-+            dw = a("entity.lightning.impact");
-+            dx = a("entity.lightning.thunder");
-+            dy = a("entity.lingeringpotion.throw");
-+            dz = a("entity.llama.ambient");
-+            dA = a("entity.llama.angry");
-+            dB = a("entity.llama.chest");
-+            dC = a("entity.llama.death");
-+            dD = a("entity.llama.eat");
-+            dE = a("entity.llama.hurt");
-+            dF = a("entity.llama.spit");
-+            dG = a("entity.llama.step");
-+            dH = a("entity.llama.swag");
-+            dI = a("entity.magmacube.death");
-+            dJ = a("entity.magmacube.hurt");
-+            dK = a("entity.magmacube.jump");
-+            dL = a("entity.magmacube.squish");
-+            dM = a("block.metal.break");
-+            dN = a("block.metal.fall");
-+            dO = a("block.metal.hit");
-+            dP = a("block.metal.place");
-+            BLOCK_METAL_PRESSUREPLATE_CLICK_OFF = a("block.metal_pressureplate.click_off");
-+            dR = a("block.metal_pressureplate.click_on");
-+            dS = a("block.metal.step");
-+            dT = a("entity.minecart.inside");
-+            dU = a("entity.minecart.riding");
-+            dV = a("entity.mooshroom.shear");
-+            dW = a("entity.mule.ambient");
-+            dX = a("entity.mule.chest");
-+            dY = a("entity.mule.death");
-+            dZ = a("entity.mule.hurt");
-+            ea = a("music.creative");
-+            eb = a("music.credits");
-+            ec = a("music.dragon");
-+            ed = a("music.end");
-+            ee = a("music.game");
-+            ef = a("music.menu");
-+            eg = a("music.nether");
-+            eh = a("block.note.basedrum");
-+            ei = a("block.note.bass");
-+            ej = a("block.note.harp");
-+            ek = a("block.note.hat");
-+            el = a("block.note.pling");
-+            em = a("block.note.snare");
-+            en = a("entity.painting.break");
-+            eo = a("entity.painting.place");
-+            ep = a("entity.pig.ambient");
-+            eq = a("entity.pig.death");
-+            er = a("entity.pig.hurt");
-+            es = a("entity.pig.saddle");
-+            et = a("entity.pig.step");
-+            eu = a("block.piston.contract");
-+            ev = a("block.piston.extend");
-+            ENTITY_PLAYER_ATTACK_CRIT = a("entity.player.attack.crit");
-+            ex = a("entity.player.attack.knockback");
-+            ey = a("entity.player.attack.nodamage");
-+            ez = a("entity.player.attack.strong");
-+            eA = a("entity.player.attack.sweep");
-+            eB = a("entity.player.attack.weak");
-+            eC = a("entity.player.big_fall");
-+            eD = a("entity.player.breath");
-+            eE = a("entity.player.burp");
-+            eF = a("entity.player.death");
-+            ENTITY_PLAYER_HURT = a("entity.player.hurt");
-+            eH = a("entity.player.levelup");
-+            eI = a("entity.player.small_fall");
-+            eJ = a("entity.player.splash");
-+            eK = a("entity.player.swim");
-+            eL = a("entity.polar_bear.ambient");
-+            eM = a("entity.polar_bear.baby_ambient");
-+            eN = a("entity.polar_bear.death");
-+            eO = a("entity.polar_bear.hurt");
-+            eP = a("entity.polar_bear.step");
-+            eQ = a("entity.polar_bear.warning");
-+            eR = a("block.portal.ambient");
-+            eS = a("block.portal.travel");
-+            eT = a("block.portal.trigger");
-+            eU = a("entity.rabbit.ambient");
-+            eV = a("entity.rabbit.attack");
-+            eW = a("entity.rabbit.death");
-+            eX = a("entity.rabbit.hurt");
-+            eY = a("entity.rabbit.jump");
-+            eZ = a("record.11");
-+            fa = a("record.13");
-+            fb = a("record.blocks");
-+            fc = a("record.cat");
-+            fd = a("record.chirp");
-+            fe = a("record.far");
-+            ff = a("record.mall");
-+            fg = a("record.mellohi");
-+            fh = a("record.stal");
-+            fi = a("record.strad");
-+            fj = a("record.wait");
-+            fk = a("record.ward");
-+            fl = a("block.redstone_torch.burnout");
-+            fm = a("block.sand.break");
-+            fn = a("block.sand.fall");
-+            fo = a("block.sand.hit");
-+            fp = a("block.sand.place");
-+            fq = a("block.sand.step");
-+            fr = a("entity.sheep.ambient");
-+            fs = a("entity.sheep.death");
-+            ft = a("entity.sheep.hurt");
-+            fu = a("entity.sheep.shear");
-+            fv = a("entity.sheep.step");
-+            fw = a("item.shield.block");
-+            fx = a("item.shield.break");
-+            fy = a("item.shovel.flatten");
-+            fz = a("entity.shulker.ambient");
-+            fA = a("block.shulker_box.close");
-+            fB = a("block.shulker_box.open");
-+            fC = a("entity.shulker_bullet.hit");
-+            fD = a("entity.shulker_bullet.hurt");
-+            fE = a("entity.shulker.close");
-+            fF = a("entity.shulker.death");
-+            fG = a("entity.shulker.hurt");
-+            fH = a("entity.shulker.hurt_closed");
-+            fI = a("entity.shulker.open");
-+            fJ = a("entity.shulker.shoot");
-+            fK = a("entity.shulker.teleport");
-+            fL = a("entity.silverfish.ambient");
-+            fM = a("entity.silverfish.death");
-+            fN = a("entity.silverfish.hurt");
-+            fO = a("entity.silverfish.step");
-+            fP = a("entity.skeleton.ambient");
-+            fQ = a("entity.skeleton.death");
-+            fR = a("entity.skeleton_horse.ambient");
-+            fS = a("entity.skeleton_horse.death");
-+            fT = a("entity.skeleton_horse.hurt");
-+            fU = a("entity.skeleton.hurt");
-+            fV = a("entity.skeleton.shoot");
-+            fW = a("entity.skeleton.step");
-+            fX = a("entity.slime.attack");
-+            fY = a("block.slime.break");
-+            fZ = a("entity.slime.death");
-+            ga = a("block.slime.fall");
-+            gb = a("block.slime.hit");
-+            gc = a("entity.slime.hurt");
-+            gd = a("entity.slime.jump");
-+            ge = a("block.slime.place");
-+            gf = a("entity.slime.squish");
-+            gg = a("block.slime.step");
-+            gh = a("entity.small_magmacube.death");
-+            gi = a("entity.small_magmacube.hurt");
-+            gj = a("entity.small_magmacube.squish");
-+            gk = a("entity.small_slime.death");
-+            gl = a("entity.small_slime.hurt");
-+            gm = a("entity.small_slime.jump");
-+            gn = a("entity.small_slime.squish");
-+            go = a("entity.snowball.throw");
-+            gp = a("entity.snowman.ambient");
-+            gq = a("entity.snowman.death");
-+            gr = a("entity.snowman.hurt");
-+            gs = a("entity.snowman.shoot");
-+            gt = a("block.snow.break");
-+            gu = a("block.snow.fall");
-+            gv = a("block.snow.hit");
-+            gw = a("block.snow.place");
-+            gx = a("block.snow.step");
-+            gy = a("entity.spider.ambient");
-+            gz = a("entity.spider.death");
-+            gA = a("entity.spider.hurt");
-+            gB = a("entity.spider.step");
-+            gC = a("entity.splash_potion.break");
-+            gD = a("entity.splash_potion.throw");
-+            gE = a("entity.squid.ambient");
-+            gF = a("entity.squid.death");
-+            gG = a("entity.squid.hurt");
-+            gH = a("block.stone.break");
-+            gI = a("block.stone_button.click_off");
-+            gJ = a("block.stone_button.click_on");
-+            gK = a("block.stone.fall");
-+            gL = a("block.stone.hit");
-+            gM = a("block.stone.place");
-+            gN = a("block.stone_pressureplate.click_off");
-+            gO = a("block.stone_pressureplate.click_on");
-+            gP = a("block.stone.step");
-+            gQ = a("entity.stray.ambient");
-+            gR = a("entity.stray.death");
-+            gS = a("entity.stray.hurt");
-+            gT = a("entity.stray.step");
-+            gU = a("enchant.thorns.hit");
-+            gV = a("entity.tnt.primed");
-+            gW = a("item.totem.use");
-+            gX = a("block.tripwire.attach");
-+            gY = a("block.tripwire.click_off");
-+            gZ = a("block.tripwire.click_on");
-+            ha = a("block.tripwire.detach");
-+            hb = a("ui.button.click");
-+            hc = a("entity.vex.ambient");
-+            hd = a("entity.vex.charge");
-+            he = a("entity.vex.death");
-+            hf = a("entity.vex.hurt");
-+            hg = a("entity.villager.ambient");
-+            hh = a("entity.villager.death");
-+            hi = a("entity.villager.hurt");
-+            hj = a("entity.villager.no");
-+            hk = a("entity.villager.trading");
-+            hl = a("entity.villager.yes");
-+            hm = a("entity.vindication_illager.ambient");
-+            hn = a("entity.vindication_illager.death");
-+            ho = a("entity.vindication_illager.hurt");
-+            hp = a("block.waterlily.place");
-+            hq = a("block.water.ambient");
-+            hr = a("weather.rain");
-+            hs = a("weather.rain.above");
-+            ht = a("entity.witch.ambient");
-+            hu = a("entity.witch.death");
-+            hv = a("entity.witch.drink");
-+            hw = a("entity.witch.hurt");
-+            hx = a("entity.witch.throw");
-+            hy = a("entity.wither.ambient");
-+            hz = a("entity.wither.break_block");
-+            hA = a("entity.wither.death");
-+            hB = a("entity.wither.hurt");
-+            hC = a("entity.wither.shoot");
-+            hD = a("entity.wither_skeleton.ambient");
-+            hE = a("entity.wither_skeleton.death");
-+            hF = a("entity.wither_skeleton.hurt");
-+            hG = a("entity.wither_skeleton.step");
-+            hH = a("entity.wither.spawn");
-+            hI = a("entity.wolf.ambient");
-+            hJ = a("entity.wolf.death");
-+            hK = a("entity.wolf.growl");
-+            hL = a("entity.wolf.howl");
-+            hM = a("entity.wolf.hurt");
-+            hN = a("entity.wolf.pant");
-+            hO = a("entity.wolf.shake");
-+            hP = a("entity.wolf.step");
-+            hQ = a("entity.wolf.whine");
-+            hR = a("block.wooden_door.close");
-+            hS = a("block.wooden_door.open");
-+            hT = a("block.wooden_trapdoor.close");
-+            hU = a("block.wooden_trapdoor.open");
-+            hV = a("block.wood.break");
-+            hW = a("block.wood_button.click_off");
-+            hX = a("block.wood_button.click_on");
-+            hY = a("block.wood.fall");
-+            hZ = a("block.wood.hit");
-+            ia = a("block.wood.place");
-+            ib = a("block.wood_pressureplate.click_off");
-+            ic = a("block.wood_pressureplate.click_on");
-+            id = a("block.wood.step");
-+            ie = a("entity.zombie.ambient");
-+            if = a("entity.zombie.attack_door_wood");
-+            ig = a("entity.zombie.attack_iron_door");
-+            ih = a("entity.zombie.break_door_wood");
-+            ii = a("entity.zombie.death");
-+            ij = a("entity.zombie_horse.ambient");
-+            ik = a("entity.zombie_horse.death");
-+            il = a("entity.zombie_horse.hurt");
-+            im = a("entity.zombie.hurt");
-+            in = a("entity.zombie.infect");
-+            io = a("entity.zombie_pig.ambient");
-+            ip = a("entity.zombie_pig.angry");
-+            iq = a("entity.zombie_pig.death");
-+            ir = a("entity.zombie_pig.hurt");
-+            is = a("entity.zombie.step");
-+            it = a("entity.zombie_villager.ambient");
-+            iu = a("entity.zombie_villager.converted");
-+            iv = a("entity.zombie_villager.cure");
-+            iw = a("entity.zombie_villager.death");
-+            ix = a("entity.zombie_villager.hurt");
-+            iy = a("entity.zombie_villager.step");
++            H = a("entity.boat.paddle_land");
++            I = a("entity.boat.paddle_water");
++            J = a("entity.bobber.retrieve");
++            K = a("entity.bobber.splash");
++            L = a("entity.bobber.throw");
++            M = a("item.bottle.empty");
++            N = a("item.bottle.fill");
++            O = a("item.bottle.fill_dragonbreath");
++            P = a("block.brewing_stand.brew");
++            Q = a("item.bucket.empty");
++            R = a("item.bucket.empty_lava");
++            S = a("item.bucket.fill");
++            T = a("item.bucket.fill_lava");
++            U = a("entity.cat.ambient");
++            V = a("entity.cat.death");
++            W = a("entity.cat.hiss");
++            X = a("entity.cat.hurt");
++            Y = a("entity.cat.purr");
++            Z = a("entity.cat.purreow");
++            aa = a("block.chest.close");
++            ab = a("block.chest.locked");
++            ac = a("block.chest.open");
++            ad = a("entity.chicken.ambient");
++            ae = a("entity.chicken.death");
++            af = a("entity.chicken.egg");
++            ag = a("entity.chicken.hurt");
++            ah = a("entity.chicken.step");
++            ai = a("block.chorus_flower.death");
++            aj = a("block.chorus_flower.grow");
++            ak = a("item.chorus_fruit.teleport");
++            al = a("block.cloth.break");
++            am = a("block.cloth.fall");
++            an = a("block.cloth.hit");
++            ao = a("block.cloth.place");
++            ap = a("block.cloth.step");
++            aq = a("block.comparator.click");
++            ar = a("entity.cow.ambient");
++            as = a("entity.cow.death");
++            at = a("entity.cow.hurt");
++            au = a("entity.cow.milk");
++            av = a("entity.cow.step");
++            aw = a("entity.creeper.death");
++            ax = a("entity.creeper.hurt");
++            ay = a("entity.creeper.primed");
++            az = a("block.dispenser.dispense");
++            aA = a("block.dispenser.fail");
++            aB = a("block.dispenser.launch");
++            aC = a("entity.donkey.ambient");
++            aD = a("entity.donkey.angry");
++            aE = a("entity.donkey.chest");
++            aF = a("entity.donkey.death");
++            aG = a("entity.donkey.hurt");
++            aH = a("entity.egg.throw");
++            aI = a("entity.elder_guardian.ambient");
++            aJ = a("entity.elder_guardian.ambient_land");
++            aK = a("entity.elder_guardian.curse");
++            aL = a("entity.elder_guardian.death");
++            aM = a("entity.elder_guardian.death_land");
++            aN = a("entity.elder_guardian.flop");
++            aO = a("entity.elder_guardian.hurt");
++            aP = a("entity.elder_guardian.hurt_land");
++            aQ = a("item.elytra.flying");
++            aR = a("block.enchantment_table.use");
++            aS = a("block.enderchest.close");
++            aT = a("block.enderchest.open");
++            aU = a("entity.enderdragon.ambient");
++            aV = a("entity.enderdragon.death");
++            aW = a("entity.enderdragon_fireball.explode");
++            aX = a("entity.enderdragon.flap");
++            aY = a("entity.enderdragon.growl");
++            aZ = a("entity.enderdragon.hurt");
++            ba = a("entity.enderdragon.shoot");
++            bb = a("entity.endereye.death");
++            bc = a("entity.endereye.launch");
++            bd = a("entity.endermen.ambient");
++            be = a("entity.endermen.death");
++            bf = a("entity.endermen.hurt");
++            bg = a("entity.endermen.scream");
++            bh = a("entity.endermen.stare");
++            bi = a("entity.endermen.teleport");
++            bj = a("entity.endermite.ambient");
++            bk = a("entity.endermite.death");
++            bl = a("entity.endermite.hurt");
++            bm = a("entity.endermite.step");
++            bn = a("entity.enderpearl.throw");
++            bo = a("block.end_gateway.spawn");
++            bp = a("block.end_portal_frame.fill");
++            bq = a("block.end_portal.spawn");
++            br = a("entity.evocation_fangs.attack");
++            bs = a("entity.evocation_illager.ambient");
++            bt = a("entity.evocation_illager.cast_spell");
++            bu = a("entity.evocation_illager.death");
++            bv = a("entity.evocation_illager.hurt");
++            bw = a("entity.evocation_illager.prepare_attack");
++            bx = a("entity.evocation_illager.prepare_summon");
++            by = a("entity.evocation_illager.prepare_wololo");
++            bz = a("entity.experience_bottle.throw");
++            bA = a("entity.experience_orb.pickup");
++            bB = a("block.fence_gate.close");
++            bC = a("block.fence_gate.open");
++            bD = a("item.firecharge.use");
++            bE = a("entity.firework.blast");
++            bF = a("entity.firework.blast_far");
++            bG = a("entity.firework.large_blast");
++            bH = a("entity.firework.large_blast_far");
++            bI = a("entity.firework.launch");
++            bJ = a("entity.firework.shoot");
++            bK = a("entity.firework.twinkle");
++            bL = a("entity.firework.twinkle_far");
++            bM = a("block.fire.ambient");
++            bN = a("block.fire.extinguish");
++            bO = a("item.flintandsteel.use");
++            bP = a("block.furnace.fire_crackle");
++            bQ = a("entity.generic.big_fall");
++            bR = a("entity.generic.burn");
++            bS = a("entity.generic.death");
++            bT = a("entity.generic.drink");
++            bU = a("entity.generic.eat");
++            bV = a("entity.generic.explode");
++            bW = a("entity.generic.extinguish_fire");
++            bX = a("entity.generic.hurt");
++            bY = a("entity.generic.small_fall");
++            bZ = a("entity.generic.splash");
++            ca = a("entity.generic.swim");
++            cb = a("entity.ghast.ambient");
++            cc = a("entity.ghast.death");
++            cd = a("entity.ghast.hurt");
++            ce = a("entity.ghast.scream");
++            cf = a("entity.ghast.shoot");
++            cg = a("entity.ghast.warn");
++            ch = a("block.glass.break");
++            ci = a("block.glass.fall");
++            cj = a("block.glass.hit");
++            ck = a("block.glass.place");
++            cl = a("block.glass.step");
++            cm = a("block.grass.break");
++            cn = a("block.grass.fall");
++            co = a("block.grass.hit");
++            cp = a("block.grass.place");
++            cq = a("block.grass.step");
++            cr = a("block.gravel.break");
++            cs = a("block.gravel.fall");
++            ct = a("block.gravel.hit");
++            cu = a("block.gravel.place");
++            cv = a("block.gravel.step");
++            cw = a("entity.guardian.ambient");
++            cx = a("entity.guardian.ambient_land");
++            cy = a("entity.guardian.attack");
++            cz = a("entity.guardian.death");
++            cA = a("entity.guardian.death_land");
++            cB = a("entity.guardian.flop");
++            cC = a("entity.guardian.hurt");
++            cD = a("entity.guardian.hurt_land");
++            cE = a("item.hoe.till");
++            cF = a("entity.horse.ambient");
++            cG = a("entity.horse.angry");
++            cH = a("entity.horse.armor");
++            cI = a("entity.horse.breathe");
++            cJ = a("entity.horse.death");
++            cK = a("entity.horse.eat");
++            cL = a("entity.horse.gallop");
++            cM = a("entity.horse.hurt");
++            cN = a("entity.horse.jump");
++            cO = a("entity.horse.land");
++            cP = a("entity.horse.saddle");
++            cQ = a("entity.horse.step");
++            cR = a("entity.horse.step_wood");
++            cS = a("entity.hostile.big_fall");
++            cT = a("entity.hostile.death");
++            cU = a("entity.hostile.hurt");
++            cV = a("entity.hostile.small_fall");
++            cW = a("entity.hostile.splash");
++            cX = a("entity.hostile.swim");
++            cY = a("entity.husk.ambient");
++            cZ = a("entity.husk.death");
++            da = a("entity.husk.hurt");
++            db = a("entity.husk.step");
++            dc = a("entity.illusion_illager.ambient");
++            dd = a("entity.illusion_illager.cast_spell");
++            de = a("entity.illusion_illager.death");
++            df = a("entity.illusion_illager.hurt");
++            dg = a("entity.illusion_illager.mirror_move");
++            dh = a("entity.illusion_illager.prepare_blindness");
++            di = a("entity.illusion_illager.prepare_mirror");
++            dj = a("entity.irongolem.attack");
++            dk = a("entity.irongolem.death");
++            dl = a("entity.irongolem.hurt");
++            dm = a("entity.irongolem.step");
++            dn = a("block.iron_door.close");
++            do_ = a("block.iron_door.open");
++            dp = a("block.iron_trapdoor.close");
++            dq = a("block.iron_trapdoor.open");
++            dr = a("entity.itemframe.add_item");
++            ds = a("entity.itemframe.break");
++            dt = a("entity.itemframe.place");
++            du = a("entity.itemframe.remove_item");
++            dv = a("entity.itemframe.rotate_item");
++            dw = a("entity.item.break");
++            dx = a("entity.item.pickup");
++            dy = a("block.ladder.break");
++            dz = a("block.ladder.fall");
++            dA = a("block.ladder.hit");
++            dB = a("block.ladder.place");
++            dC = a("block.ladder.step");
++            dD = a("block.lava.ambient");
++            dE = a("block.lava.extinguish");
++            dF = a("block.lava.pop");
++            dG = a("entity.leashknot.break");
++            dH = a("entity.leashknot.place");
++            dI = a("block.lever.click");
++            dJ = a("entity.lightning.impact");
++            dK = a("entity.lightning.thunder");
++            dL = a("entity.lingeringpotion.throw");
++            dM = a("entity.llama.ambient");
++            dN = a("entity.llama.angry");
++            dO = a("entity.llama.chest");
++            dP = a("entity.llama.death");
++            dQ = a("entity.llama.eat");
++            dR = a("entity.llama.hurt");
++            dS = a("entity.llama.spit");
++            dT = a("entity.llama.step");
++            dU = a("entity.llama.swag");
++            dV = a("entity.magmacube.death");
++            dW = a("entity.magmacube.hurt");
++            dX = a("entity.magmacube.jump");
++            dY = a("entity.magmacube.squish");
++            dZ = a("block.metal.break");
++            ea = a("block.metal.fall");
++            eb = a("block.metal.hit");
++            ec = a("block.metal.place");
++            ed = a("block.metal_pressureplate.click_off");
++            ee = a("block.metal_pressureplate.click_on");
++            ef = a("block.metal.step");
++            eg = a("entity.minecart.inside");
++            eh = a("entity.minecart.riding");
++            ei = a("entity.mooshroom.shear");
++            ej = a("entity.mule.ambient");
++            ek = a("entity.mule.chest");
++            el = a("entity.mule.death");
++            em = a("entity.mule.hurt");
++            en = a("music.creative");
++            eo = a("music.credits");
++            ep = a("music.dragon");
++            eq = a("music.end");
++            er = a("music.game");
++            es = a("music.menu");
++            et = a("music.nether");
++            eu = a("block.note.basedrum");
++            ev = a("block.note.bass");
++            ew = a("block.note.bell");
++            ex = a("block.note.chime");
++            ey = a("block.note.flute");
++            ez = a("block.note.guitar");
++            eA = a("block.note.harp");
++            eB = a("block.note.hat");
++            eC = a("block.note.pling");
++            eD = a("block.note.snare");
++            eE = a("block.note.xylophone");
++            eF = a("entity.painting.break");
++            eG = a("entity.painting.place");
++            eH = a("entity.parrot.ambient");
++            eI = a("entity.parrot.death");
++            eJ = a("entity.parrot.eat");
++            eK = a("entity.parrot.fly");
++            eL = a("entity.parrot.hurt");
++            eM = a("entity.parrot.imitate.blaze");
++            eN = a("entity.parrot.imitate.creeper");
++            eO = a("entity.parrot.imitate.elder_guardian");
++            eP = a("entity.parrot.imitate.enderdragon");
++            eQ = a("entity.parrot.imitate.enderman");
++            eR = a("entity.parrot.imitate.endermite");
++            eS = a("entity.parrot.imitate.evocation_illager");
++            eT = a("entity.parrot.imitate.ghast");
++            eU = a("entity.parrot.imitate.husk");
++            eV = a("entity.parrot.imitate.illusion_illager");
++            eW = a("entity.parrot.imitate.magmacube");
++            eX = a("entity.parrot.imitate.polar_bear");
++            eY = a("entity.parrot.imitate.shulker");
++            eZ = a("entity.parrot.imitate.silverfish");
++            fa = a("entity.parrot.imitate.skeleton");
++            fb = a("entity.parrot.imitate.slime");
++            fc = a("entity.parrot.imitate.spider");
++            fd = a("entity.parrot.imitate.stray");
++            fe = a("entity.parrot.imitate.vex");
++            ff = a("entity.parrot.imitate.vindication_illager");
++            fg = a("entity.parrot.imitate.witch");
++            fh = a("entity.parrot.imitate.wither");
++            fi = a("entity.parrot.imitate.wither_skeleton");
++            fj = a("entity.parrot.imitate.wolf");
++            fk = a("entity.parrot.imitate.zombie");
++            fl = a("entity.parrot.imitate.zombie_pigman");
++            fm = a("entity.parrot.imitate.zombie_villager");
++            fn = a("entity.parrot.step");
++            fo = a("entity.pig.ambient");
++            fp = a("entity.pig.death");
++            fq = a("entity.pig.hurt");
++            fr = a("entity.pig.saddle");
++            fs = a("entity.pig.step");
++            ft = a("block.piston.contract");
++            fu = a("block.piston.extend");
++            fv = a("entity.player.attack.crit");
++            fw = a("entity.player.attack.knockback");
++            fx = a("entity.player.attack.nodamage");
++            fy = a("entity.player.attack.strong");
++            fz = a("entity.player.attack.sweep");
++            fA = a("entity.player.attack.weak");
++            fB = a("entity.player.big_fall");
++            fC = a("entity.player.breath");
++            fD = a("entity.player.burp");
++            fE = a("entity.player.death");
++            fF = a("entity.player.hurt");
++            fG = a("entity.player.hurt_drown");
++            fH = a("entity.player.hurt_on_fire");
++            fI = a("entity.player.levelup");
++            fJ = a("entity.player.small_fall");
++            fK = a("entity.player.splash");
++            fL = a("entity.player.swim");
++            fM = a("entity.polar_bear.ambient");
++            fN = a("entity.polar_bear.baby_ambient");
++            fO = a("entity.polar_bear.death");
++            fP = a("entity.polar_bear.hurt");
++            fQ = a("entity.polar_bear.step");
++            fR = a("entity.polar_bear.warning");
++            fS = a("block.portal.ambient");
++            fT = a("block.portal.travel");
++            fU = a("block.portal.trigger");
++            fV = a("entity.rabbit.ambient");
++            fW = a("entity.rabbit.attack");
++            fX = a("entity.rabbit.death");
++            fY = a("entity.rabbit.hurt");
++            fZ = a("entity.rabbit.jump");
++            ga = a("record.11");
++            gb = a("record.13");
++            gc = a("record.blocks");
++            gd = a("record.cat");
++            ge = a("record.chirp");
++            gf = a("record.far");
++            gg = a("record.mall");
++            gh = a("record.mellohi");
++            gi = a("record.stal");
++            gj = a("record.strad");
++            gk = a("record.wait");
++            gl = a("record.ward");
++            gm = a("block.redstone_torch.burnout");
++            gn = a("block.sand.break");
++            go = a("block.sand.fall");
++            gp = a("block.sand.hit");
++            gq = a("block.sand.place");
++            gr = a("block.sand.step");
++            gs = a("entity.sheep.ambient");
++            gt = a("entity.sheep.death");
++            gu = a("entity.sheep.hurt");
++            gv = a("entity.sheep.shear");
++            gw = a("entity.sheep.step");
++            gx = a("item.shield.block");
++            gy = a("item.shield.break");
++            gz = a("item.shovel.flatten");
++            gA = a("entity.shulker.ambient");
++            gB = a("block.shulker_box.close");
++            gC = a("block.shulker_box.open");
++            gD = a("entity.shulker_bullet.hit");
++            gE = a("entity.shulker_bullet.hurt");
++            gF = a("entity.shulker.close");
++            gG = a("entity.shulker.death");
++            gH = a("entity.shulker.hurt");
++            gI = a("entity.shulker.hurt_closed");
++            gJ = a("entity.shulker.open");
++            gK = a("entity.shulker.shoot");
++            gL = a("entity.shulker.teleport");
++            gM = a("entity.silverfish.ambient");
++            gN = a("entity.silverfish.death");
++            gO = a("entity.silverfish.hurt");
++            gP = a("entity.silverfish.step");
++            gQ = a("entity.skeleton.ambient");
++            gR = a("entity.skeleton.death");
++            gS = a("entity.skeleton_horse.ambient");
++            gT = a("entity.skeleton_horse.death");
++            gU = a("entity.skeleton_horse.hurt");
++            gV = a("entity.skeleton.hurt");
++            gW = a("entity.skeleton.shoot");
++            gX = a("entity.skeleton.step");
++            gY = a("entity.slime.attack");
++            gZ = a("block.slime.break");
++            ha = a("entity.slime.death");
++            hb = a("block.slime.fall");
++            hc = a("block.slime.hit");
++            hd = a("entity.slime.hurt");
++            he = a("entity.slime.jump");
++            hf = a("block.slime.place");
++            hg = a("entity.slime.squish");
++            hh = a("block.slime.step");
++            hi = a("entity.small_magmacube.death");
++            hj = a("entity.small_magmacube.hurt");
++            hk = a("entity.small_magmacube.squish");
++            hl = a("entity.small_slime.death");
++            hm = a("entity.small_slime.hurt");
++            hn = a("entity.small_slime.jump");
++            ho = a("entity.small_slime.squish");
++            hp = a("entity.snowball.throw");
++            hq = a("entity.snowman.ambient");
++            hr = a("entity.snowman.death");
++            hs = a("entity.snowman.hurt");
++            ht = a("entity.snowman.shoot");
++            hu = a("block.snow.break");
++            hv = a("block.snow.fall");
++            hw = a("block.snow.hit");
++            hx = a("block.snow.place");
++            hy = a("block.snow.step");
++            hz = a("entity.spider.ambient");
++            hA = a("entity.spider.death");
++            hB = a("entity.spider.hurt");
++            hC = a("entity.spider.step");
++            hD = a("entity.splash_potion.break");
++            hE = a("entity.splash_potion.throw");
++            hF = a("entity.squid.ambient");
++            hG = a("entity.squid.death");
++            hH = a("entity.squid.hurt");
++            hI = a("block.stone.break");
++            hJ = a("block.stone_button.click_off");
++            hK = a("block.stone_button.click_on");
++            hL = a("block.stone.fall");
++            hM = a("block.stone.hit");
++            hN = a("block.stone.place");
++            hO = a("block.stone_pressureplate.click_off");
++            hP = a("block.stone_pressureplate.click_on");
++            hQ = a("block.stone.step");
++            hR = a("entity.stray.ambient");
++            hS = a("entity.stray.death");
++            hT = a("entity.stray.hurt");
++            hU = a("entity.stray.step");
++            hV = a("enchant.thorns.hit");
++            hW = a("entity.tnt.primed");
++            hX = a("item.totem.use");
++            hY = a("block.tripwire.attach");
++            hZ = a("block.tripwire.click_off");
++            ia = a("block.tripwire.click_on");
++            ib = a("block.tripwire.detach");
++            ic = a("ui.button.click");
++            id = a("entity.vex.ambient");
++            ie = a("entity.vex.charge");
++            if_ = a("entity.vex.death");
++            ig = a("entity.vex.hurt");
++            ih = a("entity.villager.ambient");
++            ii = a("entity.villager.death");
++            ij = a("entity.villager.hurt");
++            ik = a("entity.villager.no");
++            il = a("entity.villager.trading");
++            im = a("entity.villager.yes");
++            in = a("entity.vindication_illager.ambient");
++            io = a("entity.vindication_illager.death");
++            ip = a("entity.vindication_illager.hurt");
++            iq = a("block.waterlily.place");
++            ir = a("block.water.ambient");
++            is = a("weather.rain");
++            it = a("weather.rain.above");
++            iu = a("entity.witch.ambient");
++            iv = a("entity.witch.death");
++            iw = a("entity.witch.drink");
++            ix = a("entity.witch.hurt");
++            iy = a("entity.witch.throw");
++            iz = a("entity.wither.ambient");
++            iA = a("entity.wither.break_block");
++            iB = a("entity.wither.death");
++            iC = a("entity.wither.hurt");
++            iD = a("entity.wither.shoot");
++            iE = a("entity.wither_skeleton.ambient");
++            iF = a("entity.wither_skeleton.death");
++            iG = a("entity.wither_skeleton.hurt");
++            iH = a("entity.wither_skeleton.step");
++            iI = a("entity.wither.spawn");
++            iJ = a("entity.wolf.ambient");
++            iK = a("entity.wolf.death");
++            iL = a("entity.wolf.growl");
++            iM = a("entity.wolf.howl");
++            iN = a("entity.wolf.hurt");
++            iO = a("entity.wolf.pant");
++            iP = a("entity.wolf.shake");
++            iQ = a("entity.wolf.step");
++            iR = a("entity.wolf.whine");
++            iS = a("block.wooden_door.close");
++            iT = a("block.wooden_door.open");
++            iU = a("block.wooden_trapdoor.close");
++            iV = a("block.wooden_trapdoor.open");
++            iW = a("block.wood.break");
++            iX = a("block.wood_button.click_off");
++            iY = a("block.wood_button.click_on");
++            iZ = a("block.wood.fall");
++            ja = a("block.wood.hit");
++            jb = a("block.wood.place");
++            jc = a("block.wood_pressureplate.click_off");
++            jd = a("block.wood_pressureplate.click_on");
++            je = a("block.wood.step");
++            jf = a("entity.zombie.ambient");
++            jg = a("entity.zombie.attack_door_wood");
++            jh = a("entity.zombie.attack_iron_door");
++            ji = a("entity.zombie.break_door_wood");
++            jj = a("entity.zombie.death");
++            jk = a("entity.zombie_horse.ambient");
++            jl = a("entity.zombie_horse.death");
++            jm = a("entity.zombie_horse.hurt");
++            jn = a("entity.zombie.hurt");
++            jo = a("entity.zombie.infect");
++            jp = a("entity.zombie_pig.ambient");
++            jq = a("entity.zombie_pig.angry");
++            jr = a("entity.zombie_pig.death");
++            js = a("entity.zombie_pig.hurt");
++            jt = a("entity.zombie.step");
++            ju = a("entity.zombie_villager.ambient");
++            jv = a("entity.zombie_villager.converted");
++            jw = a("entity.zombie_villager.cure");
++            jx = a("entity.zombie_villager.death");
++            jy = a("entity.zombie_villager.hurt");
++            jz = a("entity.zombie_villager.step");
 +        }
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/ThreadWatchdog.java b/src/main/java/net/minecraft/server/ThreadWatchdog.java
 new file mode 100644
-index 0000000..da6702c
+index 0000000..dd18b4e
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/ThreadWatchdog.java
 @@ -0,0 +1,93 @@
@@ -6667,7 +6854,7 @@ index 0000000..da6702c
 +
 +    public ThreadWatchdog(DedicatedServer dedicatedserver) {
 +        this.b = dedicatedserver;
-+        this.c = dedicatedserver.aQ();
++        this.c = dedicatedserver.aT();
 +    }
 +
 +    public void run() {
@@ -6677,7 +6864,7 @@ index 0000000..da6702c
 +            long k = j - i;
 +
 +            if (k > this.c) {
-+                ThreadWatchdog.a.fatal("A single server tick took {} seconds (should be max {})", new Object[] { String.format("%.2f", new Object[] { Float.valueOf((float) k / 1000.0F)}), String.format("%.2f", new Object[] { Float.valueOf(0.05F)})});
++                ThreadWatchdog.a.fatal("A single server tick took {} seconds (should be max {})", String.format("%.2f", new Object[] { Float.valueOf((float) k / 1000.0F)}), String.format("%.2f", new Object[] { Float.valueOf(0.05F)}));
 +                ThreadWatchdog.a.fatal("Considering it to be crashed, server will forcibly shutdown.");
 +                ThreadMXBean threadmxbean = ManagementFactory.getThreadMXBean();
 +                ThreadInfo[] athreadinfo = threadmxbean.dumpAllThreads(true, true);
@@ -6706,7 +6893,7 @@ index 0000000..da6702c
 +                File file = new File(new File(this.b.A(), "crash-reports"), "crash-" + (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date()) + "-server.txt");
 +
 +                if (crashreport.a(file)) {
-+                    ThreadWatchdog.a.error("This crash report has been saved to: {}", new Object[] { file.getAbsolutePath()});
++                    ThreadWatchdog.a.error("This crash report has been saved to: {}", file.getAbsolutePath());
 +                } else {
 +                    ThreadWatchdog.a.error("We were unable to save this crash report to disk.");
 +                }
@@ -6741,7 +6928,7 @@ index 0000000..da6702c
 +}
 diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
 new file mode 100644
-index 0000000..6e91a22
+index 0000000..b746934
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
 @@ -0,0 +1,152 @@
@@ -6800,14 +6987,14 @@ index 0000000..6e91a22
 +
 +                if (!UtilColor.b(s)) {
 +                    this.g = new GameProfile((UUID) null, s);
-+                    this.h();
++                    this.i();
 +                }
 +            }
 +        }
 +
 +    }
 +
-+    public void F_() {
++    public void e() {
 +        if (this.a == 5) {
 +            if (this.world.isBlockIndirectlyPowered(this.position)) {
 +                this.i = true;
@@ -6841,10 +7028,10 @@ index 0000000..6e91a22
 +    public void setGameProfile(@Nullable GameProfile gameprofile) {
 +        this.a = 3;
 +        this.g = gameprofile;
-+        this.h();
++        this.i();
 +    }
 +
-+    private void h() {
++    private void i() {
 +        this.g = b(this.g);
 +        this.update();
 +    }

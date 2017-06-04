@@ -6,7 +6,7 @@ Subject: [PATCH] Arrow pickup rule API
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftArrow.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftArrow.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftArrow.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftArrow.java
-@@ -46,6 +46,34 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
+@@ -58,6 +58,34 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
      }
  
      @Override

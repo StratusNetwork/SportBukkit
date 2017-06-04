@@ -3,7 +3,6 @@ package org.bukkit.event.vehicle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.EntityAction;
 import org.bukkit.event.HandlerList;
 
 /**
@@ -11,7 +10,7 @@ import org.bukkit.event.HandlerList;
  * player or the environment. This is not raised if the boat is simply
  * 'removed' due to other means.
  */
-public class VehicleDestroyEvent extends VehicleEvent implements Cancellable, EntityAction {
+public class VehicleDestroyEvent extends VehicleEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Entity attacker;
     private boolean cancelled;
@@ -28,11 +27,6 @@ public class VehicleDestroyEvent extends VehicleEvent implements Cancellable, En
      */
     public Entity getAttacker() {
         return attacker;
-    }
-
-    @Override
-    public Entity getActor() {
-        return getAttacker();
     }
 
     public boolean isCancelled() {

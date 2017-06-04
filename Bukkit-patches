@@ -51,7 +51,6 @@ Localize-inventory-titles
 Skull-skin-API
 Plugin-isolation
 Implement-minecraft-api
-Arrow-pickup-rule-API
 Multi-trade-API
 Arrow-damage-API
 Absorption-API
@@ -75,7 +74,6 @@ Add-Player.willBeOnline-method
 Component-support-for-signs
 Block-physics-API
 Item-cooldown-API
-Add-armorToughness-attribute
 Add-PoseFlag-and-EntityLocation
 Mojang-task-queue-access
 Fix-several-block-rotation-data-values
@@ -94,3 +92,4 @@ Reduce-ItemStack-copying
 Expand-Physical-API
 Add-id-specific-map-API
 SportBukkit
+temp-minor-changes-that-need-to-be-addressed

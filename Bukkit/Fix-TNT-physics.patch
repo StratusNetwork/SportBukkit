@@ -6,7 +6,7 @@ Subject: [PATCH] Fix TNT physics
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -336,6 +336,13 @@ public final class Bukkit {
+@@ -321,6 +321,13 @@ public final class Bukkit {
      }
  
      /**
@@ -23,7 +23,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -274,6 +274,11 @@ public interface Server extends PluginMessageRecipient {
+@@ -261,6 +261,11 @@ public interface Server extends PluginMessageRecipient {
      public boolean getFetchSkulls();
  
      /**

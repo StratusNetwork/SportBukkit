@@ -45,3 +45,23 @@
  
              entityliving.setSlot(enumitemslot, itemstack1);
              if (entityliving instanceof EntityInsentient) {
+@@ -51,7 +82,7 @@
+         this.setMaxDurability(itemarmor_enumarmormaterial.a(enumitemslot));
+         this.e = itemarmor_enumarmormaterial.e();
+         this.maxStackSize = 1;
+-        this.b(CreativeModeTab.j);
++        this.a(CreativeModeTab.j);
+         BlockDispenser.REGISTRY.a(this, ItemArmor.b);
+     }
+ 
+@@ -149,8 +180,8 @@
+         Multimap multimap = super.a(enumitemslot);
+ 
+         if (enumitemslot == this.c) {
+-            multimap.put(GenericAttributes.h.getName(), new AttributeModifier(ItemArmor.o[enumitemslot.b()], "Armor modifier", (double) this.d, 0));
+-            multimap.put(GenericAttributes.i.getName(), new AttributeModifier(ItemArmor.o[enumitemslot.b()], "Armor toughness", (double) this.e, 0));
++            multimap.put(GenericAttributes.g.getName(), new AttributeModifier(ItemArmor.o[enumitemslot.b()], "Armor modifier", (double) this.d, 0));
++            multimap.put(GenericAttributes.h.getName(), new AttributeModifier(ItemArmor.o[enumitemslot.b()], "Armor toughness", (double) this.e, 0));
+         }
+ 
+         return multimap;

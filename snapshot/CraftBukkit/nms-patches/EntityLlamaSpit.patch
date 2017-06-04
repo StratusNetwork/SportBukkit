@@ -9,3 +9,14 @@
      private NBTTagCompound b;
  
      public EntityLlamaSpit(World world) {
+@@ -21,8 +21,8 @@
+         this.setSize(0.25F, 0.25F);
+     }
+ 
+-    public void B_() {
+-        super.B_();
++    public void A_() {
++        super.A_();
+         if (this.b != null) {
+             this.j();
+         }

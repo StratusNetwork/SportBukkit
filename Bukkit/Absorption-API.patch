@@ -6,7 +6,7 @@ Subject: [PATCH] Absorption API
 diff --git a/src/main/java/org/bukkit/entity/LivingEntity.java b/src/main/java/org/bukkit/entity/LivingEntity.java
 --- a/src/main/java/org/bukkit/entity/LivingEntity.java
 +++ b/src/main/java/org/bukkit/entity/LivingEntity.java
-@@ -227,6 +227,16 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
+@@ -190,6 +190,16 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      public void setNoDamageTicks(int ticks);
  
      /**

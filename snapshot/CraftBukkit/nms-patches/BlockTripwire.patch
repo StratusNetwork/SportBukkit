@@ -9,6 +9,24 @@
  public class BlockTripwire extends Block {
  
      public static final BlockStateBoolean POWERED = BlockStateBoolean.of("powered");
+@@ -19,7 +21,7 @@
+ 
+     public BlockTripwire() {
+         super(Material.ORIENTABLE);
+-        this.w(this.blockStateList.getBlockData().set(BlockTripwire.POWERED, Boolean.valueOf(false)).set(BlockTripwire.ATTACHED, Boolean.valueOf(false)).set(BlockTripwire.DISARMED, Boolean.valueOf(false)).set(BlockTripwire.NORTH, Boolean.valueOf(false)).set(BlockTripwire.EAST, Boolean.valueOf(false)).set(BlockTripwire.SOUTH, Boolean.valueOf(false)).set(BlockTripwire.WEST, Boolean.valueOf(false)));
++        this.y(this.blockStateList.getBlockData().set(BlockTripwire.POWERED, Boolean.valueOf(false)).set(BlockTripwire.ATTACHED, Boolean.valueOf(false)).set(BlockTripwire.DISARMED, Boolean.valueOf(false)).set(BlockTripwire.NORTH, Boolean.valueOf(false)).set(BlockTripwire.EAST, Boolean.valueOf(false)).set(BlockTripwire.SOUTH, Boolean.valueOf(false)).set(BlockTripwire.WEST, Boolean.valueOf(false)));
+         this.a(true);
+     }
+ 
+@@ -123,7 +125,7 @@
+         IBlockData iblockdata = world.getType(blockposition);
+         boolean flag = ((Boolean) iblockdata.get(BlockTripwire.POWERED)).booleanValue();
+         boolean flag1 = false;
+-        List list = world.getEntities((Entity) null, iblockdata.e(world, blockposition).a(blockposition));
++        List list = world.getEntities((Entity) null, iblockdata.d(world, blockposition).a(blockposition));
+ 
+         if (!list.isEmpty()) {
+             Iterator iterator = list.iterator();
 @@ -138,6 +140,40 @@
              }
          }
@@ -50,3 +68,12 @@
          if (flag1 != flag) {
              iblockdata = iblockdata.set(BlockTripwire.POWERED, Boolean.valueOf(flag1));
              world.setTypeAndData(blockposition, iblockdata, 3);
+@@ -218,8 +254,4 @@
+     protected BlockStateList getStateList() {
+         return new BlockStateList(this, new IBlockState[] { BlockTripwire.POWERED, BlockTripwire.ATTACHED, BlockTripwire.DISARMED, BlockTripwire.NORTH, BlockTripwire.EAST, BlockTripwire.WEST, BlockTripwire.SOUTH});
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.UNDEFINED;
+-    }
+ }

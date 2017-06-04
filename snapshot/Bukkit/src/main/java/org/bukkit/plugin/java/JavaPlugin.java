@@ -9,33 +9,34 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
+import org.bukkit.Warning.WarningState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.plugin.AuthorNagException;
+import org.bukkit.plugin.PluginAwareness;
 import org.bukkit.plugin.PluginBase;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginLogger;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.EbeanServerFactory;
-import com.avaje.ebean.config.DataSourceConfig;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+import com.google.common.io.ByteStreams;
+
+import javax.annotation.Nullable;
 
 /**
  * Represents a Java plugin
@@ -49,7 +50,6 @@ public abstract class JavaPlugin extends PluginBase {
     private File dataFolder = null;
     private ClassLoader classLoader = null;
     private boolean naggable = true;
-    private EbeanServer ebean = null;
     private FileConfiguration newConfig = null;
     private File configFile = null;
     private PluginLogger logger = null;
@@ -58,7 +58,7 @@ public abstract class JavaPlugin extends PluginBase {
         this(null);
     }
 
-    JavaPlugin(@Nullable ClassLoader classLoader) {
+    public JavaPlugin(@Nullable ClassLoader classLoader) {
         if(classLoader == null) {
             classLoader = getClass().getClassLoader();
         }
@@ -271,7 +271,7 @@ public abstract class JavaPlugin extends PluginBase {
                 try {
                     preEnable();
                     onEnable();
-                } catch(RuntimeException e) {
+                } catch (RuntimeException e) {
                     isEnabled = false;
                     throw e;
                 }
@@ -298,42 +298,6 @@ public abstract class JavaPlugin extends PluginBase {
         this.classLoader = classLoader;
         this.configFile = new File(dataFolder, "config.yml");
         this.logger = PluginLogger.get(this);
-
-        if (description.isDatabaseEnabled()) {
-            ServerConfig db = new ServerConfig();
-
-            db.setDefaultServer(false);
-            db.setRegister(false);
-            db.setClasses(getDatabaseClasses());
-            db.setName(description.getName());
-            server.configureDbConfig(db);
-
-            DataSourceConfig ds = db.getDataSourceConfig();
-
-            ds.setUrl(replaceDatabaseString(ds.getUrl()));
-            dataFolder.mkdirs();
-
-            ClassLoader previous = Thread.currentThread().getContextClassLoader();
-
-            Thread.currentThread().setContextClassLoader(classLoader);
-            ebean = EbeanServerFactory.create(db);
-            Thread.currentThread().setContextClassLoader(previous);
-        }
-    }
-
-    /**
-     * Provides a list of all classes that should be persisted in the database
-     *
-     * @return List of Classes that are Ebeans
-     */
-    public List<Class<?>> getDatabaseClasses() {
-        return new ArrayList<Class<?>>();
-    }
-
-    private String replaceDatabaseString(String input) {
-        input = input.replaceAll("\\{DIR\\}", dataFolder.getPath().replaceAll("\\\\", "/") + "/");
-        input = input.replaceAll("\\{NAME\\}", description.getName().replaceAll("[^\\w_-]", ""));
-        return input;
     }
 
     /**
@@ -397,27 +361,6 @@ public abstract class JavaPlugin extends PluginBase {
     @Override
     public final void setNaggable(boolean canNag) {
         this.naggable = canNag;
-    }
-
-    @Override
-    public EbeanServer getDatabase() {
-        Preconditions.checkState(description.isDatabaseEnabled(), "Plugin does not have database: true in plugin.yml");
-
-        return ebean;
-    }
-
-    protected void installDDL() {
-        SpiEbeanServer serv = (SpiEbeanServer) getDatabase();
-        DdlGenerator gen = serv.getDdlGenerator();
-
-        gen.runScript(false, gen.generateCreateDdl());
-    }
-
-    protected void removeDDL() {
-        SpiEbeanServer serv = (SpiEbeanServer) getDatabase();
-        DdlGenerator gen = serv.getDdlGenerator();
-
-        gen.runScript(true, gen.generateDropDdl());
     }
 
     @Override

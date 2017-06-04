@@ -1,6 +1,32 @@
 --- a/net/minecraft/server/ChunkRegionLoader.java
 +++ b/net/minecraft/server/ChunkRegionLoader.java
-@@ -29,19 +29,49 @@
+@@ -1,6 +1,5 @@
+ package net.minecraft.server;
+ 
+-import com.google.common.collect.Maps;
+ import java.io.DataInputStream;
+ import java.io.DataOutput;
+ import java.io.DataOutputStream;
+@@ -11,6 +10,7 @@
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
++import java.util.concurrent.ConcurrentHashMap;
+ import javax.annotation.Nullable;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+@@ -18,8 +18,8 @@
+ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+ 
+     private static final Logger a = LogManager.getLogger();
+-    private final Map<ChunkCoordIntPair, NBTTagCompound> b = Maps.newConcurrentMap();
+-    private final Set<ChunkCoordIntPair> c = Collections.newSetFromMap(Maps.newConcurrentMap());
++    private final Map<ChunkCoordIntPair, NBTTagCompound> b = new ConcurrentHashMap();
++    private final Set<ChunkCoordIntPair> c = Collections.newSetFromMap(new ConcurrentHashMap());
+     private final File d;
+     private final DataConverterManager e;
+     private boolean f;
+@@ -29,53 +29,101 @@
          this.e = dataconvertermanager;
      }
  
@@ -53,17 +79,37 @@
          }
  
          return this.a(world, i, j, nbttagcompound);
-@@ -55,7 +85,7 @@
+     }
+ 
+-    public boolean chunkExists(int i, int j) {
++    public boolean a(int i, int j) {
+         ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
+         NBTTagCompound nbttagcompound = (NBTTagCompound) this.b.get(chunkcoordintpair);
+ 
+-        return nbttagcompound != null ? true : RegionFileCache.chunkExists(this.d, i, j);
++        return nbttagcompound != null ? true : RegionFileCache.f(this.d, i, j);
      }
  
      @Nullable
 -    protected Chunk a(World world, int i, int j, NBTTagCompound nbttagcompound) {
 +    protected Object[] a(World world, int i, int j, NBTTagCompound nbttagcompound) { // CraftBukkit - return Chunk -> Object[]
          if (!nbttagcompound.hasKeyOfType("Level", 10)) {
-             ChunkRegionLoader.a.error("Chunk file at {},{} is missing level data, skipping", new Object[] { Integer.valueOf(i), Integer.valueOf(j)});
+-            ChunkRegionLoader.a.error("Chunk file at {},{} is missing level data, skipping", Integer.valueOf(i), Integer.valueOf(j));
++            ChunkRegionLoader.a.error("Chunk file at {},{} is missing level data, skipping", new Object[] { Integer.valueOf(i), Integer.valueOf(j)});
              return null;
-@@ -72,10 +102,28 @@
-                     ChunkRegionLoader.a.error("Chunk file at {},{} is in the wrong location; relocating. (Expected {}, {}, got {}, {})", new Object[] { Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(chunk.locX), Integer.valueOf(chunk.locZ)});
+         } else {
+             NBTTagCompound nbttagcompound1 = nbttagcompound.getCompound("Level");
+ 
+             if (!nbttagcompound1.hasKeyOfType("Sections", 9)) {
+-                ChunkRegionLoader.a.error("Chunk file at {},{} is missing block data, skipping", Integer.valueOf(i), Integer.valueOf(j));
++                ChunkRegionLoader.a.error("Chunk file at {},{} is missing block data, skipping", new Object[] { Integer.valueOf(i), Integer.valueOf(j)});
+                 return null;
+             } else {
+                 Chunk chunk = this.a(world, nbttagcompound1);
+ 
+                 if (!chunk.a(i, j)) {
+-                    ChunkRegionLoader.a.error("Chunk file at {},{} is in the wrong location; relocating. (Expected {}, {}, got {}, {})", Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(chunk.locX), Integer.valueOf(chunk.locZ));
++                    ChunkRegionLoader.a.error("Chunk file at {},{} is in the wrong location; relocating. (Expected {}, {}, got {}, {})", new Object[] { Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(chunk.locX), Integer.valueOf(chunk.locZ)});
                      nbttagcompound1.setInt("xPos", i);
                      nbttagcompound1.setInt("zPos", j);
 +
@@ -92,17 +138,29 @@
              }
          }
      }
-@@ -106,20 +154,27 @@
+@@ -88,7 +136,7 @@
+             NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+ 
+             nbttagcompound.set("Level", nbttagcompound1);
+-            nbttagcompound.setInt("DataVersion", 1137);
++            nbttagcompound.setInt("DataVersion", 921);
+             this.a(chunk, world, nbttagcompound1);
+             this.a(chunk.k(), nbttagcompound);
+         } catch (Exception exception) {
+@@ -105,21 +153,28 @@
+         FileIOThread.a().a(this);
      }
  
-     public boolean c() {
+-    public boolean a() {
 -        if (this.b.isEmpty()) {
++    public boolean c() {
 +        // CraftBukkit start
 +        Iterator<Map.Entry<ChunkCoordIntPair, NBTTagCompound>> iter = this.b.entrySet().iterator();
 +        if (!iter.hasNext()) {
 +            // CraftBukkit end
              if (this.f) {
-                 ChunkRegionLoader.a.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", new Object[] { this.d.getName()});
+-                ChunkRegionLoader.a.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", this.d.getName());
++                ChunkRegionLoader.a.info("ThreadedAnvilChunkStorage ({}): All chunks are saved", new Object[] { this.d.getName()});
              }
  
              return false;
@@ -123,7 +181,7 @@
  
                  if (nbttagcompound != null) {
                      try {
-@@ -139,10 +194,14 @@
+@@ -139,24 +194,29 @@
      }
  
      private void b(ChunkCoordIntPair chunkcoordintpair, NBTTagCompound nbttagcompound) throws IOException {
@@ -139,14 +197,42 @@
      }
  
      public void b(World world, Chunk chunk) throws IOException {}
-@@ -157,6 +216,7 @@
-                 if (this.c()) {
+ 
+-    public void b() {}
++    public void a() {}
+ 
+-    public void c() {
++    public void b() {
+         try {
+             this.f = true;
+ 
+             while (true) {
+-                if (this.a()) {
++                if (this.c()) {
                      continue;
                  }
 +                break; // CraftBukkit - Fix infinite loop when saving chunks
              }
          } finally {
              this.f = false;
+@@ -176,7 +236,7 @@
+                         nbttaglist = nbttagcompound1.getList("Entities", 10);
+ 
+                         for (j = 0; j < nbttaglist.size(); ++j) {
+-                            nbttaglist.a(j, dataconverter.a(DataConverterTypes.ENTITY, (NBTTagCompound) nbttaglist.i(j), i));
++                            nbttaglist.a(j, dataconverter.a(DataConverterTypes.ENTITY, (NBTTagCompound) nbttaglist.h(j), i));
+                         }
+                     }
+ 
+@@ -184,7 +244,7 @@
+                         nbttaglist = nbttagcompound1.getList("TileEntities", 10);
+ 
+                         for (j = 0; j < nbttaglist.size(); ++j) {
+-                            nbttaglist.a(j, dataconverter.a(DataConverterTypes.BLOCK_ENTITY, (NBTTagCompound) nbttaglist.i(j), i));
++                            nbttaglist.a(j, dataconverter.a(DataConverterTypes.BLOCK_ENTITY, (NBTTagCompound) nbttaglist.h(j), i));
+                         }
+                     }
+                 }
 @@ -334,6 +394,13 @@
              chunk.a(nbttagcompound.getByteArray("Biomes"));
          }
@@ -192,19 +278,21 @@
                  return null;
              } else {
                  if (nbttagcompound.hasKeyOfType("Passengers", 9)) {
-@@ -435,8 +508,14 @@
+@@ -435,9 +508,15 @@
          }
      }
  
 +    // CraftBukkit start
      public static void a(Entity entity, World world) {
 -        if (world.addEntity(entity) && entity.isVehicle()) {
+-            Iterator iterator = entity.bD().iterator();
 +        a(entity, world, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT);
 +    }
 +
 +    public static void a(Entity entity, World world, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason reason) {
 +        if (world.addEntity(entity, reason) && entity.isVehicle()) {
 +            // CraftBukkit end
-             Iterator iterator = entity.bx().iterator();
++            Iterator iterator = entity.bx().iterator();
  
              while (iterator.hasNext()) {
+                 Entity entity1 = (Entity) iterator.next();

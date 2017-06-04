@@ -6,24 +6,38 @@ Subject: [PATCH] Custom replacement for eaten items
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -2336,9 +2336,23 @@ public abstract class EntityLiving extends Entity {
+@@ -2369,9 +2369,10 @@ public abstract class EntityLiving extends Entity {
+             this.b(this.activeItem, 16);
+             // CraftBukkit start - fire PlayerItemConsumeEvent
+             ItemStack itemstack;
++            PlayerItemConsumeEvent event = null;
+             if (this instanceof EntityPlayer) {
+                 org.bukkit.inventory.ItemStack craftItem = CraftItemStack.asBukkitCopy(this.activeItem);
+-                PlayerItemConsumeEvent event = new PlayerItemConsumeEvent((Player) this.getBukkitEntity(), craftItem);
++                event = new PlayerItemConsumeEvent((Player) this.getBukkitEntity(), craftItem);
+                 world.getServer().getPluginManager().callEvent(event);
+ 
+                 if (event.isCancelled()) {
+@@ -2386,9 +2387,25 @@ public abstract class EntityLiving extends Entity {
+                 itemstack = this.activeItem.a(this.world, this);
              }
  
-             ItemStack itemstack = (craftItem.equals(event.getItem())) ? this.activeItem.a(this.world, this) : CraftItemStack.asNMSCopy(event.getItem()).a(world, this);
-+
 +            // SportBukkit start - save the default replacement item and change it if necessary
-+            final ItemStack defaultReplacement = itemstack;
-+            if(event.getReplacement() != null) {
-+                itemstack = CraftItemStack.asNMSCopy(event.getReplacement());
++            ItemStack defaultReplacement = null;
++            if (event != null) {
++                defaultReplacement = itemstack;
++                if(event.getReplacement() != null) {
++                    itemstack = CraftItemStack.asNMSCopy(event.getReplacement());
++                }
 +            }
 +            // SportBukkit end
 +
-             this.a(this.cz(), itemstack);
+             this.a(this.cF(), itemstack);
              // CraftBukkit end
-             this.cF();
+             this.cL();
 +
 +            // SportBukkit start - if the replacement is anything but the default, update the client inventory
-+            if(this instanceof EntityPlayer && !com.google.common.base.Objects.equal(defaultReplacement, itemstack)) {
++            if(event != null && defaultReplacement != null && this instanceof EntityPlayer && !com.google.common.base.Objects.equal(defaultReplacement, itemstack)) {
 +                ((EntityPlayer) this).getBukkitEntity().updateInventory();
 +            }
 +            // SportBukkit end

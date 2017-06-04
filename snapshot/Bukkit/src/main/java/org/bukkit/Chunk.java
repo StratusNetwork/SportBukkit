@@ -141,6 +141,13 @@ public interface Chunk extends Physical {
     boolean unload();
 
     /**
+     * Checks if this chunk can spawn slimes without being a swamp biome.
+     *
+     * @return true if slimes are able to spawn in this chunk
+     */
+    boolean isSlimeChunk();
+
+    /**
      * Replace all blocks of one material with another
      * @param original       block to replace
      * @param replacement    new block

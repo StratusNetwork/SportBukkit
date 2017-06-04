@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/BlockTNT.java
 +++ b/net/minecraft/server/BlockTNT.java
-@@ -1,6 +1,8 @@
+@@ -1,12 +1,14 @@
  package net.minecraft.server;
  
  public class BlockTNT extends Block {
@@ -8,6 +8,13 @@
 +    Entity primer; // SportBukkit
  
      public static final BlockStateBoolean EXPLODE = BlockStateBoolean.of("explode");
+ 
+     public BlockTNT() {
+         super(Material.TNT);
+-        this.w(this.blockStateList.getBlockData().set(BlockTNT.EXPLODE, Boolean.valueOf(false)));
++        this.y(this.blockStateList.getBlockData().set(BlockTNT.EXPLODE, Boolean.valueOf(false)));
+         this.a(CreativeModeTab.d);
+     }
  
 @@ -14,7 +16,11 @@
          super.onPlace(world, blockposition, iblockdata);
@@ -61,7 +68,7 @@
          }
      }
  
-@@ -45,6 +70,18 @@
+@@ -45,8 +70,20 @@
              if (((Boolean) iblockdata.get(BlockTNT.EXPLODE)).booleanValue()) {
                  EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) ((float) blockposition.getX() + 0.5F), (double) blockposition.getY(), (double) ((float) blockposition.getZ() + 0.5F), entityliving);
  
@@ -78,8 +85,11 @@
 +                // SportBukkit end
 +
                  world.addEntity(entitytntprimed);
-                 world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.gV, SoundCategory.BLOCKS, 1.0F, 1.0F);
+-                world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.hW, SoundCategory.BLOCKS, 1.0F, 1.0F);
++                world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.gV, SoundCategory.BLOCKS, 1.0F, 1.0F);
              }
+ 
+         }
 @@ -56,8 +93,14 @@
          ItemStack itemstack = entityhuman.b(enumhand);
  

@@ -74,9 +74,9 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardTran
 diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
 --- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableSet;
- import net.minecraft.server.ScoreboardTeam;
- import net.minecraft.server.ScoreboardTeamBase;
+@@ -16,7 +16,7 @@ import net.minecraft.server.ScoreboardTeamBase;
+ import org.bukkit.ChatColor;
+ import org.bukkit.craftbukkit.util.CraftChatMessage;
  
 -final class CraftTeam extends CraftScoreboardComponent implements Team {
 +public final class CraftTeam extends CraftScoreboardComponent implements Team {

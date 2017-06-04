@@ -1,6 +1,11 @@
 --- a/net/minecraft/server/BlockTripwireHook.java
 +++ b/net/minecraft/server/BlockTripwireHook.java
-@@ -5,6 +5,8 @@
+@@ -1,10 +1,12 @@
+ package net.minecraft.server;
+ 
+-import com.google.common.base.MoreObjects;
++import com.google.common.base.Objects;
+ import java.util.Iterator;
  import java.util.Random;
  import javax.annotation.Nullable;
  
@@ -9,7 +14,57 @@
  public class BlockTripwireHook extends Block {
  
      public static final BlockStateDirection FACING = BlockFacingHorizontal.FACING;
-@@ -155,6 +157,17 @@
+@@ -17,7 +19,7 @@
+ 
+     public BlockTripwireHook() {
+         super(Material.ORIENTABLE);
+-        this.w(this.blockStateList.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.NORTH).set(BlockTripwireHook.POWERED, Boolean.valueOf(false)).set(BlockTripwireHook.ATTACHED, Boolean.valueOf(false)));
++        this.y(this.blockStateList.getBlockData().set(BlockTripwireHook.FACING, EnumDirection.NORTH).set(BlockTripwireHook.POWERED, Boolean.valueOf(false)).set(BlockTripwireHook.ATTACHED, Boolean.valueOf(false)));
+         this.a(CreativeModeTab.d);
+         this.a(true);
+     }
+@@ -53,12 +55,7 @@
+     }
+ 
+     public boolean canPlace(World world, BlockPosition blockposition, EnumDirection enumdirection) {
+-        EnumDirection enumdirection1 = enumdirection.opposite();
+-        BlockPosition blockposition1 = blockposition.shift(enumdirection1);
+-        IBlockData iblockdata = world.getType(blockposition1);
+-        boolean flag = c(iblockdata.getBlock());
+-
+-        return !flag && enumdirection.k().c() && iblockdata.d(world, blockposition1, enumdirection) == EnumBlockFaceShape.SOLID && !iblockdata.m();
++        return enumdirection.k().c() && world.getType(blockposition.shift(enumdirection.opposite())).m();
+     }
+ 
+     public boolean canPlace(World world, BlockPosition blockposition) {
+@@ -72,7 +69,7 @@
+             }
+ 
+             enumdirection = (EnumDirection) iterator.next();
+-        } while (!this.canPlace(world, blockposition, enumdirection));
++        } while (!world.getType(blockposition.shift(enumdirection)).m());
+ 
+         return true;
+     }
+@@ -96,7 +93,7 @@
+             if (this.e(world, blockposition, iblockdata)) {
+                 EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockTripwireHook.FACING);
+ 
+-                if (!this.canPlace(world, blockposition, enumdirection)) {
++                if (!world.getType(blockposition.shift(enumdirection.opposite())).m()) {
+                     this.b(world, blockposition, iblockdata, 0);
+                     world.setAir(blockposition);
+                 }
+@@ -132,7 +129,7 @@
+                 flag4 = false;
+             } else {
+                 if (k == i) {
+-                    iblockdata2 = (IBlockData) MoreObjects.firstNonNull(iblockdata1, iblockdata2);
++                    iblockdata2 = (IBlockData) Objects.firstNonNull(iblockdata1, iblockdata2);
+                 }
+ 
+                 boolean flag6 = !((Boolean) iblockdata2.get(BlockTripwire.DISARMED)).booleanValue();
+@@ -160,6 +157,17 @@
              this.a(world, blockposition1, flag4, flag5, flag2, flag3);
          }
  
@@ -27,3 +82,30 @@
          this.a(world, blockposition, flag4, flag5, flag2, flag3);
          if (!flag) {
              world.setTypeAndData(blockposition, iblockdata3.set(BlockTripwireHook.FACING, enumdirection), 3);
+@@ -189,13 +197,13 @@
+ 
+     private void a(World world, BlockPosition blockposition, boolean flag, boolean flag1, boolean flag2, boolean flag3) {
+         if (flag1 && !flag3) {
+-            world.a((EntityHuman) null, blockposition, SoundEffects.ia, SoundCategory.BLOCKS, 0.4F, 0.6F);
++            world.a((EntityHuman) null, blockposition, SoundEffects.gZ, SoundCategory.BLOCKS, 0.4F, 0.6F);
+         } else if (!flag1 && flag3) {
+-            world.a((EntityHuman) null, blockposition, SoundEffects.hZ, SoundCategory.BLOCKS, 0.4F, 0.5F);
++            world.a((EntityHuman) null, blockposition, SoundEffects.gY, SoundCategory.BLOCKS, 0.4F, 0.5F);
+         } else if (flag && !flag2) {
+-            world.a((EntityHuman) null, blockposition, SoundEffects.hY, SoundCategory.BLOCKS, 0.4F, 0.7F);
++            world.a((EntityHuman) null, blockposition, SoundEffects.gX, SoundCategory.BLOCKS, 0.4F, 0.7F);
+         } else if (!flag && flag2) {
+-            world.a((EntityHuman) null, blockposition, SoundEffects.ib, SoundCategory.BLOCKS, 0.4F, 1.2F / (world.random.nextFloat() * 0.2F + 0.9F));
++            world.a((EntityHuman) null, blockposition, SoundEffects.ha, SoundCategory.BLOCKS, 0.4F, 1.2F / (world.random.nextFloat() * 0.2F + 0.9F));
+         }
+ 
+     }
+@@ -273,8 +281,4 @@
+     protected BlockStateList getStateList() {
+         return new BlockStateList(this, new IBlockState[] { BlockTripwireHook.FACING, BlockTripwireHook.POWERED, BlockTripwireHook.ATTACHED});
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.UNDEFINED;
+-    }
+ }

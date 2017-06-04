@@ -1,9 +1,10 @@
 --- a/net/minecraft/server/InventoryCraftResult.java
 +++ b/net/minecraft/server/InventoryCraftResult.java
-@@ -1,11 +1,44 @@
+@@ -1,12 +1,43 @@
  package net.minecraft.server;
  
  import java.util.Iterator;
+-import javax.annotation.Nullable;
 +// CraftBukkit start
 +import org.bukkit.Location;
 +import org.bukkit.craftbukkit.entity.CraftHumanEntity;
@@ -13,7 +14,8 @@
  public class InventoryCraftResult implements IInventory {
  
      private final NonNullList<ItemStack> items;
- 
+-    private IRecipe b;
++
 +    // CraftBukkit start
 +    private int maxStack = MAX_STACK;
 +
@@ -41,11 +43,19 @@
 +        return null;
 +    }
 +    // CraftBukkit end
-+
+ 
      public InventoryCraftResult() {
          this.items = NonNullList.a(1, ItemStack.a);
+@@ -16,7 +47,7 @@
+         return 1;
      }
-@@ -59,7 +92,7 @@
+ 
+-    public boolean x_() {
++    public boolean w_() {
+         Iterator iterator = this.items.iterator();
+ 
+         ItemStack itemstack;
+@@ -61,7 +92,7 @@
      }
  
      public int getMaxStackSize() {
@@ -54,3 +64,17 @@
      }
  
      public void update() {}
+@@ -91,13 +122,4 @@
+     public void clear() {
+         this.items.clear();
+     }
+-
+-    public void a(@Nullable IRecipe irecipe) {
+-        this.b = irecipe;
+-    }
+-
+-    @Nullable
+-    public IRecipe i() {
+-        return this.b;
+-    }
+ }

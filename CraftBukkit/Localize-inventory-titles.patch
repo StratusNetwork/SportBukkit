@@ -6,7 +6,7 @@ Subject: [PATCH] Localize inventory titles
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
-@@ -329,7 +329,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+@@ -338,7 +338,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
          container = CraftEventFactory.callInventoryOpenEvent(player, container);
          if(container == null) return;
  
@@ -20,7 +20,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b
          int size = container.getBukkitView().getTopInventory().getSize();
  
          // Special cases
-@@ -340,7 +345,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+@@ -349,7 +354,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
              size = 0;
          }
  
@@ -48,7 +48,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java 
  import net.minecraft.server.PlayerInventory;
  import net.minecraft.server.TileEntityBeacon;
  import net.minecraft.server.TileEntityBrewingStand;
-@@ -42,7 +46,21 @@ public class CraftInventory implements Inventory {
+@@ -43,7 +47,21 @@ public class CraftInventory implements Inventory {
      }
  
      public String getName() {
@@ -71,7 +71,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java 
      }
  
      public ItemStack getItem(int index) {
-@@ -432,7 +450,7 @@ public class CraftInventory implements Inventory {
+@@ -440,7 +458,7 @@ public class CraftInventory implements Inventory {
      }
  
      public String getTitle() {

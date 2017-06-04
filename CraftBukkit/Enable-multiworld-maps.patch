@@ -29,7 +29,7 @@ diff --git a/src/main/java/net/minecraft/server/ItemWorldMap.java b/src/main/jav
  
              // CraftBukkit start
              MapInitializeEvent event = new MapInitializeEvent(worldmap.mapView);
-@@ -322,7 +321,6 @@ public class ItemWorldMap extends ItemWorldMapBase {
+@@ -323,7 +322,6 @@ public class ItemWorldMap extends ItemWorldMapBase {
      protected static void a(ItemStack itemstack, World world, int i) {
          WorldMap worldmap = Items.FILLED_MAP.getSavedMap(itemstack, world);
  

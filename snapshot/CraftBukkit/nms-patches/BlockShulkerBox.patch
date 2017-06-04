@@ -1,20 +1,51 @@
 --- a/net/minecraft/server/BlockShulkerBox.java
 +++ b/net/minecraft/server/BlockShulkerBox.java
-@@ -3,10 +3,11 @@
+@@ -3,24 +3,25 @@
  public class BlockShulkerBox extends BlockTileEntity {
  
      public static final BlockStateEnum<EnumDirection> a = BlockStateDirection.of("facing");
--    private final EnumColor b;
+-    public final EnumColor color;
 +    public final EnumColor b; // PAIL: public, rename
  
      public BlockShulkerBox(EnumColor enumcolor) {
-         super(Material.STONE, MaterialMapColor.b);
+-        super(Material.STONE, MaterialMapColor.c);
+-        this.color = enumcolor;
++        super(Material.STONE, MaterialMapColor.b);
 +        proto(307); // SportBukkit
-         this.b = enumcolor;
++        this.b = enumcolor;
          this.a(CreativeModeTab.c);
-         this.y(this.blockStateList.getBlockData().set(BlockShulkerBox.a, EnumDirection.UP));
-@@ -89,7 +90,32 @@
-         tileentityshulkerbox.d(entityhuman);
+-        this.w(this.blockStateList.getBlockData().set(BlockShulkerBox.a, EnumDirection.UP));
++        this.y(this.blockStateList.getBlockData().set(BlockShulkerBox.a, EnumDirection.UP));
+     }
+ 
+     public TileEntity a(World world, int i) {
+-        return new TileEntityShulkerBox(this.color);
++        return new TileEntityShulkerBox(this.b);
+     }
+ 
+     public boolean b(IBlockData iblockdata) {
+         return false;
+     }
+ 
+-    public boolean t(IBlockData iblockdata) {
++    public boolean u(IBlockData iblockdata) {
+         return true;
+     }
+ 
+@@ -83,23 +84,45 @@
+     }
+ 
+     public void a(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman) {
+-        if (world.getTileEntity(blockposition) instanceof TileEntityShulkerBox) {
+-            TileEntityShulkerBox tileentityshulkerbox = (TileEntityShulkerBox) world.getTileEntity(blockposition);
+-
+-            tileentityshulkerbox.a(entityhuman.abilities.canInstantlyBuild);
+-            tileentityshulkerbox.d(entityhuman);
+-        }
++        TileEntityShulkerBox tileentityshulkerbox = (TileEntityShulkerBox) world.getTileEntity(blockposition);
+ 
++        tileentityshulkerbox.a(entityhuman.abilities.canInstantlyBuild);
++        tileentityshulkerbox.d(entityhuman);
      }
  
 -    public void dropNaturally(World world, BlockPosition blockposition, IBlockData iblockdata, float f, int i) {}
@@ -47,7 +78,15 @@
  
      public void postPlace(World world, BlockPosition blockposition, IBlockData iblockdata, EntityLiving entityliving, ItemStack itemstack) {
          if (itemstack.hasName()) {
-@@ -105,7 +131,7 @@
+             TileEntity tileentity = world.getTileEntity(blockposition);
+ 
+             if (tileentity instanceof TileEntityShulkerBox) {
+-                ((TileEntityShulkerBox) tileentity).setCustomName(itemstack.getName());
++                ((TileEntityShulkerBox) tileentity).a(itemstack.getName());
+             }
+         }
+ 
+@@ -108,7 +131,7 @@
      public void remove(World world, BlockPosition blockposition, IBlockData iblockdata) {
          TileEntity tileentity = world.getTileEntity(blockposition);
  
@@ -56,3 +95,25 @@
              TileEntityShulkerBox tileentityshulkerbox = (TileEntityShulkerBox) tileentity;
  
              if (!tileentityshulkerbox.r() && tileentityshulkerbox.F()) {
+@@ -120,7 +143,7 @@
+                 itemstack.setTag(nbttagcompound);
+                 if (tileentityshulkerbox.hasCustomName()) {
+                     itemstack.g(tileentityshulkerbox.getName());
+-                    tileentityshulkerbox.setCustomName("");
++                    tileentityshulkerbox.a("");
+                 }
+ 
+                 a(world, blockposition, itemstack);
+@@ -226,12 +249,4 @@
+     public IBlockData a(IBlockData iblockdata, EnumBlockMirror enumblockmirror) {
+         return iblockdata.a(enumblockmirror.a((EnumDirection) iblockdata.get(BlockShulkerBox.a)));
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        iblockdata = this.updateState(iblockdata, iblockaccess, blockposition);
+-        EnumDirection enumdirection1 = (EnumDirection) iblockdata.get(BlockShulkerBox.a);
+-        TileEntityShulkerBox.AnimationPhase tileentityshulkerbox_animationphase = ((TileEntityShulkerBox) iblockaccess.getTileEntity(blockposition)).p();
+-
+-        return tileentityshulkerbox_animationphase != TileEntityShulkerBox.AnimationPhase.CLOSED && (tileentityshulkerbox_animationphase != TileEntityShulkerBox.AnimationPhase.OPENED || enumdirection1 != enumdirection.opposite() && enumdirection1 != enumdirection) ? EnumBlockFaceShape.UNDEFINED : EnumBlockFaceShape.SOLID;
+-    }
+ }

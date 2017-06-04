@@ -15,24 +15,24 @@ diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java
      // SportBukkit start - natural regen API
      public boolean fastNaturalRegeneration = true;
      public boolean slowNaturalRegeneration = true;
-@@ -1909,11 +1911,12 @@ public abstract class EntityHuman extends EntityLiving {
+@@ -1907,11 +1909,12 @@ public abstract class EntityHuman extends EntityLiving {
      }
  
-     public float o(float f) {
--        return MathHelper.a(((float) this.aE + f) / this.dg(), 0.0F, 1.0F);
-+        return MathHelper.a(((float) Math.max(this.aE, this.clientTicksSinceLastAttack) + f) / this.dg(), 0.0F, 1.0F); // SportBukkit - check client and server ticks
+     public float p(float f) {
+-        return MathHelper.a(((float) this.aE + f) / this.dp(), 0.0F, 1.0F);
++        return MathHelper.a(((float) Math.max(this.aE, this.clientTicksSinceLastAttack) + f) / this.dp(), 0.0F, 1.0F); // SportBukkit - check client and server ticks
      }
  
-     public void dh() {
+     public void dq() {
          this.aE = 0;
 +        this.clientTicksSinceLastAttack = 0; // SportBukkit
      }
  
-     public ItemCooldown di() {
+     public ItemCooldown getCooldownTracker() {
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -496,6 +496,8 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -523,6 +523,8 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                      this.syncPosition();
                  }
  
@@ -40,4 +40,4 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
 +
                  // SportBukkit start - velocity prediction
                  this.player.handleClientTick(
-                     packetplayinflying.hasPos ? new Vector(packetplayinflying.x,
+                         packetplayinflying.hasPos ? new Vector(packetplayinflying.x,

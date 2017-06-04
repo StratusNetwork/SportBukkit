@@ -19,7 +19,16 @@
      }
  
      public static int getCombinedId(IBlockData iblockdata) {
-@@ -106,6 +115,7 @@
+@@ -78,7 +87,7 @@
+ 
+     @Deprecated
+     public boolean k(IBlockData iblockdata) {
+-        return iblockdata.getMaterial().k() && iblockdata.g();
++        return iblockdata.getMaterial().k() && iblockdata.h();
+     }
+ 
+     @Deprecated
+@@ -106,13 +115,14 @@
          return this.p;
      }
  
@@ -27,7 +36,113 @@
      @Deprecated
      public Material q(IBlockData iblockdata) {
          return this.material;
-@@ -334,7 +344,8 @@
+     }
+ 
+     @Deprecated
+-    public MaterialMapColor c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
++    public MaterialMapColor r(IBlockData iblockdata) {
+         return this.y;
+     }
+ 
+@@ -122,7 +132,7 @@
+     }
+ 
+     public int toLegacyData(IBlockData iblockdata) {
+-        if (iblockdata.s().isEmpty()) {
++        if (iblockdata.t().isEmpty()) {
+             return 0;
+         } else {
+             throw new IllegalArgumentException("Don\'t know how to convert " + iblockdata + " back into data...");
+@@ -152,8 +162,8 @@
+         this.material = material;
+         this.y = materialmapcolor;
+         this.blockStateList = this.getStateList();
+-        this.w(this.blockStateList.getBlockData());
+-        this.l = this.getBlockData().p();
++        this.y(this.blockStateList.getBlockData());
++        this.l = this.getBlockData().q();
+         this.m = this.l ? 255 : 0;
+         this.n = !material.blocksLight();
+     }
+@@ -167,7 +177,7 @@
+         return this;
+     }
+ 
+-    protected Block e(int i) {
++    protected Block d(int i) {
+         this.m = i;
+         return this;
+     }
+@@ -182,27 +192,19 @@
+         return this;
+     }
+ 
+-    protected static boolean b(Block block) {
+-        return block instanceof BlockShulkerBox || block instanceof BlockLeaves || block instanceof BlockTrapdoor || block == Blocks.BEACON || block == Blocks.cauldron || block == Blocks.GLASS || block == Blocks.GLOWSTONE || block == Blocks.ICE || block == Blocks.SEA_LANTERN || block == Blocks.STAINED_GLASS || block == Blocks.LIT_PUMPKIN;
+-    }
+-
+-    protected static boolean c(Block block) {
+-        return b(block) || block == Blocks.PISTON || block == Blocks.STICKY_PISTON || block == Blocks.PISTON_HEAD;
+-    }
+-
+     @Deprecated
+-    public boolean r(IBlockData iblockdata) {
+-        return iblockdata.getMaterial().isSolid() && iblockdata.g();
++    public boolean s(IBlockData iblockdata) {
++        return iblockdata.getMaterial().isSolid() && iblockdata.h();
+     }
+ 
+     @Deprecated
+     public boolean isOccluding(IBlockData iblockdata) {
+-        return iblockdata.getMaterial().k() && iblockdata.g() && !iblockdata.m();
++        return iblockdata.getMaterial().k() && iblockdata.h() && !iblockdata.n();
+     }
+ 
+     @Deprecated
+-    public boolean t(IBlockData iblockdata) {
+-        return this.material.isSolid() && this.getBlockData().g();
++    public boolean u(IBlockData iblockdata) {
++        return this.material.isSolid() && this.getBlockData().h();
+     }
+ 
+     @Deprecated
+@@ -260,14 +262,13 @@
+         return Block.j;
+     }
+ 
+-    @Deprecated
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.SOLID;
++    public boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
++        return iblockaccess.getType(blockposition).getMaterial().isBuildable();
+     }
+ 
+     @Deprecated
+     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> list, @Nullable Entity entity, boolean flag) {
+-        a(blockposition, axisalignedbb, list, iblockdata.d(world, blockposition));
++        a(blockposition, axisalignedbb, list, iblockdata.c(world, blockposition));
+     }
+ 
+     protected static void a(BlockPosition blockposition, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> list, @Nullable AxisAlignedBB axisalignedbb1) {
+@@ -284,7 +285,7 @@
+     @Deprecated
+     @Nullable
+     public AxisAlignedBB a(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
+-        return iblockdata.e(iblockaccess, blockposition);
++        return iblockdata.d(iblockaccess, blockposition);
+     }
+ 
+     @Deprecated
+@@ -331,7 +332,7 @@
+     public float getDamage(IBlockData iblockdata, EntityHuman entityhuman, World world, BlockPosition blockposition) {
+         float f = iblockdata.b(world, blockposition);
+ 
+-        return f < 0.0F ? 0.0F : (!entityhuman.hasBlock(iblockdata) ? entityhuman.b(iblockdata) / f / 100.0F : entityhuman.b(iblockdata) / f / 30.0F);
++        return f < 0.0F ? 0.0F : (!entityhuman.hasBlock(iblockdata) ? entityhuman.a(iblockdata) / f / 100.0F : entityhuman.a(iblockdata) / f / 30.0F);
+     }
+ 
+     public final void b(World world, BlockPosition blockposition, IBlockData iblockdata, int i) {
+@@ -343,7 +344,8 @@
              int j = this.getDropCount(i, world.random);
  
              for (int k = 0; k < j; ++k) {
@@ -37,16 +152,252 @@
                      Item item = this.getDropType(iblockdata, world.random, i);
  
                      if (item != Items.a) {
-@@ -841,12 +852,12 @@
-         a(210, "repeating_command_block", (new BlockCommand(MaterialMapColor.z)).j().b(6000000.0F).c("repeatingCommandBlock"));
-         a(211, "chain_command_block", (new BlockCommand(MaterialMapColor.C)).j().b(6000000.0F).c("chainCommandBlock"));
-         a(212, "frosted_ice", (new BlockIceFrost()).c(0.5F).d(3).a(SoundEffectType.f).c("frostedIce"));
+@@ -391,7 +393,7 @@
+     @Deprecated
+     @Nullable
+     public MovingObjectPosition a(IBlockData iblockdata, World world, BlockPosition blockposition, Vec3D vec3d, Vec3D vec3d1) {
+-        return this.a(blockposition, vec3d, vec3d1, iblockdata.e(world, blockposition));
++        return this.a(blockposition, vec3d, vec3d1, iblockdata.d(world, blockposition));
+     }
+ 
+     @Nullable
+@@ -450,7 +452,7 @@
+         entityhuman.b(StatisticList.a(this));
+         entityhuman.applyExhaustion(0.005F);
+         if (this.n() && EnchantmentManager.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemstack) > 0) {
+-            ItemStack itemstack1 = this.u(iblockdata);
++            ItemStack itemstack1 = this.w(iblockdata);
+ 
+             a(world, blockposition, itemstack1);
+         } else {
+@@ -462,14 +464,14 @@
+     }
+ 
+     protected boolean n() {
+-        return this.getBlockData().g() && !this.isTileEntity;
++        return this.getBlockData().h() && !this.isTileEntity;
+     }
+ 
+-    protected ItemStack u(IBlockData iblockdata) {
++    protected ItemStack w(IBlockData iblockdata) {
+         Item item = Item.getItemOf(this);
+         int i = 0;
+ 
+-        if (item.k()) {
++        if (item.l()) {
+             i = this.toLegacyData(iblockdata);
+         }
+ 
+@@ -547,12 +549,12 @@
+         return true;
+     }
+ 
+-    public boolean d(Block block) {
++    public boolean b(Block block) {
+         return this == block;
+     }
+ 
+     public static boolean a(Block block, Block block1) {
+-        return block != null && block1 != null ? (block == block1 ? true : block.d(block1)) : false;
++        return block != null && block1 != null ? (block == block1 ? true : block.b(block1)) : false;
+     }
+ 
+     @Deprecated
+@@ -573,7 +575,7 @@
+         return this.blockStateList;
+     }
+ 
+-    protected final void w(IBlockData iblockdata) {
++    protected final void y(IBlockData iblockdata) {
+         this.blockData = iblockdata;
+     }
+ 
+@@ -586,7 +588,7 @@
+     }
+ 
+     @Deprecated
+-    public Vec3D f(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
++    public Vec3D e(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
+         Block.EnumRandomOffset block_enumrandomoffset = this.u();
+ 
+         if (block_enumrandomoffset == Block.EnumRandomOffset.NONE) {
+@@ -619,8 +621,8 @@
+         a(5, "planks", block1);
+         a(6, "sapling", (new BlockSapling()).c(0.0F).a(SoundEffectType.c).c("sapling"));
+         a(7, "bedrock", (new BlockNoDrop(Material.STONE)).j().b(6000000.0F).a(SoundEffectType.d).c("bedrock").p().a(CreativeModeTab.b));
+-        a(8, "flowing_water", (new BlockFlowing(Material.WATER)).c(100.0F).e(3).c("water").p());
+-        a(9, "water", (new BlockStationary(Material.WATER)).c(100.0F).e(3).c("water").p());
++        a(8, "flowing_water", (new BlockFlowing(Material.WATER)).c(100.0F).d(3).c("water").p());
++        a(9, "water", (new BlockStationary(Material.WATER)).c(100.0F).d(3).c("water").p());
+         a(10, "flowing_lava", (new BlockFlowing(Material.LAVA)).c(100.0F).a(1.0F).c("lava").p());
+         a(11, "lava", (new BlockStationary(Material.LAVA)).c(100.0F).a(1.0F).c("lava").p());
+         a(12, "sand", (new BlockSand()).c(0.5F).a(SoundEffectType.h).c("sand"));
+@@ -633,7 +635,7 @@
+         a(19, "sponge", (new BlockSponge()).c(0.6F).a(SoundEffectType.c).c("sponge"));
+         a(20, "glass", (new BlockGlass(Material.SHATTERABLE, false)).c(0.3F).a(SoundEffectType.f).c("glass"));
+         a(21, "lapis_ore", (new BlockOre()).c(3.0F).b(5.0F).a(SoundEffectType.d).c("oreLapis"));
+-        a(22, "lapis_block", (new Block(Material.ORE, MaterialMapColor.I)).c(3.0F).b(5.0F).a(SoundEffectType.d).c("blockLapis").a(CreativeModeTab.b));
++        a(22, "lapis_block", (new Block(Material.ORE, MaterialMapColor.H)).c(3.0F).b(5.0F).a(SoundEffectType.d).c("blockLapis").a(CreativeModeTab.b));
+         a(23, "dispenser", (new BlockDispenser()).c(3.5F).a(SoundEffectType.d).c("dispenser"));
+         Block block2 = (new BlockSandStone()).a(SoundEffectType.d).c(0.8F).c("sandStone");
+ 
+@@ -643,7 +645,7 @@
+         a(27, "golden_rail", (new BlockPoweredRail()).c(0.7F).a(SoundEffectType.e).c("goldenRail"));
+         a(28, "detector_rail", (new BlockMinecartDetector()).c(0.7F).a(SoundEffectType.e).c("detectorRail"));
+         a(29, "sticky_piston", (new BlockPiston(true)).c("pistonStickyBase"));
+-        a(30, "web", (new BlockWeb()).e(1).c(4.0F).c("web"));
++        a(30, "web", (new BlockWeb()).d(1).c(4.0F).c("web"));
+         a(31, "tallgrass", (new BlockLongGrass()).c(0.0F).a(SoundEffectType.c).c("tallgrass"));
+         a(32, "deadbush", (new BlockDeadBush()).c(0.0F).a(SoundEffectType.c).c("deadbush"));
+         a(33, "piston", (new BlockPiston(false)).c("pistonBase"));
+@@ -658,11 +660,11 @@
+         Block block4 = (new BlockMushroom()).c(0.0F).a(SoundEffectType.c).c("mushroom");
+ 
+         a(40, "red_mushroom", block4);
+-        a(41, "gold_block", (new Block(Material.ORE, MaterialMapColor.G)).c(3.0F).b(10.0F).a(SoundEffectType.e).c("blockGold").a(CreativeModeTab.b));
+-        a(42, "iron_block", (new Block(Material.ORE, MaterialMapColor.i)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("blockIron").a(CreativeModeTab.b));
++        a(41, "gold_block", (new Block(Material.ORE, MaterialMapColor.F)).c(3.0F).b(10.0F).a(SoundEffectType.e).c("blockGold").a(CreativeModeTab.b));
++        a(42, "iron_block", (new Block(Material.ORE, MaterialMapColor.h)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("blockIron").a(CreativeModeTab.b));
+         a(43, "double_stone_slab", (new BlockDoubleStep()).c(2.0F).b(10.0F).a(SoundEffectType.d).c("stoneSlab"));
+         a(44, "stone_slab", (new BlockStep()).c(2.0F).b(10.0F).a(SoundEffectType.d).c("stoneSlab"));
+-        Block block5 = (new Block(Material.STONE, MaterialMapColor.E)).c(2.0F).b(10.0F).a(SoundEffectType.d).c("brick").a(CreativeModeTab.b);
++        Block block5 = (new Block(Material.STONE, MaterialMapColor.D)).c(2.0F).b(10.0F).a(SoundEffectType.d).c("brick").a(CreativeModeTab.b);
+ 
+         a(45, "brick_block", block5);
+         a(46, "tnt", (new BlockTNT()).c(0.0F).a(SoundEffectType.c).c("tnt"));
+@@ -676,7 +678,7 @@
+         a(54, "chest", (new BlockChest(BlockChest.Type.BASIC)).c(2.5F).a(SoundEffectType.a).c("chest"));
+         a(55, "redstone_wire", (new BlockRedstoneWire()).c(0.0F).a(SoundEffectType.d).c("redstoneDust").p());
+         a(56, "diamond_ore", (new BlockOre()).c(3.0F).b(5.0F).a(SoundEffectType.d).c("oreDiamond"));
+-        a(57, "diamond_block", (new Block(Material.ORE, MaterialMapColor.H)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("blockDiamond").a(CreativeModeTab.b));
++        a(57, "diamond_block", (new Block(Material.ORE, MaterialMapColor.G)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("blockDiamond").a(CreativeModeTab.b));
+         a(58, "crafting_table", (new BlockWorkbench()).c(2.5F).a(SoundEffectType.a).c("workbench"));
+         a(59, "wheat", (new BlockCrops()).c("crops"));
+         Block block6 = (new BlockSoil()).c(0.6F).a(SoundEffectType.b).c("farmland");
+@@ -699,8 +701,8 @@
+         a(75, "unlit_redstone_torch", (new BlockRedstoneTorch(false)).c(0.0F).a(SoundEffectType.a).c("notGate"));
+         a(76, "redstone_torch", (new BlockRedstoneTorch(true)).c(0.0F).a(0.5F).a(SoundEffectType.a).c("notGate").a(CreativeModeTab.d));
+         a(77, "stone_button", (new BlockStoneButton()).c(0.5F).a(SoundEffectType.d).c("button"));
+-        a(78, "snow_layer", (new BlockSnow()).c(0.1F).a(SoundEffectType.i).c("snow").e(0));
+-        a(79, "ice", (new BlockIce()).c(0.5F).e(3).a(SoundEffectType.f).c("ice"));
++        a(78, "snow_layer", (new BlockSnow()).c(0.1F).a(SoundEffectType.i).c("snow").d(0));
++        a(79, "ice", (new BlockIce()).c(0.5F).d(3).a(SoundEffectType.f).c("ice"));
+         a(80, "snow", (new BlockSnowBlock()).c(0.2F).a(SoundEffectType.i).c("snow"));
+         a(81, "cactus", (new BlockCactus()).c(0.4F).a(SoundEffectType.g).c("cactus"));
+         a(82, "clay", (new BlockClay()).c(0.6F).a(SoundEffectType.b).c("clay"));
+@@ -724,8 +726,8 @@
+         Block block8 = (new BlockSmoothBrick()).c(1.5F).b(10.0F).a(SoundEffectType.d).c("stonebricksmooth");
+ 
+         a(98, "stonebrick", block8);
+-        a(99, "brown_mushroom_block", (new BlockHugeMushroom(Material.WOOD, MaterialMapColor.m, block3)).c(0.2F).a(SoundEffectType.a).c("mushroom"));
+-        a(100, "red_mushroom_block", (new BlockHugeMushroom(Material.WOOD, MaterialMapColor.E, block4)).c(0.2F).a(SoundEffectType.a).c("mushroom"));
++        a(99, "brown_mushroom_block", (new BlockHugeMushroom(Material.WOOD, MaterialMapColor.l, block3)).c(0.2F).a(SoundEffectType.a).c("mushroom"));
++        a(100, "red_mushroom_block", (new BlockHugeMushroom(Material.WOOD, MaterialMapColor.D, block4)).c(0.2F).a(SoundEffectType.a).c("mushroom"));
+         a(101, "iron_bars", (new BlockThin(Material.ORE, true)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("fenceIron"));
+         a(102, "glass_pane", (new BlockThin(Material.SHATTERABLE, false)).c(0.3F).a(SoundEffectType.f).c("thinGlass"));
+         Block block9 = (new BlockMelon()).c(1.0F).a(SoundEffectType.a).c("melon");
+@@ -742,7 +744,7 @@
+         Block block10 = (new BlockNetherbrick()).c(2.0F).b(10.0F).a(SoundEffectType.d).c("netherBrick").a(CreativeModeTab.b);
+ 
+         a(112, "nether_brick", block10);
+-        a(113, "nether_brick_fence", (new BlockFence(Material.STONE, MaterialMapColor.L)).c(2.0F).b(10.0F).a(SoundEffectType.d).c("netherFence"));
++        a(113, "nether_brick_fence", (new BlockFence(Material.STONE, MaterialMapColor.K)).c(2.0F).b(10.0F).a(SoundEffectType.d).c("netherFence"));
+         a(114, "nether_brick_stairs", (new BlockStairs(block10.getBlockData())).c("stairsNetherBrick"));
+         a(115, "nether_wart", (new BlockNetherWart()).c("netherStalk"));
+         a(116, "enchanting_table", (new BlockEnchantmentTable()).c(5.0F).b(2000.0F).c("enchantmentTable"));
+@@ -750,7 +752,7 @@
+         a(118, "cauldron", (new BlockCauldron()).c(2.0F).c("cauldron"));
+         a(119, "end_portal", (new BlockEnderPortal(Material.PORTAL)).c(-1.0F).b(6000000.0F));
+         a(120, "end_portal_frame", (new BlockEnderPortalFrame()).a(SoundEffectType.f).a(0.125F).c(-1.0F).c("endPortalFrame").b(6000000.0F).a(CreativeModeTab.c));
+-        a(121, "end_stone", (new Block(Material.STONE, MaterialMapColor.e)).c(3.0F).b(15.0F).a(SoundEffectType.d).c("whiteStone").a(CreativeModeTab.b));
++        a(121, "end_stone", (new Block(Material.STONE, MaterialMapColor.d)).c(3.0F).b(15.0F).a(SoundEffectType.d).c("whiteStone").a(CreativeModeTab.b));
+         a(122, "dragon_egg", (new BlockDragonEgg()).c(3.0F).b(15.0F).a(SoundEffectType.d).a(0.125F).c("dragonEgg"));
+         a(123, "redstone_lamp", (new BlockRedstoneLamp(false)).c(0.3F).a(SoundEffectType.f).c("redstoneLight").a(CreativeModeTab.d));
+         a(124, "lit_redstone_lamp", (new BlockRedstoneLamp(true)).c(0.3F).a(SoundEffectType.f).c("redstoneLight"));
+@@ -762,11 +764,11 @@
+         a(130, "ender_chest", (new BlockEnderChest()).c(22.5F).b(1000.0F).a(SoundEffectType.d).c("enderChest").a(0.5F));
+         a(131, "tripwire_hook", (new BlockTripwireHook()).c("tripWireSource"));
+         a(132, "tripwire", (new BlockTripwire()).c("tripWire"));
+-        a(133, "emerald_block", (new Block(Material.ORE, MaterialMapColor.J)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("blockEmerald").a(CreativeModeTab.b));
++        a(133, "emerald_block", (new Block(Material.ORE, MaterialMapColor.I)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("blockEmerald").a(CreativeModeTab.b));
+         a(134, "spruce_stairs", (new BlockStairs(block1.getBlockData().set(BlockWood.VARIANT, BlockWood.EnumLogVariant.SPRUCE))).c("stairsWoodSpruce"));
+         a(135, "birch_stairs", (new BlockStairs(block1.getBlockData().set(BlockWood.VARIANT, BlockWood.EnumLogVariant.BIRCH))).c("stairsWoodBirch"));
+         a(136, "jungle_stairs", (new BlockStairs(block1.getBlockData().set(BlockWood.VARIANT, BlockWood.EnumLogVariant.JUNGLE))).c("stairsWoodJungle"));
+-        a(137, "command_block", (new BlockCommand(MaterialMapColor.C)).j().b(6000000.0F).c("commandBlock"));
++        a(137, "command_block", (new BlockCommand(MaterialMapColor.B)).j().b(6000000.0F).c("commandBlock"));
+         a(138, "beacon", (new BlockBeacon()).c("beacon").a(1.0F));
+         a(139, "cobblestone_wall", (new BlockCobbleWall(block)).c("cobbleWall"));
+         a(140, "flower_pot", (new BlockFlowerPot()).c(0.0F).a(SoundEffectType.d).c("flowerPot"));
+@@ -776,13 +778,13 @@
+         a(144, "skull", (new BlockSkull()).c(1.0F).a(SoundEffectType.d).c("skull"));
+         a(145, "anvil", (new BlockAnvil()).c(5.0F).a(SoundEffectType.k).b(2000.0F).c("anvil"));
+         a(146, "trapped_chest", (new BlockChest(BlockChest.Type.TRAP)).c(2.5F).a(SoundEffectType.a).c("chestTrap"));
+-        a(147, "light_weighted_pressure_plate", (new BlockPressurePlateWeighted(Material.ORE, 15, MaterialMapColor.G)).c(0.5F).a(SoundEffectType.a).c("weightedPlate_light"));
++        a(147, "light_weighted_pressure_plate", (new BlockPressurePlateWeighted(Material.ORE, 15, MaterialMapColor.F)).c(0.5F).a(SoundEffectType.a).c("weightedPlate_light"));
+         a(148, "heavy_weighted_pressure_plate", (new BlockPressurePlateWeighted(Material.ORE, 150)).c(0.5F).a(SoundEffectType.a).c("weightedPlate_heavy"));
+         a(149, "unpowered_comparator", (new BlockRedstoneComparator(false)).c(0.0F).a(SoundEffectType.a).c("comparator").p());
+         a(150, "powered_comparator", (new BlockRedstoneComparator(true)).c(0.0F).a(0.625F).a(SoundEffectType.a).c("comparator").p());
+         a(151, "daylight_detector", new BlockDaylightDetector(false));
+-        a(152, "redstone_block", (new BlockPowered(Material.ORE, MaterialMapColor.g)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("blockRedstone").a(CreativeModeTab.d));
+-        a(153, "quartz_ore", (new BlockOre(MaterialMapColor.L)).c(3.0F).b(5.0F).a(SoundEffectType.d).c("netherquartz"));
++        a(152, "redstone_block", (new BlockPowered(Material.ORE, MaterialMapColor.f)).c(5.0F).b(10.0F).a(SoundEffectType.e).c("blockRedstone").a(CreativeModeTab.d));
++        a(153, "quartz_ore", (new BlockOre(MaterialMapColor.K)).c(3.0F).b(5.0F).a(SoundEffectType.d).c("netherquartz"));
+         a(154, "hopper", (new BlockHopper()).c(3.0F).b(8.0F).a(SoundEffectType.e).c("hopper"));
+         Block block11 = (new BlockQuartz()).a(SoundEffectType.d).c(0.8F).c("quartzBlock");
+ 
+@@ -790,7 +792,7 @@
+         a(156, "quartz_stairs", (new BlockStairs(block11.getBlockData().set(BlockQuartz.VARIANT, BlockQuartz.EnumQuartzVariant.DEFAULT))).c("stairsQuartz"));
+         a(157, "activator_rail", (new BlockPoweredRail()).c(0.7F).a(SoundEffectType.e).c("activatorRail"));
+         a(158, "dropper", (new BlockDropper()).c(3.5F).a(SoundEffectType.d).c("dropper"));
+-        a(159, "stained_hardened_clay", (new BlockStainedHardenedClay()).c(1.25F).b(7.0F).a(SoundEffectType.d).c("clayHardenedStained"));
++        a(159, "stained_hardened_clay", (new BlockCloth(Material.STONE)).c(1.25F).b(7.0F).a(SoundEffectType.d).c("clayHardenedStained"));
+         a(160, "stained_glass_pane", (new BlockStainedGlassPane()).c(0.3F).a(SoundEffectType.f).c("thinStainedGlass"));
+         a(161, "leaves2", (new BlockLeaves2()).c("leaves"));
+         a(162, "log2", (new BlockLog2()).c("log"));
+@@ -802,9 +804,9 @@
+         a(168, "prismarine", (new BlockPrismarine()).c(1.5F).b(10.0F).a(SoundEffectType.d).c("prismarine"));
+         a(169, "sea_lantern", (new BlockSeaLantern(Material.SHATTERABLE)).c(0.3F).a(SoundEffectType.f).a(1.0F).c("seaLantern"));
+         a(170, "hay_block", (new BlockHay()).c(0.5F).a(SoundEffectType.c).c("hayBlock").a(CreativeModeTab.b));
+-        a(171, "carpet", (new BlockCarpet()).c(0.1F).a(SoundEffectType.g).c("woolCarpet").e(0));
++        a(171, "carpet", (new BlockCarpet()).c(0.1F).a(SoundEffectType.g).c("woolCarpet").d(0));
+         a(172, "hardened_clay", (new BlockHardenedClay()).c(1.25F).b(7.0F).a(SoundEffectType.d).c("clayHardened"));
+-        a(173, "coal_block", (new Block(Material.STONE, MaterialMapColor.F)).c(5.0F).b(10.0F).a(SoundEffectType.d).c("blockCoal").a(CreativeModeTab.b));
++        a(173, "coal_block", (new Block(Material.STONE, MaterialMapColor.E)).c(5.0F).b(10.0F).a(SoundEffectType.d).c("blockCoal").a(CreativeModeTab.b));
+         a(174, "packed_ice", (new BlockPackedIce()).c(0.5F).a(SoundEffectType.f).c("icePacked"));
+         a(175, "double_plant", new BlockTallPlant());
+         a(176, "standing_banner", (new BlockBanner.BlockStandingBanner()).c(1.0F).a(SoundEffectType.a).c("banner").p());
+@@ -834,28 +836,28 @@
+         a(198, "end_rod", (new BlockEndRod()).c(0.0F).a(0.9375F).a(SoundEffectType.a).c("endRod"));
+         a(199, "chorus_plant", (new BlockChorusFruit()).c(0.4F).a(SoundEffectType.a).c("chorusPlant"));
+         a(200, "chorus_flower", (new BlockChorusFlower()).c(0.4F).a(SoundEffectType.a).c("chorusFlower"));
+-        Block block13 = (new Block(Material.STONE, MaterialMapColor.s)).c(1.5F).b(10.0F).a(SoundEffectType.d).a(CreativeModeTab.b).c("purpurBlock");
++        Block block13 = (new Block(Material.STONE, MaterialMapColor.r)).c(1.5F).b(10.0F).a(SoundEffectType.d).a(CreativeModeTab.b).c("purpurBlock");
+ 
+         a(201, "purpur_block", block13);
+-        a(202, "purpur_pillar", (new BlockRotatable(Material.STONE, MaterialMapColor.s)).c(1.5F).b(10.0F).a(SoundEffectType.d).a(CreativeModeTab.b).c("purpurPillar"));
++        a(202, "purpur_pillar", (new BlockRotatable(Material.STONE, MaterialMapColor.r)).c(1.5F).b(10.0F).a(SoundEffectType.d).a(CreativeModeTab.b).c("purpurPillar"));
+         a(203, "purpur_stairs", (new BlockStairs(block13.getBlockData())).c("stairsPurpur"));
+         a(204, "purpur_double_slab", (new BlockPurpurSlab.Default()).c(2.0F).b(10.0F).a(SoundEffectType.d).c("purpurSlab"));
+         a(205, "purpur_slab", (new BlockPurpurSlab.Half()).c(2.0F).b(10.0F).a(SoundEffectType.d).c("purpurSlab"));
+-        a(206, "end_bricks", (new Block(Material.STONE, MaterialMapColor.e)).a(SoundEffectType.d).c(0.8F).a(CreativeModeTab.b).c("endBricks"));
++        a(206, "end_bricks", (new Block(Material.STONE, MaterialMapColor.d)).a(SoundEffectType.d).c(0.8F).a(CreativeModeTab.b).c("endBricks"));
+         a(207, "beetroots", (new BlockBeetroot()).c("beetroots"));
+         Block block14 = (new BlockGrassPath()).c(0.65F).a(SoundEffectType.c).c("grassPath").p();
+ 
+         a(208, "grass_path", block14);
+         a(209, "end_gateway", (new BlockEndGateway(Material.PORTAL)).c(-1.0F).b(6000000.0F));
+-        a(210, "repeating_command_block", (new BlockCommand(MaterialMapColor.A)).j().b(6000000.0F).c("repeatingCommandBlock"));
+-        a(211, "chain_command_block", (new BlockCommand(MaterialMapColor.D)).j().b(6000000.0F).c("chainCommandBlock"));
+-        a(212, "frosted_ice", (new BlockIceFrost()).c(0.5F).e(3).a(SoundEffectType.f).c("frostedIce"));
 -        a(213, "magma", (new BlockMagma()).c(0.5F).a(SoundEffectType.d).c("magma"));
--        a(214, "nether_wart_block", (new Block(Material.GRASS, MaterialMapColor.D)).a(CreativeModeTab.b).c(1.0F).a(SoundEffectType.a).c("netherWartBlock"));
+-        a(214, "nether_wart_block", (new Block(Material.GRASS, MaterialMapColor.E)).a(CreativeModeTab.b).c(1.0F).a(SoundEffectType.a).c("netherWartBlock"));
 -        a(215, "red_nether_brick", (new BlockNetherbrick()).c(2.0F).b(10.0F).a(SoundEffectType.d).c("redNetherBrick").a(CreativeModeTab.b));
 -        a(216, "bone_block", (new BlockBone()).c("boneBlock"));
 -        a(217, "structure_void", (new BlockStructureVoid()).c("structureVoid"));
 -        a(218, "observer", (new BlockObserver()).c(3.0F).c("observer"));
++        a(210, "repeating_command_block", (new BlockCommand(MaterialMapColor.z)).j().b(6000000.0F).c("repeatingCommandBlock"));
++        a(211, "chain_command_block", (new BlockCommand(MaterialMapColor.C)).j().b(6000000.0F).c("chainCommandBlock"));
++        a(212, "frosted_ice", (new BlockIceFrost()).c(0.5F).d(3).a(SoundEffectType.f).c("frostedIce"));
 +        a(213, "magma", (new BlockMagma()).c(0.5F).a(SoundEffectType.d).c("magma").proto(201)); // SportBukkit - proto
 +        a(214, "nether_wart_block", (new Block(Material.GRASS, MaterialMapColor.D)).a(CreativeModeTab.b).c(1.0F).a(SoundEffectType.a).c("netherWartBlock").proto(201)); // SportBukkit - proto
 +        a(215, "red_nether_brick", (new BlockNetherbrick()).c(2.0F).b(10.0F).a(SoundEffectType.d).c("redNetherBrick").a(CreativeModeTab.b).proto(201)); // SportBukkit - proto
@@ -56,7 +407,32 @@
          a(219, "white_shulker_box", (new BlockShulkerBox(EnumColor.WHITE)).c(2.0F).a(SoundEffectType.d).c("shulkerBoxWhite"));
          a(220, "orange_shulker_box", (new BlockShulkerBox(EnumColor.ORANGE)).c(2.0F).a(SoundEffectType.d).c("shulkerBoxOrange"));
          a(221, "magenta_shulker_box", (new BlockShulkerBox(EnumColor.MAGENTA)).c(2.0F).a(SoundEffectType.d).c("shulkerBoxMagenta"));
-@@ -896,7 +907,7 @@
+@@ -872,24 +874,6 @@
+         a(232, "green_shulker_box", (new BlockShulkerBox(EnumColor.GREEN)).c(2.0F).a(SoundEffectType.d).c("shulkerBoxGreen"));
+         a(233, "red_shulker_box", (new BlockShulkerBox(EnumColor.RED)).c(2.0F).a(SoundEffectType.d).c("shulkerBoxRed"));
+         a(234, "black_shulker_box", (new BlockShulkerBox(EnumColor.BLACK)).c(2.0F).a(SoundEffectType.d).c("shulkerBoxBlack"));
+-        a(235, "white_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.WHITE));
+-        a(236, "orange_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.ORANGE));
+-        a(237, "magenta_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.MAGENTA));
+-        a(238, "light_blue_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.LIGHT_BLUE));
+-        a(239, "yellow_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.YELLOW));
+-        a(240, "lime_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.LIME));
+-        a(241, "pink_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.PINK));
+-        a(242, "gray_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.GRAY));
+-        a(243, "silver_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.SILVER));
+-        a(244, "cyan_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.CYAN));
+-        a(245, "purple_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.PURPLE));
+-        a(246, "blue_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.BLUE));
+-        a(247, "brown_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.BROWN));
+-        a(248, "green_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.GREEN));
+-        a(249, "red_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.RED));
+-        a(250, "black_glazed_terracotta", new BlockGlazedTerracotta(EnumColor.BLACK));
+-        a(251, "concrete", (new BlockCloth(Material.STONE)).c(1.8F).a(SoundEffectType.d).c("concrete"));
+-        a(252, "concrete_powder", (new BlockConcretePowder()).c(0.5F).a(SoundEffectType.h).c("concretePowder"));
+         a(255, "structure_block", (new BlockStructure()).j().b(6000000.0F).c("structureBlock"));
+         Block.REGISTRY.a();
+         Iterator iterator = Block.REGISTRY.iterator();
+@@ -923,7 +907,7 @@
  
              if (hashset.contains(block16)) {
                  for (int i = 0; i < 15; ++i) {
@@ -65,7 +441,7 @@
  
                      Block.REGISTRY_ID.a(block16.fromLegacyData(i), j);
                  }
-@@ -905,7 +916,7 @@
+@@ -932,7 +916,7 @@
  
                  while (unmodifiableiterator.hasNext()) {
                      IBlockData iblockdata = (IBlockData) unmodifiableiterator.next();
@@ -74,7 +450,7 @@
  
                      Block.REGISTRY_ID.a(iblockdata, k);
                  }
-@@ -914,6 +925,12 @@
+@@ -941,6 +925,12 @@
  
      }
  

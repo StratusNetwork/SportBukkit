@@ -6,15 +6,7 @@ Subject: [PATCH] Complete resource pack API
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -20,6 +20,7 @@ import org.bukkit.Statistic;
- import org.bukkit.WeatherType;
- import org.bukkit.command.CommandSender;
- import org.bukkit.conversations.Conversable;
-+import org.bukkit.event.player.PlayerResourcePackStatusEvent;
- import org.bukkit.map.MapView;
- import org.bukkit.plugin.messaging.PluginMessageRecipient;
- import org.bukkit.scoreboard.Scoreboard;
-@@ -1158,13 +1159,30 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -1157,10 +1157,15 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
       * @param url The URL from which the client will download the resource
       *     pack. The string must contain only US-ASCII characters and should
       *     be encoded as per RFC 1738.
@@ -28,6 +20,10 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
 +
 +    @Deprecated
      public void setResourcePack(String url);
+ 
+     /**
+@@ -1201,6 +1206,18 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+     public void setResourcePack(String url, byte[] hash);
  
      /**
 +     * @return the most recent resource pack status received from the player,

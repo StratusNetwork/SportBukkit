@@ -35,7 +35,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/jav
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -656,7 +656,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -649,7 +649,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
              if (effect.getData() != null && effect.getData().equals(MaterialData.class)) {
                  particleFullName.append('_').append(data);
              }

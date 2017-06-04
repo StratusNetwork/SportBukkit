@@ -6,8 +6,8 @@ Subject: [PATCH] BungeeCord Chat API
 diff --git a/pom.xml b/pom.xml
 --- a/pom.xml
 +++ b/pom.xml
-@@ -93,6 +93,14 @@
-             <version>1.17</version>
+@@ -87,6 +87,14 @@
+             <version>1.18</version>
              <scope>compile</scope>
          </dependency>
 +        <dependency>
@@ -24,7 +24,7 @@ diff --git a/pom.xml b/pom.xml
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -1192,4 +1192,22 @@ public final class Bukkit {
+@@ -1205,4 +1205,22 @@ public final class Bukkit {
      public static UnsafeValues getUnsafe() {
          return server.getUnsafe();
      }
@@ -50,7 +50,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -974,4 +974,18 @@ public interface Server extends PluginMessageRecipient {
+@@ -983,4 +983,18 @@ public interface Server extends PluginMessageRecipient {
       */
      @Deprecated
      UnsafeValues getUnsafe();
@@ -72,10 +72,10 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1495,4 +1495,18 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
-      * effectively setting it to the default of "en_US".
+@@ -1544,4 +1544,18 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+      * @return The hostname and port
       */
-     public void setLocale(String locale);
+     public String getHostname();
 +
 +    /**
 +     * Sends the component to the player
@@ -90,4 +90,4 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
 +     * @param components the components to send
 +     */
 +    public void sendMessage(net.md_5.bungee.api.chat.BaseComponent... components);
-  }
+ }

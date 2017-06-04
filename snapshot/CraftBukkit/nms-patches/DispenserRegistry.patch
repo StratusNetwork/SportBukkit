@@ -1,6 +1,13 @@
 --- a/net/minecraft/server/DispenserRegistry.java
 +++ b/net/minecraft/server/DispenserRegistry.java
-@@ -7,6 +7,13 @@
+@@ -1,22 +1,27 @@
+ package net.minecraft.server;
+ 
+ import com.mojang.authlib.GameProfile;
+-import java.io.File;
+ import java.io.PrintStream;
+ import java.util.Random;
+ import java.util.UUID;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -14,7 +21,19 @@
  public class DispenserRegistry {
  
      public static final PrintStream a = System.out;
-@@ -69,7 +76,7 @@
+-    private static boolean c;
+-    public static boolean b;
+-    private static final Logger d = LogManager.getLogger();
++    private static boolean b;
++    private static final Logger c = LogManager.getLogger();
+ 
+     public static boolean a() {
+-        return DispenserRegistry.c;
++        return DispenserRegistry.b;
+     }
+ 
+     static void b() {
+@@ -71,7 +76,7 @@
          BlockDispenser.REGISTRY.a(Items.SPLASH_POTION, new IDispenseBehavior() {
              public ItemStack a(ISourceBlock isourceblock, final ItemStack itemstack) {
                  return (new DispenseBehaviorProjectile() {
@@ -23,7 +42,7 @@
                          return new EntityPotion(world, iposition.getX(), iposition.getY(), iposition.getZ(), itemstack1.cloneItemStack());
                      }
  
-@@ -86,7 +93,7 @@
+@@ -88,7 +93,7 @@
          BlockDispenser.REGISTRY.a(Items.LINGERING_POTION, new IDispenseBehavior() {
              public ItemStack a(ISourceBlock isourceblock, final ItemStack itemstack) {
                  return (new DispenseBehaviorProjectile() {
@@ -32,7 +51,7 @@
                          return new EntityPotion(world, iposition.getX(), iposition.getY(), iposition.getZ(), itemstack1.cloneItemStack());
                      }
  
-@@ -106,14 +113,52 @@
+@@ -108,14 +113,52 @@
                  double d0 = isourceblock.getX() + (double) enumdirection.getAdjacentX();
                  double d1 = (double) ((float) (isourceblock.getBlockPosition().getY() + enumdirection.getAdjacentY()) + 0.2F);
                  double d2 = isourceblock.getZ() + (double) enumdirection.getAdjacentZ();
@@ -87,7 +106,7 @@
                  return itemstack;
              }
          });
-@@ -123,10 +168,42 @@
+@@ -125,10 +168,42 @@
                  double d0 = isourceblock.getX() + (double) enumdirection.getAdjacentX();
                  double d1 = (double) ((float) isourceblock.getBlockPosition().getY() + 0.2F);
                  double d2 = isourceblock.getZ() + (double) enumdirection.getAdjacentZ();
@@ -131,7 +150,7 @@
                  return itemstack;
              }
  
-@@ -147,8 +224,40 @@
+@@ -149,8 +224,40 @@
                  double d4 = random.nextGaussian() * 0.05D + (double) enumdirection.getAdjacentY();
                  double d5 = random.nextGaussian() * 0.05D + (double) enumdirection.getAdjacentZ();
  
@@ -174,7 +193,7 @@
                  return itemstack;
              }
  
-@@ -169,7 +278,53 @@
+@@ -171,7 +278,53 @@
                  ItemBucket itembucket = (ItemBucket) itemstack.getItem();
                  BlockPosition blockposition = isourceblock.getBlockPosition().shift((EnumDirection) isourceblock.e().get(BlockDispenser.FACING));
  
@@ -229,7 +248,7 @@
              }
          };
  
-@@ -196,6 +351,30 @@
+@@ -198,6 +351,30 @@
                      item = Items.LAVA_BUCKET;
                  }
  
@@ -260,7 +279,7 @@
                  world.setAir(blockposition);
                  itemstack.subtract(1);
                  if (itemstack.isEmpty()) {
-@@ -213,14 +392,42 @@
+@@ -215,14 +392,42 @@
              protected ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
                  World world = isourceblock.getWorld();
  
@@ -293,7 +312,7 @@
  
                  if (world.isEmpty(blockposition)) {
 -                    world.setTypeUpdate(blockposition, Blocks.FIRE.getBlockData());
--                    if (itemstack.isDamaged(1, world.random)) {
+-                    if (itemstack.isDamaged(1, world.random, (EntityPlayer) null)) {
 -                        itemstack.setCount(0);
 +                    // CraftBukkit start - Ignition by dispensing flint and steel
 +                    if (!org.bukkit.craftbukkit.event.CraftEventFactory.callBlockIgniteEvent(world, blockposition.getX(), blockposition.getY(), blockposition.getZ(), isourceblock.getBlockPosition().getX(), isourceblock.getBlockPosition().getY(), isourceblock.getBlockPosition().getZ()).isCancelled()) {
@@ -306,7 +325,7 @@
                  } else if (world.getType(blockposition).getBlock() == Blocks.TNT) {
                      Blocks.TNT.postBreak(world, blockposition, Blocks.TNT.getBlockData().set(BlockTNT.EXPLODE, Boolean.valueOf(true)));
                      world.setAir(blockposition);
-@@ -238,6 +445,30 @@
+@@ -240,6 +445,30 @@
                      World world = isourceblock.getWorld();
                      BlockPosition blockposition = isourceblock.getBlockPosition().shift((EnumDirection) isourceblock.e().get(BlockDispenser.FACING));
  
@@ -337,7 +356,7 @@
                      if (ItemDye.a(itemstack, world, blockposition)) {
                          if (!world.isClientSide) {
                              world.triggerEffect(2005, blockposition, 0);
-@@ -256,11 +487,44 @@
+@@ -258,11 +487,44 @@
              protected ItemStack b(ISourceBlock isourceblock, ItemStack itemstack) {
                  World world = isourceblock.getWorld();
                  BlockPosition blockposition = isourceblock.getBlockPosition().shift((EnumDirection) isourceblock.e().get(BlockDispenser.FACING));
@@ -377,13 +396,14 @@
 +                // CraftBukkit end
 +
                  world.addEntity(entitytntprimed);
-                 world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.gV, SoundCategory.BLOCKS, 1.0F, 1.0F);
+-                world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.hW, SoundCategory.BLOCKS, 1.0F, 1.0F);
 -                itemstack.subtract(1);
++                world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.gV, SoundCategory.BLOCKS, 1.0F, 1.0F);
 +                // itemstack.subtract(1); // CraftBukkit - handled above
                  return itemstack;
              }
          });
-@@ -271,6 +535,30 @@
+@@ -273,6 +535,30 @@
                  BlockPosition blockposition = isourceblock.getBlockPosition().shift(enumdirection);
                  BlockSkull blockskull = Blocks.SKULL;
  
@@ -414,7 +434,7 @@
                  this.b = true;
                  if (world.isEmpty(blockposition) && blockskull.b(world, blockposition, itemstack)) {
                      if (!world.isClientSide) {
-@@ -319,6 +607,30 @@
+@@ -321,6 +607,30 @@
                  BlockPosition blockposition = isourceblock.getBlockPosition().shift((EnumDirection) isourceblock.e().get(BlockDispenser.FACING));
                  BlockPumpkin blockpumpkin = (BlockPumpkin) Blocks.PUMPKIN;
  
@@ -445,7 +465,66 @@
                  this.b = true;
                  if (world.isEmpty(blockposition) && blockpumpkin.b(world, blockposition)) {
                      if (!world.isClientSide) {
-@@ -456,12 +768,44 @@
+@@ -351,43 +661,26 @@
+     }
+ 
+     public static void c() {
+-        if (!DispenserRegistry.c) {
+-            DispenserRegistry.c = true;
++        if (!DispenserRegistry.b) {
++            DispenserRegistry.b = true;
+             d();
+             SoundEffect.b();
+             Block.w();
+             BlockFire.e();
+             MobEffectList.k();
+             Enchantment.g();
+-            Item.t();
++            Item.u();
+             PotionRegistry.b();
+             PotionBrewer.a();
+-            EntityTypes.c();
++            EntityTypes.b();
++            StatisticList.a();
+             BiomeBase.q();
+             b();
+-            if (!CraftingManager.init()) {
+-                DispenserRegistry.b = true;
+-                DispenserRegistry.d.error("Errors with built-in recipes!");
+-            }
+-
+-            StatisticList.a();
+-            if (DispenserRegistry.d.isDebugEnabled()) {
+-                if ((new AdvancementDataWorld((File) null)).b()) {
+-                    DispenserRegistry.b = true;
+-                    DispenserRegistry.d.error("Errors with built-in advancements!");
+-                }
+-
+-                if (!LootTables.b()) {
+-                    DispenserRegistry.b = true;
+-                    DispenserRegistry.d.error("Errors with built-in loot tables");
+-                }
+-            }
+-
+         }
+     }
+ 
+     private static void d() {
+-        if (DispenserRegistry.d.isDebugEnabled()) {
++        if (DispenserRegistry.c.isDebugEnabled()) {
+             System.setErr(new DebugOutputStream("STDERR", System.err));
+             System.setOut(new DebugOutputStream("STDOUT", DispenserRegistry.a));
+         } else {
+@@ -421,7 +714,7 @@
+                 }
+ 
+                 if (itemstack1.hasName()) {
+-                    ((TileEntityShulkerBox) tileentity).setCustomName(itemstack1.getName());
++                    ((TileEntityShulkerBox) tileentity).a(itemstack1.getName());
+                 }
+ 
+                 world.updateAdjacentComparators(blockposition, iblockdata.getBlock());
+@@ -475,12 +768,44 @@
                  d3 = 0.0D;
              }
  

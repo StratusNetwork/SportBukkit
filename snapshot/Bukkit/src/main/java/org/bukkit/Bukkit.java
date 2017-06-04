@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Warning.WarningState;
+import org.bukkit.block.BlockFactory;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -27,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventBus;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.geometry.VectorFactory;
 import org.bukkit.help.HelpMap;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -34,7 +36,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.map.MapView;
-import org.bukkit.block.BlockFactory;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -47,13 +48,12 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
 
-import com.avaje.ebean.config.ServerConfig;
 import com.google.common.collect.ImmutableList;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.generator.ChunkGenerator;
 
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.geometry.VectorFactory;
 
 /**
  * Represents the Bukkit core, for version and Server singleton handling
@@ -135,21 +135,6 @@ public final class Bukkit {
      */
     public static String getBukkitVersion() {
         return server.getBukkitVersion();
-    }
-
-    /**
-     * Gets an array copy of all currently logged in players.
-     * <p>
-     * This method exists for legacy reasons to provide backwards
-     * compatibility. It will not exist at runtime and should not be used
-     * under any circumstances.
-     *
-     * @deprecated superseded by {@link #getOnlinePlayers()}
-     * @return an array of Players that are currently online
-     */
-    @Deprecated
-    public static Player[] _INVALID_getOnlinePlayers() {
-        return server._INVALID_getOnlinePlayers();
     }
 
     /**
@@ -635,6 +620,14 @@ public final class Bukkit {
     }
 
     /**
+     * Reload only the Minecraft data for the server. This includes custom
+     * advancements and loot tables.
+     */
+    public static void reloadData() {
+        server.reloadData();
+    }
+
+    /**
      * Returns the primary logger associated with this server instance.
      *
      * @return Logger associated with this server
@@ -672,16 +665,6 @@ public final class Bukkit {
      */
     public static boolean dispatchCommand(CommandSender sender, String commandLine) throws CommandException {
         return server.dispatchCommand(sender, commandLine);
-    }
-
-    /**
-     * Populates a given {@link ServerConfig} with values attributes to this
-     * server.
-     *
-     * @param config the server config to populate
-     */
-    public static void configureDbConfig(ServerConfig config) {
-        server.configureDbConfig(config);
     }
 
     /**
@@ -1219,12 +1202,12 @@ public final class Bukkit {
 
     /**
      * Create a ChunkData for use in a generator.
-     *
+     * 
      * See {@link ChunkGenerator#generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)}
-     *
+     * 
      * @param world the world to create the ChunkData for
      * @return a new ChunkData for the world
-     *
+     * 
      */
     public static ChunkGenerator.ChunkData createChunkData(World world) {
         return server.createChunkData(world);
@@ -1242,6 +1225,36 @@ public final class Bukkit {
      */
     public static BossBar createBossBar(net.md_5.bungee.api.chat.BaseComponent title, BarColor color, BarStyle style, BarFlag... flags) {
         return server.createBossBar(title, color, style, flags);
+    }
+
+    /**
+     * Gets an entity on the server by its UUID
+     *
+     * @param uuid the UUID of the entity
+     * @return the entity with the given UUID, or null if it isn't found
+     */
+    public static Entity getEntity(UUID uuid) {
+        return server.getEntity(uuid);
+    }
+
+    /**
+     * Get the advancement specified by this key.
+     *
+     * @param key unique advancement key
+     * @return advancement or null if not exists
+     */
+    public static Advancement getAdvancement(NamespacedKey key) {
+        return server.getAdvancement(key);
+    }
+
+    /**
+     * Get an iterator through all advancements. Advancements cannot be removed
+     * from this iterator,
+     *
+     * @return an advancement iterator
+     */
+    public static Iterator<Advancement> advancementIterator() {
+        return server.advancementIterator();
     }
 
     /**

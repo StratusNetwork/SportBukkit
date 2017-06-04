@@ -1,5 +1,23 @@
 --- a/net/minecraft/server/CommandSpreadPlayers.java
 +++ b/net/minecraft/server/CommandSpreadPlayers.java
+@@ -100,7 +100,7 @@
+             Entity entity = (Entity) iterator.next();
+ 
+             if (entity instanceof EntityHuman) {
+-                hashset.add(entity.aW());
++                hashset.add(entity.aQ());
+             } else {
+                 hashset.add((Object) null);
+             }
+@@ -193,7 +193,7 @@
+             CommandSpreadPlayers.Location2D commandspreadplayers_location2d;
+ 
+             if (flag) {
+-                ScoreboardTeamBase scoreboardteambase = entity instanceof EntityHuman ? entity.aW() : null;
++                ScoreboardTeamBase scoreboardteambase = entity instanceof EntityHuman ? entity.aQ() : null;
+ 
+                 if (!hashmap.containsKey(scoreboardteambase)) {
+                     hashmap.put(scoreboardteambase, acommandspreadplayers_location2d[i++]);
 @@ -240,9 +240,16 @@
      }
  

@@ -87,6 +87,15 @@
      public TileEntityChest() {
          this.items = NonNullList.a(27, ItemStack.a);
      }
+@@ -31,7 +99,7 @@
+         return 27;
+     }
+ 
+-    public boolean x_() {
++    public boolean w_() {
+         Iterator iterator = this.items.iterator();
+ 
+         ItemStack itemstack;
 @@ -82,7 +150,7 @@
      }
  
@@ -96,6 +105,33 @@
      }
  
      public void invalidateBlockCache() {
+@@ -160,7 +228,7 @@
+         }
+     }
+ 
+-    public void e() {
++    public void F_() {
+         this.o();
+         int i = this.position.getX();
+         int j = this.position.getY();
+@@ -204,7 +272,7 @@
+                 d1 += 0.5D;
+             }
+ 
+-            this.world.a((EntityHuman) null, d1, (double) j + 0.5D, d0, SoundEffects.ac, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
++            this.world.a((EntityHuman) null, d1, (double) j + 0.5D, d0, SoundEffects.Z, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+         }
+ 
+         if (this.l == 0 && this.j > 0.0F || this.l > 0 && this.j < 1.0F) {
+@@ -234,7 +302,7 @@
+                     d0 += 0.5D;
+                 }
+ 
+-                this.world.a((EntityHuman) null, d0, (double) j + 0.5D, d2, SoundEffects.aa, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
++                this.world.a((EntityHuman) null, d0, (double) j + 0.5D, d2, SoundEffects.X, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+             }
+ 
+             if (this.j < 0.0F) {
 @@ -258,9 +326,24 @@
              if (this.l < 0) {
                  this.l = 0;

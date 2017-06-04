@@ -15,13 +15,13 @@ diff --git a/src/main/java/net/minecraft/server/EntityFallingBlock.java b/src/ma
      public EntityFallingBlock(World world) {
          super(world);
      }
-@@ -99,6 +101,7 @@ public class EntityFallingBlock extends Entity {
+@@ -121,6 +123,7 @@ public class EntityFallingBlock extends Entity {
                      if (iblockdata.getBlock() != Blocks.PISTON_EXTENSION) {
                          this.die();
                          if (!this.f) {
 +                            if(!formBlock) return; // SportBukkit
                              // CraftBukkit start
-                             if (this.world.a(block, blockposition, true, EnumDirection.UP, (Entity) null) && !BlockFalling.i(this.world.getType(blockposition.down()))) {
+                             if (this.world.a(block, blockposition, true, EnumDirection.UP, (Entity) null) && (flag1 || !BlockFalling.x(this.world.getType(blockposition.down())))) {
                                  if (CraftEventFactory.callEntityChangeBlockEvent(this, blockposition, this.block.getBlock(), this.block.getBlock().toLegacyData(this.block)).isCancelled()) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftFallingBlock.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftFallingBlock.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftFallingBlock.java
