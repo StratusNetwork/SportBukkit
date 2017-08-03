@@ -22,7 +22,7 @@ diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/mai
 +                        b.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString( split[2] );
 +                    } else
 +                    {
-+                        chatcomponenttext = new ChatComponentText("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
++                        IChatBaseComponent chatcomponenttext = new ChatComponentText("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
 +                        this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
 +                        this.b.close(chatcomponenttext);
 +                        return;

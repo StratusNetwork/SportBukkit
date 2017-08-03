@@ -146,7 +146,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaPotion.java
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrew.java b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrew.java
 new file mode 100644
-index 0000000..a8a5c1e
+index 00000000..a8a5c1ea
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrew.java
 @@ -0,0 +1,36 @@
@@ -188,7 +188,7 @@ index 0000000..a8a5c1e
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrewRegistry.java b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrewRegistry.java
 new file mode 100644
-index 0000000..c9fbaf2
+index 00000000..c9fbaf27
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionBrewRegistry.java
 @@ -0,0 +1,24 @@
@@ -218,7 +218,7 @@ index 0000000..c9fbaf2
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionEffectRegistry.java b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionEffectRegistry.java
 new file mode 100644
-index 0000000..94e0a5f
+index 00000000..94e0a5f7
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionEffectRegistry.java
 @@ -0,0 +1,37 @@

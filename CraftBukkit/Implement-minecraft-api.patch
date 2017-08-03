@@ -89,14 +89,21 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      public CraftScheduler getScheduler() {
          return scheduler;
      }
-@@ -1800,4 +1803,9 @@ public final class CraftServer implements Server {
+@@ -1800,4 +1803,16 @@ public final class CraftServer implements Server {
              player.sendMessage(components);
          }
      }
 +
 +    @Override
 +    public Set<Integer> getProtocolVersions() {
-+        return ImmutableSet.of(335);
++        return ImmutableSet.of(
++            4, 5,               // 1.7
++            47,                 // 1.8
++            107, 108, 109, 110, // 1.9
++            210,                // 1.10
++            315, 316,           // 1.11
++            335                 // 1.12
++        );
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/command/ProxiedNativeCommandSender.java b/src/main/java/org/bukkit/craftbukkit/command/ProxiedNativeCommandSender.java
@@ -182,7 +189,18 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1800,6 +1800,35 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -15,7 +15,10 @@ import java.util.*;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+ 
++import net.md_5.bungee.api.ChatMessageType;
+ import net.md_5.bungee.api.chat.BaseComponent;
++import net.md_5.bungee.api.chat.TextComponent;
++
+ import net.minecraft.server.*;
+ import net.minecraft.server.PacketPlayOutTitle.EnumTitleAction;
+ 
+@@ -1800,6 +1803,41 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      }
  
      @Override
@@ -204,8 +222,14 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
 +    public void sendMessage(net.md_5.bungee.api.ChatMessageType position, BaseComponent... message) {
 +        if ( getHandle().playerConnection == null ) return;
 +
-+        PacketPlayOutChat packet = new PacketPlayOutChat(null, (byte) position.ordinal());
-+        packet.components = message;
++        PacketPlayOutChat packet = new PacketPlayOutChat(null, net.minecraft.server.ChatMessageType.a(((byte) position.ordinal())));
++        if(position == ChatMessageType.ACTION_BAR) {
++            // Work around a client bug where component text above the hotbar is not formatted.
++            // The only way to format it is by wrapping legacy formatting in a text component.
++            packet.components = new BaseComponent[]{ new TextComponent(TextComponent.toLegacyText(message)) };
++        } else {
++            packet.components = message;
++        }
 +        getHandle().playerConnection.sendPacket(packet);
 +    }
 +
@@ -218,7 +242,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
      public void sendMessage(BaseComponent component) {
          sendMessage( new BaseComponent[] { component } );
      }
-@@ -1910,4 +1939,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1910,4 +1948,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      public RayBlockIntersection getTargetedBlock(boolean nonSolids, boolean liquids) {
          return getTargetedBlock(getBlockReach(), nonSolids, liquids);
      }

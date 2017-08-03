@@ -26,7 +26,7 @@ public interface Sign extends BlockState {
      * @throws IndexOutOfBoundsException Thrown when the line does not exist
      * @return Text on the given line
      */
-    BaseComponent[] line(int index);
+    BaseComponent line(int index);
 
     @Deprecated
     public String getLine(int index) throws IndexOutOfBoundsException;

@@ -16,7 +16,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
          // Try to see if we're actually running in a terminal, disable jline if not
 diff --git a/src/main/java/org/bukkit/craftbukkit/DataInspectorEntityPassengers.java b/src/main/java/org/bukkit/craftbukkit/DataInspectorEntityPassengers.java
 new file mode 100644
-index 0000000..3afe5b8
+index 00000000..3afe5b8f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/DataInspectorEntityPassengers.java
 @@ -0,0 +1,23 @@

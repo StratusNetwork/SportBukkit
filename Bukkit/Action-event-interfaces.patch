@@ -14,27 +14,9 @@ diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/Worl
  import org.bukkit.metadata.Metadatable;
  import org.bukkit.plugin.messaging.PluginMessageRecipient;
  import org.bukkit.util.Consumer;
-diff --git a/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java b/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java
---- a/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java
-+++ b/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java
-@@ -55,11 +55,11 @@ public class ItemAttributeModifier implements ConfigurationSerializable {
- 
-     private static final String[] slotNames = new String[EquipmentSlot.values().length];
-     static {
--        slotNames[EquipmentSlot.HAND.ordinal()] = "mainhand";
-+        slotNames[EquipmentSlot.HAND.ordinal()] = "mainhsand";
-         slotNames[EquipmentSlot.OFF_HAND.ordinal()] = "offhand";
-         slotNames[EquipmentSlot.HEAD.ordinal()] = "head";
-         slotNames[EquipmentSlot.CHEST.ordinal()] = "chest";
-         slotNames[EquipmentSlot.LEGS.ordinal()] = "legs";
-         slotNames[EquipmentSlot.FEET.ordinal()] = "feet";
-     }
--}
-\ No newline at end of file
-+}
 diff --git a/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java~ b/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java~
 new file mode 100644
-index 0000000..9c68b60
+index 00000000..9c68b60c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java~
 @@ -0,0 +1,65 @@
@@ -106,7 +88,7 @@ index 0000000..9c68b60
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/event/EntityAction.java b/src/main/java/org/bukkit/event/EntityAction.java
 new file mode 100644
-index 0000000..26870fc
+index 00000000..26870fc7
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EntityAction.java
 @@ -0,0 +1,28 @@
@@ -140,7 +122,7 @@ index 0000000..26870fc
 +}
 diff --git a/src/main/java/org/bukkit/event/PlayerAction.java b/src/main/java/org/bukkit/event/PlayerAction.java
 new file mode 100644
-index 0000000..5cbbf3d
+index 00000000..5cbbf3db
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/PlayerAction.java
 @@ -0,0 +1,14 @@
@@ -417,7 +399,7 @@ diff --git a/src/main/java/org/bukkit/event/entity/CreeperPowerEvent.java b/src/
       *
 diff --git a/src/main/java/org/bukkit/event/entity/EntityActionBase.java b/src/main/java/org/bukkit/event/entity/EntityActionBase.java
 new file mode 100644
-index 0000000..6e806f9
+index 00000000..6e806f99
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/EntityActionBase.java
 @@ -0,0 +1,16 @@
@@ -1010,7 +992,7 @@ diff --git a/src/main/java/org/bukkit/event/inventory/InventoryPickupItemEvent.j
       *
 diff --git a/src/main/java/org/bukkit/event/player/PlayerActionBase.java b/src/main/java/org/bukkit/event/player/PlayerActionBase.java
 new file mode 100644
-index 0000000..178360d
+index 00000000..178360d3
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerActionBase.java
 @@ -0,0 +1,20 @@

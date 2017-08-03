@@ -111,7 +111,7 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
  }
 diff --git a/src/main/java/org/bukkit/event/player/PlayerKnockbackEvent.java b/src/main/java/org/bukkit/event/player/PlayerKnockbackEvent.java
 new file mode 100644
-index 0000000..7411633
+index 00000000..74116330
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerKnockbackEvent.java
 @@ -0,0 +1,26 @@

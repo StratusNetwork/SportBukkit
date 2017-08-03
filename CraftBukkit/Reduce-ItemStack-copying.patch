@@ -247,7 +247,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java 
 -            }
 -        }
 -        return -1;
-+        return ListUtils.indexOf(storage(), Objects::isNull);
++        return ListUtils.indexOf(storage(), item -> item == null || Material.AIR.equals(item.getType()));
      }
  
      public int firstPartial(int materialId) {

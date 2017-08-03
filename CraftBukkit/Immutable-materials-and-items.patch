@@ -70,7 +70,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
          if (object == null) {
 diff --git a/src/test/java/org/bukkit/craftbukkit/inventory/ImItemStackTest.java b/src/test/java/org/bukkit/craftbukkit/inventory/ImItemStackTest.java
 new file mode 100644
-index 0000000..0dd64b3
+index 00000000..0dd64b3a
 --- /dev/null
 +++ b/src/test/java/org/bukkit/craftbukkit/inventory/ImItemStackTest.java
 @@ -0,0 +1,98 @@

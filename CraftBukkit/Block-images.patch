@@ -479,7 +479,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockFactory.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockFactory.java
 new file mode 100644
-index 0000000..88101d0
+index 00000000..88101d0d
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockFactory.java
 @@ -0,0 +1,91 @@
@@ -576,7 +576,7 @@ index 0000000..88101d0
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockImage.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockImage.java
 new file mode 100644
-index 0000000..b97680f
+index 00000000..b97680fb
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockImage.java
 @@ -0,0 +1,225 @@
@@ -1033,7 +1033,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
 \ No newline at end of file
 diff --git a/src/test/java/org/bukkit/block/BlockFactoryTest.java b/src/test/java/org/bukkit/block/BlockFactoryTest.java
 new file mode 100644
-index 0000000..e720c7b
+index 00000000..e720c7ba
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/BlockFactoryTest.java
 @@ -0,0 +1,58 @@

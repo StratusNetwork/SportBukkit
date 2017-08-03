@@ -24,14 +24,6 @@ diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/
          minecraftserver.reader.addCompleter(new org.bukkit.craftbukkit.command.ConsoleCommandCompleter(minecraftserver.server));
          // CraftBukkit end
  
-@@ -136,7 +136,6 @@ public abstract class PlayerList {
-         WorldData worlddata = worldserver.getWorldData();
- 
-         this.a(entityplayer, (EntityPlayer) null, worldserver);
--        PlayerConnection playerconnection = new PlayerConnection(this.server, networkmanager, entityplayer);
-         // SportBukkit start - activate previously created PlayerConnection
-         // PlayerConnection playerconnection = new PlayerConnection(this.server, networkmanager, entityplayer);
-         PlayerConnection playerconnection = entityplayer.playerConnection;
 diff --git a/src/main/java/org/bukkit/CraftBukkitRuntime.java b/src/main/java/org/bukkit/CraftBukkitRuntime.java
 --- a/src/main/java/org/bukkit/CraftBukkitRuntime.java
 +++ b/src/main/java/org/bukkit/CraftBukkitRuntime.java
@@ -359,7 +351,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java 
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CaseInsensitiveNameMap.java b/src/main/java/org/bukkit/craftbukkit/util/CaseInsensitiveNameMap.java
 new file mode 100644
-index 0000000..8db42e6
+index 00000000..8db42e6a
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CaseInsensitiveNameMap.java
 @@ -0,0 +1,74 @@

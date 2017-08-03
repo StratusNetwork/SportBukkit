@@ -6,38 +6,37 @@ Subject: [PATCH] Arrow pickup rule API
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftArrow.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftArrow.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftArrow.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftArrow.java
-@@ -58,6 +58,34 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
+@@ -48,13 +48,30 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
+ 
+     @Override
+     public PickupStatus getPickupStatus() {
+-        return PickupStatus.values()[getHandle().fromPlayer.ordinal()];
++        return convertPickupStatus(getHandle().fromPlayer);
      }
  
      @Override
-+    public PickupRule getPickupRule() {
-+        return convertPickupRule(getHandle().fromPlayer);
+     public void setPickupStatus(PickupStatus status) {
+-        Preconditions.checkNotNull(status, "status");
+-        getHandle().fromPlayer = EntityArrow.PickupStatus.a(status.ordinal());
++        getHandle().fromPlayer = convertPickupStatus(status);
 +    }
 +
-+    @Override
-+    public void setPickupRule(PickupRule rule) {
-+        getHandle().fromPlayer = convertPickupRule(rule);
-+    }
-+
-+    public static PickupRule convertPickupRule(EntityArrow.PickupStatus nms) {
++    public static PickupStatus convertPickupStatus(EntityArrow.PickupStatus nms) {
 +        switch(nms) {
-+            case DISALLOWED: return PickupRule.DISALLOWED;
-+            case ALLOWED: return PickupRule.ALLOWED;
-+            case CREATIVE_ONLY: return PickupRule.CREATIVE_ONLY;
++            case DISALLOWED: return PickupStatus.DISALLOWED;
++            case ALLOWED: return PickupStatus.ALLOWED;
++            case CREATIVE_ONLY: return PickupStatus.CREATIVE_ONLY;
 +            default: throw new IllegalStateException();
 +        }
 +    }
 +
-+    public static EntityArrow.PickupStatus convertPickupRule(PickupRule bukkit) {
++    public static EntityArrow.PickupStatus convertPickupStatus(PickupStatus bukkit) {
 +        switch(bukkit) {
 +            case DISALLOWED: return EntityArrow.PickupStatus.DISALLOWED;
 +            case ALLOWED: return EntityArrow.PickupStatus.ALLOWED;
 +            case CREATIVE_ONLY: return EntityArrow.PickupStatus.CREATIVE_ONLY;
 +            default: throw new IllegalStateException();
 +        }
-+    }
-+
-+    @Override
-     public EntityArrow getHandle() {
-         return (EntityArrow) entity;
      }
+ 
+     @Override

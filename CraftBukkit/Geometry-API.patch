@@ -291,7 +291,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      public void addWorld(World world) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftVectorFactory.java b/src/main/java/org/bukkit/craftbukkit/CraftVectorFactory.java
 new file mode 100644
-index 0000000..cd9984d
+index 00000000..cd9984d0
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftVectorFactory.java
 @@ -0,0 +1,49 @@
@@ -346,7 +346,7 @@ index 0000000..cd9984d
 +}
 diff --git a/src/test/java/org/bukkit/block/BlockFaceTest.java b/src/test/java/org/bukkit/block/BlockFaceTest.java
 new file mode 100644
-index 0000000..acd78b6
+index 00000000..acd78b62
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/BlockFaceTest.java
 @@ -0,0 +1,60 @@
@@ -412,7 +412,7 @@ index 0000000..acd78b6
 +}
 diff --git a/src/test/java/org/bukkit/block/BlockReflectionTest.java b/src/test/java/org/bukkit/block/BlockReflectionTest.java
 new file mode 100644
-index 0000000..2aef44a
+index 00000000..2aef44a9
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/BlockReflectionTest.java
 @@ -0,0 +1,30 @@
@@ -448,7 +448,7 @@ index 0000000..2aef44a
 +}
 diff --git a/src/test/java/org/bukkit/block/BlockRotationTest.java b/src/test/java/org/bukkit/block/BlockRotationTest.java
 new file mode 100644
-index 0000000..c09e27e
+index 00000000..c09e27e1
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/BlockRotationTest.java
 @@ -0,0 +1,52 @@
@@ -506,7 +506,7 @@ index 0000000..c09e27e
 +}
 diff --git a/src/test/java/org/bukkit/block/TransformTest.java b/src/test/java/org/bukkit/block/TransformTest.java
 new file mode 100644
-index 0000000..488f1b9
+index 00000000..488f1b9e
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/TransformTest.java
 @@ -0,0 +1,211 @@
@@ -723,7 +723,7 @@ index 0000000..488f1b9
 +}
 diff --git a/src/test/java/org/bukkit/support/BukkitRuntimeTest.java b/src/test/java/org/bukkit/support/BukkitRuntimeTest.java
 new file mode 100644
-index 0000000..30e5c74
+index 00000000..30e5c747
 --- /dev/null
 +++ b/src/test/java/org/bukkit/support/BukkitRuntimeTest.java
 @@ -0,0 +1,26 @@
@@ -755,7 +755,7 @@ index 0000000..30e5c74
 +}
 diff --git a/src/test/java/org/bukkit/util/VectorEqualityTest.java b/src/test/java/org/bukkit/util/VectorEqualityTest.java
 new file mode 100644
-index 0000000..8cacf3d
+index 00000000..8cacf3d2
 --- /dev/null
 +++ b/src/test/java/org/bukkit/util/VectorEqualityTest.java
 @@ -0,0 +1,26 @@
@@ -787,7 +787,7 @@ index 0000000..8cacf3d
 +}
 diff --git a/src/test/java/org/bukkit/util/VectorFactoryTest.java b/src/test/java/org/bukkit/util/VectorFactoryTest.java
 new file mode 100644
-index 0000000..c130ede
+index 00000000..c130edeb
 --- /dev/null
 +++ b/src/test/java/org/bukkit/util/VectorFactoryTest.java
 @@ -0,0 +1,59 @@
@@ -852,7 +852,7 @@ index 0000000..c130ede
 +}
 diff --git a/src/test/java/org/bukkit/util/VectorMixedResolutionArithmeticTest.java b/src/test/java/org/bukkit/util/VectorMixedResolutionArithmeticTest.java
 new file mode 100644
-index 0000000..29e9680
+index 00000000..29e9680e
 --- /dev/null
 +++ b/src/test/java/org/bukkit/util/VectorMixedResolutionArithmeticTest.java
 @@ -0,0 +1,55 @@

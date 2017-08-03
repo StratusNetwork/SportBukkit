@@ -3,24 +3,6 @@ Date: Sat, 13 Dec 2014 12:59:14 +1100
 Subject: [PATCH] BungeeCord Chat API
 
 
-diff --git a/pom.xml b/pom.xml
---- a/pom.xml
-+++ b/pom.xml
-@@ -87,6 +87,14 @@
-             <version>1.18</version>
-             <scope>compile</scope>
-         </dependency>
-+        <dependency>
-+            <groupId>tc.oc</groupId>
-+            <artifactId>bungeecord-chat</artifactId>
-+            <version>1.11-SNAPSHOT</version>
-+            <type>jar</type>
-+            <scope>compile</scope>
-+        </dependency>
-+
-         <!-- testing -->
-         <dependency>
-             <groupId>junit</groupId>
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java

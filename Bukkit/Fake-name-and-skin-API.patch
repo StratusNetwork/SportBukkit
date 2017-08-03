@@ -61,7 +61,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
       * @return a plugin manager for this Server instance
 diff --git a/src/main/java/org/bukkit/Skin.java b/src/main/java/org/bukkit/Skin.java
 new file mode 100644
-index 0000000..c5d1704
+index 00000000..c5d17040
 --- /dev/null
 +++ b/src/main/java/org/bukkit/Skin.java
 @@ -0,0 +1,76 @@
@@ -170,7 +170,7 @@ diff --git a/src/main/java/org/bukkit/command/CommandSender.java b/src/main/java
  }
 diff --git a/src/main/java/org/bukkit/command/defaults/ListCommand.java b/src/main/java/org/bukkit/command/defaults/ListCommand.java
 new file mode 100644
-index 0000000..8442e03
+index 00000000..8442e03f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/command/defaults/ListCommand.java
 @@ -0,0 +1,55 @@
@@ -231,7 +231,7 @@ index 0000000..8442e03
 +}
 diff --git a/src/main/java/org/bukkit/command/defaults/TellCommand.java b/src/main/java/org/bukkit/command/defaults/TellCommand.java
 new file mode 100644
-index 0000000..466691f
+index 00000000..466691f5
 --- /dev/null
 +++ b/src/main/java/org/bukkit/command/defaults/TellCommand.java
 @@ -0,0 +1,50 @@
@@ -287,7 +287,7 @@ index 0000000..466691f
 +}
 diff --git a/src/main/java/org/bukkit/command/defaults/VanillaCommand.java b/src/main/java/org/bukkit/command/defaults/VanillaCommand.java
 new file mode 100644
-index 0000000..9105712
+index 00000000..9105712b
 --- /dev/null
 +++ b/src/main/java/org/bukkit/command/defaults/VanillaCommand.java
 @@ -0,0 +1,111 @@
@@ -567,7 +567,7 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
       * @param loc Location to point to
 diff --git a/src/main/java/org/bukkit/event/player/PlayerSkinPartsChangeEvent.java b/src/main/java/org/bukkit/event/player/PlayerSkinPartsChangeEvent.java
 new file mode 100644
-index 0000000..a222f21
+index 00000000..a222f21e
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerSkinPartsChangeEvent.java
 @@ -0,0 +1,32 @@

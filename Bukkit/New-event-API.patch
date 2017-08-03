@@ -38,7 +38,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
       *
 diff --git a/src/main/java/org/bukkit/BukkitModule.java b/src/main/java/org/bukkit/BukkitModule.java
 new file mode 100644
-index 0000000..2cb3a71
+index 00000000..2cb3a714
 --- /dev/null
 +++ b/src/main/java/org/bukkit/BukkitModule.java
 @@ -0,0 +1,44 @@
@@ -165,7 +165,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
       *
 diff --git a/src/main/java/org/bukkit/ServerInstanceModule.java b/src/main/java/org/bukkit/ServerInstanceModule.java
 new file mode 100644
-index 0000000..4c82a5f
+index 00000000..4c82a5ff
 --- /dev/null
 +++ b/src/main/java/org/bukkit/ServerInstanceModule.java
 @@ -0,0 +1,35 @@
@@ -206,7 +206,7 @@ index 0000000..4c82a5f
 +}
 diff --git a/src/main/java/org/bukkit/ServerModule.java b/src/main/java/org/bukkit/ServerModule.java
 new file mode 100644
-index 0000000..009faf3
+index 00000000..009faf3c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/ServerModule.java
 @@ -0,0 +1,113 @@
@@ -354,7 +354,7 @@ diff --git a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java b/src
                      }
 diff --git a/src/main/java/org/bukkit/event/BoundEventHandler.java b/src/main/java/org/bukkit/event/BoundEventHandler.java
 new file mode 100644
-index 0000000..0fd01db
+index 00000000..0fd01dbd
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/BoundEventHandler.java
 @@ -0,0 +1,74 @@
@@ -434,7 +434,7 @@ index 0000000..0fd01db
 +}
 diff --git a/src/main/java/org/bukkit/event/CallableEventHandler.java b/src/main/java/org/bukkit/event/CallableEventHandler.java
 new file mode 100644
-index 0000000..fa77ef1
+index 00000000..fa77ef11
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/CallableEventHandler.java
 @@ -0,0 +1,101 @@
@@ -698,7 +698,7 @@ diff --git a/src/main/java/org/bukkit/event/Event.java b/src/main/java/org/bukki
       * Any custom event that should not by synchronized with other events must
 diff --git a/src/main/java/org/bukkit/event/EventBody.java b/src/main/java/org/bukkit/event/EventBody.java
 new file mode 100644
-index 0000000..7abbbbb
+index 00000000..7abbbbb8
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventBody.java
 @@ -0,0 +1,11 @@
@@ -715,7 +715,7 @@ index 0000000..7abbbbb
 +}
 diff --git a/src/main/java/org/bukkit/event/EventBus.java b/src/main/java/org/bukkit/event/EventBus.java
 new file mode 100644
-index 0000000..7fac014
+index 00000000..7fac0140
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventBus.java
 @@ -0,0 +1,55 @@
@@ -776,7 +776,7 @@ index 0000000..7fac014
 +}
 diff --git a/src/main/java/org/bukkit/event/EventCallable.java b/src/main/java/org/bukkit/event/EventCallable.java
 new file mode 100644
-index 0000000..e56fcf6
+index 00000000..e56fcf60
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventCallable.java
 @@ -0,0 +1,11 @@
@@ -805,7 +805,7 @@ diff --git a/src/main/java/org/bukkit/event/EventException.java b/src/main/java/
      private final Event event;
 diff --git a/src/main/java/org/bukkit/event/EventExecutor.java b/src/main/java/org/bukkit/event/EventExecutor.java
 new file mode 100644
-index 0000000..7bfa1c9
+index 00000000..7bfa1c9f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventExecutor.java
 @@ -0,0 +1,7 @@
@@ -818,7 +818,7 @@ index 0000000..7bfa1c9
 +}
 diff --git a/src/main/java/org/bukkit/event/EventHandlerMeta.java b/src/main/java/org/bukkit/event/EventHandlerMeta.java
 new file mode 100644
-index 0000000..54f89ac
+index 00000000..54f89ac3
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventHandlerMeta.java
 @@ -0,0 +1,120 @@
@@ -944,7 +944,7 @@ index 0000000..54f89ac
 +}
 diff --git a/src/main/java/org/bukkit/event/EventMethodExecutor.java b/src/main/java/org/bukkit/event/EventMethodExecutor.java
 new file mode 100644
-index 0000000..ac3afad
+index 00000000..ac3afade
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventMethodExecutor.java
 @@ -0,0 +1,119 @@
@@ -1069,7 +1069,7 @@ index 0000000..ac3afad
 +}
 diff --git a/src/main/java/org/bukkit/event/EventRegistry.java b/src/main/java/org/bukkit/event/EventRegistry.java
 new file mode 100644
-index 0000000..dcf4a37
+index 00000000..dcf4a37c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventRegistry.java
 @@ -0,0 +1,80 @@
@@ -1429,7 +1429,7 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
      /**
 diff --git a/src/main/java/org/bukkit/event/RegisteredHandler.java b/src/main/java/org/bukkit/event/RegisteredHandler.java
 new file mode 100644
-index 0000000..bd0a7be
+index 00000000..bd0a7be4
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/RegisteredHandler.java
 @@ -0,0 +1,22 @@
@@ -1457,7 +1457,7 @@ index 0000000..bd0a7be
 +}
 diff --git a/src/main/java/org/bukkit/event/SimpleEventBus.java b/src/main/java/org/bukkit/event/SimpleEventBus.java
 new file mode 100644
-index 0000000..4b5fe75
+index 00000000..4b5fe75a
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/SimpleEventBus.java
 @@ -0,0 +1,119 @@
@@ -1582,7 +1582,7 @@ index 0000000..4b5fe75
 +}
 diff --git a/src/main/java/org/bukkit/event/SimpleEventRegistry.java b/src/main/java/org/bukkit/event/SimpleEventRegistry.java
 new file mode 100644
-index 0000000..3d823c2
+index 00000000..3d823c2c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/SimpleEventRegistry.java
 @@ -0,0 +1,88 @@
@@ -1677,7 +1677,7 @@ index 0000000..3d823c2
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/permissions/PermissionBinder.java b/src/main/java/org/bukkit/permissions/PermissionBinder.java
 new file mode 100644
-index 0000000..bb0172e
+index 00000000..bb0172e6
 --- /dev/null
 +++ b/src/main/java/org/bukkit/permissions/PermissionBinder.java
 @@ -0,0 +1,18 @@
@@ -1716,7 +1716,7 @@ diff --git a/src/main/java/org/bukkit/plugin/EventExecutor.java b/src/main/java/
  }
 diff --git a/src/main/java/org/bukkit/plugin/EventExecutorAdapter.java b/src/main/java/org/bukkit/plugin/EventExecutorAdapter.java
 new file mode 100644
-index 0000000..5b03f17
+index 00000000..5b03f176
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/EventExecutorAdapter.java
 @@ -0,0 +1,18 @@
@@ -1832,7 +1832,7 @@ diff --git a/src/main/java/org/bukkit/plugin/PluginBase.java b/src/main/java/org
          return getName().hashCode();
 diff --git a/src/main/java/org/bukkit/plugin/PluginEventRegistry.java b/src/main/java/org/bukkit/plugin/PluginEventRegistry.java
 new file mode 100644
-index 0000000..bc06595
+index 00000000..bc065955
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginEventRegistry.java
 @@ -0,0 +1,57 @@
@@ -1895,7 +1895,7 @@ index 0000000..bc06595
 +}
 diff --git a/src/main/java/org/bukkit/plugin/PluginExceptionHandler.java b/src/main/java/org/bukkit/plugin/PluginExceptionHandler.java
 new file mode 100644
-index 0000000..d5a96b1
+index 00000000..d5a96b1e
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginExceptionHandler.java
 @@ -0,0 +1,33 @@
@@ -1934,7 +1934,7 @@ index 0000000..d5a96b1
 +}
 diff --git a/src/main/java/org/bukkit/plugin/PluginInstanceModule.java b/src/main/java/org/bukkit/plugin/PluginInstanceModule.java
 new file mode 100644
-index 0000000..8c64d81
+index 00000000..8c64d81d
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginInstanceModule.java
 @@ -0,0 +1,22 @@
@@ -1980,7 +1980,7 @@ diff --git a/src/main/java/org/bukkit/plugin/PluginManager.java b/src/main/java/
       * Registers the specified plugin loader
 diff --git a/src/main/java/org/bukkit/plugin/PluginModule.java b/src/main/java/org/bukkit/plugin/PluginModule.java
 new file mode 100644
-index 0000000..1e2dda4
+index 00000000..1e2dda48
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginModule.java
 @@ -0,0 +1,54 @@
@@ -2040,7 +2040,7 @@ index 0000000..1e2dda4
 +}
 diff --git a/src/main/java/org/bukkit/plugin/PluginScheduler.java b/src/main/java/org/bukkit/plugin/PluginScheduler.java
 new file mode 100644
-index 0000000..80c562e
+index 00000000..80c562e0
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginScheduler.java
 @@ -0,0 +1,33 @@
@@ -2541,7 +2541,7 @@ diff --git a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java b/src/ma
      public void enablePlugin(final Plugin plugin) {
 diff --git a/src/main/java/org/bukkit/plugin/java/ModularPlugin.java b/src/main/java/org/bukkit/plugin/java/ModularPlugin.java
 new file mode 100644
-index 0000000..98941df
+index 00000000..98941dff
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/java/ModularPlugin.java
 @@ -0,0 +1,18 @@
@@ -2701,7 +2701,7 @@ diff --git a/src/test/java/org/bukkit/TestServer.java b/src/test/java/org/bukkit
      public static Server getInstance() {
 diff --git a/src/test/java/org/bukkit/event/EventBusTest.java b/src/test/java/org/bukkit/event/EventBusTest.java
 new file mode 100644
-index 0000000..5622515
+index 00000000..56225158
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/EventBusTest.java
 @@ -0,0 +1,263 @@
@@ -2970,7 +2970,7 @@ index 0000000..5622515
 +}
 diff --git a/src/test/java/org/bukkit/event/EventHandlerMetaTest.java b/src/test/java/org/bukkit/event/EventHandlerMetaTest.java
 new file mode 100644
-index 0000000..7399b06
+index 00000000..7399b061
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/EventHandlerMetaTest.java
 @@ -0,0 +1,87 @@
@@ -3063,7 +3063,7 @@ index 0000000..7399b06
 +}
 diff --git a/src/test/java/org/bukkit/event/EventMethodExecutorTest.java b/src/test/java/org/bukkit/event/EventMethodExecutorTest.java
 new file mode 100644
-index 0000000..d879171
+index 00000000..d879171f
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/EventMethodExecutorTest.java
 @@ -0,0 +1,135 @@
@@ -3204,7 +3204,7 @@ index 0000000..d879171
 +}
 diff --git a/src/test/java/org/bukkit/event/EventRegistryTest.java b/src/test/java/org/bukkit/event/EventRegistryTest.java
 new file mode 100644
-index 0000000..9da2f8d
+index 00000000..9da2f8d1
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/EventRegistryTest.java
 @@ -0,0 +1,93 @@
@@ -3303,7 +3303,7 @@ index 0000000..9da2f8d
 +}
 diff --git a/src/test/java/org/bukkit/event/HandlerListTest.java b/src/test/java/org/bukkit/event/HandlerListTest.java
 new file mode 100644
-index 0000000..ff30c1d
+index 00000000..ff30c1df
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/HandlerListTest.java
 @@ -0,0 +1,18 @@
@@ -3327,7 +3327,7 @@ index 0000000..ff30c1d
 +}
 diff --git a/src/test/java/org/bukkit/event/SyntheticEventTest.java b/src/test/java/org/bukkit/event/SyntheticEventTest.java
 deleted file mode 100644
-index df6cf00..0000000
+index df6cf000..00000000
 --- a/src/test/java/org/bukkit/event/SyntheticEventTest.java
 +++ /dev/null
 @@ -1,49 +0,0 @@
@@ -3396,7 +3396,7 @@ diff --git a/src/test/java/org/bukkit/event/TestEvent.java b/src/test/java/org/b
      }
 diff --git a/src/test/java/org/bukkit/exception/TestExceptionHandler.java b/src/test/java/org/bukkit/exception/TestExceptionHandler.java
 new file mode 100644
-index 0000000..440d183
+index 00000000..440d183f
 --- /dev/null
 +++ b/src/test/java/org/bukkit/exception/TestExceptionHandler.java
 @@ -0,0 +1,10 @@

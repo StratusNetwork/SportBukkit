@@ -5,7 +5,7 @@ Subject: [PATCH] Add onGround API
 
 diff --git a/src/main/java/org/bukkit/event/player/PlayerOnGroundEvent.java b/src/main/java/org/bukkit/event/player/PlayerOnGroundEvent.java
 new file mode 100644
-index 0000000..4a6c3d4
+index 00000000..4a6c3d4b
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerOnGroundEvent.java
 @@ -0,0 +1,32 @@

@@ -5,7 +5,7 @@ Subject: [PATCH] Potion effect events
 
 diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java
 new file mode 100644
-index 0000000..a0e0634
+index 00000000..a0e06344
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java
 @@ -0,0 +1,32 @@
@@ -43,7 +43,7 @@ index 0000000..a0e0634
 +}
 diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java
 new file mode 100644
-index 0000000..b0571a6
+index 00000000..b0571a62
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java
 @@ -0,0 +1,23 @@
@@ -72,7 +72,7 @@ index 0000000..b0571a6
 +}
 diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java
 new file mode 100644
-index 0000000..0fc2840
+index 00000000..0fc28405
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java
 @@ -0,0 +1,45 @@
@@ -123,7 +123,7 @@ index 0000000..0fc2840
 +}
 diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java
 new file mode 100644
-index 0000000..02164cf
+index 00000000..02164cf3
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java
 @@ -0,0 +1,26 @@
@@ -155,7 +155,7 @@ index 0000000..02164cf
 +}
 diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java
 new file mode 100644
-index 0000000..c95af16
+index 00000000..c95af16b
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java
 @@ -0,0 +1,33 @@

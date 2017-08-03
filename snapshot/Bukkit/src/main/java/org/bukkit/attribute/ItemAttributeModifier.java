@@ -55,7 +55,7 @@ public class ItemAttributeModifier implements ConfigurationSerializable {
 
     private static final String[] slotNames = new String[EquipmentSlot.values().length];
     static {
-        slotNames[EquipmentSlot.HAND.ordinal()] = "mainhsand";
+        slotNames[EquipmentSlot.HAND.ordinal()] = "mainhand";
         slotNames[EquipmentSlot.OFF_HAND.ordinal()] = "offhand";
         slotNames[EquipmentSlot.HEAD.ordinal()] = "head";
         slotNames[EquipmentSlot.CHEST.ordinal()] = "chest";

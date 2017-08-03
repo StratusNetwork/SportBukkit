@@ -229,7 +229,7 @@ diff --git a/src/main/java/org/bukkit/block/Block.java b/src/main/java/org/bukki
       *
 diff --git a/src/main/java/org/bukkit/block/BlockFactory.java b/src/main/java/org/bukkit/block/BlockFactory.java
 new file mode 100644
-index 0000000..4968dd1
+index 00000000..4968dd19
 --- /dev/null
 +++ b/src/main/java/org/bukkit/block/BlockFactory.java
 @@ -0,0 +1,21 @@
@@ -256,7 +256,7 @@ index 0000000..4968dd1
 +}
 diff --git a/src/main/java/org/bukkit/block/BlockImage.java b/src/main/java/org/bukkit/block/BlockImage.java
 new file mode 100644
-index 0000000..defd64c
+index 00000000..defd64cf
 --- /dev/null
 +++ b/src/main/java/org/bukkit/block/BlockImage.java
 @@ -0,0 +1,65 @@
@@ -373,7 +373,7 @@ diff --git a/src/main/java/org/bukkit/block/BlockState.java b/src/main/java/org/
  }
 diff --git a/src/main/java/org/bukkit/block/EmptyBlockImage.java b/src/main/java/org/bukkit/block/EmptyBlockImage.java
 new file mode 100644
-index 0000000..fc3f166
+index 00000000..fc3f1666
 --- /dev/null
 +++ b/src/main/java/org/bukkit/block/EmptyBlockImage.java
 @@ -0,0 +1,40 @@
@@ -419,7 +419,7 @@ index 0000000..fc3f166
 +}
 diff --git a/src/main/java/org/bukkit/block/TransformedBlockImage.java b/src/main/java/org/bukkit/block/TransformedBlockImage.java
 new file mode 100644
-index 0000000..db43c72
+index 00000000..db43c72d
 --- /dev/null
 +++ b/src/main/java/org/bukkit/block/TransformedBlockImage.java
 @@ -0,0 +1,49 @@

@@ -5,7 +5,7 @@ Subject: [PATCH] Import necessary NMS classes
 
 diff --git a/src/main/java/net/minecraft/server/BlockFalling.java b/src/main/java/net/minecraft/server/BlockFalling.java
 new file mode 100644
-index 0000000..6743957
+index 00000000..67439575
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/BlockFalling.java
 @@ -0,0 +1,77 @@
@@ -88,7 +88,7 @@ index 0000000..6743957
 +}
 diff --git a/src/main/java/net/minecraft/server/BlockPosition.java b/src/main/java/net/minecraft/server/BlockPosition.java
 new file mode 100644
-index 0000000..8155f81
+index 00000000..8155f817
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/BlockPosition.java
 @@ -0,0 +1,421 @@
@@ -515,7 +515,7 @@ index 0000000..8155f81
 +}
 diff --git a/src/main/java/net/minecraft/server/DataConverterMaterialId.java b/src/main/java/net/minecraft/server/DataConverterMaterialId.java
 new file mode 100644
-index 0000000..87b82eb
+index 00000000..87b82eb3
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/DataConverterMaterialId.java
 @@ -0,0 +1,342 @@
@@ -863,7 +863,7 @@ index 0000000..87b82eb
 +}
 diff --git a/src/main/java/net/minecraft/server/DataConverterPotionId.java b/src/main/java/net/minecraft/server/DataConverterPotionId.java
 new file mode 100644
-index 0000000..201f560
+index 00000000..201f5609
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/DataConverterPotionId.java
 @@ -0,0 +1,166 @@
@@ -1035,7 +1035,7 @@ index 0000000..201f560
 +}
 diff --git a/src/main/java/net/minecraft/server/EntityHorse.java b/src/main/java/net/minecraft/server/EntityHorse.java
 new file mode 100644
-index 0000000..9830cb3
+index 00000000..9830cb32
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/EntityHorse.java
 @@ -0,0 +1,281 @@
@@ -1322,7 +1322,7 @@ index 0000000..9830cb3
 +}
 diff --git a/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java b/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java
 new file mode 100644
-index 0000000..c831725
+index 00000000..c8317252
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java
 @@ -0,0 +1,192 @@
@@ -1520,7 +1520,7 @@ index 0000000..c831725
 +}
 diff --git a/src/main/java/net/minecraft/server/EnumProtocol.java b/src/main/java/net/minecraft/server/EnumProtocol.java
 new file mode 100644
-index 0000000..1d04959
+index 00000000..1d04959e
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/EnumProtocol.java
 @@ -0,0 +1,242 @@
@@ -1768,7 +1768,7 @@ index 0000000..1d04959
 +}
 diff --git a/src/main/java/net/minecraft/server/GameProfileBanList.java b/src/main/java/net/minecraft/server/GameProfileBanList.java
 new file mode 100644
-index 0000000..737035b
+index 00000000..737035bf
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/GameProfileBanList.java
 @@ -0,0 +1,58 @@
@@ -1832,7 +1832,7 @@ index 0000000..737035b
 +}
 diff --git a/src/main/java/net/minecraft/server/GenericAttributes.java b/src/main/java/net/minecraft/server/GenericAttributes.java
 new file mode 100644
-index 0000000..d60cc23
+index 00000000..d60cc232
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/GenericAttributes.java
 @@ -0,0 +1,120 @@
@@ -1958,7 +1958,7 @@ index 0000000..d60cc23
 +}
 diff --git a/src/main/java/net/minecraft/server/Item.java b/src/main/java/net/minecraft/server/Item.java
 new file mode 100644
-index 0000000..aa1afe1
+index 00000000..aa1afe1a
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/Item.java
 @@ -0,0 +1,804 @@
@@ -2768,7 +2768,7 @@ index 0000000..aa1afe1
 +}
 diff --git a/src/main/java/net/minecraft/server/OpList.java b/src/main/java/net/minecraft/server/OpList.java
 new file mode 100644
-index 0000000..e5f457b
+index 00000000..e5f457bf
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/OpList.java
 @@ -0,0 +1,66 @@
@@ -2840,7 +2840,7 @@ index 0000000..e5f457b
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketDecoder.java b/src/main/java/net/minecraft/server/PacketDecoder.java
 new file mode 100644
-index 0000000..0f7cdac
+index 00000000..0f7cdacc
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketDecoder.java
 @@ -0,0 +1,45 @@
@@ -2891,7 +2891,7 @@ index 0000000..0f7cdac
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketEncoder.java b/src/main/java/net/minecraft/server/PacketEncoder.java
 new file mode 100644
-index 0000000..a6da6f5
+index 00000000..a6da6f5c
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketEncoder.java
 @@ -0,0 +1,54 @@
@@ -2951,7 +2951,7 @@ index 0000000..a6da6f5
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketHandshakingInSetProtocol.java b/src/main/java/net/minecraft/server/PacketHandshakingInSetProtocol.java
 new file mode 100644
-index 0000000..1cb9d60
+index 00000000..1cb9d60d
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketHandshakingInSetProtocol.java
 @@ -0,0 +1,39 @@
@@ -2996,7 +2996,7 @@ index 0000000..1cb9d60
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayInResourcePackStatus.java b/src/main/java/net/minecraft/server/PacketPlayInResourcePackStatus.java
 new file mode 100644
-index 0000000..a9d3bfc
+index 00000000..a9d3bfc6
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayInResourcePackStatus.java
 @@ -0,0 +1,33 @@
@@ -3035,7 +3035,7 @@ index 0000000..a9d3bfc
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java b/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java
 new file mode 100644
-index 0000000..7c9389a
+index 00000000..7c9389aa
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java
 @@ -0,0 +1,75 @@
@@ -3116,7 +3116,7 @@ index 0000000..7c9389a
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayInUseItem.java b/src/main/java/net/minecraft/server/PacketPlayInUseItem.java
 new file mode 100644
-index 0000000..bdcda81
+index 00000000..bdcda81c
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayInUseItem.java
 @@ -0,0 +1,61 @@
@@ -3183,7 +3183,7 @@ index 0000000..bdcda81
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutAttachEntity.java b/src/main/java/net/minecraft/server/PacketPlayOutAttachEntity.java
 new file mode 100644
-index 0000000..9d23a64
+index 00000000..9d23a647
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutAttachEntity.java
 @@ -0,0 +1,31 @@
@@ -3220,7 +3220,7 @@ index 0000000..9d23a64
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutChat.java b/src/main/java/net/minecraft/server/PacketPlayOutChat.java
 new file mode 100644
-index 0000000..b1fddee
+index 00000000..b1fddee7
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutChat.java
 @@ -0,0 +1,42 @@
@@ -3268,7 +3268,7 @@ index 0000000..b1fddee
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutCollect.java b/src/main/java/net/minecraft/server/PacketPlayOutCollect.java
 new file mode 100644
-index 0000000..1678628
+index 00000000..16786284
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutCollect.java
 @@ -0,0 +1,34 @@
@@ -3308,7 +3308,7 @@ index 0000000..1678628
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutCustomSoundEffect.java b/src/main/java/net/minecraft/server/PacketPlayOutCustomSoundEffect.java
 new file mode 100644
-index 0000000..8a19c73
+index 00000000..8a19c733
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutCustomSoundEffect.java
 @@ -0,0 +1,52 @@
@@ -3366,7 +3366,7 @@ index 0000000..8a19c73
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntityHeadRotation.java b/src/main/java/net/minecraft/server/PacketPlayOutEntityHeadRotation.java
 new file mode 100644
-index 0000000..6913631
+index 00000000..69136315
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutEntityHeadRotation.java
 @@ -0,0 +1,30 @@
@@ -3402,7 +3402,7 @@ index 0000000..6913631
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java b/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java
 new file mode 100644
-index 0000000..fdf19d1
+index 00000000..fdf19d1f
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java
 @@ -0,0 +1,37 @@
@@ -3445,7 +3445,7 @@ index 0000000..fdf19d1
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntityTeleport.java b/src/main/java/net/minecraft/server/PacketPlayOutEntityTeleport.java
 new file mode 100644
-index 0000000..76a558e
+index 00000000..76a558eb
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutEntityTeleport.java
 @@ -0,0 +1,50 @@
@@ -3501,7 +3501,7 @@ index 0000000..76a558e
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutLogin.java b/src/main/java/net/minecraft/server/PacketPlayOutLogin.java
 new file mode 100644
-index 0000000..9a973d5
+index 00000000..9a973d57
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutLogin.java
 @@ -0,0 +1,67 @@
@@ -3574,7 +3574,7 @@ index 0000000..9a973d5
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 new file mode 100644
-index 0000000..d16669b
+index 00000000..d16669bc
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
 @@ -0,0 +1,152 @@
@@ -3732,7 +3732,7 @@ index 0000000..d16669b
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMount.java b/src/main/java/net/minecraft/server/PacketPlayOutMount.java
 new file mode 100644
-index 0000000..06d8960
+index 00000000..06d8960d
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMount.java
 @@ -0,0 +1,38 @@
@@ -3776,7 +3776,7 @@ index 0000000..06d8960
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
 new file mode 100644
-index 0000000..072c2ba
+index 00000000..072c2ba6
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
 @@ -0,0 +1,57 @@
@@ -3839,7 +3839,7 @@ index 0000000..072c2ba
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutNamedSoundEffect.java b/src/main/java/net/minecraft/server/PacketPlayOutNamedSoundEffect.java
 new file mode 100644
-index 0000000..736015c
+index 00000000..736015cf
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutNamedSoundEffect.java
 @@ -0,0 +1,52 @@
@@ -3897,7 +3897,7 @@ index 0000000..736015c
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutOpenWindow.java b/src/main/java/net/minecraft/server/PacketPlayOutOpenWindow.java
 new file mode 100644
-index 0000000..e9f24b3
+index 00000000..e9f24b34
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutOpenWindow.java
 @@ -0,0 +1,56 @@
@@ -3959,7 +3959,7 @@ index 0000000..e9f24b3
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
 new file mode 100644
-index 0000000..fc255ab
+index 00000000..fc255aba
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
 @@ -0,0 +1,218 @@
@@ -4183,7 +4183,7 @@ index 0000000..fc255ab
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerListHeaderFooter.java b/src/main/java/net/minecraft/server/PacketPlayOutPlayerListHeaderFooter.java
 new file mode 100644
-index 0000000..0663b07
+index 00000000..0663b07c
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutPlayerListHeaderFooter.java
 @@ -0,0 +1,25 @@
@@ -4214,7 +4214,7 @@ index 0000000..0663b07
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java b/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java
 new file mode 100644
-index 0000000..549d4e8
+index 00000000..549d4e89
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java
 @@ -0,0 +1,119 @@
@@ -4339,7 +4339,7 @@ index 0000000..549d4e8
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntity.java b/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntity.java
 new file mode 100644
-index 0000000..428bc93
+index 00000000..428bc93a
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntity.java
 @@ -0,0 +1,96 @@
@@ -4441,7 +4441,7 @@ index 0000000..428bc93
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntityLiving.java b/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntityLiving.java
 new file mode 100644
-index 0000000..6c86341
+index 00000000..6c863414
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntityLiving.java
 @@ -0,0 +1,106 @@
@@ -4553,7 +4553,7 @@ index 0000000..6c86341
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutTileEntityData.java b/src/main/java/net/minecraft/server/PacketPlayOutTileEntityData.java
 new file mode 100644
-index 0000000..b30c97e
+index 00000000..b30c97e3
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutTileEntityData.java
 @@ -0,0 +1,34 @@
@@ -4593,7 +4593,7 @@ index 0000000..b30c97e
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutTitle.java b/src/main/java/net/minecraft/server/PacketPlayOutTitle.java
 new file mode 100644
-index 0000000..22564b7
+index 00000000..22564b7b
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutTitle.java
 @@ -0,0 +1,101 @@
@@ -4700,7 +4700,7 @@ index 0000000..22564b7
 +}
 diff --git a/src/main/java/net/minecraft/server/PacketStatusOutServerInfo.java b/src/main/java/net/minecraft/server/PacketStatusOutServerInfo.java
 new file mode 100644
-index 0000000..df9b08b
+index 00000000..df9b08be
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PacketStatusOutServerInfo.java
 @@ -0,0 +1,29 @@
@@ -4735,7 +4735,7 @@ index 0000000..df9b08b
 +}
 diff --git a/src/main/java/net/minecraft/server/PotionUtil.java b/src/main/java/net/minecraft/server/PotionUtil.java
 new file mode 100644
-index 0000000..2eeda14
+index 00000000..2eeda148
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/PotionUtil.java
 @@ -0,0 +1,155 @@
@@ -4896,7 +4896,7 @@ index 0000000..2eeda14
 +}
 diff --git a/src/main/java/net/minecraft/server/ServerConnection.java b/src/main/java/net/minecraft/server/ServerConnection.java
 new file mode 100644
-index 0000000..b85c1c5
+index 00000000..b85c1c58
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/ServerConnection.java
 @@ -0,0 +1,174 @@
@@ -5076,7 +5076,7 @@ index 0000000..b85c1c5
 +}
 diff --git a/src/main/java/net/minecraft/server/SoundEffect.java b/src/main/java/net/minecraft/server/SoundEffect.java
 new file mode 100644
-index 0000000..573fa07
+index 00000000..573fa076
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/SoundEffect.java
 @@ -0,0 +1,567 @@
@@ -5649,7 +5649,7 @@ index 0000000..573fa07
 +}
 diff --git a/src/main/java/net/minecraft/server/SoundEffectType.java b/src/main/java/net/minecraft/server/SoundEffectType.java
 new file mode 100644
-index 0000000..c5cb28b
+index 00000000..c5cb28b9
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/SoundEffectType.java
 @@ -0,0 +1,54 @@
@@ -5709,7 +5709,7 @@ index 0000000..c5cb28b
 +}
 diff --git a/src/main/java/net/minecraft/server/SoundEffects.java b/src/main/java/net/minecraft/server/SoundEffects.java
 new file mode 100644
-index 0000000..da98701
+index 00000000..da987017
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/SoundEffects.java
 @@ -0,0 +1,1114 @@
@@ -6829,7 +6829,7 @@ index 0000000..da98701
 +}
 diff --git a/src/main/java/net/minecraft/server/ThreadWatchdog.java b/src/main/java/net/minecraft/server/ThreadWatchdog.java
 new file mode 100644
-index 0000000..dd18b4e
+index 00000000..dd18b4e0
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/ThreadWatchdog.java
 @@ -0,0 +1,93 @@
@@ -6928,7 +6928,7 @@ index 0000000..dd18b4e
 +}
 diff --git a/src/main/java/net/minecraft/server/TileEntitySkull.java b/src/main/java/net/minecraft/server/TileEntitySkull.java
 new file mode 100644
-index 0000000..b746934
+index 00000000..b7469346
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/TileEntitySkull.java
 @@ -0,0 +1,152 @@
@@ -7086,7 +7086,7 @@ index 0000000..b746934
 +}
 diff --git a/src/main/java/net/minecraft/server/WhiteList.java b/src/main/java/net/minecraft/server/WhiteList.java
 new file mode 100644
-index 0000000..85085d5
+index 00000000..85085d54
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/WhiteList.java
 @@ -0,0 +1,58 @@

@@ -79,7 +79,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
      private final UserCache Y;
      private long Z;
      protected final Queue<FutureTask<?>> j = Queues.newArrayDeque();
-+    protected final Deque<FutureTask<?>> taskQueue = (Deque<FutureTask<?>>) j; // SportBukkit - alias and downcast
++    public final Deque<FutureTask<?>> taskQueue = (Deque<FutureTask<?>>) j; // SportBukkit - alias and downcast
      private Thread serverThread;
      void setLastTickStart(long millis) { ab = millis; } // SportBukkit - alias
      private long ab = aw();
@@ -236,9 +236,9 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  import org.bukkit.plugin.java.JavaPluginLoader;
  import org.bukkit.plugin.messaging.Messenger;
  import org.bukkit.potion.Potion;
-@@ -1809,4 +1804,44 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
-     public Set<Integer> getProtocolVersions() {
-         return ImmutableSet.of(335);
+@@ -1816,4 +1811,44 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+             335                 // 1.12
+         );
      }
 +
 +    @Override

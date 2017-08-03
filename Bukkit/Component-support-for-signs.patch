@@ -31,7 +31,7 @@ diff --git a/src/main/java/org/bukkit/block/Sign.java b/src/main/java/org/bukkit
       * @throws IndexOutOfBoundsException Thrown when the line does not exist
       * @return Text on the given line
       */
-+    BaseComponent[] line(int index);
++    BaseComponent line(int index);
 +
 +    @Deprecated
      public String getLine(int index) throws IndexOutOfBoundsException;

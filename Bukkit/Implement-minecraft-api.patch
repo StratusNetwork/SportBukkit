@@ -3,21 +3,6 @@ Date: Thu, 4 Feb 2016 04:59:45 -0500
 Subject: [PATCH] Implement minecraft-api
 
 
-diff --git a/pom.xml b/pom.xml
---- a/pom.xml
-+++ b/pom.xml
-@@ -89,10 +89,8 @@
-         </dependency>
-         <dependency>
-             <groupId>tc.oc</groupId>
--            <artifactId>bungeecord-chat</artifactId>
-+            <artifactId>minecraft-api</artifactId>
-             <version>1.11-SNAPSHOT</version>
--            <type>jar</type>
--            <scope>compile</scope>
-         </dependency>
- 
-         <!-- testing -->
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java

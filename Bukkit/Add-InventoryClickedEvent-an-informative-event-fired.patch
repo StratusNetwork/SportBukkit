@@ -6,7 +6,7 @@ Subject: [PATCH] Add InventoryClickedEvent, an informative event fired after
 
 diff --git a/src/main/java/org/bukkit/event/inventory/InventoryClickedEvent.java b/src/main/java/org/bukkit/event/inventory/InventoryClickedEvent.java
 new file mode 100644
-index 0000000..7d27a6e
+index 00000000..7d27a6ee
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/inventory/InventoryClickedEvent.java
 @@ -0,0 +1,110 @@

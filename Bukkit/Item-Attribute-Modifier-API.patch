@@ -119,7 +119,7 @@ diff --git a/src/main/java/org/bukkit/attribute/AttributeModifier.java b/src/mai
  }
 diff --git a/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java b/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java
 new file mode 100644
-index 0000000..9c68b60
+index 00000000..9c68b60c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java
 @@ -0,0 +1,65 @@

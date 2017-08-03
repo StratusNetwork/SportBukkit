@@ -130,7 +130,7 @@ diff --git a/src/main/java/org/bukkit/command/SimpleCommandMap.java b/src/main/j
      public void setFallbackCommands() {
 diff --git a/src/main/java/org/bukkit/command/defaults/SuspendCommand.java b/src/main/java/org/bukkit/command/defaults/SuspendCommand.java
 new file mode 100644
-index 0000000..2a844e6
+index 00000000..2a844e68
 --- /dev/null
 +++ b/src/main/java/org/bukkit/command/defaults/SuspendCommand.java
 @@ -0,0 +1,53 @@
@@ -247,7 +247,7 @@ diff --git a/src/main/java/org/bukkit/event/SimpleEventBus.java b/src/main/java/
      }
 diff --git a/src/main/java/org/bukkit/event/server/ServerSuspendEvent.java b/src/main/java/org/bukkit/event/server/ServerSuspendEvent.java
 new file mode 100644
-index 0000000..bdd4123
+index 00000000..bdd41233
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/server/ServerSuspendEvent.java
 @@ -0,0 +1,16 @@

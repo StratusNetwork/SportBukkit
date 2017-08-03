@@ -173,7 +173,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtils.java b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtils.java
 new file mode 100644
-index 0000000..ef29a03
+index 00000000..ef29a034
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtils.java
 @@ -0,0 +1,42 @@

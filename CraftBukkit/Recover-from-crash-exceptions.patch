@@ -122,7 +122,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
              }
 diff --git a/src/main/java/org/bukkit/CraftLogging.java b/src/main/java/org/bukkit/CraftLogging.java
 new file mode 100644
-index 0000000..8d03955
+index 00000000..8d039557
 --- /dev/null
 +++ b/src/main/java/org/bukkit/CraftLogging.java
 @@ -0,0 +1,23 @@

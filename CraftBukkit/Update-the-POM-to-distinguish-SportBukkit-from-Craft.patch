@@ -65,6 +65,15 @@ diff --git a/pom.xml b/pom.xml
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
+@@ -36,7 +57,7 @@
+         <dependency>
+             <groupId>net.sf.jopt-simple</groupId>
+             <artifactId>jopt-simple</artifactId>
+-            <version>5.0.3</version>
++            <version>4.9</version>
+             <scope>compile</scope>
+         </dependency>
+         <dependency>
 @@ -46,17 +67,21 @@
              <scope>compile</scope>
          </dependency>
@@ -77,7 +86,8 @@ diff --git a/pom.xml b/pom.xml
 -        <dependency>
              <groupId>mysql</groupId>
              <artifactId>mysql-connector-java</artifactId>
-             <version>5.1.42</version>
+-            <version>5.1.42</version>
++            <version>5.1.39</version>
              <scope>compile</scope>
          </dependency>
 +        <dependency>
@@ -106,7 +116,15 @@ diff --git a/pom.xml b/pom.xml
      </dependencies>
  
      <!-- required until fixed plexus-compiler-eclipse is deployed -->
-@@ -181,17 +212,6 @@
+@@ -104,6 +135,7 @@
+                 <artifactId>maven-jar-plugin</artifactId>
+                 <version>3.0.2</version>
+                 <configuration>
++                    <forceCreation>true</forceCreation> <!-- Required to prevent shading the jar multiple times -->
+                     <archive>
+                         <manifestEntries>
+                             <Main-Class>org.bukkit.craftbukkit.Main</Main-Class>
+@@ -181,17 +213,6 @@
                                      <pattern>it.unimi</pattern>
                                      <shadedPattern>org.bukkit.craftbukkit.libs.it.unimi</shadedPattern>
                                  </relocation>

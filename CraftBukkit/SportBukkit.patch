@@ -196,65 +196,22 @@ diff --git a/src/main/java/net/minecraft/server/WorldNBTStorage.java b/src/main/
      public NBTTagCompound getPlayerData(String s) {
          try {
              File file1 = new File(this.playerDir, s + ".dat");
-diff --git a/src/main/java/org/bukkit/CraftLogging.java b/src/main/java/org/bukkit/CraftLogging.java
-deleted file mode 100644
-index 8d03955..0000000
+diff --git a/src/main/java/org/bukkit/CraftLogging.java b/src/main/java/org/bukkit/craftbukkit/CraftLogging.java
+similarity index 92%
+rename from src/main/java/org/bukkit/CraftLogging.java
+rename to src/main/java/org/bukkit/craftbukkit/CraftLogging.java
 --- a/src/main/java/org/bukkit/CraftLogging.java
-+++ /dev/null
-@@ -1,23 +0,0 @@
--package org.bukkit;
--
--import net.minecraft.server.CrashReport;
--import net.minecraft.server.CrashReportSystemDetails;
--
--import java.util.logging.Level;
--import java.util.logging.Logger;
--
--public class CraftLogging {
--
--    public static void crashReport(CrashReport report) {
--        crashReport(report, Bukkit.getLogger());
--    }
--
--    public static void crashReport(CrashReport report, Logger logger) {
--        final StringBuilder text = new StringBuilder();
--        for(CrashReportSystemDetails extra : report.extras()) {
--            extra.a(text);
--        }
--        report.details().a(text);
--        logger.log(Level.SEVERE, "Exception while " + report.activity() + "\n\n" + text, report.exception());
--    }
--}
-diff --git a/src/main/java/org/bukkit/craftbukkit/CraftLogging.java b/src/main/java/org/bukkit/craftbukkit/CraftLogging.java
-new file mode 100644
-index 0000000..e5a8d8c
---- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftLogging.java
-@@ -0,0 +1,24 @@
+@@ -1,7 +1,8 @@
+-package org.bukkit;
 +package org.bukkit.craftbukkit;
-+
-+import net.minecraft.server.CrashReport;
-+import net.minecraft.server.CrashReportSystemDetails;
+ 
+ import net.minecraft.server.CrashReport;
+ import net.minecraft.server.CrashReportSystemDetails;
 +import org.bukkit.Bukkit;
-+
-+import java.util.logging.Level;
-+import java.util.logging.Logger;
-+
-+public class CraftLogging {
-+
-+    public static void crashReport(CrashReport report) {
-+        crashReport(report, Bukkit.getLogger());
-+    }
-+
-+    public static void crashReport(CrashReport report, Logger logger) {
-+        final StringBuilder text = new StringBuilder();
-+        for(CrashReportSystemDetails extra : report.extras()) {
-+            extra.a(text);
-+        }
-+        report.details().a(text);
-+        logger.log(Level.SEVERE, "Exception while " + report.activity() + "\n\n" + text, report.exception());
-+    }
-+}
+ 
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java b/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java
@@ -322,7 +279,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java b/src/
          if (player != null) return player.getLastPlayed();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayerFactory.java b/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayerFactory.java
 new file mode 100644
-index 0000000..f763fab
+index 00000000..f763fab7
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayerFactory.java
 @@ -0,0 +1,54 @@
@@ -621,7 +578,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
          return players.toArray(new OfflinePlayer[players.size()]);
      }
  
-@@ -1888,6 +1880,11 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -1895,6 +1887,11 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      }
  
      @Override
@@ -635,7 +592,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServerModule.java b/src/main/java/org/bukkit/craftbukkit/CraftServerModule.java
 new file mode 100644
-index 0000000..8c1abdd
+index 00000000..8c1abddf
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServerModule.java
 @@ -0,0 +1,56 @@
@@ -697,7 +654,7 @@ index 0000000..8c1abdd
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftServerEventRegistry.java b/src/main/java/org/bukkit/craftbukkit/event/CraftServerEventRegistry.java
 new file mode 100644
-index 0000000..cdcb821
+index 00000000..cdcb8212
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftServerEventRegistry.java
 @@ -0,0 +1,17 @@
@@ -720,7 +677,7 @@ index 0000000..cdcb821
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/protocol/CraftServerPing.java b/src/main/java/org/bukkit/craftbukkit/protocol/CraftServerPing.java
 new file mode 100644
-index 0000000..c529dba
+index 00000000..c529dba1
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/protocol/CraftServerPing.java
 @@ -0,0 +1,31 @@
@@ -779,7 +736,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java 
      private static final int RECENT_TICKS;
 diff --git a/src/main/java/org/bukkit/craftbukkit/user/MojangUserSource.java b/src/main/java/org/bukkit/craftbukkit/user/MojangUserSource.java
 new file mode 100644
-index 0000000..6b1c1d6
+index 00000000..6b1c1d6e
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/user/MojangUserSource.java
 @@ -0,0 +1,69 @@
@@ -854,7 +811,7 @@ index 0000000..6b1c1d6
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/user/UserUpdateListener.java b/src/main/java/org/bukkit/craftbukkit/user/UserUpdateListener.java
 new file mode 100644
-index 0000000..496aeae
+index 00000000..496aeaeb
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/user/UserUpdateListener.java
 @@ -0,0 +1,39 @@

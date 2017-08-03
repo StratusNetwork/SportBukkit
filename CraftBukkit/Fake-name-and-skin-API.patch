@@ -756,7 +756,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Skins.java b/src/main/java/org/bukkit/craftbukkit/util/Skins.java
 new file mode 100644
-index 0000000..f2691b2
+index 00000000..43345fa5
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Skins.java
 @@ -0,0 +1,61 @@
@@ -785,9 +785,9 @@ index 0000000..f2691b2
 +        if(skin == null || skin.isEmpty()) return null;
 +
 +        if(skin.getSignature() != null) {
-+            return new Property("textures", "eyJ0aW1lc3RhbXAiOjE0OTI5MjY5NTk4NjEsInByb2ZpbGVJZCI6IjE3ZmVhZWM1OTYxNjQ5ZDhhNTA3ODMwMjYwNTBkZDhmIiwicHJvZmlsZU5hbWUiOiJTaGlueURpYWxnYSIsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9lMDgxYjVjMjAyMWQ5ZjlhZGM5YWJjODk5NDYwYzYyZmYyMmUyOWRlNjFhMjRlYzFhM2Q2NTQ4ZTVkMTUyNSJ9LCJDQVBFIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWM4MGEyMjViMTQ1YzgxMmE2ZWYxY2EyOWFmMGYzZWJmMDIxNjM4NzRkMWE2NmU1M2JhYzk5OTY1MjI1ZTAifX19", skin.getSignature());
++            return new Property("textures", skin.getData(), skin.getSignature());
 +        } else {
-+            return new Property("textures", "eyJ0aW1lc3RhbXAiOjE0OTI5MjY5NTk4NjEsInByb2ZpbGVJZCI6IjE3ZmVhZWM1OTYxNjQ5ZDhhNTA3ODMwMjYwNTBkZDhmIiwicHJvZmlsZU5hbWUiOiJTaGlueURpYWxnYSIsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9lMDgxYjVjMjAyMWQ5ZjlhZGM5YWJjODk5NDYwYzYyZmYyMmUyOWRlNjFhMjRlYzFhM2Q2NTQ4ZTVkMTUyNSJ9LCJDQVBFIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWM4MGEyMjViMTQ1YzgxMmE2ZWYxY2EyOWFmMGYzZWJmMDIxNjM4NzRkMWE2NmU1M2JhYzk5OTY1MjI1ZTAifX19");
++            return new Property("textures", skin.getData());
 +        }
 +    }
 +

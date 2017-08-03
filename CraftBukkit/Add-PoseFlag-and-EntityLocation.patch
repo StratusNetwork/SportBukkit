@@ -179,7 +179,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/
  import org.bukkit.craftbukkit.util.CraftChatMessage;
  import org.bukkit.entity.Player;
  import org.bukkit.event.player.PlayerChangedWorldEvent;
-@@ -729,6 +731,7 @@ public abstract class PlayerList {
+@@ -731,6 +733,7 @@ public abstract class PlayerList {
              this.savePlayerFile(entityplayer);
          }
          // CraftBukkit end
