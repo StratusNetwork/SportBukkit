@@ -17,7 +17,7 @@ diff --git a/src/main/java/net/minecraft/server/ChunkSection.java b/src/main/jav
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
-@@ -101,6 +101,14 @@ public class CraftChunk implements Chunk {
+@@ -103,6 +103,14 @@ public class CraftChunk implements Chunk {
          return blocks;
      }
  

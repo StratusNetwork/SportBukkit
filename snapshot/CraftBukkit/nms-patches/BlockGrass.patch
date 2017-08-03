@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/BlockGrass.java
 +++ b/net/minecraft/server/BlockGrass.java
-@@ -2,6 +2,14 @@
+@@ -2,13 +2,21 @@
  
  import java.util.Random;
  
@@ -15,6 +15,14 @@
  public class BlockGrass extends Block implements IBlockFragilePlantElement {
  
      public static final BlockStateBoolean SNOWY = BlockStateBoolean.of("snowy");
+ 
+     protected BlockGrass() {
+         super(Material.GRASS);
+-        this.w(this.blockStateList.getBlockData().set(BlockGrass.SNOWY, Boolean.valueOf(false)));
++        this.y(this.blockStateList.getBlockData().set(BlockGrass.SNOWY, Boolean.valueOf(false)));
+         this.a(true);
+         this.a(CreativeModeTab.b);
+     }
 @@ -22,7 +30,19 @@
      public void b(World world, BlockPosition blockposition, IBlockData iblockdata, Random random) {
          if (!world.isClientSide) {
@@ -57,6 +65,15 @@
                          }
                      }
                  }
+@@ -68,7 +100,7 @@
+             while (true) {
+                 if (j < i / 16) {
+                     blockposition2 = blockposition2.a(random.nextInt(3) - 1, (random.nextInt(3) - 1) * random.nextInt(3) / 2, random.nextInt(3) - 1);
+-                    if (world.getType(blockposition2.down()).getBlock() == Blocks.GRASS && !world.getType(blockposition2).l()) {
++                    if (world.getType(blockposition2.down()).getBlock() == Blocks.GRASS && !world.getType(blockposition2).m()) {
+                         ++j;
+                         continue;
+                     }
 @@ -79,13 +111,15 @@
                          IBlockData iblockdata1 = blockflowers.getBlockData().set(blockflowers.g(), blockflowers_enumflowervarient);
  

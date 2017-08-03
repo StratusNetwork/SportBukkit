@@ -6,7 +6,7 @@ Subject: [PATCH] Better handling of plugin startup errors
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -353,7 +353,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -359,7 +359,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
      }
  
      public void B() {
@@ -18,7 +18,7 @@ diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -122,7 +122,9 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -122,7 +122,9 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
      private static final int TICK_TIME = 1000000000 / TPS;
      private static final int SAMPLE_INTERVAL = 100;
      public final double[] recentTps = new double[ 3 ];
@@ -29,7 +29,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
  
      public MinecraftServer(OptionSet options, Proxy proxy, DataConverterManager dataconvertermanager, YggdrasilAuthenticationService yggdrasilauthenticationservice, MinecraftSessionService minecraftsessionservice, GameProfileRepository gameprofilerepository, UserCache usercache) {
          this.e = proxy;
-@@ -574,8 +576,10 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -574,8 +576,10 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
              } else {
                  // CraftBukkit - if init fails, stop the server
                  // this.a((CrashReport) null);
@@ -40,7 +40,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
              MinecraftServer.LOGGER.error("Encountered an unexpected exception", throwable);
              CrashReport crashreport = null;
  
-@@ -907,6 +911,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -909,6 +913,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
              // CraftBukkit end
          } catch (Exception exception) {
              MinecraftServer.LOGGER.fatal("Failed to start the minecraft server", exception);
@@ -51,7 +51,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -291,6 +291,12 @@ public final class CraftServer implements Server {
+@@ -292,6 +292,12 @@ public final class CraftServer implements Server {
          }
      }
  
@@ -64,7 +64,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      public void loadPlugins() {
          pluginManager.registerInterface(JavaPluginLoader.class);
  
-@@ -303,8 +309,9 @@ public final class CraftServer implements Server {
+@@ -304,8 +310,9 @@ public final class CraftServer implements Server {
                      String message = String.format("Loading %s", plugin.getDescription().getFullName());
                      plugin.getLogger().info(message);
                      plugin.onLoad();
@@ -75,7 +75,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
                  }
              }
          } else {
-@@ -361,9 +368,13 @@ public final class CraftServer implements Server {
+@@ -362,9 +369,13 @@ public final class CraftServer implements Server {
              }
  
              pluginManager.enablePlugin(plugin);
@@ -90,7 +90,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      }
  
      @Override
-@@ -533,6 +544,10 @@ public final class CraftServer implements Server {
+@@ -527,6 +538,10 @@ public final class CraftServer implements Server {
          return this.configuration.getBoolean("settings.query-plugins");
      }
  

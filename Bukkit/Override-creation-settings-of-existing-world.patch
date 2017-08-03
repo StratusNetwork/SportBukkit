@@ -6,7 +6,7 @@ Subject: [PATCH] Override creation settings of existing world
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -500,6 +500,14 @@ public final class Bukkit {
+@@ -485,6 +485,14 @@ public final class Bukkit {
          return server.getWorlds();
      }
  
@@ -24,7 +24,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -411,6 +411,29 @@ public interface Server extends PluginMessageRecipient {
+@@ -398,6 +398,29 @@ public interface Server extends PluginMessageRecipient {
      public List<World> getWorlds();
  
      /**

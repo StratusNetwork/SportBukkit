@@ -16,7 +16,7 @@
  
      public boolean a(InventoryCrafting inventorycrafting, World world) {
          ArrayList arraylist = Lists.newArrayList();
-@@ -62,7 +66,17 @@
+@@ -62,13 +66,27 @@
                      i1 = 0;
                  }
  
@@ -35,3 +35,31 @@
              }
          }
  
+         return ItemStack.a;
+     }
+ 
++    public int a() {
++        return 4;
++    }
++
+     public ItemStack b() {
+         return ItemStack.a;
+     }
+@@ -79,15 +97,11 @@
+         for (int i = 0; i < nonnulllist.size(); ++i) {
+             ItemStack itemstack = inventorycrafting.getItem(i);
+ 
+-            if (itemstack.getItem().r()) {
+-                nonnulllist.set(i, new ItemStack(itemstack.getItem().q()));
++            if (itemstack.getItem().s()) {
++                nonnulllist.set(i, new ItemStack(itemstack.getItem().r()));
+             }
+         }
+ 
+         return nonnulllist;
+     }
+-
+-    public boolean c() {
+-        return true;
+-    }
+ }

@@ -18,7 +18,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src
      private int currentTick;
      private boolean h;
      private BlockPosition i;
-@@ -241,6 +241,7 @@ public class PlayerInteractManager {
+@@ -239,6 +239,7 @@ public class PlayerInteractManager {
      public void e() {
          this.d = false;
          this.world.c(this.player.getId(), this.f, -1);
@@ -29,9 +29,9 @@ diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1900,4 +1900,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
-                                                              java.util.EnumSet.allOf(PacketPlayOutPosition.EnumPlayerTeleportFlags.class),
-                                                              cause);
+@@ -1878,4 +1878,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+                         java.util.EnumSet.allOf(PacketPlayOutPosition.EnumPlayerTeleportFlags.class),
+                         cause);
      }
 +
 +    @Override
@@ -48,7 +48,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 --- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-@@ -271,6 +271,14 @@ public class CraftEventFactory {
+@@ -273,6 +273,14 @@ public class CraftEventFactory {
          return event;
      }
  

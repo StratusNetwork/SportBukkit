@@ -5,7 +5,7 @@ import org.bukkit.event.HandlerList;
 
 /**
  * Fired when the server transitions to a suspended state, which can happen from an
- * explicit call to {@link org.bukkit.Server#setSuspended(boolean)}, or automatically
+ * explicit call to {@link Server#setSuspended(boolean)}, or automatically
  * due to {@link Server#getEmptyServerSuspendDelay()}.
  *
  * The suspension happens entirely within the event. A call to {@link #yield()}

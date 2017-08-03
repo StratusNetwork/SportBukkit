@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/ItemFishingRod.java
 +++ b/net/minecraft/server/ItemFishingRod.java
-@@ -1,5 +1,7 @@
+@@ -1,11 +1,13 @@
  package net.minecraft.server;
  
 +import org.bukkit.event.player.PlayerFishEvent; // CraftBukkit
@@ -8,18 +8,31 @@
  public class ItemFishingRod extends Item {
  
      public ItemFishingRod() {
-@@ -19,7 +21,6 @@
+         this.setMaxDurability(64);
+         this.d(1);
+-        this.b(CreativeModeTab.i);
++        this.a(CreativeModeTab.i);
+         this.a(new MinecraftKey("cast"), new IDynamicTexture() {
+         });
+     }
+@@ -18,9 +20,7 @@
+ 
              itemstack.damage(i, entityhuman);
              entityhuman.a(enumhand);
+-            world.a((EntityHuman) null, entityhuman.locX, entityhuman.locY, entityhuman.locZ, SoundEffects.J, SoundCategory.NEUTRAL, 1.0F, 0.4F / (ItemFishingRod.j.nextFloat() * 0.4F + 0.8F));
          } else {
--            world.a((EntityHuman) null, entityhuman.locX, entityhuman.locY, entityhuman.locZ, SoundEffects.I, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemFishingRod.j.nextFloat() * 0.4F + 0.8F));
+-            world.a((EntityHuman) null, entityhuman.locX, entityhuman.locY, entityhuman.locZ, SoundEffects.L, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemFishingRod.j.nextFloat() * 0.4F + 0.8F));
              if (!world.isClientSide) {
                  EntityFishingHook entityfishinghook = new EntityFishingHook(world, entityhuman);
                  int j = EnchantmentManager.c(itemstack);
-@@ -34,6 +35,17 @@
-                     entityfishinghook.b(k);
-                 }
+@@ -32,8 +32,19 @@
+                 int k = EnchantmentManager.b(itemstack);
  
+                 if (k > 0) {
+-                    entityfishinghook.c(k);
++                    entityfishinghook.b(k);
++                }
++
 +                // CraftBukkit start
 +                PlayerFishEvent playerFishEvent = new PlayerFishEvent((org.bukkit.entity.Player) entityhuman.getBukkitEntity(), null, (org.bukkit.entity.Fish) entityfishinghook.getBukkitEntity(), PlayerFishEvent.State.FISHING);
 +                world.getServer().getPluginManager().callEvent(playerFishEvent);
@@ -27,10 +40,9 @@
 +                if (playerFishEvent.isCancelled()) {
 +                    entityhuman.hookedFish = null;
 +                    return new InteractionResultWrapper(EnumInteractionResult.PASS, itemstack);
-+                }
+                 }
 +                world.a((EntityHuman) null, entityhuman.locX, entityhuman.locY, entityhuman.locZ, SoundEffects.I, SoundCategory.NEUTRAL, 0.5F, 0.4F / (ItemFishingRod.j.nextFloat() * 0.4F + 0.8F));
 +                // CraftBukkit end
-+
+ 
                  world.addEntity(entityfishinghook);
              }
- 

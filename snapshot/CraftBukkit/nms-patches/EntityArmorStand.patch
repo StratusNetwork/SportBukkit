@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityArmorStand.java
 +++ b/net/minecraft/server/EntityArmorStand.java
-@@ -5,6 +5,15 @@
+@@ -5,14 +5,23 @@
  import java.util.List;
  import javax.annotation.Nullable;
  
@@ -15,10 +15,281 @@
 +
  public class EntityArmorStand extends EntityLiving {
  
-     private static final Vector3f bq = new Vector3f(0.0F, 0.0F, 0.0F);
-@@ -364,6 +373,21 @@
-         if (itemstack1.isEmpty() || (this.bA & 1 << enumitemslot.c() + 8) == 0) {
-             if (!itemstack1.isEmpty() || (this.bA & 1 << enumitemslot.c() + 16) == 0) {
++    private static final Vector3f bq = new Vector3f(0.0F, 0.0F, 0.0F);
+     private static final Vector3f br = new Vector3f(0.0F, 0.0F, 0.0F);
+-    private static final Vector3f bs = new Vector3f(0.0F, 0.0F, 0.0F);
+-    private static final Vector3f bt = new Vector3f(-10.0F, 0.0F, -10.0F);
+-    private static final Vector3f bu = new Vector3f(-15.0F, 0.0F, 10.0F);
+-    private static final Vector3f bv = new Vector3f(-1.0F, 0.0F, -1.0F);
+-    private static final Vector3f bw = new Vector3f(1.0F, 0.0F, 1.0F);
++    private static final Vector3f bs = new Vector3f(-10.0F, 0.0F, -10.0F);
++    private static final Vector3f bt = new Vector3f(-15.0F, 0.0F, 10.0F);
++    private static final Vector3f bu = new Vector3f(-1.0F, 0.0F, -1.0F);
++    private static final Vector3f bv = new Vector3f(1.0F, 0.0F, 1.0F);
+     public static final DataWatcherObject<Byte> a = DataWatcher.a(EntityArmorStand.class, DataWatcherRegistry.a);
+     public static final DataWatcherObject<Vector3f> b = DataWatcher.a(EntityArmorStand.class, DataWatcherRegistry.i);
+     public static final DataWatcherObject<Vector3f> c = DataWatcher.a(EntityArmorStand.class, DataWatcherRegistry.i);
+@@ -20,7 +29,7 @@
+     public static final DataWatcherObject<Vector3f> e = DataWatcher.a(EntityArmorStand.class, DataWatcherRegistry.i);
+     public static final DataWatcherObject<Vector3f> f = DataWatcher.a(EntityArmorStand.class, DataWatcherRegistry.i);
+     public static final DataWatcherObject<Vector3f> g = DataWatcher.a(EntityArmorStand.class, DataWatcherRegistry.i);
+-    private static final Predicate<Entity> bx = new Predicate() {
++    private static final Predicate<Entity> bw = new Predicate() {
+         public boolean a(@Nullable Entity entity) {
+             return entity instanceof EntityMinecartAbstract && ((EntityMinecartAbstract) entity).v() == EntityMinecartAbstract.EnumMinecartType.RIDEABLE;
+         }
+@@ -29,12 +38,12 @@
+             return this.a((Entity) object);
+         }
+     };
++    private final NonNullList<ItemStack> bx;
+     private final NonNullList<ItemStack> by;
+-    private final NonNullList<ItemStack> bz;
+-    private boolean bA;
++    private boolean bz;
+     public long h;
+-    private int bB;
+-    private boolean bC;
++    private int bA;
++    private boolean bB;
+     public Vector3f headPose;
+     public Vector3f bodyPose;
+     public Vector3f leftArmPose;
+@@ -44,14 +53,14 @@
+ 
+     public EntityArmorStand(World world) {
+         super(world);
+-        this.by = NonNullList.a(2, ItemStack.a);
+-        this.bz = NonNullList.a(4, ItemStack.a);
+-        this.headPose = EntityArmorStand.br;
+-        this.bodyPose = EntityArmorStand.bs;
+-        this.leftArmPose = EntityArmorStand.bt;
+-        this.rightArmPose = EntityArmorStand.bu;
+-        this.leftLegPose = EntityArmorStand.bv;
+-        this.rightLegPose = EntityArmorStand.bw;
++        this.bx = NonNullList.a(2, ItemStack.a);
++        this.by = NonNullList.a(4, ItemStack.a);
++        this.headPose = EntityArmorStand.bq;
++        this.bodyPose = EntityArmorStand.br;
++        this.leftArmPose = EntityArmorStand.bs;
++        this.rightArmPose = EntityArmorStand.bt;
++        this.leftLegPose = EntityArmorStand.bu;
++        this.rightLegPose = EntityArmorStand.bv;
+         this.noclip = this.isNoGravity();
+         this.setSize(0.5F, 1.975F);
+     }
+@@ -71,36 +80,36 @@
+         this.setPosition(d0, d1, d2);
+     }
+ 
+-    public boolean cA() {
+-        return super.cA() && !this.isNoGravity();
++    public boolean cu() {
++        return super.cu() && !this.isNoGravity();
+     }
+ 
+     protected void i() {
+         super.i();
+         this.datawatcher.register(EntityArmorStand.a, Byte.valueOf((byte) 0));
+-        this.datawatcher.register(EntityArmorStand.b, EntityArmorStand.br);
+-        this.datawatcher.register(EntityArmorStand.c, EntityArmorStand.bs);
+-        this.datawatcher.register(EntityArmorStand.d, EntityArmorStand.bt);
+-        this.datawatcher.register(EntityArmorStand.e, EntityArmorStand.bu);
+-        this.datawatcher.register(EntityArmorStand.f, EntityArmorStand.bv);
+-        this.datawatcher.register(EntityArmorStand.g, EntityArmorStand.bw);
++        this.datawatcher.register(EntityArmorStand.b, EntityArmorStand.bq);
++        this.datawatcher.register(EntityArmorStand.c, EntityArmorStand.br);
++        this.datawatcher.register(EntityArmorStand.d, EntityArmorStand.bs);
++        this.datawatcher.register(EntityArmorStand.e, EntityArmorStand.bt);
++        this.datawatcher.register(EntityArmorStand.f, EntityArmorStand.bu);
++        this.datawatcher.register(EntityArmorStand.g, EntityArmorStand.bv);
+     }
+ 
+-    public Iterable<ItemStack> aM() {
+-        return this.by;
++    public Iterable<ItemStack> aG() {
++        return this.bx;
+     }
+ 
+     public Iterable<ItemStack> getArmorItems() {
+-        return this.bz;
++        return this.by;
+     }
+ 
+     public ItemStack getEquipment(EnumItemSlot enumitemslot) {
+         switch (enumitemslot.a()) {
+         case HAND:
+-            return (ItemStack) this.by.get(enumitemslot.b());
++            return (ItemStack) this.bx.get(enumitemslot.b());
+ 
+         case ARMOR:
+-            return (ItemStack) this.bz.get(enumitemslot.b());
++            return (ItemStack) this.by.get(enumitemslot.b());
+ 
+         default:
+             return ItemStack.a;
+@@ -111,12 +120,12 @@
+         switch (enumitemslot.a()) {
+         case HAND:
+             this.a_(itemstack);
+-            this.by.set(enumitemslot.b(), itemstack);
++            this.bx.set(enumitemslot.b(), itemstack);
+             break;
+ 
+         case ARMOR:
+             this.a_(itemstack);
+-            this.bz.set(enumitemslot.b(), itemstack);
++            this.by.set(enumitemslot.b(), itemstack);
+         }
+ 
+     }
+@@ -160,7 +169,7 @@
+ 
+         NBTTagCompound nbttagcompound1;
+ 
+-        for (Iterator iterator = this.bz.iterator(); iterator.hasNext(); nbttaglist.add(nbttagcompound1)) {
++        for (Iterator iterator = this.by.iterator(); iterator.hasNext(); nbttaglist.add(nbttagcompound1)) {
+             ItemStack itemstack = (ItemStack) iterator.next();
+ 
+             nbttagcompound1 = new NBTTagCompound();
+@@ -174,7 +183,7 @@
+ 
+         NBTTagCompound nbttagcompound2;
+ 
+-        for (Iterator iterator1 = this.by.iterator(); iterator1.hasNext(); nbttaglist1.add(nbttagcompound2)) {
++        for (Iterator iterator1 = this.bx.iterator(); iterator1.hasNext(); nbttaglist1.add(nbttagcompound2)) {
+             ItemStack itemstack1 = (ItemStack) iterator1.next();
+ 
+             nbttagcompound2 = new NBTTagCompound();
+@@ -187,7 +196,7 @@
+         nbttagcompound.setBoolean("Invisible", this.isInvisible());
+         nbttagcompound.setBoolean("Small", this.isSmall());
+         nbttagcompound.setBoolean("ShowArms", this.hasArms());
+-        nbttagcompound.setInt("DisabledSlots", this.bB);
++        nbttagcompound.setInt("DisabledSlots", this.bA);
+         nbttagcompound.setBoolean("NoBasePlate", this.hasBasePlate());
+         if (this.isMarker()) {
+             nbttagcompound.setBoolean("Marker", this.isMarker());
+@@ -204,26 +213,26 @@
+         if (nbttagcompound.hasKeyOfType("ArmorItems", 9)) {
+             nbttaglist = nbttagcompound.getList("ArmorItems", 10);
+ 
+-            for (i = 0; i < this.bz.size(); ++i) {
+-                this.bz.set(i, new ItemStack(nbttaglist.get(i)));
++            for (i = 0; i < this.by.size(); ++i) {
++                this.by.set(i, new ItemStack(nbttaglist.get(i)));
+             }
+         }
+ 
+         if (nbttagcompound.hasKeyOfType("HandItems", 9)) {
+             nbttaglist = nbttagcompound.getList("HandItems", 10);
+ 
+-            for (i = 0; i < this.by.size(); ++i) {
+-                this.by.set(i, new ItemStack(nbttaglist.get(i)));
++            for (i = 0; i < this.bx.size(); ++i) {
++                this.bx.set(i, new ItemStack(nbttaglist.get(i)));
+             }
+         }
+ 
+         this.setInvisible(nbttagcompound.getBoolean("Invisible"));
+         this.setSmall(nbttagcompound.getBoolean("Small"));
+         this.setArms(nbttagcompound.getBoolean("ShowArms"));
+-        this.bB = nbttagcompound.getInt("DisabledSlots");
++        this.bA = nbttagcompound.getInt("DisabledSlots");
+         this.setBasePlate(nbttagcompound.getBoolean("NoBasePlate"));
+         this.setMarker(nbttagcompound.getBoolean("Marker"));
+-        this.bC = !this.isMarker();
++        this.bB = !this.isMarker();
+         this.noclip = this.isNoGravity();
+         NBTTagCompound nbttagcompound1 = nbttagcompound.getCompound("Pose");
+ 
+@@ -233,48 +242,48 @@
+     private void g(NBTTagCompound nbttagcompound) {
+         NBTTagList nbttaglist = nbttagcompound.getList("Head", 5);
+ 
+-        this.setHeadPose(nbttaglist.isEmpty() ? EntityArmorStand.br : new Vector3f(nbttaglist));
++        this.setHeadPose(nbttaglist.isEmpty() ? EntityArmorStand.bq : new Vector3f(nbttaglist));
+         NBTTagList nbttaglist1 = nbttagcompound.getList("Body", 5);
+ 
+-        this.setBodyPose(nbttaglist1.isEmpty() ? EntityArmorStand.bs : new Vector3f(nbttaglist1));
++        this.setBodyPose(nbttaglist1.isEmpty() ? EntityArmorStand.br : new Vector3f(nbttaglist1));
+         NBTTagList nbttaglist2 = nbttagcompound.getList("LeftArm", 5);
+ 
+-        this.setLeftArmPose(nbttaglist2.isEmpty() ? EntityArmorStand.bt : new Vector3f(nbttaglist2));
++        this.setLeftArmPose(nbttaglist2.isEmpty() ? EntityArmorStand.bs : new Vector3f(nbttaglist2));
+         NBTTagList nbttaglist3 = nbttagcompound.getList("RightArm", 5);
+ 
+-        this.setRightArmPose(nbttaglist3.isEmpty() ? EntityArmorStand.bu : new Vector3f(nbttaglist3));
++        this.setRightArmPose(nbttaglist3.isEmpty() ? EntityArmorStand.bt : new Vector3f(nbttaglist3));
+         NBTTagList nbttaglist4 = nbttagcompound.getList("LeftLeg", 5);
+ 
+-        this.setLeftLegPose(nbttaglist4.isEmpty() ? EntityArmorStand.bv : new Vector3f(nbttaglist4));
++        this.setLeftLegPose(nbttaglist4.isEmpty() ? EntityArmorStand.bu : new Vector3f(nbttaglist4));
+         NBTTagList nbttaglist5 = nbttagcompound.getList("RightLeg", 5);
+ 
+-        this.setRightLegPose(nbttaglist5.isEmpty() ? EntityArmorStand.bw : new Vector3f(nbttaglist5));
++        this.setRightLegPose(nbttaglist5.isEmpty() ? EntityArmorStand.bv : new Vector3f(nbttaglist5));
+     }
+ 
+     private NBTTagCompound C() {
+         NBTTagCompound nbttagcompound = new NBTTagCompound();
+ 
+-        if (!EntityArmorStand.br.equals(this.headPose)) {
++        if (!EntityArmorStand.bq.equals(this.headPose)) {
+             nbttagcompound.set("Head", this.headPose.a());
+         }
+ 
+-        if (!EntityArmorStand.bs.equals(this.bodyPose)) {
++        if (!EntityArmorStand.br.equals(this.bodyPose)) {
+             nbttagcompound.set("Body", this.bodyPose.a());
+         }
+ 
+-        if (!EntityArmorStand.bt.equals(this.leftArmPose)) {
++        if (!EntityArmorStand.bs.equals(this.leftArmPose)) {
+             nbttagcompound.set("LeftArm", this.leftArmPose.a());
+         }
+ 
+-        if (!EntityArmorStand.bu.equals(this.rightArmPose)) {
++        if (!EntityArmorStand.bt.equals(this.rightArmPose)) {
+             nbttagcompound.set("RightArm", this.rightArmPose.a());
+         }
+ 
+-        if (!EntityArmorStand.bv.equals(this.leftLegPose)) {
++        if (!EntityArmorStand.bu.equals(this.leftLegPose)) {
+             nbttagcompound.set("LeftLeg", this.leftLegPose.a());
+         }
+ 
+-        if (!EntityArmorStand.bw.equals(this.rightLegPose)) {
++        if (!EntityArmorStand.bv.equals(this.rightLegPose)) {
+             nbttagcompound.set("RightLeg", this.rightLegPose.a());
+         }
+ 
+@@ -287,8 +296,8 @@
+ 
+     protected void C(Entity entity) {}
+ 
+-    protected void cz() {
+-        List list = this.world.getEntities(this, this.getBoundingBox(), EntityArmorStand.bx);
++    protected void ct() {
++        List list = this.world.getEntities(this, this.getBoundingBox(), EntityArmorStand.bw);
+ 
+         for (int i = 0; i < list.size(); ++i) {
+             Entity entity = (Entity) list.get(i);
+@@ -355,15 +364,30 @@
+     }
+ 
+     private boolean c(EnumItemSlot enumitemslot) {
+-        return (this.bB & 1 << enumitemslot.c()) != 0;
++        return (this.bA & 1 << enumitemslot.c()) != 0;
+     }
+ 
+     private void a(EntityHuman entityhuman, EnumItemSlot enumitemslot, ItemStack itemstack, EnumHand enumhand) {
+         ItemStack itemstack1 = this.getEquipment(enumitemslot);
+ 
+-        if (itemstack1.isEmpty() || (this.bB & 1 << enumitemslot.c() + 8) == 0) {
+-            if (!itemstack1.isEmpty() || (this.bB & 1 << enumitemslot.c() + 16) == 0) {
++        if (itemstack1.isEmpty() || (this.bA & 1 << enumitemslot.c() + 8) == 0) {
++            if (!itemstack1.isEmpty() || (this.bA & 1 << enumitemslot.c() + 16) == 0) {
                  ItemStack itemstack2;
 +                // CraftBukkit start
 +                org.bukkit.inventory.ItemStack armorStandItem = CraftItemStack.asCraftMirror(itemstack1);
@@ -52,17 +323,22 @@
 -                this.die();
 +                this.Q(); // CraftBukkit - this.die() -> this.Q()
                  return false;
-             } else if (!this.isInvulnerable(damagesource) && !this.bz && !this.isMarker()) {
+-            } else if (!this.isInvulnerable(damagesource) && !this.bA && !this.isMarker()) {
++            } else if (!this.isInvulnerable(damagesource) && !this.bz && !this.isMarker()) {
                  if (damagesource.isExplosion()) {
-                     this.G();
+-                    this.F();
 -                    this.die();
++                    this.G();
 +                    this.Q(); // CraftBukkit - this.die() -> this.Q()
                      return false;
                  } else if (DamageSource.FIRE.equals(damagesource)) {
                      if (this.isBurning()) {
-@@ -421,7 +450,7 @@
+@@ -419,9 +448,9 @@
+                         if (damagesource.getEntity() instanceof EntityHuman && !((EntityHuman) damagesource.getEntity()).abilities.mayBuild) {
+                             return false;
                          } else if (damagesource.u()) {
-                             this.I();
+-                            this.H();
++                            this.I();
                              this.D();
 -                            this.die();
 +                            this.Q(); // CraftBukkit - this.die() -> this.Q()
@@ -78,11 +354,13 @@
                              }
  
                              return false;
-@@ -460,19 +489,19 @@
+@@ -459,48 +488,48 @@
+ 
          f1 -= f;
          if (f1 <= 0.5F) {
-             this.G();
+-            this.F();
 -            this.die();
++            this.G();
 +            this.Q(); // CraftBukkit - this.die() -> this.Q()
          } else {
              this.setHealth(f1);
@@ -92,41 +370,165 @@
  
 -    private void E() {
 -        Block.a(this.world, new BlockPosition(this), new ItemStack(Items.ARMOR_STAND));
+-        this.F();
 +    private void E() { // PAIL: Rename dropLoot
 +        drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(new ItemStack(Items.ARMOR_STAND))); // CraftBukkit - add to drops
-         this.G();
++        this.G();
      }
  
--    private void G() {
+-    private void F() {
+-        this.H();
 +    private void G() { // PAIL: Rename dropEquippedItems
-         this.I();
++        this.I();
  
          int i;
-@@ -481,7 +510,7 @@
-         for (i = 0; i < this.bx.size(); ++i) {
-             itemstack = (ItemStack) this.bx.get(i);
+         ItemStack itemstack;
+ 
+-        for (i = 0; i < this.by.size(); ++i) {
+-            itemstack = (ItemStack) this.by.get(i);
++        for (i = 0; i < this.bx.size(); ++i) {
++            itemstack = (ItemStack) this.bx.get(i);
              if (!itemstack.isEmpty()) {
 -                Block.a(this.world, (new BlockPosition(this)).up(), itemstack);
+-                this.by.set(i, ItemStack.a);
 +                drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(itemstack)); // CraftBukkit - add to drops
-                 this.bx.set(i, ItemStack.a);
++                this.bx.set(i, ItemStack.a);
              }
          }
-@@ -489,7 +518,7 @@
-         for (i = 0; i < this.by.size(); ++i) {
-             itemstack = (ItemStack) this.by.get(i);
+ 
+-        for (i = 0; i < this.bz.size(); ++i) {
+-            itemstack = (ItemStack) this.bz.get(i);
++        for (i = 0; i < this.by.size(); ++i) {
++            itemstack = (ItemStack) this.by.get(i);
              if (!itemstack.isEmpty()) {
 -                Block.a(this.world, (new BlockPosition(this)).up(), itemstack);
+-                this.bz.set(i, ItemStack.a);
 +                drops.add(org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(itemstack)); // CraftBukkit - add to drops
-                 this.by.set(i, ItemStack.a);
++                this.by.set(i, ItemStack.a);
              }
          }
-@@ -600,7 +629,8 @@
+ 
+     }
+ 
+-    private void H() {
+-        this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, SoundEffects.j, this.bI(), 1.0F, 1.0F);
++    private void I() {
++        this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, SoundEffects.j, this.bC(), 1.0F, 1.0F);
+     }
+ 
+-    protected float g(float f, float f1) {
++    protected float h(float f, float f1) {
+         this.aO = this.lastYaw;
+         this.aN = this.yaw;
+         return 0.0F;
+@@ -510,28 +539,28 @@
+         return this.isBaby() ? this.length * 0.5F : this.length * 0.9F;
+     }
+ 
+-    public double aD() {
++    public double ax() {
+         return this.isMarker() ? 0.0D : 0.10000000149011612D;
+     }
+ 
+-    public void a(float f, float f1, float f2) {
++    public void g(float f, float f1) {
+         if (!this.isNoGravity()) {
+-            super.a(f, f1, f2);
++            super.g(f, f1);
+         }
+     }
+ 
+-    public void j(float f) {
++    public void i(float f) {
+         this.aO = this.lastYaw = f;
+         this.aQ = this.aP = f;
+     }
+ 
+-    public void setHeadRotation(float f) {
++    public void h(float f) {
+         this.aO = this.lastYaw = f;
+         this.aQ = this.aP = f;
+     }
+ 
+-    public void B_() {
+-        super.B_();
++    public void A_() {
++        super.A_();
+         Vector3f vector3f = (Vector3f) this.datawatcher.get(EntityArmorStand.b);
+ 
+         if (!this.headPose.equals(vector3f)) {
+@@ -570,10 +599,10 @@
+ 
+         boolean flag = this.isMarker();
+ 
+-        if (this.bC != flag) {
++        if (this.bB != flag) {
+             this.a(flag);
+             this.i = !flag;
+-            this.bC = flag;
++            this.bB = flag;
+         }
+ 
+     }
+@@ -587,12 +616,12 @@
+ 
+     }
+ 
+-    protected void G() {
+-        this.setInvisible(this.bA);
++    protected void F() {
++        this.setInvisible(this.bz);
+     }
+ 
+     public void setInvisible(boolean flag) {
+-        this.bA = flag;
++        this.bz = flag;
+         super.setInvisible(flag);
+     }
+ 
+@@ -600,11 +629,12 @@
          return this.isSmall();
      }
  
--    public void Q() {
+-    public void killEntity() {
 +    public void Q() { // PAIL: Rename killEntity (super)
 +        org.bukkit.craftbukkit.event.CraftEventFactory.callEntityDeathEvent(this, drops); // CraftBukkit - call event
          this.die();
      }
  
+-    public boolean bz() {
++    public boolean bt() {
+         return this.isInvisible();
+     }
+ 
+@@ -707,18 +737,18 @@
+     }
+ 
+     @Nullable
+-    protected SoundEffect d(DamageSource damagesource) {
++    protected SoundEffect bW() {
+         return SoundEffects.l;
+     }
+ 
+     @Nullable
+-    protected SoundEffect cd() {
++    protected SoundEffect bX() {
+         return SoundEffects.j;
+     }
+ 
+     public void onLightningStrike(EntityLightning entitylightning) {}
+ 
+-    public boolean cP() {
++    public boolean cJ() {
+         return false;
+     }
+ 
+@@ -730,7 +760,7 @@
+         super.a(datawatcherobject);
+     }
+ 
+-    public boolean cQ() {
++    public boolean cK() {
+         return false;
+     }
+ }

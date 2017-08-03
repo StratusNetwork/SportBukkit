@@ -26,7 +26,7 @@ diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/m
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -843,6 +843,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -843,6 +843,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
  
              // if (i == 0 || this.getAllowNether()) {
                  WorldServer worldserver = this.worlds.get(i);
@@ -37,7 +37,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -593,6 +593,16 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -563,6 +563,16 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      }
  
      @Override
@@ -57,7 +57,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -96,6 +96,40 @@ public class CraftWorld implements World {
+@@ -93,6 +93,40 @@ public class CraftWorld implements World {
          if (server.chunkGCPeriod > 0) {
              chunkGCTickCount = rand.nextInt(server.chunkGCPeriod);
          }
@@ -98,7 +98,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/jav
      }
  
      @Override
-@@ -219,6 +253,11 @@ public class CraftWorld implements World {
+@@ -216,6 +250,11 @@ public class CraftWorld implements World {
          return world.getChunkProviderServer().unloadChunk(chunk, chunk.mustSave || save);
      }
  

@@ -6,7 +6,7 @@ Subject: [PATCH] Server suspend API
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -275,6 +275,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -281,6 +281,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
                      thread1.setName("Server Watchdog");
                      thread1.setDaemon(true);
                      thread1.start();
@@ -14,7 +14,7 @@ diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/
                  }
  
                  return true;
-@@ -381,6 +382,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -387,6 +388,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
  
      public void issueCommand(String s, ICommandListener icommandlistener) {
          this.serverCommandQueue.add(new ServerCommand(s, icommandlistener));
@@ -34,8 +34,8 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
 +import org.bukkit.event.server.ServerSuspendEvent;
  // SportBukkit end
  
- public abstract class MinecraftServer implements Runnable, ICommandListener, IAsyncTaskHandler, IMojangStatistics {
-@@ -132,6 +135,13 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+ public abstract class MinecraftServer implements ICommandListener, Runnable, IAsyncTaskHandler, IMojangStatistics {
+@@ -132,6 +135,13 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
      protected boolean abnormalTermination;
      // Sportbukkit end
  
@@ -49,7 +49,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
      public MinecraftServer(OptionSet options, Proxy proxy, DataConverterManager dataconvertermanager, YggdrasilAuthenticationService yggdrasilauthenticationservice, MinecraftSessionService minecraftsessionservice, GameProfileRepository gameprofilerepository, UserCache usercache) {
          this.e = proxy;
          this.V = yggdrasilauthenticationservice;
-@@ -534,9 +544,83 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -534,9 +544,83 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
  
      public void safeShutdown() {
          this.isRunning = false;
@@ -115,7 +115,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
 +                setLastTickStart(realTimeMillis());
 +                server.getLogger().info("Resuming server");
 +            });
-+            return true;
++                      return true;
 +        }
 +        return false;
 +    }
@@ -134,7 +134,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
      private static double calcTps(double avg, double exp, double tps)
      {
          return ( avg * exp ) + ( tps * ( 1 - exp ) );
-@@ -552,18 +636,22 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -552,18 +636,22 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
  
                  // SportBukkit start
                  Arrays.fill( recentTps, 20 );
@@ -163,7 +163,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
                      }
  
                      if ( MinecraftServer.currentTick++ % SAMPLE_INTERVAL == 0 )
-@@ -718,6 +806,8 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -718,6 +806,8 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
  
          // SportBukkit start - don't lock the task queue while running tasks
          processTasks();
@@ -172,7 +172,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
          /*
          synchronized (this.j) {
              while (!this.j.isEmpty()) {
-@@ -1465,6 +1555,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -1445,6 +1535,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
  
              synchronized (this.j) {
                  this.j.add(listenablefuturetask);
@@ -180,7 +180,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
                  return listenablefuturetask;
              }
          } else {
-@@ -1498,6 +1589,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -1478,6 +1569,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
                  taskQueue.addLast(task);
              }
          }
@@ -206,7 +206,7 @@ diff --git a/src/main/java/net/minecraft/server/ThreadWatchdog.java b/src/main/j
 --- a/src/main/java/net/minecraft/server/ThreadWatchdog.java
 +++ b/src/main/java/net/minecraft/server/ThreadWatchdog.java
 @@ -22,8 +22,17 @@ public class ThreadWatchdog implements Runnable {
-         this.c = dedicatedserver.aQ();
+         this.c = dedicatedserver.aT();
      }
  
 +    // SportBukkit start
@@ -235,33 +235,33 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  import java.util.ArrayList;
  import java.util.Arrays;
  import java.util.Collections;
-@@ -20,7 +22,7 @@ import java.util.UUID;
- import java.util.logging.Level;
+@@ -21,6 +23,7 @@ import java.util.logging.Level;
  import java.util.logging.Logger;
  import java.util.regex.Pattern;
--
+ 
 +import javax.annotation.Nullable;
  import javax.imageio.ImageIO;
  
- import com.google.common.collect.Maps;
-@@ -140,6 +142,7 @@ import io.netty.handler.codec.base64.Base64;
+ import com.google.common.collect.*;
+@@ -117,6 +120,7 @@ import io.netty.buffer.Unpooled;
+ import io.netty.handler.codec.base64.Base64;
  import jline.console.ConsoleReader;
  import org.bukkit.event.server.TabCompleteEvent;
- import net.md_5.bungee.api.chat.BaseComponent;
 +import tc.oc.minecraft.api.configuration.InvalidConfigurationException;
  import tc.oc.minecraft.api.plugin.PluginFinder;
  
  public final class CraftServer extends CraftBukkitRuntime implements Server {
-@@ -191,6 +194,8 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -168,6 +172,9 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      public boolean bungee = false;
      public static final com.google.gson.Gson gson = new com.google.gson.Gson();
  
-+    private @Nullable Instant emptySince;
++    private @Nullable
++    Instant emptySince;
 +
      private final class BooleanWrapper {
          private boolean value = true;
      }
-@@ -202,7 +207,15 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -179,7 +186,14 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
  
      public CraftServer(MinecraftServer console, PlayerList playerList) {
          this.console = console;
@@ -274,15 +274,15 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
 +                console.addMainThreadTask(task);
 +            }
 +        });
-+
          this.playerList = (DedicatedPlayerList) playerList;
          this.playerView = Collections.unmodifiableList(Lists.transform(playerList.players, EntityPlayer::getBukkitEntity));
          this.playersById = Collections.unmodifiableMap(Maps.transformValues(playerList.playersById(), EntityPlayer::getBukkitEntity));
-@@ -661,6 +674,16 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -631,6 +645,17 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      }
  
      @Override
-+    public @Nullable Duration getEmptyServerSuspendDelay() {
++    public @Nullable
++    Duration getEmptyServerSuspendDelay() {
 +        try {
 +            return this.configuration.getDuration("settings.empty-server-suspend");
 +        } catch(InvalidConfigurationException e) {
@@ -295,7 +295,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      public PluginManager getPluginManager() {
          return pluginManager;
      }
-@@ -1897,4 +1920,53 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -1891,4 +1916,53 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
  
          return task instanceof Wrapped ? task : new Wrapped();
      }

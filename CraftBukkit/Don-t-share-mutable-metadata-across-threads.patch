@@ -6,9 +6,9 @@ Subject: [PATCH] Don't share mutable metadata across threads
 diff --git a/src/main/java/net/minecraft/server/DataWatcher.java b/src/main/java/net/minecraft/server/DataWatcher.java
 --- a/src/main/java/net/minecraft/server/DataWatcher.java
 +++ b/src/main/java/net/minecraft/server/DataWatcher.java
-@@ -303,5 +303,30 @@ public class DataWatcher {
-         public void a(boolean flag) {
-             this.c = flag;
+@@ -307,5 +307,30 @@ public class DataWatcher {
+         public DataWatcher.Item<T> d() {
+             return new DataWatcher.Item(this.a, this.a.b().a(this.b));
          }
 +
 +        // SportBukkit start - Make an independent copy of the item
@@ -40,11 +40,10 @@ diff --git a/src/main/java/net/minecraft/server/DataWatcher.java b/src/main/java
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java b/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java
 --- a/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java
-@@ -20,7 +20,7 @@ public class PacketPlayOutEntityMetadata implements Packet<PacketListenerPlayOut
-         } else {
+@@ -21,6 +21,7 @@ public class PacketPlayOutEntityMetadata implements Packet<PacketListenerPlayOut
              this.b = datawatcher.b();
          }
--
+ 
 +        DataWatcher.deepCopy(this.b); // SportBukkit - send unshared copy of metadata
      }
  

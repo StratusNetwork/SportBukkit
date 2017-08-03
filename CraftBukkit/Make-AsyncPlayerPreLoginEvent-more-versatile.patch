@@ -6,9 +6,9 @@ Subject: [PATCH] Make AsyncPlayerPreLoginEvent more versatile
 diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/java/net/minecraft/server/LoginListener.java
 --- a/src/main/java/net/minecraft/server/LoginListener.java
 +++ b/src/main/java/net/minecraft/server/LoginListener.java
-@@ -72,6 +72,12 @@ public class LoginListener implements PacketLoginInListener, ITickable {
-     }
- 
+@@ -74,6 +74,12 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+     // CraftBukkit start
+     @Deprecated
      public void disconnect(String s) {
 +        // SportBukkit start - postpone disconnect until after pre-login event
 +        if(!this.preLoginEventFired) {
@@ -17,9 +17,9 @@ diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/ja
 +        }
 +        // SportBukkit end
          try {
-             LoginListener.c.info("Disconnecting {}: {}", new Object[] { this.d(), s});
-             ChatComponentText chatcomponenttext = new ChatComponentText(s);
-@@ -85,9 +91,11 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+             IChatBaseComponent ichatbasecomponent = new ChatComponentText(s);
+             LoginListener.c.info("Disconnecting {}: {}", this.c(), s);
+@@ -97,9 +103,11 @@ public class LoginListener implements PacketLoginInListener, ITickable {
      }
  
      public void b() {
@@ -31,7 +31,7 @@ diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/ja
  
          // CraftBukkit start - fire PlayerLoginEvent
          EntityPlayer s = this.server.getPlayerList().attemptLogin(this, this.i, hostname);
-@@ -137,7 +145,15 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+@@ -149,7 +157,15 @@ public class LoginListener implements PacketLoginInListener, ITickable {
              this.g = LoginListener.EnumProtocolState.KEY;
              this.networkManager.sendPacket(new PacketLoginOutEncryptionBegin("", this.server.O().getPublic(), this.e));
          } else {
@@ -48,7 +48,7 @@ diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/ja
          }
  
      }
-@@ -161,49 +177,11 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+@@ -173,49 +189,11 @@ public class LoginListener implements PacketLoginInListener, ITickable {
  
                          LoginListener.this.i = LoginListener.this.server.az().hasJoinedServer(new GameProfile((UUID) null, gameprofile.getName()), s, this.a());
                          if (LoginListener.this.i != null) {
@@ -89,7 +89,7 @@ diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/ja
 -                                }
 -                            }
 -                            // CraftBukkit end
--                            LoginListener.c.info("UUID of player {} is {}", new Object[] { LoginListener.this.i.getName(), LoginListener.this.i.getId()});
+-                            LoginListener.c.info("UUID of player {} is {}", LoginListener.this.i.getName(), LoginListener.this.i.getId());
 -                            LoginListener.this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
 +                            if (!networkManager.isConnected()) return; // SportBukkit - ensure player is still connected
 +                            LoginListener.c.info("UUID of player " + LoginListener.this.i.getName() + " is " + LoginListener.this.i.getId());
@@ -98,26 +98,25 @@ diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/ja
                              LoginListener.this.i = LoginListener.this.a(gameprofile);
 -                            LoginListener.this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
                          } else {
-                             LoginListener.this.disconnect("Failed to verify username!");
-                             LoginListener.c.error("Username \'{}\' tried to join with an invalid session", new Object[] { gameprofile.getName()});
-@@ -212,7 +190,6 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+                             LoginListener.this.disconnect(new ChatMessage("multiplayer.disconnect.unverified_username", new Object[0]));
+                             LoginListener.c.error("Username \'{}\' tried to join with an invalid session", gameprofile.getName());
+@@ -224,7 +202,6 @@ public class LoginListener implements PacketLoginInListener, ITickable {
                          if (LoginListener.this.server.R()) {
                              LoginListener.c.warn("Authentication servers are down but will let them in anyway!");
                              LoginListener.this.i = LoginListener.this.a(gameprofile);
 -                            LoginListener.this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
                          } else {
-                             LoginListener.this.disconnect("Authentication servers are down. Please try again later, sorry!");
+                             LoginListener.this.disconnect(new ChatMessage("multiplayer.disconnect.authservers_down", new Object[0]));
                              LoginListener.c.error("Couldn\'t verify username because servers are unavailable");
-@@ -223,7 +200,7 @@ public class LoginListener implements PacketLoginInListener, ITickable {
-                         server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + gameprofile.getName(), exception);
+@@ -236,6 +213,7 @@ public class LoginListener implements PacketLoginInListener, ITickable {
                          // CraftBukkit end
                      }
--
+ 
 +                    callPreLoginEvent(); // SportBukkit
                  }
  
                  @Nullable
-@@ -236,6 +213,58 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+@@ -248,6 +226,58 @@ public class LoginListener implements PacketLoginInListener, ITickable {
          }
      }
  
@@ -174,5 +173,5 @@ diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/ja
 +    // SportBukkit end
 +
      protected GameProfile a(GameProfile gameprofile) {
-         UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameprofile.getName()).getBytes(Charsets.UTF_8));
+         UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameprofile.getName()).getBytes(StandardCharsets.UTF_8));
  

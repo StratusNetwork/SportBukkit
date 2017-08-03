@@ -13,7 +13,36 @@
          this.i.b(nbttagcompound);
          return nbttagcompound;
      }
-@@ -74,14 +80,34 @@
+@@ -37,6 +43,12 @@
+                 return "Sign";
+             }
+ 
++            public IChatBaseComponent getScoreboardDisplayName() {
++                return new ChatComponentText(this.getName());
++            }
++
++            public void sendMessage(IChatBaseComponent ichatbasecomponent) {}
++
+             public boolean a(int i, String s) {
+                 return true;
+             }
+@@ -53,19 +65,49 @@
+                 return TileEntitySign.this.world;
+             }
+ 
+-            public MinecraftServer C_() {
++            public Entity f() {
++                return null;
++            }
++
++            public boolean getSendCommandFeedback() {
++                return false;
++            }
++
++            public void a(CommandObjectiveExecutor.EnumCommandResult commandobjectiveexecutor_enumcommandresult, int i) {}
++
++            public MinecraftServer B_() {
+                 return TileEntitySign.this.world.getMinecraftServer();
              }
          };
  
@@ -52,11 +81,22 @@
              }
          }
  
-@@ -171,7 +197,14 @@
+@@ -140,8 +182,8 @@
+ 
+             }
+ 
+-            public MinecraftServer C_() {
+-                return entityhuman.C_();
++            public MinecraftServer B_() {
++                return entityhuman.B_();
+             }
+         };
+         IChatBaseComponent[] aichatbasecomponent = this.lines;
+@@ -155,7 +197,14 @@
                  ChatClickable chatclickable = chatmodifier.h();
  
                  if (chatclickable.a() == ChatClickable.EnumClickAction.RUN_COMMAND) {
--                    entityhuman.B_().getCommandHandler().a(icommandlistener, chatclickable.b());
+-                    entityhuman.C_().getCommandHandler().a(icommandlistener, chatclickable.b());
 +                    // CraftBukkit start
 +                    // entityhuman.B_().getCommandHandler().a(icommandlistener, chatclickable.b());
 +                    CommandBlockListenerAbstract.executeSafely(icommandlistener, new org.bukkit.craftbukkit.command.ProxiedNativeCommandSender(

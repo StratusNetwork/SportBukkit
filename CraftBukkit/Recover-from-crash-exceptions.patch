@@ -6,15 +6,15 @@ Subject: [PATCH] Recover from crash exceptions
 diff --git a/src/main/java/net/minecraft/server/CrashReport.java b/src/main/java/net/minecraft/server/CrashReport.java
 --- a/src/main/java/net/minecraft/server/CrashReport.java
 +++ b/src/main/java/net/minecraft/server/CrashReport.java
-@@ -22,6 +22,7 @@ public class CrashReport {
+@@ -24,6 +24,7 @@ public class CrashReport {
      private final String b;
      private final Throwable c;
      private final CrashReportSystemDetails d = new CrashReportSystemDetails(this, "System Details");
-+    public List<CrashReportSystemDetails> extras() { return e; } // SportBukkit - alias
++    public List<CrashReportSystemDetails> extras() { return e; } // SportBukkit - alia
      private final List<CrashReportSystemDetails> e = Lists.newArrayList();
      private File f;
      private boolean g = true;
-@@ -126,10 +127,12 @@ public class CrashReport {
+@@ -128,10 +129,12 @@ public class CrashReport {
          this.d.a("CraftBukkit Information", (CrashReportCallable) new org.bukkit.craftbukkit.CraftCrashReport()); // CraftBukkit
      }
  
@@ -27,7 +27,7 @@ diff --git a/src/main/java/net/minecraft/server/CrashReport.java b/src/main/java
      public Throwable b() {
          return this.c;
      }
-@@ -255,6 +258,7 @@ public class CrashReport {
+@@ -257,6 +260,7 @@ public class CrashReport {
          }
      }
  
@@ -38,15 +38,15 @@ diff --git a/src/main/java/net/minecraft/server/CrashReport.java b/src/main/java
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -29,6 +29,7 @@ import org.bukkit.inventory.MainHand;
- // CraftBukkit end
- 
- // SportBukkit start
-+import org.bukkit.craftbukkit.CraftLogging;
- import org.bukkit.craftbukkit.util.Skins;
- import org.bukkit.event.player.PlayerSkinPartsChangeEvent;
- import org.bukkit.event.player.PlayerKnockbackEvent;
-@@ -511,7 +512,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
+ // CraftBukkit start
+ import com.google.common.base.Preconditions;
+ import org.bukkit.Bukkit;
++import org.bukkit.CraftLogging;
+ import org.bukkit.GameMode;
+ import org.bukkit.WeatherType;
+ import org.bukkit.craftbukkit.CraftWorld;
+@@ -543,7 +544,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
              CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Player being ticked");
  
              this.appendEntityCrashDetails(crashreportsystemdetails);
@@ -73,15 +73,15 @@ diff --git a/src/main/java/net/minecraft/server/TileEntity.java b/src/main/java/
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -18,6 +18,7 @@ import com.google.common.collect.Maps;
+@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
+ import com.google.common.collect.Maps;
  import java.util.Map;
  import org.bukkit.Bukkit;
++import org.bukkit.CraftLogging;
  import org.bukkit.block.BlockState;
-+import org.bukkit.craftbukkit.CraftLogging;
  import org.bukkit.craftbukkit.CraftServer;
  import org.bukkit.craftbukkit.CraftWorld;
- import org.bukkit.craftbukkit.event.CraftEventFactory;
-@@ -1312,7 +1313,11 @@ public abstract class World implements IBlockAccess {
+@@ -1313,7 +1314,11 @@ public abstract class World implements IBlockAccess {
                      entity.appendEntityCrashDetails(crashreportsystemdetails);
                  }
  
@@ -94,7 +94,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
              }
  
              if (entity.dead) {
-@@ -1368,7 +1373,11 @@ public abstract class World implements IBlockAccess {
+@@ -1369,7 +1374,11 @@ public abstract class World implements IBlockAccess {
                      crashreport1 = CrashReport.a(throwable1, "Ticking entity");
                      crashreportsystemdetails1 = crashreport1.a("Entity being ticked");
                      entity.appendEntityCrashDetails(crashreportsystemdetails1);
@@ -107,7 +107,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
                  }
              }
  
-@@ -1415,7 +1424,11 @@ public abstract class World implements IBlockAccess {
+@@ -1416,7 +1425,11 @@ public abstract class World implements IBlockAccess {
                          crashreport1 = CrashReport.a(throwable2, "Ticking block entity");
                          crashreportsystemdetails1 = crashreport1.a("Block entity being ticked");
                          tileentity.a(crashreportsystemdetails1);
@@ -120,20 +120,19 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
                      }
                  }
              }
-diff --git a/src/main/java/org/bukkit/craftbukkit/CraftLogging.java b/src/main/java/org/bukkit/craftbukkit/CraftLogging.java
+diff --git a/src/main/java/org/bukkit/CraftLogging.java b/src/main/java/org/bukkit/CraftLogging.java
 new file mode 100644
-index 0000000..792c90f
+index 00000000..8d039557
 --- /dev/null
-+++ b/src/main/java/org/bukkit/craftbukkit/CraftLogging.java
-@@ -0,0 +1,24 @@
-+package org.bukkit.craftbukkit;
-+
-+import java.util.logging.Level;
-+import java.util.logging.Logger;
++++ b/src/main/java/org/bukkit/CraftLogging.java
+@@ -0,0 +1,23 @@
++package org.bukkit;
 +
 +import net.minecraft.server.CrashReport;
 +import net.minecraft.server.CrashReportSystemDetails;
-+import org.bukkit.Bukkit;
++
++import java.util.logging.Level;
++import java.util.logging.Logger;
 +
 +public class CraftLogging {
 +

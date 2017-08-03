@@ -6,7 +6,7 @@ Subject: [PATCH] Multi-trade API
 diff --git a/src/main/java/org/bukkit/entity/HumanEntity.java b/src/main/java/org/bukkit/entity/HumanEntity.java
 --- a/src/main/java/org/bukkit/entity/HumanEntity.java
 +++ b/src/main/java/org/bukkit/entity/HumanEntity.java
-@@ -119,6 +119,14 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
+@@ -120,6 +120,14 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
      public InventoryView openMerchant(Villager trader, boolean force);
  
      /**

@@ -8,7 +8,72 @@
  public abstract class EntityMonster extends EntityCreature implements IMonster {
  
      public EntityMonster(World world) {
-@@ -75,7 +77,14 @@
+@@ -7,13 +9,13 @@
+         this.b_ = 5;
+     }
+ 
+-    public SoundCategory bI() {
++    public SoundCategory bC() {
+         return SoundCategory.HOSTILE;
+     }
+ 
+     public void n() {
+-        this.cj();
+-        float f = this.f(1.0F);
++        this.cd();
++        float f = this.e(1.0F);
+ 
+         if (f > 0.5F) {
+             this.ticksFarFromPlayer += 2;
+@@ -22,36 +24,36 @@
+         super.n();
+     }
+ 
+-    public void B_() {
+-        super.B_();
++    public void A_() {
++        super.A_();
+         if (!this.world.isClientSide && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
+             this.die();
+         }
+ 
+     }
+ 
+-    protected SoundEffect ae() {
+-        return SoundEffects.cX;
++    protected SoundEffect aa() {
++        return SoundEffects.cR;
+     }
+ 
+-    protected SoundEffect af() {
+-        return SoundEffects.cW;
++    protected SoundEffect ab() {
++        return SoundEffects.cQ;
+     }
+ 
+     public boolean damageEntity(DamageSource damagesource, float f) {
+         return this.isInvulnerable(damagesource) ? false : super.damageEntity(damagesource, f);
+     }
+ 
+-    protected SoundEffect d(DamageSource damagesource) {
+-        return SoundEffects.cU;
++    protected SoundEffect bW() {
++        return SoundEffects.cO;
+     }
+ 
+-    protected SoundEffect cd() {
+-        return SoundEffects.cT;
++    protected SoundEffect bX() {
++        return SoundEffects.cN;
+     }
+ 
+     protected SoundEffect e(int i) {
+-        return i > 4 ? SoundEffects.cS : SoundEffects.cV;
++        return i > 4 ? SoundEffects.cM : SoundEffects.cP;
+     }
+ 
+     public boolean B(Entity entity) {
+@@ -75,19 +77,26 @@
              int j = EnchantmentManager.getFireAspectEnchantmentLevel(this);
  
              if (j > 0) {
@@ -24,3 +89,57 @@
              }
  
              if (entity instanceof EntityHuman) {
+                 EntityHuman entityhuman = (EntityHuman) entity;
+                 ItemStack itemstack = this.getItemInMainHand();
+-                ItemStack itemstack1 = entityhuman.isHandRaised() ? entityhuman.cH() : ItemStack.a;
++                ItemStack itemstack1 = entityhuman.isHandRaised() ? entityhuman.cB() : ItemStack.a;
+ 
+                 if (!itemstack.isEmpty() && !itemstack1.isEmpty() && itemstack.getItem() instanceof ItemAxe && itemstack1.getItem() == Items.SHIELD) {
+                     float f1 = 0.25F + (float) EnchantmentManager.getDigSpeedEnchantmentLevel(this) * 0.05F;
+ 
+                     if (this.random.nextFloat() < f1) {
+-                        entityhuman.getCooldownTracker().a(Items.SHIELD, 100);
++                        entityhuman.di().a(Items.SHIELD, 100);
+                         this.world.broadcastEntityEffect(entityhuman, (byte) 30);
+                     }
+                 }
+@@ -103,7 +112,7 @@
+         return 0.5F - this.world.n(blockposition);
+     }
+ 
+-    protected boolean s_() {
++    protected boolean r_() {
+         BlockPosition blockposition = new BlockPosition(this.locX, this.getBoundingBox().b, this.locZ);
+ 
+         if (this.world.getBrightness(EnumSkyBlock.SKY, blockposition) > this.random.nextInt(32)) {
+@@ -111,8 +120,8 @@
+         } else {
+             int i = this.world.getLightLevel(blockposition);
+ 
+-            if (this.world.X()) {
+-                int j = this.world.ah();
++            if (this.world.V()) {
++                int j = this.world.af();
+ 
+                 this.world.c(10);
+                 i = this.world.getLightLevel(blockposition);
+@@ -123,8 +132,8 @@
+         }
+     }
+ 
+-    public boolean P() {
+-        return this.world.getDifficulty() != EnumDifficulty.PEACEFUL && this.s_() && super.P();
++    public boolean cM() {
++        return this.world.getDifficulty() != EnumDifficulty.PEACEFUL && this.r_() && super.cM();
+     }
+ 
+     protected void initAttributes() {
+@@ -135,8 +144,4 @@
+     protected boolean isDropExperience() {
+         return true;
+     }
+-
+-    public boolean c(EntityHuman entityhuman) {
+-        return true;
+-    }
+ }

@@ -55,23 +55,6 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      * This list contains all blocks from the living entity's eye position to
      * target inclusive.
      *
-     * @param transparent HashSet containing all transparent block IDs (set to
-     *     null for only air)
-     * @param maxDistance this is the maximum distance to scan (may be limited
-     *     by server by at least 100 blocks, no less)
-     * @return list containing all blocks along the living entity's line of
-     *     sight
-     * @deprecated Magic value
-     */
-    @Deprecated
-    public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance);
-
-    /**
-     * Gets all blocks along the living entity's line of sight.
-     * <p>
-     * This list contains all blocks from the living entity's eye position to
-     * target inclusive.
-     *
      * @param transparent HashSet containing all transparent block Materials (set to
      *     null for only air)
      * @param maxDistance this is the maximum distance to scan (may be limited
@@ -193,31 +176,11 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
     public double getLastDamage();
 
     /**
-     * This method exists for legacy reasons to provide backwards
-     * compatibility. It will not exist at runtime and should not be used
-     * under any circumstances.
-     * 
-     * @return damage taken since the last no damage ticks time period
-     */
-    @Deprecated
-    public int _INVALID_getLastDamage();
-
-    /**
      * Sets the damage dealt within the current no damage ticks time period.
      *
      * @param damage amount of damage
      */
     public void setLastDamage(double damage);
-
-    /**
-     * This method exists for legacy reasons to provide backwards
-     * compatibility. It will not exist at runtime and should not be used
-     * under any circumstances.
-     * 
-     * @param damage amount of damage
-     */
-    @Deprecated
-    public void _INVALID_setLastDamage(int damage);
 
     /**
      * Returns the living entity's current no damage ticks.

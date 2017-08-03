@@ -5,7 +5,7 @@ Subject: [PATCH] Fix combustion events
 
 diff --git a/src/main/java/org/bukkit/event/entity/EntityExtinguishEvent.java b/src/main/java/org/bukkit/event/entity/EntityExtinguishEvent.java
 new file mode 100644
-index 0000000..5833ab7
+index 00000000..5833ab7c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/EntityExtinguishEvent.java
 @@ -0,0 +1,25 @@

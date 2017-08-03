@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityMushroomCow.java
 +++ b/net/minecraft/server/EntityMushroomCow.java
-@@ -1,6 +1,7 @@
+@@ -1,13 +1,14 @@
  package net.minecraft.server;
  
  import javax.annotation.Nullable;
@@ -8,6 +8,14 @@
  
  public class EntityMushroomCow extends EntityCow {
  
+     public EntityMushroomCow(World world) {
+         super(world);
+         this.setSize(0.9F, 1.4F);
+-        this.bA = Blocks.MYCELIUM;
++        this.bz = Blocks.MYCELIUM;
+     }
+ 
+     public static void c(DataConverterManager dataconvertermanager) {
 @@ -27,6 +28,14 @@
  
              return true;
@@ -23,3 +31,12 @@
              this.die();
              this.world.addParticle(EnumParticle.EXPLOSION_LARGE, this.locX, this.locY + (double) (this.length / 2.0F), this.locZ, 0.0D, 0.0D, 0.0D, new int[0]);
              if (!this.world.isClientSide) {
+@@ -46,7 +55,7 @@
+                 }
+ 
+                 itemstack.damage(1, entityhuman);
+-                this.a(SoundEffects.ei, 1.0F, 1.0F);
++                this.a(SoundEffects.dV, 1.0F, 1.0F);
+             }
+ 
+             return true;

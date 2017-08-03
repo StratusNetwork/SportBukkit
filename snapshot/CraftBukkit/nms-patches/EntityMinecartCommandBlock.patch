@@ -10,3 +10,21 @@
          public void i() {
              EntityMinecartCommandBlock.this.getDataWatcher().set(EntityMinecartCommandBlock.COMMAND, this.getCommand());
              EntityMinecartCommandBlock.this.getDataWatcher().set(EntityMinecartCommandBlock.b, this.l());
+@@ -26,7 +29,7 @@
+             return EntityMinecartCommandBlock.this;
+         }
+ 
+-        public MinecraftServer C_() {
++        public MinecraftServer B_() {
+             return EntityMinecartCommandBlock.this.world.getMinecraftServer();
+         }
+     };
+@@ -112,7 +115,7 @@
+ 
+     }
+ 
+-    public boolean bA() {
++    public boolean bu() {
+         return true;
+     }
+ }

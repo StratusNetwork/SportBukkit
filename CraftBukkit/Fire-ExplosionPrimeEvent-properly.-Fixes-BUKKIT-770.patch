@@ -73,7 +73,7 @@ diff --git a/src/main/java/net/minecraft/server/BlockTNT.java b/src/main/java/ne
 +                // SportBukkit end
 +
                  world.addEntity(entitytntprimed);
-                 world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.gV, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                 world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.hW, SoundCategory.BLOCKS, 1.0F, 1.0F);
              }
 @@ -57,7 +83,11 @@ public class BlockTNT extends Block {
  
@@ -105,10 +105,10 @@ diff --git a/src/main/java/net/minecraft/server/EntityCreeper.java b/src/main/ja
 --- a/src/main/java/net/minecraft/server/EntityCreeper.java
 +++ b/src/main/java/net/minecraft/server/EntityCreeper.java
 @@ -103,7 +103,16 @@ public class EntityCreeper extends EntityMonster {
-             int i = this.di();
+             int i = this.dk();
  
              if (i > 0 && this.fuseTicks == 0) {
--                this.a(SoundEffects.av, 1.0F, 0.5F);
+-                this.a(SoundEffects.ay, 1.0F, 0.5F);
 +                // SportBukkit start - fire ExplosionPrimeEvent
 +                ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), this.explosionRadius * (this.isPowered() ? 2.0F : 1.0F), false);
 +                this.world.getServer().getPluginManager().callEvent(event);
@@ -116,7 +116,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityCreeper.java b/src/main/ja
 +                if (event.isCancelled()) {
 +                    i = 0;
 +                } else {
-+                    this.a(SoundEffects.av, 1.0F, 0.5F);
++                    this.a(SoundEffects.ay, 1.0F, 0.5F);
 +                }
 +                // SportBukkit end
              }
@@ -125,7 +125,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityCreeper.java b/src/main/ja
 diff --git a/src/main/java/net/minecraft/server/EntityLargeFireball.java b/src/main/java/net/minecraft/server/EntityLargeFireball.java
 --- a/src/main/java/net/minecraft/server/EntityLargeFireball.java
 +++ b/src/main/java/net/minecraft/server/EntityLargeFireball.java
-@@ -23,15 +23,9 @@ public class EntityLargeFireball extends EntityFireball {
+@@ -25,15 +25,9 @@ public class EntityLargeFireball extends EntityFireball {
  
              boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
  
@@ -137,7 +137,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLargeFireball.java b/src/m
  
 -            if (!event.isCancelled()) {
 -                // give 'this' instead of (Entity) null so we know what causes the damage
--                this.world.createExplosion(this, this.locX, this.locY, this.locZ, event.getRadius(), event.getFire(), flag);
+-                this.world.createExplosion(this, this.locX, this.locY, this.locZ, event.getRadius(), event.getFire(), isIncendiary);
 -            }
 -            // CraftBukkit end
              this.die();
@@ -146,7 +146,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLargeFireball.java b/src/m
 diff --git a/src/main/java/net/minecraft/server/EntityTNTPrimed.java b/src/main/java/net/minecraft/server/EntityTNTPrimed.java
 --- a/src/main/java/net/minecraft/server/EntityTNTPrimed.java
 +++ b/src/main/java/net/minecraft/server/EntityTNTPrimed.java
-@@ -85,12 +85,9 @@ public class EntityTNTPrimed extends Entity {
+@@ -86,12 +86,9 @@ public class EntityTNTPrimed extends Entity {
          // float f = 4.0F;
  
          org.bukkit.craftbukkit.CraftServer server = this.world.getServer();

@@ -34,3 +34,23 @@
          this.a = iinventory1;
          this.f = entityhorseabstract;
          boolean flag = true;
+@@ -15,7 +37,7 @@
+ 
+         this.a(new Slot(iinventory1, 0, 8, 18) {
+             public boolean isAllowed(ItemStack itemstack) {
+-                return itemstack.getItem() == Items.SADDLE && !this.hasItem() && entityhorseabstract.dD();
++                return itemstack.getItem() == Items.SADDLE && !this.hasItem() && entityhorseabstract.dA();
+             }
+         });
+         this.a(new Slot(iinventory1, 1, 8, 36) {
+@@ -32,8 +54,8 @@
+ 
+         if (entityhorseabstract instanceof EntityHorseChestedAbstract && ((EntityHorseChestedAbstract) entityhorseabstract).isCarryingChest()) {
+             for (i = 0; i < 3; ++i) {
+-                for (j = 0; j < ((EntityHorseChestedAbstract) entityhorseabstract).dr(); ++j) {
+-                    this.a(new Slot(iinventory1, 2 + j + i * ((EntityHorseChestedAbstract) entityhorseabstract).dr(), 80 + j * 18, 18 + i * 18));
++                for (j = 0; j < ((EntityHorseChestedAbstract) entityhorseabstract).dl(); ++j) {
++                    this.a(new Slot(iinventory1, 2 + j + i * ((EntityHorseChestedAbstract) entityhorseabstract).dl(), 80 + j * 18, 18 + i * 18));
+                 }
+             }
+         }

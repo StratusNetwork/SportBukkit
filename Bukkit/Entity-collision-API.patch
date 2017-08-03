@@ -6,7 +6,7 @@ Subject: [PATCH] Entity collision API
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1073,6 +1073,18 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -1061,6 +1061,18 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      public void setFlying(boolean value);
  
      /**

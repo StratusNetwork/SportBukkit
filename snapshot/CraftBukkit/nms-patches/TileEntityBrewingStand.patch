@@ -16,10 +16,12 @@
  public class TileEntityBrewingStand extends TileEntityContainer implements ITickable, IWorldInventory {
  
      private static final int[] a = new int[] { 3};
-@@ -14,6 +23,31 @@
+@@ -13,7 +22,32 @@
+     private boolean[] j;
      private Item k;
      private String l;
-     private int m;
+-    private int fuelLevel;
++    private int m;
 +    // CraftBukkit start - add fields and methods
 +    private int lastTick = MinecraftServer.currentTick;
 +    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
@@ -48,12 +50,36 @@
  
      public TileEntityBrewingStand() {
          this.items = NonNullList.a(5, ItemStack.a);
-@@ -55,8 +89,19 @@
+@@ -27,7 +61,7 @@
+         return this.l != null && !this.l.isEmpty();
+     }
+ 
+-    public void setCustomName(String s) {
++    public void a(String s) {
+         this.l = s;
+     }
+ 
+@@ -35,7 +69,7 @@
+         return this.items.size();
+     }
+ 
+-    public boolean x_() {
++    public boolean w_() {
+         Iterator iterator = this.items.iterator();
+ 
+         ItemStack itemstack;
+@@ -51,12 +85,23 @@
+         return false;
+     }
+ 
+-    public void e() {
++    public void F_() {
          ItemStack itemstack = (ItemStack) this.items.get(4);
  
-         if (this.m <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
--            this.m = 20;
+-        if (this.fuelLevel <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
+-            this.fuelLevel = 20;
 -            itemstack.subtract(1);
++        if (this.m <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
 +            // CraftBukkit start
 +            BrewingStandFuelEvent event = new BrewingStandFuelEvent(world.getWorld().getBlockAt(position.getX(), position.getY(), position.getZ()), CraftItemStack.asCraftMirror(itemstack), 20);
 +            this.world.getServer().getPluginManager().callEvent(event);
@@ -87,6 +113,17 @@
  
              if (flag2 && flag) {
                  this.p();
+@@ -78,8 +128,8 @@
+                 this.brewTime = 0;
+                 this.update();
+             }
+-        } else if (flag && this.fuelLevel > 0) {
+-            --this.fuelLevel;
++        } else if (flag && this.m > 0) {
++            --this.m;
+             this.brewTime = 400;
+             this.k = itemstack1.getItem();
+             this.update();
 @@ -140,6 +190,15 @@
  
      private void p() {
@@ -103,6 +140,35 @@
  
          for (int i = 0; i < 3; ++i) {
              this.items.set(i, PotionBrewer.d(itemstack, (ItemStack) this.items.get(i)));
+@@ -148,8 +207,8 @@
+         itemstack.subtract(1);
+         BlockPosition blockposition = this.getPosition();
+ 
+-        if (itemstack.getItem().r()) {
+-            ItemStack itemstack1 = new ItemStack(itemstack.getItem().q());
++        if (itemstack.getItem().s()) {
++            ItemStack itemstack1 = new ItemStack(itemstack.getItem().r());
+ 
+             if (itemstack.isEmpty()) {
+                 itemstack = itemstack1;
+@@ -175,7 +234,7 @@
+             this.l = nbttagcompound.getString("CustomName");
+         }
+ 
+-        this.fuelLevel = nbttagcompound.getByte("Fuel");
++        this.m = nbttagcompound.getByte("Fuel");
+     }
+ 
+     public NBTTagCompound save(NBTTagCompound nbttagcompound) {
+@@ -186,7 +245,7 @@
+             nbttagcompound.setString("CustomName", this.l);
+         }
+ 
+-        nbttagcompound.setByte("Fuel", (byte) this.fuelLevel);
++        nbttagcompound.setByte("Fuel", (byte) this.m);
+         return nbttagcompound;
+     }
+ 
 @@ -210,7 +269,7 @@
      }
  
@@ -112,3 +178,30 @@
      }
  
      public boolean a(EntityHuman entityhuman) {
+@@ -227,7 +286,7 @@
+         } else {
+             Item item = itemstack.getItem();
+ 
+-            return i == 4 ? item == Items.BLAZE_POWDER : (item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE) && this.getItem(i).isEmpty();
++            return i == 4 ? item == Items.BLAZE_POWDER : (item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE) && this.getItem(i) == ItemStack.a;
+         }
+     }
+ 
+@@ -257,7 +316,7 @@
+             return this.brewTime;
+ 
+         case 1:
+-            return this.fuelLevel;
++            return this.m;
+ 
+         default:
+             return 0;
+@@ -271,7 +330,7 @@
+             break;
+ 
+         case 1:
+-            this.fuelLevel = j;
++            this.m = j;
+         }
+ 
+     }

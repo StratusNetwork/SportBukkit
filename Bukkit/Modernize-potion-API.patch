@@ -15,7 +15,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
  import org.bukkit.registry.Key;
  import org.bukkit.scheduler.BukkitScheduler;
  import org.bukkit.scoreboard.ScoreboardManager;
-@@ -1253,4 +1255,12 @@ public final class Bukkit {
+@@ -1266,4 +1268,12 @@ public final class Bukkit {
      public static Key key(String id) {
          return runtime().key(id);
      }
@@ -73,7 +73,7 @@ diff --git a/src/main/java/org/bukkit/inventory/meta/PotionMeta.java b/src/main/
       *
 diff --git a/src/main/java/org/bukkit/potion/PotionBrew.java b/src/main/java/org/bukkit/potion/PotionBrew.java
 new file mode 100644
-index 0000000..f5fcc3a
+index 00000000..f5fcc3a9
 --- /dev/null
 +++ b/src/main/java/org/bukkit/potion/PotionBrew.java
 @@ -0,0 +1,9 @@
@@ -88,7 +88,7 @@ index 0000000..f5fcc3a
 +}
 diff --git a/src/main/java/org/bukkit/potion/PotionBrewRegistry.java b/src/main/java/org/bukkit/potion/PotionBrewRegistry.java
 new file mode 100644
-index 0000000..11ae697
+index 00000000..11ae697b
 --- /dev/null
 +++ b/src/main/java/org/bukkit/potion/PotionBrewRegistry.java
 @@ -0,0 +1,5 @@
@@ -99,7 +99,7 @@ index 0000000..11ae697
 +public interface PotionBrewRegistry extends Registry<PotionBrew> {}
 diff --git a/src/main/java/org/bukkit/potion/PotionEffectRegistry.java b/src/main/java/org/bukkit/potion/PotionEffectRegistry.java
 new file mode 100644
-index 0000000..724b62f
+index 00000000..724b62f7
 --- /dev/null
 +++ b/src/main/java/org/bukkit/potion/PotionEffectRegistry.java
 @@ -0,0 +1,11 @@

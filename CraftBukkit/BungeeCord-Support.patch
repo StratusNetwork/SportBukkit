@@ -9,7 +9,7 @@ diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/mai
 --- a/src/main/java/net/minecraft/server/HandshakeListener.java
 +++ b/src/main/java/net/minecraft/server/HandshakeListener.java
 @@ -71,6 +71,28 @@ public class HandshakeListener implements PacketHandshakingInListener {
-                 this.b.close(chatcomponenttext);
+                 this.b.close(chatmessage);
              } else {
                  this.b.setPacketListener(new LoginListener(this.a, this.b));
 +
@@ -22,7 +22,7 @@ diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/mai
 +                        b.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString( split[2] );
 +                    } else
 +                    {
-+                        chatcomponenttext = new ChatComponentText("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
++                        IChatBaseComponent chatcomponenttext = new ChatComponentText("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
 +                        this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
 +                        this.b.close(chatcomponenttext);
 +                        return;
@@ -40,16 +40,7 @@ diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/mai
 diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/java/net/minecraft/server/LoginListener.java
 --- a/src/main/java/net/minecraft/server/LoginListener.java
 +++ b/src/main/java/net/minecraft/server/LoginListener.java
-@@ -148,7 +148,7 @@ public class LoginListener implements PacketLoginInListener, ITickable {
-             // SportBukkit start - call pre-login event in offline mode
-             new Thread("User Authenticator #" + LoginListener.b.incrementAndGet()) {
-                 public void run() {
--                    LoginListener.this.i = LoginListener.this.a(LoginListener.this.i);
-+                    LoginListener.this.i = LoginListener.this.completeOfflineProfile(LoginListener.this.i);
-                     LoginListener.c.info("UUID (offline) of player " + LoginListener.this.i.getName() + " is " + LoginListener.this.i.getId());
-                     callPreLoginEvent();
-                 }
-@@ -263,6 +263,22 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+@@ -276,6 +276,22 @@ public class LoginListener implements PacketLoginInListener, ITickable {
  
          this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
      }
@@ -103,7 +94,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketHandshakingInSetProtocol.j
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -171,6 +171,8 @@ public final class CraftServer implements Server {
+@@ -172,6 +172,8 @@ public final class CraftServer implements Server {
      private final UUID invalidUserUUID = UUID.nameUUIDFromBytes("InvalidUsername".getBytes(Charsets.UTF_8));
      private final List<CraftPlayer> playerView;
      public int reloadCount;
@@ -112,7 +103,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  
      private final class BooleanWrapper {
          private boolean value = true;
-@@ -244,6 +246,7 @@ public final class CraftServer implements Server {
+@@ -245,6 +247,7 @@ public final class CraftServer implements Server {
          }
  
          saveCommandsConfig();

@@ -2,7 +2,6 @@ package org.bukkit.util;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.geometry.Vec3;
 
 /**
  * Result of a ray-block intersection test
@@ -10,12 +9,12 @@ import org.bukkit.geometry.Vec3;
 public class RayBlockIntersection {
     private final Block block;
     private final BlockFace face;
-    private final ImVector position;
+    private final Vector position;
 
-    public RayBlockIntersection(Block block, BlockFace face, Vec3 position) {
+    public RayBlockIntersection(Block block, BlockFace face, Vector position) {
         this.block = block;
         this.face = face;
-        this.position = ImVector.copyOf(position);
+        this.position = position;
     }
 
     /**

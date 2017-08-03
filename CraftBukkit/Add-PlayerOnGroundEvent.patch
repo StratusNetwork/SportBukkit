@@ -15,8 +15,8 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
      public PlayerConnection(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
          this.minecraftServer = minecraftserver;
          this.networkManager = networkmanager;
-@@ -631,6 +633,13 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
-                             this.B &= !this.player.hasEffect(MobEffects.LEVITATION) && !this.player.cH() && !worldserver.c(this.player.getBoundingBox().g(0.0625D).b(0.0D, -0.55D, 0.0D));
+@@ -663,6 +665,13 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+                             this.B &= !this.player.hasEffect(MobEffects.LEVITATION) && !this.player.cN() && !worldserver.c(this.player.getBoundingBox().g(0.0625D).b(0.0D, -0.55D, 0.0D));
                              this.player.onGround = packetplayinflying.a();
                              this.minecraftServer.getPlayerList().d(this.player);
 +                            // SportBukkit start

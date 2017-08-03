@@ -6,7 +6,7 @@ Subject: [PATCH] Firework Meta Crash Fix
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.java
-@@ -145,7 +145,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
+@@ -146,7 +146,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
              case BURST:
                  return 4;
              default:
@@ -15,7 +15,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.ja
          }
      }
  
-@@ -162,7 +162,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
+@@ -163,7 +163,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
              case 4:
                  return Type.BURST;
              default:

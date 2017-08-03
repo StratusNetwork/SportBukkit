@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/PlayerInventory.java
 +++ b/net/minecraft/server/PlayerInventory.java
-@@ -5,6 +5,15 @@
+@@ -5,22 +5,75 @@
  import java.util.List;
  import javax.annotation.Nullable;
  
@@ -16,10 +16,16 @@
  public class PlayerInventory implements IInventory {
  
      public final NonNullList<ItemStack> items;
-@@ -16,11 +25,55 @@
+     public final NonNullList<ItemStack> armor;
+     public final NonNullList<ItemStack> extraSlots;
+-    private final List<NonNullList<ItemStack>> f;
++    private final List<NonNullList<ItemStack>> g;
+     public int itemInHandIndex;
+     public EntityHuman player;
      private ItemStack carried;
-     public boolean f;
- 
+-    private int h;
++    public boolean f;
++
 +    // CraftBukkit start - add fields and methods
 +    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 +    private int maxStack = MAX_STACK;
@@ -63,12 +69,12 @@
 +        return player.getBukkitEntity().getLocation();
 +    }
 +    // CraftBukkit end
-+
+ 
      public PlayerInventory(EntityHuman entityhuman) {
          this.items = NonNullList.a(36, ItemStack.a);
          this.armor = NonNullList.a(4, ItemStack.a);
          this.extraSlots = NonNullList.a(1, ItemStack.a);
--        this.g = Arrays.asList(new NonNullList[] { this.items, this.armor, this.extraSlots});
+-        this.f = Arrays.asList(new NonNullList[] { this.items, this.armor, this.extraSlots});
 +        this.g = (List) Arrays.asList(new NonNullList[] { this.items, this.armor, this.extraSlots}); // CraftBukkit - decompile error
          this.carried = ItemStack.a;
          this.player = entityhuman;
@@ -106,7 +112,238 @@
      public int getFirstEmptySlotIndex() {
          for (int i = 0; i < this.items.size(); ++i) {
              if (((ItemStack) this.items.get(i)).isEmpty()) {
-@@ -477,7 +556,7 @@
+@@ -139,51 +218,51 @@
+         return k;
+     }
+ 
+-    private int i(ItemStack itemstack) {
+-        int i = this.firstPartial(itemstack);
++    private int g(ItemStack itemstack) {
++        Item item = itemstack.getItem();
++        int i = itemstack.getCount();
++        int j = this.firstPartial(itemstack);
+ 
+-        if (i == -1) {
+-            i = this.getFirstEmptySlotIndex();
++        if (j == -1) {
++            j = this.getFirstEmptySlotIndex();
+         }
+ 
+-        return i == -1 ? itemstack.getCount() : this.d(i, itemstack);
+-    }
++        if (j == -1) {
++            return i;
++        } else {
++            ItemStack itemstack1 = this.getItem(j);
+ 
+-    private int d(int i, ItemStack itemstack) {
+-        Item item = itemstack.getItem();
+-        int j = itemstack.getCount();
+-        ItemStack itemstack1 = this.getItem(i);
++            if (itemstack1.isEmpty()) {
++                itemstack1 = new ItemStack(item, 0, itemstack.getData());
++                if (itemstack.hasTag()) {
++                    itemstack1.setTag(itemstack.getTag().g());
++                }
+ 
+-        if (itemstack1.isEmpty()) {
+-            itemstack1 = new ItemStack(item, 0, itemstack.getData());
+-            if (itemstack.hasTag()) {
+-                itemstack1.setTag(itemstack.getTag().g());
++                this.setItem(j, itemstack1);
+             }
+ 
+-            this.setItem(i, itemstack1);
+-        }
+-
+-        int k = j;
++            int k = i;
+ 
+-        if (j > itemstack1.getMaxStackSize() - itemstack1.getCount()) {
+-            k = itemstack1.getMaxStackSize() - itemstack1.getCount();
+-        }
++            if (i > itemstack1.getMaxStackSize() - itemstack1.getCount()) {
++                k = itemstack1.getMaxStackSize() - itemstack1.getCount();
++            }
+ 
+-        if (k > this.getMaxStackSize() - itemstack1.getCount()) {
+-            k = this.getMaxStackSize() - itemstack1.getCount();
+-        }
++            if (k > this.getMaxStackSize() - itemstack1.getCount()) {
++                k = this.getMaxStackSize() - itemstack1.getCount();
++            }
+ 
+-        if (k == 0) {
+-            return j;
+-        } else {
+-            j -= k;
+-            itemstack1.add(k);
+-            itemstack1.d(5);
+-            return j;
++            if (k == 0) {
++                return i;
++            } else {
++                i -= k;
++                itemstack1.add(k);
++                itemstack1.d(5);
++                return i;
++            }
+         }
+     }
+ 
+-    public int firstPartial(ItemStack itemstack) {
++    private int firstPartial(ItemStack itemstack) {
+         if (this.a(this.getItem(this.itemInHandIndex), itemstack)) {
+             return this.itemInHandIndex;
+         } else if (this.a(this.getItem(40), itemstack)) {
+@@ -200,7 +279,7 @@
+     }
+ 
+     public void n() {
+-        Iterator iterator = this.f.iterator();
++        Iterator iterator = this.g.iterator();
+ 
+         while (iterator.hasNext()) {
+             NonNullList nonnulllist = (NonNullList) iterator.next();
+@@ -214,20 +293,15 @@
+ 
+     }
+ 
+-    public boolean pickup(ItemStack itemstack) {
+-        return this.c(-1, itemstack);
+-    }
+-
+-    public boolean c(int i, final ItemStack itemstack) {
++    public boolean pickup(final ItemStack itemstack) {
+         if (itemstack.isEmpty()) {
+             return false;
+         } else {
+             try {
+-                if (itemstack.h()) {
+-                    if (i == -1) {
+-                        i = this.getFirstEmptySlotIndex();
+-                    }
++                int i;
+ 
++                if (itemstack.h()) {
++                    i = this.getFirstEmptySlotIndex();
+                     if (i >= 0) {
+                         this.items.set(i, itemstack.cloneItemStack());
+                         ((ItemStack) this.items.get(i)).d(5);
+@@ -240,22 +314,16 @@
+                         return false;
+                     }
+                 } else {
+-                    int j;
+-
+                     do {
+-                        j = itemstack.getCount();
+-                        if (i == -1) {
+-                            itemstack.setCount(this.i(itemstack));
+-                        } else {
+-                            itemstack.setCount(this.d(i, itemstack));
+-                        }
+-                    } while (!itemstack.isEmpty() && itemstack.getCount() < j);
++                        i = itemstack.getCount();
++                        itemstack.setCount(this.g(itemstack));
++                    } while (!itemstack.isEmpty() && itemstack.getCount() < i);
+ 
+-                    if (itemstack.getCount() == j && this.player.abilities.canInstantlyBuild) {
++                    if (itemstack.getCount() == i && this.player.abilities.canInstantlyBuild) {
+                         itemstack.setCount(0);
+                         return true;
+                     } else {
+-                        return itemstack.getCount() < j;
++                        return itemstack.getCount() < i;
+                     }
+                 }
+             } catch (Throwable throwable) {
+@@ -278,36 +346,12 @@
+         }
+     }
+ 
+-    public void a(World world, ItemStack itemstack) {
+-        if (!world.isClientSide) {
+-            while (!itemstack.isEmpty()) {
+-                int i = this.firstPartial(itemstack);
+-
+-                if (i == -1) {
+-                    i = this.getFirstEmptySlotIndex();
+-                }
+-
+-                if (i == -1) {
+-                    this.player.drop(itemstack, false);
+-                    break;
+-                }
+-
+-                int j = itemstack.getMaxStackSize() - this.getItem(i).getCount();
+-
+-                if (this.c(i, itemstack.cloneAndSubtract(j))) {
+-                    ((EntityPlayer) this.player).playerConnection.sendPacket(new PacketPlayOutSetSlot(-2, i, this.getItem(i)));
+-                }
+-            }
+-
+-        }
+-    }
+-
+     public ItemStack splitStack(int i, int j) {
+         NonNullList nonnulllist = null;
+ 
+         NonNullList nonnulllist1;
+ 
+-        for (Iterator iterator = this.f.iterator(); iterator.hasNext(); i -= nonnulllist1.size()) {
++        for (Iterator iterator = this.g.iterator(); iterator.hasNext(); i -= nonnulllist1.size()) {
+             nonnulllist1 = (NonNullList) iterator.next();
+             if (i < nonnulllist1.size()) {
+                 nonnulllist = nonnulllist1;
+@@ -318,8 +362,8 @@
+         return nonnulllist != null && !((ItemStack) nonnulllist.get(i)).isEmpty() ? ContainerUtil.a(nonnulllist, i, j) : ItemStack.a;
+     }
+ 
+-    public void f(ItemStack itemstack) {
+-        Iterator iterator = this.f.iterator();
++    public void d(ItemStack itemstack) {
++        Iterator iterator = this.g.iterator();
+ 
+         while (iterator.hasNext()) {
+             NonNullList nonnulllist = (NonNullList) iterator.next();
+@@ -339,7 +383,7 @@
+ 
+         NonNullList nonnulllist1;
+ 
+-        for (Iterator iterator = this.f.iterator(); iterator.hasNext(); i -= nonnulllist1.size()) {
++        for (Iterator iterator = this.g.iterator(); iterator.hasNext(); i -= nonnulllist1.size()) {
+             nonnulllist1 = (NonNullList) iterator.next();
+             if (i < nonnulllist1.size()) {
+                 nonnulllist = nonnulllist1;
+@@ -362,7 +406,7 @@
+ 
+         NonNullList nonnulllist1;
+ 
+-        for (Iterator iterator = this.f.iterator(); iterator.hasNext(); i -= nonnulllist1.size()) {
++        for (Iterator iterator = this.g.iterator(); iterator.hasNext(); i -= nonnulllist1.size()) {
+             nonnulllist1 = (NonNullList) iterator.next();
+             if (i < nonnulllist1.size()) {
+                 nonnulllist = nonnulllist1;
+@@ -447,7 +491,7 @@
+         return this.items.size() + this.armor.size() + this.extraSlots.size();
+     }
+ 
+-    public boolean x_() {
++    public boolean w_() {
+         Iterator iterator = this.items.iterator();
+ 
+         ItemStack itemstack;
+@@ -488,7 +532,7 @@
+ 
+         NonNullList nonnulllist1;
+ 
+-        for (Iterator iterator = this.f.iterator(); iterator.hasNext(); i -= nonnulllist1.size()) {
++        for (Iterator iterator = this.g.iterator(); iterator.hasNext(); i -= nonnulllist1.size()) {
+             nonnulllist1 = (NonNullList) iterator.next();
+             if (i < nonnulllist1.size()) {
+                 nonnulllist = nonnulllist1;
+@@ -512,7 +556,7 @@
      }
  
      public int getMaxStackSize() {
@@ -115,7 +352,25 @@
      }
  
      public boolean b(IBlockData iblockdata) {
-@@ -533,6 +612,11 @@
+@@ -542,7 +586,7 @@
+     }
+ 
+     public void o() {
+-        Iterator iterator = this.f.iterator();
++        Iterator iterator = this.g.iterator();
+ 
+         while (iterator.hasNext()) {
+             List list = (List) iterator.next();
+@@ -560,7 +604,7 @@
+     }
+ 
+     public void update() {
+-        ++this.h;
++        this.f = true;
+     }
+ 
+     public void setCarried(ItemStack itemstack) {
+@@ -568,6 +612,11 @@
      }
  
      public ItemStack getCarried() {
@@ -127,3 +382,23 @@
          return this.carried;
      }
  
+@@ -575,8 +624,8 @@
+         return this.player.dead ? false : entityhuman.h(this.player) <= 64.0D;
+     }
+ 
+-    public boolean h(ItemStack itemstack) {
+-        Iterator iterator = this.f.iterator();
++    public boolean f(ItemStack itemstack) {
++        Iterator iterator = this.g.iterator();
+ 
+         while (iterator.hasNext()) {
+             List list = (List) iterator.next();
+@@ -621,7 +670,7 @@
+     }
+ 
+     public void clear() {
+-        Iterator iterator = this.f.iterator();
++        Iterator iterator = this.g.iterator();
+ 
+         while (iterator.hasNext()) {
+             List list = (List) iterator.next();

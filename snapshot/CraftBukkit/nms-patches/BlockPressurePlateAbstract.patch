@@ -9,6 +9,15 @@
  public abstract class BlockPressurePlateAbstract extends Block {
  
      protected static final AxisAlignedBB a = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.03125D, 0.9375D);
+@@ -63,7 +65,7 @@
+     }
+ 
+     private boolean i(World world, BlockPosition blockposition) {
+-        return world.getType(blockposition).q() || world.getType(blockposition).getBlock() instanceof BlockFence;
++        return world.getType(blockposition).r() || world.getType(blockposition).getBlock() instanceof BlockFence;
+     }
+ 
+     public void a(World world, BlockPosition blockposition, IBlockData iblockdata, Random random) {}
 @@ -95,6 +97,19 @@
          boolean flag = i > 0;
          boolean flag1 = j > 0;
@@ -29,3 +38,12 @@
          if (i != j) {
              iblockdata = this.a(iblockdata, j);
              world.setTypeAndData(blockposition, iblockdata, 2);
+@@ -152,8 +167,4 @@
+     protected abstract int getPower(IBlockData iblockdata);
+ 
+     protected abstract IBlockData a(IBlockData iblockdata, int i);
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.UNDEFINED;
+-    }
+ }

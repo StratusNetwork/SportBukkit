@@ -79,8 +79,12 @@
      }
  
      public void c() {
-@@ -151,7 +182,7 @@
-                             ServerConnection.e.warn("Failed to handle packet for {}", new Object[] { networkmanager.getSocketAddress(), exception});
+@@ -148,10 +179,10 @@
+                                 throw new ReportedException(crashreport);
+                             }
+ 
+-                            ServerConnection.e.warn("Failed to handle packet for {}", networkmanager.getSocketAddress(), exception);
++                            ServerConnection.e.warn("Failed to handle packet for {}", new Object[] { networkmanager.getSocketAddress(), exception});
                              final ChatComponentText chatcomponenttext = new ChatComponentText("Internal server error");
  
 -                            networkmanager.sendPacket(new PacketPlayOutKickDisconnect(chatcomponenttext), new GenericFutureListener() {

@@ -1,13 +1,31 @@
 --- a/net/minecraft/server/RecipesBanner.java
 +++ b/net/minecraft/server/RecipesBanner.java
-@@ -20,9 +20,13 @@
-         craftingmanager.a(new RecipesBanner.AddRecipe(null));
-     }
+@@ -2,9 +2,31 @@
  
--    static class AddRecipe implements IRecipe {
+ import javax.annotation.Nullable;
+ 
+-public class RecipesBanner {    public static class AddRecipe implements IRecipe {
++public class RecipesBanner {
+ 
+-        public AddRecipe() {}
++    public RecipesBanner() {}
++
++    void a(CraftingManager craftingmanager) {
++        EnumColor[] aenumcolor = EnumColor.values();
++        int i = aenumcolor.length;
++
++        for (int j = 0; j < i; ++j) {
++            EnumColor enumcolor = aenumcolor[j];
++
++            craftingmanager.registerShapedRecipe(ItemBanner.a(enumcolor, (NBTTagList) null), new Object[] { "###", "###", " | ", Character.valueOf('#'), new ItemStack(Blocks.WOOL, 1, enumcolor.getColorIndex()), Character.valueOf('|'), Items.STICK});
++        }
++
++        craftingmanager.a(new RecipesBanner.DuplicateRecipe(null));
++        craftingmanager.a(new RecipesBanner.AddRecipe(null));
++    }
++
 +    static class AddRecipe extends ShapelessRecipes implements IRecipe { // CraftBukkit - added extends
- 
--        private AddRecipe() {}
++
 +        // CraftBukkit start - Delegate to new parent class with bogus info
 +        private AddRecipe() {
 +            super(new ItemStack(Items.BANNER, 0, 0), java.util.Arrays.asList(new ItemStack(Items.BANNER)));
@@ -16,14 +34,43 @@
  
          public boolean a(InventoryCrafting inventorycrafting, World world) {
              boolean flag = false;
-@@ -208,9 +212,13 @@
+@@ -79,6 +101,10 @@
+             return itemstack;
+         }
+ 
++        public int a() {
++            return 10;
++        }
++
+         public ItemStack b() {
+             return ItemStack.a;
+         }
+@@ -89,8 +115,8 @@
+             for (int i = 0; i < nonnulllist.size(); ++i) {
+                 ItemStack itemstack = inventorycrafting.getItem(i);
+ 
+-                if (itemstack.getItem().r()) {
+-                    nonnulllist.set(i, new ItemStack(itemstack.getItem().q()));
++                if (itemstack.getItem().s()) {
++                    nonnulllist.set(i, new ItemStack(itemstack.getItem().r()));
+                 }
+             }
+ 
+@@ -181,14 +207,18 @@
+             return null;
+         }
+ 
+-        public boolean c() {
+-            return true;
++        AddRecipe(Object object) {
++            this();
          }
      }
  
--    static class DuplicateRecipe implements IRecipe {
+-    public static class DuplicateRecipe implements IRecipe {
 +    static class DuplicateRecipe extends ShapelessRecipes implements IRecipe { // CraftBukkit - added extends
  
--        private DuplicateRecipe() {}
+-        public DuplicateRecipe() {}
 +        // CraftBukkit start - Delegate to new parent class with bogus info
 +        private DuplicateRecipe() {
 +            super(new ItemStack(Items.BANNER, 0, 0), java.util.Arrays.asList(new ItemStack(Items.DYE, 0, 5)));
@@ -32,3 +79,36 @@
  
          public boolean a(InventoryCrafting inventorycrafting, World world) {
              ItemStack itemstack = ItemStack.a;
+@@ -255,6 +285,10 @@
+             return ItemStack.a;
+         }
+ 
++        public int a() {
++            return 2;
++        }
++
+         public ItemStack b() {
+             return ItemStack.a;
+         }
+@@ -266,8 +300,8 @@
+                 ItemStack itemstack = inventorycrafting.getItem(i);
+ 
+                 if (!itemstack.isEmpty()) {
+-                    if (itemstack.getItem().r()) {
+-                        nonnulllist.set(i, new ItemStack(itemstack.getItem().q()));
++                    if (itemstack.getItem().s()) {
++                        nonnulllist.set(i, new ItemStack(itemstack.getItem().r()));
+                     } else if (itemstack.hasTag() && TileEntityBanner.b(itemstack) > 0) {
+                         ItemStack itemstack1 = itemstack.cloneItemStack();
+ 
+@@ -280,8 +314,8 @@
+             return nonnulllist;
+         }
+ 
+-        public boolean c() {
+-            return true;
++        DuplicateRecipe(Object object) {
++            this();
+         }
+     }
+ }

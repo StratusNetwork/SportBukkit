@@ -6,7 +6,7 @@ Subject: [PATCH] Highly Optimized Tick Loop
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -102,6 +102,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -102,6 +102,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
      private long Z;
      protected final Queue<FutureTask<?>> j = Queues.newArrayDeque();
      private Thread serverThread;
@@ -14,7 +14,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
      private long ab = aw();
  
      // CraftBukkit start
-@@ -116,6 +117,12 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -116,6 +117,12 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
      public java.util.Queue<Runnable> processQueue = new java.util.concurrent.ConcurrentLinkedQueue<Runnable>();
      public int autosavePeriod;
      // CraftBukkit end
@@ -27,7 +27,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
  
      public MinecraftServer(OptionSet options, Proxy proxy, DataConverterManager dataconvertermanager, YggdrasilAuthenticationService yggdrasilauthenticationservice, MinecraftSessionService minecraftsessionservice, GameProfileRepository gameprofilerepository, UserCache usercache) {
          this.e = proxy;
-@@ -516,48 +523,50 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -516,48 +523,50 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
          this.isRunning = false;
      }
  
@@ -45,7 +45,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
 -                long i = 0L;
 -
                  this.q.setMOTD(new ChatComponentText(this.motd));
-                 this.q.setServerInfo(new ServerPing.ServerData("1.11.1", 316));
+                 this.q.setServerInfo(new ServerPing.ServerData("1.12-pre6", 333));
                  this.a(this.q);
  
 +                // SportBukkit start
@@ -57,7 +57,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
 -
 -                    if (k > 2000L && this.ab - this.R >= 15000L) {
 -                        if (server.getWarnOnOverload()) // CraftBukkit
--                        MinecraftServer.LOGGER.warn("Can\'t keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)", new Object[] { Long.valueOf(k), Long.valueOf(k / 50L)});
+-                        MinecraftServer.LOGGER.warn("Can\'t keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)", Long.valueOf(k), Long.valueOf(k / 50L));
 -                        k = 2000L;
 -                        this.R = this.ab;
 -                    }
@@ -106,7 +106,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
              } else {
                  this.a((CrashReport) null);
              }
-@@ -636,6 +645,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -636,6 +645,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
  
      public void B() {}
  
@@ -114,7 +114,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
      protected void C() throws ExceptionWorldConflict { // CraftBukkit - added throws
          long i = System.nanoTime();
  
-@@ -1347,6 +1357,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -1337,6 +1347,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
          return this.e;
      }
  

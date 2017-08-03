@@ -1,6 +1,42 @@
 --- a/net/minecraft/server/EntityChicken.java
 +++ b/net/minecraft/server/EntityChicken.java
-@@ -44,6 +44,11 @@
+@@ -6,19 +6,19 @@
+ 
+ public class EntityChicken extends EntityAnimal {
+ 
+-    private static final Set<Item> bF = Sets.newHashSet(new Item[] { Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS});
++    private static final Set<Item> bE = Sets.newHashSet(new Item[] { Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS});
++    public float bw;
+     public float bx;
+     public float by;
+-    public float bz;
+-    public float bB;
+-    public float bC = 1.0F;
+-    public int bD;
+-    public boolean bE;
++    public float bA;
++    public float bB = 1.0F;
++    public int bC;
++    public boolean bD;
+ 
+     public EntityChicken(World world) {
+         super(world);
+         this.setSize(0.4F, 0.7F);
+-        this.bD = this.random.nextInt(6000) + 6000;
++        this.bC = this.random.nextInt(6000) + 6000;
+         this.a(PathType.WATER, 0.0F);
+     }
+ 
+@@ -26,7 +26,7 @@
+         this.goalSelector.a(0, new PathfinderGoalFloat(this));
+         this.goalSelector.a(1, new PathfinderGoalPanic(this, 1.4D));
+         this.goalSelector.a(2, new PathfinderGoalBreed(this, 1.0D));
+-        this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, false, EntityChicken.bF));
++        this.goalSelector.a(3, new PathfinderGoalTempt(this, 1.0D, false, EntityChicken.bE));
+         this.goalSelector.a(4, new PathfinderGoalFollowParent(this, 1.1D));
+         this.goalSelector.a(5, new PathfinderGoalRandomStrollLand(this, 1.0D));
+         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
+@@ -44,45 +44,52 @@
      }
  
      public void n() {
@@ -10,15 +46,118 @@
 +        }
 +        // CraftBukkit end
          super.n();
-         this.bA = this.bw;
-         this.by = this.bx;
-@@ -61,7 +66,9 @@
-         this.bw += this.bB * 2.0F;
-         if (!this.world.isClientSide && !this.isBaby() && !this.isChickenJockey() && --this.bC <= 0) {
-             this.a(SoundEffects.ac, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-+            this.forceDrops = true; // CraftBukkit
-             this.a(Items.EGG, 1);
-+            this.forceDrops = false; // CraftBukkit
-             this.bC = this.random.nextInt(6000) + 6000;
+-        this.bB = this.bx;
+-        this.bz = this.by;
+-        this.by = (float) ((double) this.by + (double) (this.onGround ? -1 : 4) * 0.3D);
+-        this.by = MathHelper.a(this.by, 0.0F, 1.0F);
+-        if (!this.onGround && this.bC < 1.0F) {
+-            this.bC = 1.0F;
++        this.bA = this.bw;
++        this.by = this.bx;
++        this.bx = (float) ((double) this.bx + (double) (this.onGround ? -1 : 4) * 0.3D);
++        this.bx = MathHelper.a(this.bx, 0.0F, 1.0F);
++        if (!this.onGround && this.bB < 1.0F) {
++            this.bB = 1.0F;
          }
  
+-        this.bC = (float) ((double) this.bC * 0.9D);
++        this.bB = (float) ((double) this.bB * 0.9D);
+         if (!this.onGround && this.motY < 0.0D) {
+             this.motY *= 0.6D;
+         }
+ 
+-        this.bx += this.bC * 2.0F;
+-        if (!this.world.isClientSide && !this.isBaby() && !this.isChickenJockey() && --this.bD <= 0) {
+-            this.a(SoundEffects.af, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
++        this.bw += this.bB * 2.0F;
++        if (!this.world.isClientSide && !this.isBaby() && !this.isChickenJockey() && --this.bC <= 0) {
++            this.a(SoundEffects.ac, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
++            this.forceDrops = true; // CraftBukkit
+             this.a(Items.EGG, 1);
+-            this.bD = this.random.nextInt(6000) + 6000;
++            this.forceDrops = false; // CraftBukkit
++            this.bC = this.random.nextInt(6000) + 6000;
+         }
+ 
+     }
+ 
+     public void e(float f, float f1) {}
+ 
+-    protected SoundEffect F() {
+-        return SoundEffects.ad;
++    protected SoundEffect G() {
++        return SoundEffects.aa;
+     }
+ 
+-    protected SoundEffect d(DamageSource damagesource) {
+-        return SoundEffects.ag;
++    protected SoundEffect bW() {
++        return SoundEffects.ad;
+     }
+ 
+-    protected SoundEffect cd() {
+-        return SoundEffects.ae;
++    protected SoundEffect bX() {
++        return SoundEffects.ab;
+     }
+ 
+     protected void a(BlockPosition blockposition, Block block) {
+-        this.a(SoundEffects.ah, 0.15F, 1.0F);
++        this.a(SoundEffects.ae, 0.15F, 1.0F);
+     }
+ 
+     @Nullable
+@@ -95,7 +102,7 @@
+     }
+ 
+     public boolean e(ItemStack itemstack) {
+-        return EntityChicken.bF.contains(itemstack.getItem());
++        return EntityChicken.bE.contains(itemstack.getItem());
+     }
+ 
+     protected int getExpValue(EntityHuman entityhuman) {
+@@ -108,17 +115,17 @@
+ 
+     public void a(NBTTagCompound nbttagcompound) {
+         super.a(nbttagcompound);
+-        this.bE = nbttagcompound.getBoolean("IsChickenJockey");
++        this.bD = nbttagcompound.getBoolean("IsChickenJockey");
+         if (nbttagcompound.hasKey("EggLayTime")) {
+-            this.bD = nbttagcompound.getInt("EggLayTime");
++            this.bC = nbttagcompound.getInt("EggLayTime");
+         }
+ 
+     }
+ 
+     public void b(NBTTagCompound nbttagcompound) {
+         super.b(nbttagcompound);
+-        nbttagcompound.setBoolean("IsChickenJockey", this.bE);
+-        nbttagcompound.setInt("EggLayTime", this.bD);
++        nbttagcompound.setBoolean("IsChickenJockey", this.bD);
++        nbttagcompound.setInt("EggLayTime", this.bC);
+     }
+ 
+     protected boolean isTypeNotPersistent() {
+@@ -132,7 +139,7 @@
+         float f2 = 0.1F;
+         float f3 = 0.0F;
+ 
+-        entity.setPosition(this.locX + (double) (0.1F * f), this.locY + (double) (this.length * 0.5F) + entity.aD() + 0.0D, this.locZ - (double) (0.1F * f1));
++        entity.setPosition(this.locX + (double) (0.1F * f), this.locY + (double) (this.length * 0.5F) + entity.ax() + 0.0D, this.locZ - (double) (0.1F * f1));
+         if (entity instanceof EntityLiving) {
+             ((EntityLiving) entity).aN = this.aN;
+         }
+@@ -140,11 +147,11 @@
+     }
+ 
+     public boolean isChickenJockey() {
+-        return this.bE;
++        return this.bD;
+     }
+ 
+     public void p(boolean flag) {
+-        this.bE = flag;
++        this.bD = flag;
+     }
+ 
+     public EntityAgeable createChild(EntityAgeable entityageable) {

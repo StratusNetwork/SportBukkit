@@ -6,7 +6,7 @@ Subject: [PATCH] Attack cooldown info API
 diff --git a/src/main/java/org/bukkit/entity/HumanEntity.java b/src/main/java/org/bukkit/entity/HumanEntity.java
 --- a/src/main/java/org/bukkit/entity/HumanEntity.java
 +++ b/src/main/java/org/bukkit/entity/HumanEntity.java
-@@ -244,4 +244,21 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
+@@ -338,4 +338,21 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
       *         random spawning and despawning near them.
       */
      public boolean getAffectsSpawning();

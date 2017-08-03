@@ -6,7 +6,7 @@ Subject: [PATCH] Entity ID API
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -1048,6 +1048,13 @@ public final class Bukkit {
+@@ -1031,6 +1031,13 @@ public final class Bukkit {
      }
  
      /**
@@ -23,7 +23,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -856,6 +856,13 @@ public interface Server extends PluginMessageRecipient {
+@@ -841,6 +841,13 @@ public interface Server extends PluginMessageRecipient {
      ScoreboardManager getScoreboardManager();
  
      /**

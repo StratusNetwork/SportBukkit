@@ -27,7 +27,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerInventory.java b/src/main/
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-@@ -274,7 +274,7 @@ public class CraftInventory implements Inventory {
+@@ -282,7 +282,7 @@ public class CraftInventory implements Inventory {
          return firstPartial(material.getId());
      }
  
@@ -39,7 +39,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
-@@ -233,6 +233,15 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
+@@ -229,6 +229,15 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
      }
  
      @Override

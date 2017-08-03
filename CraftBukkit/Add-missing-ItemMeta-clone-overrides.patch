@@ -6,7 +6,7 @@ Subject: [PATCH] Add missing ItemMeta clone overrides
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBanner.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBanner.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBanner.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBanner.java
-@@ -201,4 +201,11 @@ public class CraftMetaBanner extends CraftMetaItem implements BannerMeta {
+@@ -200,4 +200,11 @@ public class CraftMetaBanner extends CraftMetaItem implements BannerMeta {
      boolean applicableTo(Material type) {
          return type == Material.BANNER;
      }
@@ -21,7 +21,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBanner.java
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
-@@ -497,4 +497,13 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
+@@ -498,4 +498,13 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
          blockEntityTag = new NBTTagCompound();
          te.save(blockEntityTag);
      }

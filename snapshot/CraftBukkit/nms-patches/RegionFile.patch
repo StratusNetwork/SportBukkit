@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/RegionFile.java
 +++ b/net/minecraft/server/RegionFile.java
-@@ -86,6 +86,45 @@
+@@ -86,13 +86,52 @@
  
      }
  
@@ -46,3 +46,35 @@
      @Nullable
      public synchronized DataInputStream a(int i, int j) {
          if (this.d(i, j)) {
+             return null;
+         } else {
+             try {
+-                int k = this.getOffset(i, j);
++                int k = this.e(i, j);
+ 
+                 if (k == 0) {
+                     return null;
+@@ -141,7 +180,7 @@
+ 
+     protected synchronized void a(int i, int j, byte[] abyte, int k) {
+         try {
+-            int l = this.getOffset(i, j);
++            int l = this.e(i, j);
+             int i1 = l >> 8;
+             int j1 = l & 255;
+             int k1 = (k + 5) / 4096 + 1;
+@@ -224,12 +263,12 @@
+         return i < 0 || i >= 32 || j < 0 || j >= 32;
+     }
+ 
+-    private synchronized int getOffset(int i, int j) {
++    private int e(int i, int j) {
+         return this.d[i + j * 32];
+     }
+ 
+     public boolean c(int i, int j) {
+-        return this.getOffset(i, j) != 0;
++        return this.e(i, j) != 0;
+     }
+ 
+     private void a(int i, int j, int k) throws IOException {

@@ -1,13 +1,21 @@
 --- a/net/minecraft/server/RecipiesShield.java
 +++ b/net/minecraft/server/RecipiesShield.java
-@@ -9,9 +9,13 @@
-         craftingmanager.a(new RecipiesShield.Decoration(null));
-     }
+@@ -1,8 +1,21 @@
+ package net.minecraft.server;
  
--    static class Decoration implements IRecipe {
+-public class RecipiesShield {    public static class Decoration implements IRecipe {
++public class RecipiesShield {
+ 
+-        public Decoration() {}
++    public RecipiesShield() {}
++
++    public void a(CraftingManager craftingmanager) {
++        craftingmanager.registerShapedRecipe(new ItemStack(Items.SHIELD), new Object[] { "WoW", "WWW", " W ", Character.valueOf('W'), Blocks.PLANKS, Character.valueOf('o'), Items.IRON_INGOT});
++        craftingmanager.a(new RecipiesShield.Decoration(null));
++    }
++
 +    static class Decoration extends ShapelessRecipes implements IRecipe { // CraftBukkit - added extends
- 
--        private Decoration() {}
++
 +        // CraftBukkit start - Delegate to new parent class with bogus info
 +        private Decoration() {
 +            super(new ItemStack(Items.SHIELD, 0 ,0), java.util.Arrays.asList(new ItemStack(Items.BANNER, 0, 0)));
@@ -16,3 +24,35 @@
  
          public boolean a(InventoryCrafting inventorycrafting, World world) {
              ItemStack itemstack = ItemStack.a;
+@@ -71,6 +84,10 @@
+             }
+         }
+ 
++        public int a() {
++            return 2;
++        }
++
+         public ItemStack b() {
+             return ItemStack.a;
+         }
+@@ -81,16 +98,16 @@
+             for (int i = 0; i < nonnulllist.size(); ++i) {
+                 ItemStack itemstack = inventorycrafting.getItem(i);
+ 
+-                if (itemstack.getItem().r()) {
+-                    nonnulllist.set(i, new ItemStack(itemstack.getItem().q()));
++                if (itemstack.getItem().s()) {
++                    nonnulllist.set(i, new ItemStack(itemstack.getItem().r()));
+                 }
+             }
+ 
+             return nonnulllist;
+         }
+ 
+-        public boolean c() {
+-            return true;
++        Decoration(Object object) {
++            this();
+         }
+     }
+ }

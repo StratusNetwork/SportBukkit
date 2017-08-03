@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/ContainerWorkbench.java
 +++ b/net/minecraft/server/ContainerWorkbench.java
-@@ -1,13 +1,28 @@
+@@ -1,17 +1,30 @@
  package net.minecraft.server;
  
 +// CraftBukkit start
@@ -11,11 +11,12 @@
  public class ContainerWorkbench extends Container {
  
 -    public InventoryCrafting craftInventory = new InventoryCrafting(this, 3, 3);
--    public IInventory resultInventory = new InventoryCraftResult();
+-    public InventoryCraftResult resultInventory = new InventoryCraftResult();
 +    public InventoryCrafting craftInventory; // CraftBukkit - move initialization into constructor
 +    public IInventory resultInventory; // CraftBukkit - move initialization into constructor
      private final World g;
      private final BlockPosition h;
+-    private final EntityHuman i;
 +    // CraftBukkit start
 +    private CraftInventoryView bukkitEntity = null;
 +    private PlayerInventory player;
@@ -30,12 +31,19 @@
 +        // CraftBukkit end
          this.g = world;
          this.h = blockposition;
+-        this.i = playerinventory.player;
          this.a((Slot) (new SlotResult(playerinventory.player, this.craftInventory, this.resultInventory, 0, 124, 35)));
-@@ -35,7 +50,21 @@
+ 
+         int i;
+@@ -33,20 +46,43 @@
+             this.a(new Slot(playerinventory, i, 8 + i * 18, 142));
+         }
+ 
++        this.a((IInventory) this.craftInventory);
      }
  
      public void a(IInventory iinventory) {
--        this.resultInventory.setItem(0, CraftingManager.getInstance().craft(this.craftInventory, this.g));
+-        this.a(this.g, this.i, this.craftInventory, this.resultInventory);
 +        // this.resultInventory.setItem(0, CraftingManager.getInstance().craft(this.craftInventory, this.g));
 +        // CraftBukkit start
 +        CraftingManager.getInstance().lastCraftView = getBukkitView();
@@ -54,7 +62,18 @@
      }
  
      public void b(EntityHuman entityhuman) {
-@@ -53,6 +82,7 @@
+         super.b(entityhuman);
+         if (!this.g.isClientSide) {
+-            this.a(entityhuman, this.g, this.craftInventory);
++            for (int i = 0; i < 9; ++i) {
++                ItemStack itemstack = this.craftInventory.splitWithoutUpdate(i);
++
++                if (!itemstack.isEmpty()) {
++                    entityhuman.drop(itemstack, false);
++                }
++            }
++
+         }
      }
  
      public boolean a(EntityHuman entityhuman) {
@@ -62,7 +81,7 @@
          return this.g.getType(this.h).getBlock() != Blocks.CRAFTING_TABLE ? false : entityhuman.d((double) this.h.getX() + 0.5D, (double) this.h.getY() + 0.5D, (double) this.h.getZ() + 0.5D) <= 64.0D;
      }
  
-@@ -106,4 +136,17 @@
+@@ -100,4 +136,17 @@
      public boolean a(ItemStack itemstack, Slot slot) {
          return slot.inventory != this.resultInventory && super.a(itemstack, slot);
      }

@@ -6,15 +6,7 @@ Subject: [PATCH] Expand Physical API
 diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
 --- a/src/main/java/org/bukkit/Location.java
 +++ b/src/main/java/org/bukkit/Location.java
-@@ -4,7 +4,6 @@ import java.util.HashMap;
- import java.util.Map;
- import java.util.Objects;
- import java.util.UUID;
--import javax.annotation.Nullable;
- 
- import org.bukkit.block.Block;
- import org.bukkit.configuration.serialization.ConfigurationSerializable;
-@@ -19,7 +18,7 @@ import org.bukkit.util.Vector;
+@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  /**
   * Represents a 3-dimensional position in a world
   */
@@ -23,7 +15,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
  
      private UUID worldId;
      private final Vector position;
-@@ -97,6 +96,15 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -97,6 +97,15 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
          this.yaw = yaw;
      }
  
@@ -39,7 +31,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      /**
       * Sets the world that this location resides in
       *
-@@ -106,33 +114,19 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -106,34 +115,18 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
          setWorldId(world.getUID());
      }
  
@@ -52,21 +44,21 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
       *
       * @return World that contains this location
       */
-+    @Override
      public World getWorld() {
 -        return getWorld(Bukkit.getServer());
 -    }
 -
 -    public World getWorld(Server server) {
 -        return server.world(getWorldId());
--    }
--
--    public @Nullable World getWorldIfLoaded() {
--        return getWorldIfLoaded(Bukkit.getServer());
 +        return Bukkit.world(getWorldId());
      }
  
--    public @Nullable World getWorldIfLoaded(Server server) {
+-    public @Nullable World getWorldIfLoaded() {
+-        return getWorldIfLoaded(Bukkit.getServer());
+-    }
+-
+-    public @Nullable
+-    World getWorldIfLoaded(Server server) {
 -        return server.getWorld(getWorldId());
 -    }
 -
@@ -142,7 +134,7 @@ diff --git a/src/main/java/org/bukkit/Physical.java b/src/main/java/org/bukkit/P
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -533,6 +533,11 @@ public interface World extends PluginMessageRecipient, Metadatable, Physical {
+@@ -529,6 +529,11 @@ public interface World extends PluginMessageRecipient, Metadatable, Physical {
       */
      public UUID getUID();
  
@@ -157,7 +149,7 @@ diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/Worl
 diff --git a/src/main/java/org/bukkit/block/BlockState.java b/src/main/java/org/bukkit/block/BlockState.java
 --- a/src/main/java/org/bukkit/block/BlockState.java
 +++ b/src/main/java/org/bukkit/block/BlockState.java
-@@ -109,8 +109,6 @@ public interface BlockState extends Metadatable, Locatable {
+@@ -105,8 +105,6 @@ public interface BlockState extends Metadatable, Locatable {
       */
      World getWorld();
  

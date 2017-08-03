@@ -1,6 +1,85 @@
 --- a/net/minecraft/server/EntityGhast.java
 +++ b/net/minecraft/server/EntityGhast.java
-@@ -159,7 +159,8 @@
+@@ -31,8 +31,8 @@
+         return this.b;
+     }
+ 
+-    public void B_() {
+-        super.B_();
++    public void A_() {
++        super.A_();
+         if (!this.world.isClientSide && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
+             this.die();
+         }
+@@ -42,8 +42,9 @@
+     public boolean damageEntity(DamageSource damagesource, float f) {
+         if (this.isInvulnerable(damagesource)) {
+             return false;
+-        } else if (damagesource.i() instanceof EntityLargeFireball && damagesource.getEntity() instanceof EntityHuman) {
++        } else if ("fireball".equals(damagesource.p()) && damagesource.getEntity() instanceof EntityHuman) {
+             super.damageEntity(damagesource, 1000.0F);
++            ((EntityHuman) damagesource.getEntity()).b((Statistic) AchievementList.z);
+             return true;
+         } else {
+             return super.damageEntity(damagesource, f);
+@@ -61,20 +62,20 @@
+         this.getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(100.0D);
+     }
+ 
+-    public SoundCategory bI() {
++    public SoundCategory bC() {
+         return SoundCategory.HOSTILE;
+     }
+ 
+-    protected SoundEffect F() {
+-        return SoundEffects.cb;
++    protected SoundEffect G() {
++        return SoundEffects.bV;
+     }
+ 
+-    protected SoundEffect d(DamageSource damagesource) {
+-        return SoundEffects.cd;
++    protected SoundEffect bW() {
++        return SoundEffects.bX;
+     }
+ 
+-    protected SoundEffect cd() {
+-        return SoundEffects.cc;
++    protected SoundEffect bX() {
++        return SoundEffects.bW;
+     }
+ 
+     @Nullable
+@@ -82,15 +83,15 @@
+         return LootTables.aj;
+     }
+ 
+-    protected float co() {
++    protected float ci() {
+         return 10.0F;
+     }
+ 
+-    public boolean P() {
+-        return this.random.nextInt(20) == 0 && super.P() && this.world.getDifficulty() != EnumDifficulty.PEACEFUL;
++    public boolean cM() {
++        return this.random.nextInt(20) == 0 && super.cM() && this.world.getDifficulty() != EnumDifficulty.PEACEFUL;
+     }
+ 
+-    public int cS() {
++    public int cQ() {
+         return 1;
+     }
+ 
+@@ -150,7 +151,7 @@
+ 
+                 if (this.a == 20) {
+                     double d1 = 4.0D;
+-                    Vec3D vec3d = this.ghast.g(1.0F);
++                    Vec3D vec3d = this.ghast.f(1.0F);
+                     double d2 = entityliving.locX - (this.ghast.locX + vec3d.x * 4.0D);
+                     double d3 = entityliving.getBoundingBox().b + (double) (entityliving.length / 2.0F) - (0.5D + this.ghast.locY + (double) (this.ghast.length / 2.0F));
+                     double d4 = entityliving.locZ - (this.ghast.locZ + vec3d.z * 4.0D);
+@@ -158,7 +159,8 @@
                      world.a((EntityHuman) null, 1016, new BlockPosition(this.ghast), 0);
                      EntityLargeFireball entitylargefireball = new EntityLargeFireball(world, this.ghast, d2, d3, d4);
  
@@ -10,3 +89,21 @@
                      entitylargefireball.locX = this.ghast.locX + vec3d.x * 4.0D;
                      entitylargefireball.locY = this.ghast.locY + (double) (this.ghast.length / 2.0F) + 0.5D;
                      entitylargefireball.locZ = this.ghast.locZ + vec3d.z * 4.0D;
+@@ -218,7 +220,7 @@
+         public boolean a() {
+             ControllerMove controllermove = this.a.getControllerMove();
+ 
+-            if (!controllermove.b()) {
++            if (!controllermove.a()) {
+                 return true;
+             } else {
+                 double d0 = controllermove.d() - this.a.locX;
+@@ -254,7 +256,7 @@
+             this.i = entityghast;
+         }
+ 
+-        public void a() {
++        public void c() {
+             if (this.h == ControllerMove.Operation.MOVE_TO) {
+                 double d0 = this.b - this.i.locX;
+                 double d1 = this.c - this.i.locY;

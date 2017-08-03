@@ -5,7 +5,7 @@ Subject: [PATCH] Add PoseFlag and EntityLocation
 
 diff --git a/src/main/java/org/bukkit/EntityLocation.java b/src/main/java/org/bukkit/EntityLocation.java
 new file mode 100644
-index 0000000..d9fbf35
+index 00000000..d9fbf35a
 --- /dev/null
 +++ b/src/main/java/org/bukkit/EntityLocation.java
 @@ -0,0 +1,104 @@
@@ -115,7 +115,7 @@ index 0000000..d9fbf35
 +}
 diff --git a/src/main/java/org/bukkit/PoseFlag.java b/src/main/java/org/bukkit/PoseFlag.java
 new file mode 100644
-index 0000000..4d8fbee
+index 00000000..4d8fbeed
 --- /dev/null
 +++ b/src/main/java/org/bukkit/PoseFlag.java
 @@ -0,0 +1,41 @@

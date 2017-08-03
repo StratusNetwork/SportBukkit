@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
-import com.avaje.ebean.EbeanServer;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -117,10 +116,6 @@ public class TestPlugin extends PluginBase {
 
     public void setNaggable(boolean naggable) {
         this.naggable = naggable;
-    }
-
-    public EbeanServer getDatabase() {
-        throw new UnsupportedOperationException("Not supported.");
     }
 
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {

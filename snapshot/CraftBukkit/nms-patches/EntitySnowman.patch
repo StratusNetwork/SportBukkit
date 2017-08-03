@@ -12,7 +12,13 @@
  
  public class EntitySnowman extends EntityGolem implements IRangedEntity {
  
-@@ -59,7 +64,7 @@
+@@ -54,12 +59,12 @@
+             int j = MathHelper.floor(this.locY);
+             int k = MathHelper.floor(this.locZ);
+ 
+-            if (this.an()) {
++            if (this.ai()) {
+                 this.damageEntity(DamageSource.DROWN, 1.0F);
              }
  
              if (this.world.getBiome(new BlockPosition(i, 0, k)).a(new BlockPosition(i, j, k)) > 1.0F) {
@@ -30,3 +36,38 @@
                  }
              }
          }
+@@ -94,7 +99,7 @@
+         float f1 = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
+ 
+         entitysnowball.shoot(d1, d2 + (double) f1, d3, 1.6F, 12.0F);
+-        this.a(SoundEffects.ht, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
++        this.a(SoundEffects.gs, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+         this.world.addEntity(entitysnowball);
+     }
+ 
+@@ -129,19 +134,17 @@
+     }
+ 
+     @Nullable
+-    protected SoundEffect F() {
+-        return SoundEffects.hq;
++    protected SoundEffect G() {
++        return SoundEffects.gp;
+     }
+ 
+     @Nullable
+-    protected SoundEffect d(DamageSource damagesource) {
+-        return SoundEffects.hs;
++    protected SoundEffect bW() {
++        return SoundEffects.gr;
+     }
+ 
+     @Nullable
+-    protected SoundEffect cd() {
+-        return SoundEffects.hr;
++    protected SoundEffect bX() {
++        return SoundEffects.gq;
+     }
+-
+-    public void p(boolean flag) {}
+ }

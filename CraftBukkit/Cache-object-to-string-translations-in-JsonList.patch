@@ -21,7 +21,7 @@ diff --git a/src/main/java/net/minecraft/server/GameProfileBanList.java b/src/ma
 diff --git a/src/main/java/net/minecraft/server/JsonList.java b/src/main/java/net/minecraft/server/JsonList.java
 --- a/src/main/java/net/minecraft/server/JsonList.java
 +++ b/src/main/java/net/minecraft/server/JsonList.java
-@@ -29,6 +29,12 @@ import org.apache.commons.io.IOUtils;
+@@ -30,6 +30,12 @@ import org.apache.commons.io.IOUtils;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -34,7 +34,7 @@ diff --git a/src/main/java/net/minecraft/server/JsonList.java b/src/main/java/ne
  public class JsonList<K, V extends JsonListEntry<K>> {
  
      protected static final Logger a = LogManager.getLogger();
-@@ -50,6 +56,16 @@ public class JsonList<K, V extends JsonListEntry<K>> {
+@@ -51,6 +57,16 @@ public class JsonList<K, V extends JsonListEntry<K>> {
          }
      };
  
@@ -51,7 +51,7 @@ diff --git a/src/main/java/net/minecraft/server/JsonList.java b/src/main/java/ne
      public JsonList(File file) {
          this.c = file;
          GsonBuilder gsonbuilder = (new GsonBuilder()).setPrettyPrinting();
-@@ -112,7 +128,15 @@ public class JsonList<K, V extends JsonListEntry<K>> {
+@@ -113,7 +129,15 @@ public class JsonList<K, V extends JsonListEntry<K>> {
      }
  
      protected String a(K k0) {

@@ -6,15 +6,15 @@ Subject: [PATCH] New event API
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -24,6 +24,7 @@ import org.bukkit.command.ConsoleCommandSender;
+@@ -25,6 +25,7 @@ import org.bukkit.command.ConsoleCommandSender;
  import org.bukkit.command.PluginCommand;
  import org.bukkit.entity.Entity;
  import org.bukkit.entity.Player;
 +import org.bukkit.event.EventBus;
  import org.bukkit.event.inventory.InventoryType;
  import org.bukkit.event.server.ServerListPingEvent;
- import org.bukkit.help.HelpMap;
-@@ -523,6 +524,10 @@ public final class Bukkit {
+ import org.bukkit.geometry.VectorFactory;
+@@ -508,6 +509,10 @@ public final class Bukkit {
          return server.getServicesManager();
      }
  
@@ -25,7 +25,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
      /**
       * Gets a list of all worlds on this server.
       *
-@@ -1113,6 +1118,10 @@ public final class Bukkit {
+@@ -1096,6 +1101,10 @@ public final class Bukkit {
          return server.getWarningState();
      }
  
@@ -38,7 +38,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
       *
 diff --git a/src/main/java/org/bukkit/BukkitModule.java b/src/main/java/org/bukkit/BukkitModule.java
 new file mode 100644
-index 0000000..2cb3a71
+index 00000000..2cb3a714
 --- /dev/null
 +++ b/src/main/java/org/bukkit/BukkitModule.java
 @@ -0,0 +1,44 @@
@@ -94,9 +94,9 @@ diff --git a/src/main/java/org/bukkit/BukkitRuntime.java b/src/main/java/org/buk
  
 +import com.google.inject.Injector;
  import org.bukkit.block.BlockFactory;
+ import org.bukkit.geometry.VectorFactory;
  import org.bukkit.inventory.ItemFactory;
- import org.bukkit.inventory.meta.ItemMeta;
-@@ -10,6 +11,15 @@ import org.bukkit.geometry.VectorFactory;
+@@ -10,6 +11,15 @@ import org.bukkit.registry.Key;
  
  public interface BukkitRuntime {
  
@@ -123,7 +123,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
  import org.bukkit.event.inventory.InventoryType;
  import org.bukkit.event.server.ServerListPingEvent;
  import org.bukkit.help.HelpMap;
-@@ -134,6 +135,8 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
+@@ -121,6 +122,8 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
       */
      public Collection<? extends Player> getOnlinePlayers();
  
@@ -132,7 +132,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
      /**
       * Get the maximum amount of players which can login to this server.
       *
-@@ -410,12 +413,21 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
+@@ -397,12 +400,21 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
      public ServicesManager getServicesManager();
  
      /**
@@ -154,7 +154,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
      /**
       * Check for a level.dat file belonging to a world with the given name.
       * If found, return a {@link WorldCreator} configured to match the settings
-@@ -900,6 +912,8 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
+@@ -885,6 +897,8 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
       */
      public WarningState getWarningState();
  
@@ -165,7 +165,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
       *
 diff --git a/src/main/java/org/bukkit/ServerInstanceModule.java b/src/main/java/org/bukkit/ServerInstanceModule.java
 new file mode 100644
-index 0000000..4c82a5f
+index 00000000..4c82a5ff
 --- /dev/null
 +++ b/src/main/java/org/bukkit/ServerInstanceModule.java
 @@ -0,0 +1,35 @@
@@ -206,10 +206,10 @@ index 0000000..4c82a5f
 +}
 diff --git a/src/main/java/org/bukkit/ServerModule.java b/src/main/java/org/bukkit/ServerModule.java
 new file mode 100644
-index 0000000..373967b
+index 00000000..009faf3c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/ServerModule.java
-@@ -0,0 +1,111 @@
+@@ -0,0 +1,113 @@
 +package org.bukkit;
 +
 +import java.util.Collection;
@@ -230,6 +230,7 @@ index 0000000..373967b
 +import tc.oc.inject.SingletonModule;
 +import tc.oc.minecraft.api.plugin.PluginFinder;
 +import tc.oc.minecraft.api.server.LocalServer;
++import tc.oc.minecraft.api.server.MinecraftServerModule;
 +
 +/**
 + * Bindings for things that belong to a {@link Server}.
@@ -243,6 +244,7 @@ index 0000000..373967b
 +    @Override
 +    protected void configure() {
 +        install(new BukkitModule());
++        install(new MinecraftServerModule());
 +
 +        bind(tc.oc.minecraft.api.server.Server.class).to(LocalServer.class);
 +        bind(LocalServer.class).to(Server.class);
@@ -337,7 +339,7 @@ diff --git a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java b/src
              return false;
          }
 -        if (!sender.getServer().getPluginManager().useTimings()) {
-+        if (!sender.getServer().pluginProfiling()) {
++        if (!sender.getServer().pluginProfiling() ) {
              sender.sendMessage("Please enable timings by setting \"settings.plugin-profiling\" to true in bukkit.yml");
              return true;
          }
@@ -352,7 +354,7 @@ diff --git a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java b/src
                      }
 diff --git a/src/main/java/org/bukkit/event/BoundEventHandler.java b/src/main/java/org/bukkit/event/BoundEventHandler.java
 new file mode 100644
-index 0000000..0fd01db
+index 00000000..0fd01dbd
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/BoundEventHandler.java
 @@ -0,0 +1,74 @@
@@ -432,7 +434,7 @@ index 0000000..0fd01db
 +}
 diff --git a/src/main/java/org/bukkit/event/CallableEventHandler.java b/src/main/java/org/bukkit/event/CallableEventHandler.java
 new file mode 100644
-index 0000000..fa77ef1
+index 00000000..fa77ef11
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/CallableEventHandler.java
 @@ -0,0 +1,101 @@
@@ -540,25 +542,26 @@ index 0000000..fa77ef1
 diff --git a/src/main/java/org/bukkit/event/Event.java b/src/main/java/org/bukkit/event/Event.java
 --- a/src/main/java/org/bukkit/event/Event.java
 +++ b/src/main/java/org/bukkit/event/Event.java
-@@ -1,5 +1,17 @@
+@@ -1,7 +1,18 @@
  package org.bukkit.event;
  
-+import java.lang.reflect.Field;
-+import java.lang.reflect.Method;
-+import java.lang.reflect.Modifier;
-+import java.util.concurrent.ExecutionException;
-+import javax.annotation.Nullable;
-+
 +import com.google.common.base.Throwables;
 +import com.google.common.cache.CacheBuilder;
 +import com.google.common.cache.CacheLoader;
 +import com.google.common.cache.LoadingCache;
 +import com.google.common.util.concurrent.UncheckedExecutionException;
-+import org.bukkit.plugin.Plugin;
  import org.bukkit.plugin.PluginManager;
  
++import javax.annotation.Nullable;
++import java.lang.reflect.Field;
++import java.lang.reflect.Method;
++import java.lang.reflect.Modifier;
++import java.util.concurrent.ExecutionException;
++
  /**
-@@ -47,7 +59,132 @@ public abstract class Event {
+  * Represents an event.
+  *
+@@ -47,7 +58,133 @@ public abstract class Event {
          return name;
      }
  
@@ -567,7 +570,8 @@ diff --git a/src/main/java/org/bukkit/event/Event.java b/src/main/java/org/bukki
 +        return false;
 +    }
 +
-+    @Nullable EventCallable yielder = null;
++    @Nullable
++    EventCallable yielder = null;
 +
 +    /**
 +     * Can this event be yielded to right now?
@@ -596,7 +600,7 @@ diff --git a/src/main/java/org/bukkit/event/Event.java b/src/main/java/org/bukki
 +    public void yield() throws EventException {
 +        if(!canYield()) {
 +            throw new IllegalStateException(
-+                "This event has already been yielded to, or is not currently being dispatched"
++                    "This event has already been yielded to, or is not currently being dispatched"
 +            );
 +        }
 +
@@ -694,7 +698,7 @@ diff --git a/src/main/java/org/bukkit/event/Event.java b/src/main/java/org/bukki
       * Any custom event that should not by synchronized with other events must
 diff --git a/src/main/java/org/bukkit/event/EventBody.java b/src/main/java/org/bukkit/event/EventBody.java
 new file mode 100644
-index 0000000..7abbbbb
+index 00000000..7abbbbb8
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventBody.java
 @@ -0,0 +1,11 @@
@@ -711,7 +715,7 @@ index 0000000..7abbbbb
 +}
 diff --git a/src/main/java/org/bukkit/event/EventBus.java b/src/main/java/org/bukkit/event/EventBus.java
 new file mode 100644
-index 0000000..7fac014
+index 00000000..7fac0140
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventBus.java
 @@ -0,0 +1,55 @@
@@ -772,7 +776,7 @@ index 0000000..7fac014
 +}
 diff --git a/src/main/java/org/bukkit/event/EventCallable.java b/src/main/java/org/bukkit/event/EventCallable.java
 new file mode 100644
-index 0000000..e56fcf6
+index 00000000..e56fcf60
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventCallable.java
 @@ -0,0 +1,11 @@
@@ -801,7 +805,7 @@ diff --git a/src/main/java/org/bukkit/event/EventException.java b/src/main/java/
      private final Event event;
 diff --git a/src/main/java/org/bukkit/event/EventExecutor.java b/src/main/java/org/bukkit/event/EventExecutor.java
 new file mode 100644
-index 0000000..7bfa1c9
+index 00000000..7bfa1c9f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventExecutor.java
 @@ -0,0 +1,7 @@
@@ -814,7 +818,7 @@ index 0000000..7bfa1c9
 +}
 diff --git a/src/main/java/org/bukkit/event/EventHandlerMeta.java b/src/main/java/org/bukkit/event/EventHandlerMeta.java
 new file mode 100644
-index 0000000..54f89ac
+index 00000000..54f89ac3
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventHandlerMeta.java
 @@ -0,0 +1,120 @@
@@ -940,7 +944,7 @@ index 0000000..54f89ac
 +}
 diff --git a/src/main/java/org/bukkit/event/EventMethodExecutor.java b/src/main/java/org/bukkit/event/EventMethodExecutor.java
 new file mode 100644
-index 0000000..ac3afad
+index 00000000..ac3afade
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventMethodExecutor.java
 @@ -0,0 +1,119 @@
@@ -1065,7 +1069,7 @@ index 0000000..ac3afad
 +}
 diff --git a/src/main/java/org/bukkit/event/EventRegistry.java b/src/main/java/org/bukkit/event/EventRegistry.java
 new file mode 100644
-index 0000000..dcf4a37
+index 00000000..dcf4a37c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/EventRegistry.java
 @@ -0,0 +1,80 @@
@@ -1152,12 +1156,7 @@ index 0000000..dcf4a37
 diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org/bukkit/event/HandlerList.java
 --- a/src/main/java/org/bukkit/event/HandlerList.java
 +++ b/src/main/java/org/bukkit/event/HandlerList.java
-@@ -1,33 +1,33 @@
- package org.bukkit.event;
- 
--import org.bukkit.plugin.Plugin;
--import org.bukkit.plugin.RegisteredListener;
-+import org.bukkit.plugin.*;
+@@ -5,29 +5,30 @@ import org.bukkit.plugin.RegisteredListener;
  
  import java.util.*;
  import java.util.Map.Entry;
@@ -1192,7 +1191,7 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
  
      /**
       * Bake all handler lists. Best used just after all normal event
-@@ -47,11 +47,9 @@ public class HandlerList {
+@@ -47,11 +48,9 @@ public class HandlerList {
       */
      public static void unregisterAll() {
          synchronized (allLists) {
@@ -1206,7 +1205,7 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
                      h.handlers = null;
                  }
              }
-@@ -64,11 +62,8 @@ public class HandlerList {
+@@ -64,11 +63,8 @@ public class HandlerList {
       * @param plugin plugin to unregister
       */
      public static void unregisterAll(Plugin plugin) {
@@ -1216,11 +1215,11 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
 -            }
 -        }
 +        unregisterAll(handler -> handler instanceof RegisteredListener &&
-+                                 plugin == ((RegisteredListener) handler).getPlugin());
++                plugin == ((RegisteredListener) handler).getPlugin());
      }
  
      /**
-@@ -77,9 +72,14 @@ public class HandlerList {
+@@ -77,9 +73,14 @@ public class HandlerList {
       * @param listener listener to unregister
       */
      public static void unregisterAll(Listener listener) {
@@ -1228,7 +1227,7 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
 -            for (HandlerList h : allLists) {
 -                h.unregister(listener);
 +        unregisterAll(handler -> handler instanceof BoundEventHandler &&
-+                                 listener == ((BoundEventHandler) handler).listener());
++                listener == ((BoundEventHandler) handler).listener());
 +    }
 +
 +    public static void unregisterAll(Predicate<RegisteredHandler<?>> filter) {
@@ -1238,7 +1237,7 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
              }
          }
      }
-@@ -90,9 +90,9 @@ public class HandlerList {
+@@ -90,9 +91,9 @@ public class HandlerList {
       * The HandlerList is then added to meta-list for use in bakeAll()
       */
      public HandlerList() {
@@ -1250,7 +1249,7 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
          }
          synchronized (allLists) {
              allLists.add(this);
-@@ -102,22 +102,30 @@ public class HandlerList {
+@@ -102,22 +103,29 @@ public class HandlerList {
      /**
       * Register a new listener in this handler list
       *
@@ -1264,13 +1263,12 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
 +        final EventPriority priority = handler.meta().priority();
 +        if(handlerslots.get(priority).contains(handler)) {
 +            throw new IllegalStateException("Event handler " + handler +
-+                                            " is already registered at priority " + priority);
++                    " is already registered at priority " + priority);
 +        }
          handlers = null;
 -        handlerslots.get(listener.getPriority()).add(listener);
 +        handlerslots.get(priority).add(handler);
 +    }
-+
 +    // For legacy binary compatibility
 +    public synchronized void register(RegisteredListener listener) {
 +        register((RegisteredHandler) listener);
@@ -1343,7 +1341,7 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
 -        }
 -        if (changed) handlers = null;
 +        unregister(handler -> handler instanceof BoundEventHandler &&
-+                              listener == ((BoundEventHandler) handler).listener());
++                listener == ((BoundEventHandler) handler).listener());
      }
  
      /**
@@ -1431,7 +1429,7 @@ diff --git a/src/main/java/org/bukkit/event/HandlerList.java b/src/main/java/org
      /**
 diff --git a/src/main/java/org/bukkit/event/RegisteredHandler.java b/src/main/java/org/bukkit/event/RegisteredHandler.java
 new file mode 100644
-index 0000000..bd0a7be
+index 00000000..bd0a7be4
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/RegisteredHandler.java
 @@ -0,0 +1,22 @@
@@ -1459,13 +1457,17 @@ index 0000000..bd0a7be
 +}
 diff --git a/src/main/java/org/bukkit/event/SimpleEventBus.java b/src/main/java/org/bukkit/event/SimpleEventBus.java
 new file mode 100644
-index 0000000..96dec8a
+index 00000000..4b5fe75a
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/SimpleEventBus.java
-@@ -0,0 +1,115 @@
+@@ -0,0 +1,119 @@
 +package org.bukkit.event;
 +
++import java.util.concurrent.ExecutionException;
++import java.util.concurrent.Executor;
 +import javax.annotation.Nullable;
++
++import com.google.common.util.concurrent.SettableFuture;
 +
 +public class SimpleEventBus implements EventBus {
 +
@@ -1580,7 +1582,7 @@ index 0000000..96dec8a
 +}
 diff --git a/src/main/java/org/bukkit/event/SimpleEventRegistry.java b/src/main/java/org/bukkit/event/SimpleEventRegistry.java
 new file mode 100644
-index 0000000..2b37b7a
+index 00000000..3d823c2c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/SimpleEventRegistry.java
 @@ -0,0 +1,88 @@
@@ -1605,7 +1607,7 @@ index 0000000..2b37b7a
 +
 +    @Inject public SimpleEventRegistry(@Nullable ExceptionHandler exceptionHandler) {
 +        this.exceptionHandler = exceptionHandler != null ? exceptionHandler
-+                                                         : LoggingExceptionHandler.forGlobalLogger();
++                : LoggingExceptionHandler.forGlobalLogger();
 +    }
 +
 +    @Override
@@ -1636,7 +1638,7 @@ index 0000000..2b37b7a
 +    @Override
 +    public Stream<BoundEventHandler<?>> bindHandlers(Listener listener) {
 +        return createHandlers(listener.getClass())
-+            .map(unbound -> bindHandler(listener, unbound));
++                .map(unbound -> bindHandler(listener, unbound));
 +    }
 +
 +    @Override
@@ -1647,14 +1649,14 @@ index 0000000..2b37b7a
 +    @Override
 +    public void unregisterListener(Listener listener) {
 +        HandlerList.unregisterAll(handler -> handler instanceof OwnedEventHandler &&
-+                                             this == ((OwnedEventHandler) handler).registry() &&
-+                                             listener == ((OwnedEventHandler) handler).listener());
++                this == ((OwnedEventHandler) handler).registry() &&
++                listener == ((OwnedEventHandler) handler).listener());
 +    }
 +
 +    @Override
 +    public void unregisterAll() {
 +        HandlerList.unregisterAll(handler -> handler instanceof OwnedEventHandler &&
-+                                             this == ((OwnedEventHandler) handler).registry());
++                this == ((OwnedEventHandler) handler).registry());
 +    }
 +
 +    private class OwnedEventHandler<T extends Event> extends BoundEventHandler<T> {
@@ -1672,9 +1674,10 @@ index 0000000..2b37b7a
 +        }
 +    }
 +}
+\ No newline at end of file
 diff --git a/src/main/java/org/bukkit/permissions/PermissionBinder.java b/src/main/java/org/bukkit/permissions/PermissionBinder.java
 new file mode 100644
-index 0000000..bb0172e
+index 00000000..bb0172e6
 --- /dev/null
 +++ b/src/main/java/org/bukkit/permissions/PermissionBinder.java
 @@ -0,0 +1,18 @@
@@ -1713,7 +1716,7 @@ diff --git a/src/main/java/org/bukkit/plugin/EventExecutor.java b/src/main/java/
  }
 diff --git a/src/main/java/org/bukkit/plugin/EventExecutorAdapter.java b/src/main/java/org/bukkit/plugin/EventExecutorAdapter.java
 new file mode 100644
-index 0000000..5b03f17
+index 00000000..5b03f176
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/EventExecutorAdapter.java
 @@ -0,0 +1,18 @@
@@ -1745,8 +1748,8 @@ diff --git a/src/main/java/org/bukkit/plugin/Plugin.java b/src/main/java/org/buk
 +import org.bukkit.event.EventRegistry;
  import org.bukkit.generator.ChunkGenerator;
  
- import com.avaje.ebean.EbeanServer;
-@@ -93,6 +94,11 @@ public interface Plugin extends TabExecutor, tc.oc.minecraft.api.plugin.Plugin,
+ /**
+@@ -91,6 +92,11 @@ public interface Plugin extends TabExecutor, tc.oc.minecraft.api.plugin.Plugin,
      public PluginLoader getPluginLoader();
  
      /**
@@ -1764,15 +1767,15 @@ diff --git a/src/main/java/org/bukkit/plugin/PluginBase.java b/src/main/java/org
 @@ -1,5 +1,15 @@
  package org.bukkit.plugin;
  
-+import java.util.Set;
-+import javax.inject.Inject;
-+import javax.inject.Provider;
-+
++import com.google.inject.Inject;
 +import com.google.inject.Injector;
++import com.google.inject.Provider;
 +import org.bukkit.event.EventRegistry;
 +import org.bukkit.permissions.Permission;
-+import tc.oc.minecraft.api.event.ListenerContext;
 +import tc.oc.exception.ExceptionHandler;
++import tc.oc.minecraft.api.event.ListenerContext;
++
++import java.util.Set;
 +
  /**
   * Represents a base {@link Plugin}
@@ -1829,7 +1832,7 @@ diff --git a/src/main/java/org/bukkit/plugin/PluginBase.java b/src/main/java/org
          return getName().hashCode();
 diff --git a/src/main/java/org/bukkit/plugin/PluginEventRegistry.java b/src/main/java/org/bukkit/plugin/PluginEventRegistry.java
 new file mode 100644
-index 0000000..bc06595
+index 00000000..bc065955
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginEventRegistry.java
 @@ -0,0 +1,57 @@
@@ -1892,7 +1895,7 @@ index 0000000..bc06595
 +}
 diff --git a/src/main/java/org/bukkit/plugin/PluginExceptionHandler.java b/src/main/java/org/bukkit/plugin/PluginExceptionHandler.java
 new file mode 100644
-index 0000000..d5a96b1
+index 00000000..d5a96b1e
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginExceptionHandler.java
 @@ -0,0 +1,33 @@
@@ -1931,7 +1934,7 @@ index 0000000..d5a96b1
 +}
 diff --git a/src/main/java/org/bukkit/plugin/PluginInstanceModule.java b/src/main/java/org/bukkit/plugin/PluginInstanceModule.java
 new file mode 100644
-index 0000000..8c64d81
+index 00000000..8c64d81d
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginInstanceModule.java
 @@ -0,0 +1,22 @@
@@ -1977,7 +1980,7 @@ diff --git a/src/main/java/org/bukkit/plugin/PluginManager.java b/src/main/java/
       * Registers the specified plugin loader
 diff --git a/src/main/java/org/bukkit/plugin/PluginModule.java b/src/main/java/org/bukkit/plugin/PluginModule.java
 new file mode 100644
-index 0000000..1e2dda4
+index 00000000..1e2dda48
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginModule.java
 @@ -0,0 +1,54 @@
@@ -2037,7 +2040,7 @@ index 0000000..1e2dda4
 +}
 diff --git a/src/main/java/org/bukkit/plugin/PluginScheduler.java b/src/main/java/org/bukkit/plugin/PluginScheduler.java
 new file mode 100644
-index 0000000..80c562e
+index 00000000..80c562e0
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/PluginScheduler.java
 @@ -0,0 +1,33 @@
@@ -2174,23 +2177,19 @@ diff --git a/src/main/java/org/bukkit/plugin/RegisteredListener.java b/src/main/
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -2,7 +2,6 @@ package org.bukkit.plugin;
- 
- import java.io.File;
- import java.lang.reflect.Constructor;
--import java.lang.reflect.Method;
- import java.util.ArrayList;
- import java.util.Collection;
- import java.util.HashMap;
-@@ -25,6 +24,7 @@ import org.bukkit.command.PluginCommandYamlParser;
+@@ -24,10 +24,7 @@ import org.bukkit.command.Command;
+ import org.bukkit.command.PluginCommandYamlParser;
  import org.bukkit.command.SimpleCommandMap;
  import org.bukkit.configuration.serialization.ConfigurationSerialization;
- import org.bukkit.event.Event;
-+import org.bukkit.event.EventHandlerMeta;
- import org.bukkit.event.EventPriority;
- import org.bukkit.event.HandlerList;
- import org.bukkit.event.Listener;
-@@ -49,7 +49,6 @@ public final class SimplePluginManager implements PluginManager {
+-import org.bukkit.event.Event;
+-import org.bukkit.event.EventPriority;
+-import org.bukkit.event.HandlerList;
+-import org.bukkit.event.Listener;
++import org.bukkit.event.*;
+ import org.bukkit.permissions.Permissible;
+ import org.bukkit.permissions.Permission;
+ import org.bukkit.permissions.PermissionDefault;
+@@ -49,7 +46,6 @@ public final class SimplePluginManager implements PluginManager {
      private final Map<Boolean, Set<Permission>> defaultPerms = new LinkedHashMap<Boolean, Set<Permission>>();
      private final Map<String, Map<Permissible, Boolean>> permSubs = new HashMap<String, Map<Permissible, Boolean>>();
      private final Map<Boolean, Map<Permissible, Boolean>> defSubs = new HashMap<Boolean, Map<Permissible, Boolean>>();
@@ -2198,7 +2197,7 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
  
      public SimplePluginManager(Server instance, SimpleCommandMap commandMap) {
          server = instance;
-@@ -489,83 +488,13 @@ public final class SimplePluginManager implements PluginManager {
+@@ -486,83 +482,12 @@ public final class SimplePluginManager implements PluginManager {
          }
      }
  
@@ -2209,7 +2208,7 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
 -     *
 -     * @param event Event details
 -     */
--    public void callEvent(Event event) {
+     public void callEvent(Event event) {
 -        if (event.isAsynchronous()) {
 -            if (Thread.holdsLock(this)) {
 -                throw new IllegalStateException(event.getEventName() + " cannot be triggered asynchronously from inside synchronized code.");
@@ -2260,7 +2259,7 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
 -        registerEvents((Listener) listener, (Plugin) plugin);
 -    }
 -
-     @Override
+-    @Override
 -    public void unregisterListener(tc.oc.minecraft.api.event.Listener listener) {
 -        HandlerList.unregisterAll((Listener) listener);
 -    }
@@ -2268,7 +2267,6 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
 -    @Override
 -    public void unregisterListeners(tc.oc.minecraft.api.plugin.Plugin plugin) {
 -        HandlerList.unregisterAll((Plugin) plugin);
-+    public void callEvent(Event event) {
 +        server.eventBus().callEvent(event);
      }
  
@@ -2285,7 +2283,7 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
      }
  
      public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority, EventExecutor executor, Plugin plugin) {
-@@ -585,45 +514,7 @@ public final class SimplePluginManager implements PluginManager {
+@@ -582,45 +507,7 @@ public final class SimplePluginManager implements PluginManager {
       *     cancelled
       */
      public void registerEvent(Class<? extends Event> event, Listener listener, EventPriority priority, EventExecutor executor, Plugin plugin, boolean ignoreCancelled) {
@@ -2332,7 +2330,7 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
      }
  
      public Permission getPermission(String name) {
-@@ -755,15 +646,6 @@ public final class SimplePluginManager implements PluginManager {
+@@ -752,15 +639,6 @@ public final class SimplePluginManager implements PluginManager {
      }
  
      public boolean useTimings() {
@@ -2387,41 +2385,16 @@ diff --git a/src/main/java/org/bukkit/plugin/TimedRegisteredListener.java b/src/
 diff --git a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java b/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
 --- a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
 +++ b/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
-@@ -9,24 +9,20 @@ import java.io.OutputStream;
- import java.io.Reader;
- import java.net.URL;
- import java.net.URLConnection;
--import java.nio.charset.Charset;
- import java.util.ArrayList;
- import java.util.List;
- import java.util.logging.Level;
- import java.util.logging.Logger;
-+import javax.annotation.Nullable;
- 
- import org.apache.commons.lang.Validate;
- import org.bukkit.Server;
--import org.bukkit.Warning.WarningState;
- import org.bukkit.command.Command;
- import org.bukkit.command.CommandSender;
- import org.bukkit.command.PluginCommand;
--import org.bukkit.configuration.InvalidConfigurationException;
- import org.bukkit.configuration.file.FileConfiguration;
- import org.bukkit.configuration.file.YamlConfiguration;
- import org.bukkit.generator.ChunkGenerator;
--import org.bukkit.plugin.AuthorNagException;
--import org.bukkit.plugin.PluginAwareness;
- import org.bukkit.plugin.PluginBase;
- import org.bukkit.plugin.PluginDescriptionFile;
- import org.bukkit.plugin.PluginLoader;
-@@ -40,7 +36,6 @@ import com.avaje.ebeaninternal.api.SpiEbeanServer;
- import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
- import com.google.common.base.Charsets;
+@@ -36,6 +36,8 @@ import com.google.common.base.Charsets;
  import com.google.common.base.Preconditions;
--import com.google.common.io.ByteStreams;
+ import com.google.common.io.ByteStreams;
  
++import javax.annotation.Nullable;
++
  /**
   * Represents a Java plugin
-@@ -60,7 +55,13 @@ public abstract class JavaPlugin extends PluginBase {
+  */
+@@ -53,7 +55,13 @@ public abstract class JavaPlugin extends PluginBase {
      private PluginLogger logger = null;
  
      public JavaPlugin() {
@@ -2429,14 +2402,14 @@ diff --git a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java b/src/main/jav
 +        this(null);
 +    }
 +
-+    JavaPlugin(@Nullable ClassLoader classLoader) {
++    public JavaPlugin(@Nullable ClassLoader classLoader) {
 +        if(classLoader == null) {
 +            classLoader = getClass().getClassLoader();
 +        }
          if (!(classLoader instanceof PluginClassLoader)) {
              throw new IllegalStateException("JavaPlugin requires " + PluginClassLoader.class.getName());
          }
-@@ -266,15 +267,21 @@ public abstract class JavaPlugin extends PluginBase {
+@@ -259,15 +267,21 @@ public abstract class JavaPlugin extends PluginBase {
      protected final void setEnabled(final boolean enabled) {
          if(!isEnabled && enabled) {
              isEnabled = true;
@@ -2449,7 +2422,7 @@ diff --git a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java b/src/main/jav
 +                try {
 +                    preEnable();
 +                    onEnable();
-+                } catch(RuntimeException e) {
++                } catch (RuntimeException e) {
 +                    isEnabled = false;
 +                    throw e;
 +                }
@@ -2467,41 +2440,7 @@ diff --git a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java b/src/main/jav
 diff --git a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java b/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
 --- a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
 +++ b/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
-@@ -4,9 +4,6 @@ import java.io.File;
- import java.io.FileNotFoundException;
- import java.io.IOException;
- import java.io.InputStream;
--import java.lang.reflect.InvocationTargetException;
--import java.lang.reflect.Method;
--import java.util.Arrays;
- import java.util.HashMap;
- import java.util.HashSet;
- import java.util.LinkedHashMap;
-@@ -25,23 +22,16 @@ import com.google.common.cache.CacheBuilder;
- import com.google.common.hash.HashCode;
- import org.apache.commons.lang.Validate;
- import org.bukkit.Server;
--import org.bukkit.Warning;
--import org.bukkit.Warning.WarningState;
- import org.bukkit.event.Event;
--import org.bukkit.event.EventException;
--import org.bukkit.event.EventHandler;
- import org.bukkit.event.Listener;
- import org.bukkit.event.server.PluginDisableEvent;
- import org.bukkit.event.server.PluginEnableEvent;
--import org.bukkit.plugin.AuthorNagException;
--import org.bukkit.plugin.EventExecutor;
- import org.bukkit.plugin.InvalidDescriptionException;
- import org.bukkit.plugin.InvalidPluginException;
- import org.bukkit.plugin.Plugin;
- import org.bukkit.plugin.PluginDescriptionFile;
- import org.bukkit.plugin.PluginLoader;
- import org.bukkit.plugin.RegisteredListener;
--import org.bukkit.plugin.TimedRegisteredListener;
- import org.bukkit.plugin.UnknownDependencyException;
- import org.yaml.snakeyaml.error.YAMLException;
- 
-@@ -207,92 +197,12 @@ public final class JavaPluginLoader implements PluginLoader {
+@@ -206,92 +206,12 @@ public final class JavaPluginLoader implements PluginLoader {
      }
  
      public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, final Plugin plugin) {
@@ -2593,8 +2532,8 @@ diff --git a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java b/src/ma
 -        return ret;
 +        final Map<Class<? extends Event>, Set<RegisteredListener>> result = new HashMap<>();
 +        plugin.eventRegistry().bindHandlers(listener).forEach(
-+            handler -> result.computeIfAbsent(handler.meta().event(), event -> new HashSet<>())
-+                             .add((RegisteredListener) handler)
++                handler -> result.computeIfAbsent(handler.meta().event(), event -> new HashSet<>())
++                        .add((RegisteredListener) handler)
 +        );
 +        return result;
      }
@@ -2602,7 +2541,7 @@ diff --git a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java b/src/ma
      public void enablePlugin(final Plugin plugin) {
 diff --git a/src/main/java/org/bukkit/plugin/java/ModularPlugin.java b/src/main/java/org/bukkit/plugin/java/ModularPlugin.java
 new file mode 100644
-index 0000000..98941df
+index 00000000..98941dff
 --- /dev/null
 +++ b/src/main/java/org/bukkit/plugin/java/ModularPlugin.java
 @@ -0,0 +1,18 @@
@@ -2627,7 +2566,7 @@ index 0000000..98941df
 diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
 --- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
 +++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
-@@ -12,6 +12,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
+@@ -14,6 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  import com.google.common.hash.Hashing;
  import com.google.common.hash.HashingInputStream;
  import com.google.common.io.ByteStreams;
@@ -2635,7 +2574,7 @@ diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/m
  import org.apache.commons.lang.Validate;
  import org.bukkit.plugin.InvalidPluginException;
  import org.bukkit.plugin.PluginDescriptionFile;
-@@ -57,14 +58,16 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -59,14 +60,16 @@ final class PluginClassLoader extends URLClassLoader {
                  throw new InvalidPluginException("Cannot find main class `" + description.getMain() + "'", ex);
              }
  
@@ -2650,15 +2589,15 @@ diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/m
 +                plugin = new ModularPlugin(jarClass.asSubclass(Module.class).newInstance());
 +            } else {
 +                throw new InvalidPluginException("main class `" + jarClass.getName() +
-+                                                 "' must extend either " + JavaPlugin.class.getName() +
-+                                                 " or " + Module.class.getName());
++                        "' must extend either " + JavaPlugin.class.getName() +
++                        " or " + Module.class.getName());
              }
  
 -            plugin = pluginClass.newInstance();
              return plugin;
          } catch (IllegalAccessException ex) {
              throw new InvalidPluginException("No public constructor", ex);
-@@ -195,7 +198,6 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -197,7 +200,6 @@ final class PluginClassLoader extends URLClassLoader {
  
      synchronized void initialize(JavaPlugin javaPlugin) {
          Validate.notNull(javaPlugin, "Initializing plugin cannot be null");
@@ -2720,23 +2659,16 @@ diff --git a/src/main/java/org/bukkit/scheduler/BukkitTask.java b/src/main/java/
 diff --git a/src/test/java/org/bukkit/TestServer.java b/src/test/java/org/bukkit/TestServer.java
 --- a/src/test/java/org/bukkit/TestServer.java
 +++ b/src/test/java/org/bukkit/TestServer.java
-@@ -6,12 +6,13 @@ import java.lang.reflect.Proxy;
- import java.util.Map;
+@@ -7,6 +7,8 @@ import java.util.Map;
  import java.util.logging.Logger;
  
-+import com.google.common.collect.ImmutableMap;
  import org.bukkit.command.SimpleCommandMap;
 +import org.bukkit.event.EventBus;
 +import org.bukkit.event.SimpleEventBus;
  import org.bukkit.plugin.PluginManager;
  import org.bukkit.plugin.SimplePluginManager;
  
--import com.google.common.collect.ImmutableMap;
--
- public class TestServer implements InvocationHandler {
-     private static interface MethodHandler {
-         Object handle(TestServer server, Object[] args);
-@@ -39,6 +40,14 @@ public class TestServer implements InvocationHandler {
+@@ -39,6 +41,14 @@ public class TestServer implements InvocationHandler {
                      }
                  );
              methodMap.put(
@@ -2746,12 +2678,12 @@ diff --git a/src/test/java/org/bukkit/TestServer.java b/src/test/java/org/bukkit
 +                            return server.eventBus;
 +                        }
 +                    }
-+                );
++            );
 +            methodMap.put(
                      Server.class.getMethod("getLogger"),
                      new MethodHandler() {
                          final Logger logger = Logger.getLogger(TestServer.class.getCanonicalName());
-@@ -77,6 +86,7 @@ public class TestServer implements InvocationHandler {
+@@ -77,6 +87,7 @@ public class TestServer implements InvocationHandler {
              Server instance = Proxy.getProxyClass(Server.class.getClassLoader(), Server.class).asSubclass(Server.class).getConstructor(InvocationHandler.class).newInstance(server);
              Bukkit.setServer(instance);
              server.pluginManager = new SimplePluginManager(instance, new SimpleCommandMap(instance));
@@ -2759,7 +2691,7 @@ diff --git a/src/test/java/org/bukkit/TestServer.java b/src/test/java/org/bukkit
          } catch (Throwable t) {
              throw new Error(t);
          }
-@@ -84,6 +94,7 @@ public class TestServer implements InvocationHandler {
+@@ -84,6 +95,7 @@ public class TestServer implements InvocationHandler {
  
      private Thread creatingThread = Thread.currentThread();
      private PluginManager pluginManager;
@@ -2769,10 +2701,10 @@ diff --git a/src/test/java/org/bukkit/TestServer.java b/src/test/java/org/bukkit
      public static Server getInstance() {
 diff --git a/src/test/java/org/bukkit/event/EventBusTest.java b/src/test/java/org/bukkit/event/EventBusTest.java
 new file mode 100644
-index 0000000..efb19e5
+index 00000000..56225158
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/EventBusTest.java
-@@ -0,0 +1,275 @@
+@@ -0,0 +1,263 @@
 +package org.bukkit.event;
 +
 +import java.util.ArrayList;
@@ -2795,13 +2727,12 @@ index 0000000..efb19e5
 +    static class Oops extends Exception {}
 +
 +    ExceptionHandler exceptionHandler = new TestExceptionHandler();
-+    Object lock;
 +    SimpleEventBus bus;
 +    List<String> flow;
 +
 +    @Before
 +    public void setUp() throws Exception {
-+        bus = new SimpleEventBus(Thread.currentThread(), lock = new Object());
++        bus = new SimpleEventBus(Thread.currentThread(), null);
 +        flow = new ArrayList<>();
 +    }
 +
@@ -2851,17 +2782,6 @@ index 0000000..efb19e5
 +        assertThrows(IllegalStateException.class, () ->
 +            bus.callEvent(new TestEvent(true))
 +        );
-+    }
-+
-+    @Test
-+    public void asyncEventHoldingLockThrows() throws Throwable {
-+        TestThread.join(() -> {
-+            synchronized(lock) {
-+                assertThrows(IllegalStateException.class, () ->
-+                    bus.callEvent(new TestEvent(true))
-+                );
-+            }
-+        });
 +    }
 +
 +    @Test
@@ -3050,7 +2970,7 @@ index 0000000..efb19e5
 +}
 diff --git a/src/test/java/org/bukkit/event/EventHandlerMetaTest.java b/src/test/java/org/bukkit/event/EventHandlerMetaTest.java
 new file mode 100644
-index 0000000..7399b06
+index 00000000..7399b061
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/EventHandlerMetaTest.java
 @@ -0,0 +1,87 @@
@@ -3143,7 +3063,7 @@ index 0000000..7399b06
 +}
 diff --git a/src/test/java/org/bukkit/event/EventMethodExecutorTest.java b/src/test/java/org/bukkit/event/EventMethodExecutorTest.java
 new file mode 100644
-index 0000000..d879171
+index 00000000..d879171f
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/EventMethodExecutorTest.java
 @@ -0,0 +1,135 @@
@@ -3284,7 +3204,7 @@ index 0000000..d879171
 +}
 diff --git a/src/test/java/org/bukkit/event/EventRegistryTest.java b/src/test/java/org/bukkit/event/EventRegistryTest.java
 new file mode 100644
-index 0000000..9da2f8d
+index 00000000..9da2f8d1
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/EventRegistryTest.java
 @@ -0,0 +1,93 @@
@@ -3383,7 +3303,7 @@ index 0000000..9da2f8d
 +}
 diff --git a/src/test/java/org/bukkit/event/HandlerListTest.java b/src/test/java/org/bukkit/event/HandlerListTest.java
 new file mode 100644
-index 0000000..ff30c1d
+index 00000000..ff30c1df
 --- /dev/null
 +++ b/src/test/java/org/bukkit/event/HandlerListTest.java
 @@ -0,0 +1,18 @@
@@ -3407,7 +3327,7 @@ index 0000000..ff30c1d
 +}
 diff --git a/src/test/java/org/bukkit/event/SyntheticEventTest.java b/src/test/java/org/bukkit/event/SyntheticEventTest.java
 deleted file mode 100644
-index df6cf00..0000000
+index df6cf000..00000000
 --- a/src/test/java/org/bukkit/event/SyntheticEventTest.java
 +++ /dev/null
 @@ -1,49 +0,0 @@
@@ -3476,7 +3396,7 @@ diff --git a/src/test/java/org/bukkit/event/TestEvent.java b/src/test/java/org/b
      }
 diff --git a/src/test/java/org/bukkit/exception/TestExceptionHandler.java b/src/test/java/org/bukkit/exception/TestExceptionHandler.java
 new file mode 100644
-index 0000000..440d183
+index 00000000..440d183f
 --- /dev/null
 +++ b/src/test/java/org/bukkit/exception/TestExceptionHandler.java
 @@ -0,0 +1,10 @@
@@ -3502,26 +3422,112 @@ diff --git a/src/test/java/org/bukkit/plugin/PluginManagerTest.java b/src/test/j
              return;
          }
          throw new IllegalStateException("No exception thrown");
-@@ -57,7 +57,7 @@ public class PluginManagerTest {
-         secondThread.start();
-         secondThread.join();
-         assertThat(store.value, is(instanceOf(IllegalStateException.class)));
--        assertThat(event.getEventName() + " cannot be triggered asynchronously from inside synchronized code.", is(((Throwable) store.value).getMessage()));
-+        assertThat(event.getEventName() + " cannot be called asynchronously from inside synchronized code.", is(((Throwable) store.value).getMessage()));
+@@ -39,39 +39,17 @@ public class PluginManagerTest {
      }
  
      @Test
+-    public void testAsyncLocked() throws InterruptedException {
++    public void testAsyncUnlocked() throws InterruptedException {
+         final Event event = new TestEvent(true);
+         Thread secondThread = new Thread(
+-            new Runnable() {
+-                public void run() {
+-                    try {
+-                        synchronized (pm) {
++                new Runnable() {
++                    public void run() {
++                        try {
+                             pm.callEvent(event);
++                        } catch (Throwable ex) {
++                            store.value = ex;
+                         }
+-                    } catch (Throwable ex) {
+-                        store.value = ex;
+-                    }
+-                }
+-            }
+-        );
+-        secondThread.start();
+-        secondThread.join();
+-        assertThat(store.value, is(instanceOf(IllegalStateException.class)));
+-        assertThat(event.getEventName() + " cannot be triggered asynchronously from inside synchronized code.", is(((Throwable) store.value).getMessage()));
+-    }
+-
+-    @Test
+-    public void testAsyncUnlocked() throws InterruptedException {
+-        final Event event = new TestEvent(true);
+-        Thread secondThread = new Thread(
+-            new Runnable() {
+-                public void run() {
+-                    try {
+-                        pm.callEvent(event);
+-                    } catch (Throwable ex) {
+-                        store.value = ex;
+-                    }
+-                }});
++                    }});
+         secondThread.start();
+         secondThread.join();
+         if (store.value != null) {
+@@ -83,15 +61,15 @@ public class PluginManagerTest {
+     public void testSyncUnlocked() throws InterruptedException {
+         final Event event = new TestEvent(false);
+         Thread secondThread = new Thread(
+-            new Runnable() {
+-                public void run() {
+-                    try {
+-                        pm.callEvent(event);
+-                    } catch (Throwable ex) {
+-                        store.value = ex;
++                new Runnable() {
++                    public void run() {
++                        try {
++                            pm.callEvent(event);
++                        } catch (Throwable ex) {
++                            store.value = ex;
++                        }
+                     }
+                 }
+-            }
+         );
+         secondThread.start();
+         secondThread.join();
+@@ -104,17 +82,17 @@ public class PluginManagerTest {
+     public void testSyncLocked() throws InterruptedException {
+         final Event event = new TestEvent(false);
+         Thread secondThread = new Thread(
+-            new Runnable() {
+-                public void run() {
+-                    try {
+-                        synchronized (pm) {
+-                            pm.callEvent(event);
++                new Runnable() {
++                    public void run() {
++                        try {
++                            synchronized (pm) {
++                                pm.callEvent(event);
++                            }
++                        } catch (Throwable ex) {
++                            store.value = ex;
+                         }
+-                    } catch (Throwable ex) {
+-                        store.value = ex;
+                     }
+                 }
+-            }
+         );
+         secondThread.start();
+         secondThread.join();
 diff --git a/src/test/java/org/bukkit/plugin/TestPlugin.java b/src/test/java/org/bukkit/plugin/TestPlugin.java
 --- a/src/test/java/org/bukkit/plugin/TestPlugin.java
 +++ b/src/test/java/org/bukkit/plugin/TestPlugin.java
-@@ -3,22 +3,37 @@ package org.bukkit.plugin;
+@@ -3,20 +3,36 @@ package org.bukkit.plugin;
  import java.io.File;
  import java.io.InputStream;
  import java.util.List;
 +import java.util.logging.Logger;
 +import javax.annotation.Nullable;
  
-+import com.avaje.ebean.EbeanServer;
  import org.bukkit.Server;
  import org.bukkit.command.Command;
  import org.bukkit.command.CommandSender;
@@ -3529,8 +3535,6 @@ diff --git a/src/test/java/org/bukkit/plugin/TestPlugin.java b/src/test/java/org
 +import tc.oc.exception.ExceptionHandler;
  import org.bukkit.generator.ChunkGenerator;
  
--import com.avaje.ebean.EbeanServer;
--
  public class TestPlugin extends PluginBase {
      private boolean enabled = true;
 +    private boolean naggable = true;
@@ -3554,7 +3558,7 @@ diff --git a/src/test/java/org/bukkit/plugin/TestPlugin.java b/src/test/java/org
      }
  
      public void setEnabled(boolean enabled) {
-@@ -57,15 +72,26 @@ public class TestPlugin extends PluginBase {
+@@ -55,15 +71,26 @@ public class TestPlugin extends PluginBase {
          throw new UnsupportedOperationException("Not supported.");
      }
  
@@ -3583,7 +3587,7 @@ diff --git a/src/test/java/org/bukkit/plugin/TestPlugin.java b/src/test/java/org
          throw new UnsupportedOperationException("Not supported.");
      }
  
-@@ -86,11 +112,11 @@ public class TestPlugin extends PluginBase {
+@@ -84,11 +111,11 @@ public class TestPlugin extends PluginBase {
      }
  
      public boolean isNaggable() {
@@ -3597,4 +3601,4 @@ diff --git a/src/test/java/org/bukkit/plugin/TestPlugin.java b/src/test/java/org
 +        this.naggable = naggable;
      }
  
-     public EbeanServer getDatabase() {
+     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {

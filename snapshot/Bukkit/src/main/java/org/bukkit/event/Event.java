@@ -1,18 +1,17 @@
 package org.bukkit.event;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.concurrent.ExecutionException;
-import javax.annotation.Nullable;
-
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents an event.
@@ -63,7 +62,8 @@ public abstract class Event {
         return false;
     }
 
-    @Nullable EventCallable yielder = null;
+    @Nullable
+    EventCallable yielder = null;
 
     /**
      * Can this event be yielded to right now?
@@ -92,7 +92,7 @@ public abstract class Event {
     public void yield() throws EventException {
         if(!canYield()) {
             throw new IllegalStateException(
-                "This event has already been yielded to, or is not currently being dispatched"
+                    "This event has already been yielded to, or is not currently being dispatched"
             );
         }
 

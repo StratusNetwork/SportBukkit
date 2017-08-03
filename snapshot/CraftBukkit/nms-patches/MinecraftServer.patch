@@ -1,6 +1,21 @@
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
-@@ -40,6 +40,21 @@
+@@ -1,5 +1,6 @@
+ package net.minecraft.server;
+ 
++import com.google.common.base.Charsets;
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Queues;
+ import com.google.common.util.concurrent.Futures;
+@@ -20,7 +21,6 @@
+ import java.io.UnsupportedEncodingException;
+ import java.net.Proxy;
+ import java.net.URLEncoder;
+-import java.nio.charset.StandardCharsets;
+ import java.security.KeyPair;
+ import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
+@@ -40,8 +40,23 @@
  import org.apache.commons.lang3.Validate;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -20,8 +35,20 @@
 +import org.bukkit.event.server.ServerSuspendEvent;
 +// SportBukkit end
  
- public abstract class MinecraftServer implements Runnable, ICommandListener, IAsyncTaskHandler, IMojangStatistics {
+-public abstract class MinecraftServer implements ICommandListener, Runnable, IAsyncTaskHandler, IMojangStatistics {
++public abstract class MinecraftServer implements Runnable, ICommandListener, IAsyncTaskHandler, IMojangStatistics {
  
+     public static final Logger LOGGER = LogManager.getLogger();
+     public static final File a = new File("usercache.json");
+@@ -54,7 +69,7 @@
+     private final ServerConnection p;
+     private final ServerPing q = new ServerPing();
+     private final Random r = new Random();
+-    public final DataConverterManager dataConverterManager;
++    private final DataConverterManager dataConverterManager;
+     private String serverIp;
+     private int u = -1;
+     public WorldServer[] worldServer;
 @@ -94,22 +109,86 @@
      private final UserCache Y;
      private long Z;
@@ -112,6 +139,15 @@
      protected CommandDispatcher i() {
          return new CommandDispatcher(this);
      }
+@@ -128,7 +207,7 @@
+                 public void a(int i) {
+                     if (System.currentTimeMillis() - this.b >= 1000L) {
+                         this.b = System.currentTimeMillis();
+-                        MinecraftServer.LOGGER.info("Converting... {}%", Integer.valueOf(i));
++                        MinecraftServer.LOGGER.info("Converting... {}%", new Object[] { Integer.valueOf(i)});
+                     }
+ 
+                 }
 @@ -147,6 +226,7 @@
          this.a(s);
          this.b("menu.loadingLevel");
@@ -295,7 +331,26 @@
          this.t();
      }
  
-@@ -273,14 +439,17 @@
+@@ -242,9 +408,9 @@
+ 
+         if (file.isFile()) {
+             try {
+-                this.setResourcePack("level://" + URLEncoder.encode(s, StandardCharsets.UTF_8.toString()) + "/" + "resources.zip", "");
++                this.setResourcePack("level://" + URLEncoder.encode(s, Charsets.UTF_8.toString()) + "/" + "resources.zip", "");
+             } catch (UnsupportedEncodingException unsupportedencodingexception) {
+-                MinecraftServer.LOGGER.warn("Something went wrong url encoding {}", s);
++                MinecraftServer.LOGGER.warn("Something went wrong url encoding {}", new Object[] { s});
+             }
+         }
+ 
+@@ -267,28 +433,32 @@
+     protected void a_(String s, int i) {
+         this.f = s;
+         this.g = i;
+-        MinecraftServer.LOGGER.info("{}: {}%", s, Integer.valueOf(i));
++        MinecraftServer.LOGGER.info("{}: {}%", new Object[] { s, Integer.valueOf(i)});
+     }
+ 
      protected void t() {
          this.f = null;
          this.g = 0;
@@ -315,7 +370,9 @@
  
              if (worldserver != null) {
                  if (!flag) {
-@@ -289,6 +458,7 @@
+-                    MinecraftServer.LOGGER.info("Saving chunks for level \'{}\'/{}", worldserver.getWorldData().getName(), worldserver.worldProvider.getDimensionManager().b());
++                    MinecraftServer.LOGGER.info("Saving chunks for level \'{}\'/{}", new Object[] { worldserver.getWorldData().getName(), worldserver.worldProvider.getDimensionManager().b()});
+                 }
  
                  try {
                      worldserver.save(true, (IProgressUpdate) null);
@@ -441,8 +498,8 @@
 +            return true;
 +        }
 +        return false;
-+    }
-+
+     }
+ 
 +    public void interrupt() {
 +        if(!isMainThread()) {
 +            synchronized(suspended) {
@@ -456,9 +513,9 @@
 +    private static double calcTps(double avg, double exp, double tps)
 +    {
 +        return ( avg * exp ) + ( tps * ( 1 - exp ) );
-     }
++    }
 +    // SportBukkit End
- 
++
      public void run() {
          try {
              if (this.init()) {
@@ -466,7 +523,8 @@
 -                long i = 0L;
 -
                  this.q.setMOTD(new ChatComponentText(this.motd));
-                 this.q.setServerInfo(new ServerPing.ServerData("1.11.1", 316));
+-                this.q.setServerInfo(new ServerPing.ServerData("1.12-pre6", 333));
++                this.q.setServerInfo(new ServerPing.ServerData("1.11.1", 316));
                  this.a(this.q);
  
 +                // SportBukkit start
@@ -477,7 +535,7 @@
 -                    long k = j - this.ab;
 -
 -                    if (k > 2000L && this.ab - this.R >= 15000L) {
--                        MinecraftServer.LOGGER.warn("Can\'t keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)", new Object[] { Long.valueOf(k), Long.valueOf(k / 50L)});
+-                        MinecraftServer.LOGGER.warn("Can\'t keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)", Long.valueOf(k), Long.valueOf(k / 50L));
 -                        k = 2000L;
 -                        this.R = this.ab;
 -                    }
@@ -536,6 +594,15 @@
              MinecraftServer.LOGGER.error("Encountered an unexpected exception", throwable);
              CrashReport crashreport = null;
  
+@@ -414,7 +688,7 @@
+             File file = new File(new File(this.A(), "crash-reports"), "crash-" + (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date()) + "-server.txt");
+ 
+             if (crashreport.a(file)) {
+-                MinecraftServer.LOGGER.error("This crash report has been saved to: {}", file.getAbsolutePath());
++                MinecraftServer.LOGGER.error("This crash report has been saved to: {}", new Object[] { file.getAbsolutePath()});
+             } else {
+                 MinecraftServer.LOGGER.error("We were unable to save this crash report to disk.");
+             }
 @@ -427,6 +701,12 @@
              } catch (Throwable throwable1) {
                  MinecraftServer.LOGGER.error("Exception stopping the server", throwable1);
@@ -549,6 +616,15 @@
                  this.B();
              }
  
+@@ -452,7 +732,7 @@
+                 ImageIO.write(bufferedimage, "PNG", new ByteBufOutputStream(bytebuf));
+                 ByteBuf bytebuf1 = Base64.encode(bytebuf);
+ 
+-                serverping.setFavicon("data:image/png;base64," + bytebuf1.toString(StandardCharsets.UTF_8));
++                serverping.setFavicon("data:image/png;base64," + bytebuf1.toString(Charsets.UTF_8));
+             } catch (Exception exception) {
+                 MinecraftServer.LOGGER.error("Couldn\'t load server icon", exception);
+             } finally {
 @@ -470,7 +750,8 @@
  
      public void B() {}
@@ -645,7 +721,7 @@
  
                  this.methodProfiler.a("tick");
  
-@@ -571,9 +880,9 @@
+@@ -571,21 +880,19 @@
                  worldserver.getTracker().updatePlayers();
                  this.methodProfiler.b();
                  this.methodProfiler.b();
@@ -657,7 +733,20 @@
          }
  
          this.methodProfiler.c("connection");
-@@ -597,10 +906,11 @@
+         this.an().c();
+         this.methodProfiler.c("players");
+         this.v.tick();
+-        this.methodProfiler.c("commandFunctions");
+-        this.aL().e();
+         this.methodProfiler.c("tickables");
+ 
+         for (i = 0; i < this.o.size(); ++i) {
+-            ((ITickable) this.o.get(i)).e();
++            ((ITickable) this.o.get(i)).F_();
+         }
+ 
+         this.methodProfiler.b();
+@@ -599,10 +906,11 @@
          this.o.add(itickable);
      }
  
@@ -670,7 +759,7 @@
              boolean flag = true;
              String s = null;
              String s1 = ".";
-@@ -645,13 +955,16 @@
+@@ -647,13 +955,16 @@
                      ++j;
                  }
              }
@@ -688,7 +777,16 @@
              if (s != null) {
                  dedicatedserver.i(s);
              }
-@@ -682,15 +995,37 @@
+@@ -675,7 +986,7 @@
+             }
+ 
+             if (flag && !GraphicsEnvironment.isHeadless()) {
+-                dedicatedserver.aR();
++                dedicatedserver.aO();
+             }
+ 
+             dedicatedserver.F();
+@@ -684,15 +995,37 @@
                      dedicatedserver.stop();
                  }
              });
@@ -726,7 +824,7 @@
      }
  
      public File d(String s) {
-@@ -706,7 +1041,14 @@
+@@ -708,11 +1041,18 @@
      }
  
      public WorldServer getWorldServer(int i) {
@@ -742,7 +840,12 @@
      }
  
      public String getVersion() {
-@@ -730,7 +1072,7 @@
+-        return "1.12-pre6";
++        return "1.11.1";
+     }
+ 
+     public int H() {
+@@ -732,7 +1072,7 @@
      }
  
      public boolean isDebugging() {
@@ -751,7 +854,7 @@
      }
  
      public void g(String s) {
-@@ -745,7 +1087,7 @@
+@@ -747,7 +1087,7 @@
      }
  
      public String getServerModName() {
@@ -760,7 +863,7 @@
      }
  
      public CrashReport b(CrashReport crashreport) {
-@@ -774,6 +1116,7 @@
+@@ -776,6 +1116,7 @@
      }
  
      public List<String> tabCompleteCommand(ICommandListener icommandlistener, String s, @Nullable BlockPosition blockposition, boolean flag) {
@@ -768,7 +871,16 @@
          ArrayList arraylist = Lists.newArrayList();
          boolean flag1 = s.startsWith("/");
  
-@@ -816,10 +1159,13 @@
+@@ -808,7 +1149,7 @@
+                 while (iterator.hasNext()) {
+                     String s3 = (String) iterator.next();
+ 
+-                    if (flag2 && !flag) {
++                    if (flag2) {
+                         arraylist.add("/" + s3);
+                     } else {
+                         arraylist.add(s3);
+@@ -818,10 +1159,13 @@
  
              return arraylist;
          }
@@ -783,7 +895,7 @@
      }
  
      public String getName() {
-@@ -827,7 +1173,7 @@
+@@ -829,7 +1173,7 @@
      }
  
      public void sendMessage(IChatBaseComponent ichatbasecomponent) {
@@ -792,7 +904,7 @@
      }
  
      public boolean a(int i, String s) {
-@@ -842,6 +1188,7 @@
+@@ -844,6 +1188,7 @@
          return this.I;
      }
  
@@ -800,7 +912,7 @@
      public int P() {
          return this.u;
      }
-@@ -875,11 +1222,13 @@
+@@ -877,11 +1222,13 @@
      }
  
      public void a(EnumDifficulty enumdifficulty) {
@@ -817,7 +929,7 @@
  
              if (worldserver != null) {
                  if (worldserver.getWorldData().isHardcore()) {
-@@ -946,13 +1295,11 @@
+@@ -948,13 +1295,11 @@
          int i = 0;
  
          if (this.worldServer != null) {
@@ -835,7 +947,7 @@
                      WorldData worlddata = worldserver.getWorldData();
  
                      mojangstatisticsgenerator.a("world[" + i + "][dimension]", Integer.valueOf(worldserver.worldProvider.getDimensionManager().getDimensionID()));
-@@ -985,7 +1332,7 @@
+@@ -987,7 +1332,7 @@
      public abstract boolean aa();
  
      public boolean getOnlineMode() {
@@ -844,7 +956,7 @@
      }
  
      public void setOnlineMode(boolean flag) {
-@@ -1065,17 +1412,14 @@
+@@ -1067,17 +1412,14 @@
      }
  
      public void setGamemode(EnumGamemode enumgamemode) {
@@ -866,16 +978,29 @@
      public ServerConnection an() {
          return this.p;
      }
-@@ -1103,7 +1447,7 @@
+@@ -1096,8 +1438,20 @@
+         this.T = true;
      }
  
++    public BlockPosition getChunkCoordinates() {
++        return BlockPosition.ZERO;
++    }
++
++    public Vec3D d() {
++        return Vec3D.a;
++    }
++
      public World getWorld() {
 -        return this.worldServer[0];
 +        return this.worlds.get(0); // CraftBukkit
++    }
++
++    public Entity f() {
++        return null;
      }
  
-     public Entity f() {
-@@ -1130,6 +1474,7 @@
+     public int getSpawnProtection() {
+@@ -1120,6 +1474,7 @@
          return this.e;
      }
  
@@ -883,7 +1008,22 @@
      public static long aw() {
          return System.currentTimeMillis();
      }
-@@ -1175,8 +1520,10 @@
+@@ -1132,6 +1487,14 @@
+         this.H = i;
+     }
+ 
++    public IChatBaseComponent getScoreboardDisplayName() {
++        return new ChatComponentText(this.getName());
++    }
++
++    public boolean ay() {
++        return true;
++    }
++
+     public MinecraftSessionService az() {
+         return this.W;
+     }
+@@ -1157,8 +1520,10 @@
          WorldServer[] aworldserver = this.worldServer;
          int i = aworldserver.length;
  
@@ -896,7 +1036,7 @@
  
              if (worldserver != null) {
                  Entity entity = worldserver.getEntity(uuid);
-@@ -1191,7 +1538,7 @@
+@@ -1173,10 +1538,12 @@
      }
  
      public boolean getSendCommandFeedback() {
@@ -904,8 +1044,14 @@
 +        return worlds.get(0).getGameRules().getBoolean("sendCommandFeedback");
      }
  
-     public void a(CommandObjectiveExecutor.EnumCommandResult commandobjectiveexecutor_enumcommandresult, int i) {}
-@@ -1206,12 +1553,13 @@
+-    public MinecraftServer C_() {
++    public void a(CommandObjectiveExecutor.EnumCommandResult commandobjectiveexecutor_enumcommandresult, int i) {}
++
++    public MinecraftServer B_() {
+         return this;
+     }
+ 
+@@ -1186,12 +1553,13 @@
  
      public <V> ListenableFuture<V> a(Callable<V> callable) {
          Validate.notNull(callable);
@@ -920,7 +1066,7 @@
                  return listenablefuturetask;
              }
          } else {
-@@ -1232,6 +1580,48 @@
+@@ -1212,6 +1580,48 @@
          return Thread.currentThread() == this.serverThread;
      }
  
@@ -969,15 +1115,41 @@
      public int aG() {
          return 256;
      }
-@@ -1251,4 +1641,11 @@
-     public int a(@Nullable WorldServer worldserver) {
-         return worldserver != null ? worldserver.getGameRules().c("spawnRadius") : 10;
+@@ -1224,28 +1634,18 @@
+         return this.serverThread;
      }
-+
+ 
+-    public int a(@Nullable WorldServer worldserver) {
+-        return worldserver != null ? worldserver.getGameRules().c("spawnRadius") : 10;
++    public DataConverterManager getDataConverterManager() {
++        return this.dataConverterManager;
+     }
+ 
+-    public AdvancementDataWorld getAdvancementData() {
+-        return this.worldServer[0].z();
+-    }
+-
+-    public CustomFunctionData aL() {
+-        return this.worldServer[0].A();
++    public int a(@Nullable WorldServer worldserver) {
++        return worldserver != null ? worldserver.getGameRules().c("spawnRadius") : 10;
+     }
+ 
+-    public void reload() {
+-        if (this.isMainThread()) {
+-            this.getPlayerList().savePlayers();
+-            this.worldServer[0].getLootTableRegistry().reload();
+-            this.getAdvancementData().reload();
+-            this.aL().f();
+-            this.getPlayerList().reload();
+-        } else {
+-            this.postToMainThread(run<invokedynamic>(this));
+-        }
+-
 +    // CraftBukkit start
 +    @Deprecated
 +    public static MinecraftServer getServer() {
 +        return (Bukkit.getServer() instanceof CraftServer) ? ((CraftServer) Bukkit.getServer()).getServer() : null;
-+    }
+     }
 +    // CraftBukkit end
  }

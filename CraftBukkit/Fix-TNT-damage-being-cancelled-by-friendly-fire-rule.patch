@@ -6,7 +6,7 @@ Subject: [PATCH] Fix TNT damage being cancelled by friendly-fire rules
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -488,7 +488,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -561,7 +561,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
              if (!flag && this.invulnerableTicks > 0 && damagesource != DamageSource.OUT_OF_WORLD) {
                  return false;
              } else {

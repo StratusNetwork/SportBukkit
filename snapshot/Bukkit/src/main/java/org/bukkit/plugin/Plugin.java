@@ -10,8 +10,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventRegistry;
 import org.bukkit.generator.ChunkGenerator;
 
-import com.avaje.ebean.EbeanServer;
-
 /**
  * Represents a Plugin
  * <p>
@@ -59,9 +57,9 @@ public interface Plugin extends TabExecutor, tc.oc.minecraft.api.plugin.Plugin, 
 
     /**
      * Saves the raw contents of the default config.yml file to the location
-     * retrievable by {@link #getConfig()}. If there is no default config.yml
-     * embedded in the plugin, an empty config.yml file is saved. This should
-     * fail silently if the config.yml already exists.
+     * retrievable by {@link #getConfig()}.
+     * <p>
+     * This should fail silently if the config.yml already exists.
      */
     public void saveDefaultConfig();
 
@@ -144,24 +142,6 @@ public interface Plugin extends TabExecutor, tc.oc.minecraft.api.plugin.Plugin, 
      * @param canNag is this plugin still naggable?
      */
     public void setNaggable(boolean canNag);
-
-    /**
-     * Gets the {@link EbeanServer} tied to this plugin. This will only be
-     * available if enabled in the {@link
-     * PluginDescriptionFile#isDatabaseEnabled()}
-     * <p>
-     * <i>For more information on the use of <a href="http://www.avaje.org/">
-     * Avaje Ebeans ORM</a>, see <a
-     * href="http://www.avaje.org/ebean/documentation.html">Avaje Ebeans
-     * Documentation</a></i>
-     * <p>
-     * <i>For an example using Ebeans ORM, see <a
-     * href="https://github.com/Bukkit/HomeBukkit">Bukkit's Homebukkit Plugin
-     * </a></i>
-     *
-     * @return ebean server instance or null if not enabled
-     */
-    public EbeanServer getDatabase();
 
     /**
      * Gets a {@link ChunkGenerator} for use in a default world, as specified

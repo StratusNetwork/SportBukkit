@@ -8,6 +8,15 @@
  import java.util.Iterator;
  import java.util.List;
  import javax.annotation.Nullable;
+@@ -46,7 +48,7 @@
+     }
+ 
+     public void a(@Nullable Entity entity) {
+-        this.a(SoundEffects.dG, 1.0F, 1.0F);
++        this.a(SoundEffects.dt, 1.0F, 1.0F);
+     }
+ 
+     public boolean d(NBTTagCompound nbttagcompound) {
 @@ -71,22 +73,42 @@
              while (iterator.hasNext()) {
                  entityinsentient = (EntityInsentient) iterator.next();
@@ -54,3 +63,22 @@
                  }
              }
  
+@@ -102,7 +124,7 @@
+         EntityLeash entityleash = new EntityLeash(world, blockposition);
+ 
+         world.addEntity(entityleash);
+-        entityleash.p();
++        entityleash.o();
+         return entityleash;
+     }
+ 
+@@ -127,7 +149,7 @@
+         return entityleash;
+     }
+ 
+-    public void p() {
+-        this.a(SoundEffects.dH, 1.0F, 1.0F);
++    public void o() {
++        this.a(SoundEffects.du, 1.0F, 1.0F);
+     }
+ }

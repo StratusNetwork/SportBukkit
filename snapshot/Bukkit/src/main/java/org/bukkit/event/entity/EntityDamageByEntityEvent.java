@@ -9,7 +9,7 @@ import org.bukkit.event.EntityAction;
 /**
  * Called when an entity is damaged by an entity
  */
-public class EntityDamageByEntityEvent extends EntityDamageEvent implements EntityAction {
+public class EntityDamageByEntityEvent extends EntityDamageEvent implements EntityAction{
     private final Entity damager;
 
     @Deprecated

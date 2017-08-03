@@ -6,7 +6,7 @@ Subject: [PATCH] Entity bounding box API
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-@@ -31,6 +31,8 @@ import org.bukkit.permissions.PermissionAttachment;
+@@ -26,6 +26,8 @@ import org.bukkit.permissions.PermissionAttachment;
  import org.bukkit.permissions.PermissionAttachmentInfo;
  import org.bukkit.permissions.ServerOperator;
  import org.bukkit.plugin.Plugin;
@@ -15,7 +15,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/
  import org.bukkit.util.Vector;
  
  public abstract class CraftEntity implements org.bukkit.entity.Entity {
-@@ -818,4 +820,11 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -859,4 +861,11 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
      public Vector getPredictedVelocity() {
          return getVelocity();
      }
@@ -30,7 +30,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -73,6 +73,7 @@ import org.bukkit.potion.PotionEffectType;
+@@ -76,6 +76,7 @@ import org.bukkit.potion.PotionEffectType;
  import org.bukkit.potion.PotionType;
  import org.bukkit.util.BlockIterator;
  import org.bukkit.util.NumberConversions;
@@ -38,7 +38,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java 
  import org.bukkit.util.Vector;
  
  public class CraftLivingEntity extends CraftEntity implements LivingEntity {
-@@ -245,6 +246,11 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -249,6 +250,11 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
          return loc;
      }
  

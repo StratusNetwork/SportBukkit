@@ -1,5 +1,21 @@
 --- a/net/minecraft/server/PathfinderGoalTame.java
 +++ b/net/minecraft/server/PathfinderGoalTame.java
+@@ -36,12 +36,12 @@
+     }
+ 
+     public boolean b() {
+-        return !this.entity.isTamed() && !this.entity.getNavigation().o() && this.entity.isVehicle();
++        return !this.entity.getNavigation().n() && this.entity.isVehicle();
+     }
+ 
+     public void e() {
+-        if (!this.entity.isTamed() && this.entity.getRandom().nextInt(50) == 0) {
+-            Entity entity = (Entity) this.entity.bD().get(0);
++        if (this.entity.getRandom().nextInt(50) == 0) {
++            Entity entity = (Entity) this.entity.bx().get(0);
+ 
+             if (entity == null) {
+                 return;
 @@ -51,7 +51,8 @@
                  int i = this.entity.getTemper();
                  int j = this.entity.getMaxDomestication();
@@ -10,3 +26,14 @@
                      this.entity.h((EntityHuman) entity);
                      return;
                  }
+@@ -59,8 +60,8 @@
+                 this.entity.n(5);
+             }
+ 
+-            this.entity.ejectPassengers();
+-            this.entity.dI();
++            this.entity.az();
++            this.entity.dF();
+             this.entity.world.broadcastEntityEffect(this.entity, (byte) 6);
+         }
+ 

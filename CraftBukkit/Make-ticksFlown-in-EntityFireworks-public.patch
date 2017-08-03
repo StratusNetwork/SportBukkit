@@ -6,7 +6,7 @@ Subject: [PATCH] Make ticksFlown in EntityFireworks public
 diff --git a/src/main/java/net/minecraft/server/EntityFireworks.java b/src/main/java/net/minecraft/server/EntityFireworks.java
 --- a/src/main/java/net/minecraft/server/EntityFireworks.java
 +++ b/src/main/java/net/minecraft/server/EntityFireworks.java
-@@ -7,7 +7,7 @@ public class EntityFireworks extends Entity {
+@@ -8,7 +8,7 @@ public class EntityFireworks extends Entity {
  
      public static final DataWatcherObject<ItemStack> FIREWORK_ITEM = DataWatcher.a(EntityFireworks.class, DataWatcherRegistry.f);
      private static final DataWatcherObject<Integer> b = DataWatcher.a(EntityFireworks.class, DataWatcherRegistry.b);

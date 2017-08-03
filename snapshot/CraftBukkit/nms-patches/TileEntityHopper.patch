@@ -47,7 +47,7 @@
      public TileEntityHopper() {
          this.items = NonNullList.a(5, ItemStack.a);
          this.f = -1;
-@@ -72,7 +106,7 @@
+@@ -72,10 +106,10 @@
      }
  
      public int getMaxStackSize() {
@@ -55,7 +55,29 @@
 +        return maxStack; // CraftBukkit
      }
  
-     public void F_() {
+-    public void e() {
++    public void F_() {
+         if (this.world != null && !this.world.isClientSide) {
+             --this.f;
+             this.g = this.world.getTime();
+@@ -129,7 +163,7 @@
+         return false;
+     }
+ 
+-    public boolean x_() {
++    public boolean w_() {
+         return this.p();
+     }
+ 
+@@ -155,7 +189,7 @@
+         if (iinventory == null) {
+             return false;
+         } else {
+-            EnumDirection enumdirection = BlockHopper.b(this.v()).opposite();
++            EnumDirection enumdirection = BlockHopper.e(this.v()).opposite();
+ 
+             if (this.a(iinventory, enumdirection)) {
+                 return false;
 @@ -163,10 +197,35 @@
                  for (int i = 0; i < this.getSize(); ++i) {
                      if (!this.getItem(i).isEmpty()) {
@@ -152,3 +174,21 @@
              ItemStack itemstack = entityitem.getItemStack().cloneItemStack();
              ItemStack itemstack1 = addItem(iinventory, iinventory1, itemstack, (EnumDirection) null);
  
+@@ -353,7 +450,7 @@
+ 
+         if (a(iinventory1, itemstack, i, enumdirection)) {
+             boolean flag = false;
+-            boolean flag1 = iinventory1.x_();
++            boolean flag1 = iinventory1.w_();
+ 
+             if (itemstack1.isEmpty()) {
+                 iinventory1.setItem(i, itemstack);
+@@ -395,7 +492,7 @@
+     }
+ 
+     private IInventory I() {
+-        EnumDirection enumdirection = BlockHopper.b(this.v());
++        EnumDirection enumdirection = BlockHopper.e(this.v());
+ 
+         return b(this.getWorld(), this.E() + (double) enumdirection.getAdjacentX(), this.F() + (double) enumdirection.getAdjacentY(), this.G() + (double) enumdirection.getAdjacentZ());
+     }

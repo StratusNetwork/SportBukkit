@@ -9,6 +9,15 @@
  public class BlockPoweredRail extends BlockMinecartTrackAbstract {
  
      public static final BlockStateEnum<BlockMinecartTrackAbstract.EnumTrackPosition> SHAPE = BlockStateEnum.a("shape", BlockMinecartTrackAbstract.EnumTrackPosition.class, new Predicate() {
+@@ -18,7 +20,7 @@
+ 
+     protected BlockPoweredRail() {
+         super(true);
+-        this.w(this.blockStateList.getBlockData().set(BlockPoweredRail.SHAPE, BlockMinecartTrackAbstract.EnumTrackPosition.NORTH_SOUTH).set(BlockPoweredRail.POWERED, Boolean.valueOf(false)));
++        this.y(this.blockStateList.getBlockData().set(BlockPoweredRail.SHAPE, BlockMinecartTrackAbstract.EnumTrackPosition.NORTH_SOUTH).set(BlockPoweredRail.POWERED, Boolean.valueOf(false)));
+     }
+ 
+     protected boolean a(World world, BlockPosition blockposition, IBlockData iblockdata, boolean flag, int i) {
 @@ -117,6 +119,13 @@
          boolean flag1 = world.isBlockIndirectlyPowered(blockposition) || this.a(world, blockposition, iblockdata, true, 0) || this.a(world, blockposition, iblockdata, false, 0);
  

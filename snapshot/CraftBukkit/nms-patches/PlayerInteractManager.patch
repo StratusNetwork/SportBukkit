@@ -33,7 +33,7 @@
          this.world.everyoneSleeping();
      }
  
-@@ -51,7 +59,7 @@
+@@ -51,13 +59,14 @@
      }
  
      public void a() {
@@ -42,7 +42,22 @@
          float f;
          int i;
  
-@@ -98,8 +106,28 @@
+         if (this.h) {
+             int j = this.currentTick - this.j;
+             IBlockData iblockdata = this.world.getType(this.i);
++            Block block = iblockdata.getBlock();
+ 
+             if (iblockdata.getMaterial() == Material.AIR) {
+                 this.h = false;
+@@ -76,6 +85,7 @@
+             }
+         } else if (this.d) {
+             IBlockData iblockdata1 = this.world.getType(this.f);
++            Block block1 = iblockdata1.getBlock();
+ 
+             if (iblockdata1.getMaterial() == Material.AIR) {
+                 this.world.c(this.player.getId(), this.f, -1);
+@@ -96,8 +106,28 @@
      }
  
      public void a(BlockPosition blockposition, EnumDirection enumdirection) {
@@ -72,7 +87,16 @@
                  this.breakBlock(blockposition);
              }
  
-@@ -125,15 +153,49 @@
+@@ -110,7 +140,7 @@
+                     return;
+                 }
+ 
+-                if (!this.player.di()) {
++                if (!this.player.dc()) {
+                     ItemStack itemstack = this.player.getItemInMainHand();
+ 
+                     if (itemstack.isEmpty()) {
+@@ -123,14 +153,48 @@
                  }
              }
  
@@ -99,8 +123,8 @@
                  f = iblockdata.a((EntityHuman) this.player, this.player.world, blockposition);
 +                // Allow fire punching to be blocked
 +                this.world.douseFire(this.player, blockposition, enumdirection); // CraftBukkit - add this.player
-             }
- 
++            }
++
 +            if (event.useItemInHand() == Event.Result.DENY) {
 +                // If we 'insta destroyed' then the client needs to be informed.
 +                if (f > 1.0f) {
@@ -118,13 +142,12 @@
 +
 +            if (blockEvent.getInstaBreak()) {
 +                f = 2.0f;
-+            }
+             }
 +            // CraftBukkit end
-+
+ 
              if (iblockdata.getMaterial() != Material.AIR && f >= 1.0F) {
                  this.breakBlock(blockposition);
-             } else {
-@@ -150,6 +212,7 @@
+@@ -148,6 +212,7 @@
  
      public void a(BlockPosition blockposition) {
          if (blockposition.equals(this.f)) {
@@ -132,7 +155,7 @@
              int i = this.currentTick - this.lastDigTick;
              IBlockData iblockdata = this.world.getType(blockposition);
  
-@@ -167,6 +230,10 @@
+@@ -165,6 +230,10 @@
                      this.j = this.lastDigTick;
                  }
              }
@@ -143,7 +166,7 @@
          }
  
      }
-@@ -174,6 +241,7 @@
+@@ -172,6 +241,7 @@
      public void e() {
          this.d = false;
          this.world.c(this.player.getId(), this.f, -1);
@@ -151,7 +174,7 @@
      }
  
      private boolean c(BlockPosition blockposition) {
-@@ -190,13 +258,86 @@
+@@ -188,14 +258,87 @@
      }
  
      public boolean breakBlock(BlockPosition blockposition) {
@@ -223,6 +246,7 @@
              TileEntity tileentity = this.world.getTileEntity(blockposition);
              Block block = iblockdata.getBlock();
  
+-            if ((block instanceof BlockCommand || block instanceof BlockStructure) && !this.player.isCreativeAndOp()) {
 +            // CraftBukkit start - Special case skulls, their item data comes from a tile entity
 +            if (iblockdata.getBlock() == Blocks.SKULL && !this.isCreative()) {
 +                iblockdata.getBlock().dropNaturally(world, blockposition, iblockdata, 1.0F, 0);
@@ -236,10 +260,20 @@
 +            }
 +            // CraftBukkit end
 +
-             if ((block instanceof BlockCommand || block instanceof BlockStructure) && !this.player.dk()) {
++            if ((block instanceof BlockCommand || block instanceof BlockStructure) && !this.player.dk()) {
                  this.world.notify(blockposition, iblockdata, iblockdata, 3);
                  return false;
-@@ -238,6 +379,12 @@
+             } else {
+@@ -204,7 +347,7 @@
+                         return false;
+                     }
+ 
+-                    if (!this.player.di()) {
++                    if (!this.player.dc()) {
+                         ItemStack itemstack = this.player.getItemInMainHand();
+ 
+                         if (itemstack.isEmpty()) {
+@@ -236,6 +379,12 @@
                      }
                  }
  
@@ -252,7 +286,16 @@
                  return flag;
              }
          }
-@@ -280,63 +427,86 @@
+@@ -244,7 +393,7 @@
+     public EnumInteractionResult a(EntityHuman entityhuman, World world, ItemStack itemstack, EnumHand enumhand) {
+         if (this.gamemode == EnumGamemode.SPECTATOR) {
+             return EnumInteractionResult.PASS;
+-        } else if (entityhuman.getCooldownTracker().a(itemstack.getItem())) {
++        } else if (entityhuman.di().a(itemstack.getItem())) {
+             return EnumInteractionResult.PASS;
+         } else {
+             int i = itemstack.getCount();
+@@ -278,63 +427,86 @@
          }
      }
  
@@ -276,7 +319,7 @@
 +            }
  
 -                if (itileinventory instanceof TileEntityChest && block instanceof BlockChest) {
--                    itileinventory = ((BlockChest) block).c(world, blockposition);
+-                    itileinventory = ((BlockChest) block).getInventory(world, blockposition);
 -                }
 +            if (itemstack.getItem() instanceof ItemBlock && !entityhuman.dk()) { // PAIL: creativeAndOp
 +                Block block1 = ((ItemBlock) itemstack.getItem()).getBlock();
@@ -334,10 +377,10 @@
  
 -            if (itemstack.isEmpty()) {
 -                return EnumInteractionResult.PASS;
--            } else if (entityhuman.di().a(itemstack.getItem())) {
+-            } else if (entityhuman.getCooldownTracker().a(itemstack.getItem())) {
                  return EnumInteractionResult.PASS;
              } else {
--                if (itemstack.getItem() instanceof ItemBlock && !entityhuman.dk()) {
+-                if (itemstack.getItem() instanceof ItemBlock && !entityhuman.isCreativeAndOp()) {
 -                    Block block1 = ((ItemBlock) itemstack.getItem()).getBlock();
 +                if (!entityhuman.isSneaking() || entityhuman.getItemInMainHand().isEmpty() && entityhuman.getItemInOffHand().isEmpty()) {
 +                    IBlockData iblockdata = world.getType(blockposition);

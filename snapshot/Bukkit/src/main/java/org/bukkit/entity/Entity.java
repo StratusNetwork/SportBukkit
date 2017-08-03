@@ -11,7 +11,6 @@ import org.bukkit.World;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.geometry.Cuboid;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.geometry.Cuboid;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -105,6 +104,20 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
      * For all other entities, this returns the same value as {@link #getVelocity()}.
      */
     Vector getPredictedVelocity();
+
+    /**
+     * Gets the entity's height
+     *
+     * @return height of entity
+     */
+    public double getHeight();
+
+    /**
+     * Gets the entity's width
+     *
+     * @return width of entity
+     */
+    public double getWidth();
 
     /**
      * Returns true if the entity is supported by a block. This value is a
@@ -233,40 +246,67 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
      * multiple passengers, this will only return the primary passenger.
      *
      * @return an entity
+     * @deprecated entities may have multiple passengers, use
+     * {@link #getPassengers()}
      */
-    public abstract Entity getPassenger();
+    @Deprecated
+    public Entity getPassenger();
 
     /**
      * Set the passenger of a vehicle.
      *
      * @param passenger The new passenger.
      * @return false if it could not be done for whatever reason
+     * @deprecated entities may have multiple passengers, use
+     * {@link #getPassengers()}
      */
-    public abstract boolean setPassenger(Entity passenger);
+    @Deprecated
+    public boolean setPassenger(Entity passenger);
+
+    /**
+     * Gets a list of passengers of this vehicle.
+     * <p>
+     * The returned list will not be directly linked to the entity's current
+     * passengers, and no guarantees are made as to its mutability.
+     *
+     * @return list of entities corresponding to current passengers.
+     */
+    public List<Entity> getPassengers();
+
+    /**
+     * Add a passenger to the vehicle.
+     *
+     * @param passenger The passenger to add
+     * @return false if it could not be done for whatever reason
+     */
+    public boolean addPassenger(Entity passenger);
+
+    /**
+     * Remove a passenger from the vehicle.
+     *
+     * @param passenger The passenger to remove
+     * @return false if it could not be done for whatever reason
+     */
+    public boolean removePassenger(Entity passenger);
 
     /**
      * Check if a vehicle has passengers.
      *
      * @return True if the vehicle has no passengers.
      */
-    public abstract boolean isEmpty();
+    public boolean isEmpty();
 
     /**
      * Eject any passenger.
      *
      * @return True if there was a passenger.
      */
-    public abstract boolean eject();
+    public boolean eject();
 
     /**
      * @return true if the given entity is a passenger of this vehicle
      */
     boolean hasPassenger(Entity passenger);
-
-    /**
-     * @return all of the current passengers in this vehicle
-     */
-    List<Entity> getPassengers();
 
     /**
      * Make the given entities passengers of this vehicle. Any existing

@@ -6,10 +6,11 @@ Subject: [PATCH] Item cooldown API
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1678,5 +1678,29 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -1724,4 +1724,30 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+     Vector getUnackedImpulse();
  
      boolean hasUnackedVelocity();
- 
++
 +    /**
 +     * Start a timed cooldown of the given item type for this player.
 +     *
@@ -24,7 +25,7 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
 +     * @param ticks    Ticks to cooldown for
 +     */
 +    void startItemCooldown(Material item, int ticks);
- 
++
 +    /**
 +     * Return the fraction of time remaining on any current cooldown of
 +     * the given item type for this player, relative to the initial

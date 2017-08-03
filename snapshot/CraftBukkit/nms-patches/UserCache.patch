@@ -1,6 +1,24 @@
 --- a/net/minecraft/server/UserCache.java
 +++ b/net/minecraft/server/UserCache.java
-@@ -45,7 +45,7 @@
+@@ -1,5 +1,6 @@
+ package net.minecraft.server;
+ 
++import com.google.common.base.Charsets;
+ import com.google.common.collect.Iterators;
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Maps;
+@@ -22,10 +23,8 @@
+ import java.io.File;
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
+-import java.io.Reader;
+ import java.lang.reflect.ParameterizedType;
+ import java.lang.reflect.Type;
+-import java.nio.charset.StandardCharsets;
+ import java.text.ParseException;
+ import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
+@@ -46,7 +45,7 @@
      private static boolean c;
      private final Map<String, UserCache.UserCacheEntry> d = Maps.newHashMap();
      private final Map<UUID, UserCache.UserCacheEntry> e = Maps.newHashMap();
@@ -9,7 +27,27 @@
      private final GameProfileRepository g;
      protected final Gson b;
      private final File h;
-@@ -336,11 +336,11 @@
+@@ -196,8 +195,8 @@
+         BufferedReader bufferedreader = null;
+ 
+         try {
+-            bufferedreader = Files.newReader(this.h, StandardCharsets.UTF_8);
+-            List list = (List) ChatDeserializer.a(this.b, (Reader) bufferedreader, (Type) UserCache.i);
++            bufferedreader = Files.newReader(this.h, Charsets.UTF_8);
++            List list = (List) this.b.fromJson(bufferedreader, UserCache.i);
+ 
+             this.d.clear();
+             this.e.clear();
+@@ -228,7 +227,7 @@
+         BufferedWriter bufferedwriter = null;
+ 
+         try {
+-            bufferedwriter = Files.newWriter(this.h, StandardCharsets.UTF_8);
++            bufferedwriter = Files.newWriter(this.h, Charsets.UTF_8);
+             bufferedwriter.write(s);
+             return;
+         } catch (FileNotFoundException filenotfoundexception) {
+@@ -337,11 +336,11 @@
              }
          }
  

@@ -8,6 +8,17 @@
  
  public abstract class PathfinderGoalTarget extends PathfinderGoal {
  
+@@ -36,8 +37,8 @@
+         } else if (!entityliving.isAlive()) {
+             return false;
+         } else {
+-            ScoreboardTeamBase scoreboardteambase = this.e.aW();
+-            ScoreboardTeamBase scoreboardteambase1 = entityliving.aW();
++            ScoreboardTeamBase scoreboardteambase = this.e.aQ();
++            ScoreboardTeamBase scoreboardteambase1 = entityliving.aQ();
+ 
+             if (scoreboardteambase != null && scoreboardteambase1 == scoreboardteambase) {
+                 return false;
 @@ -58,7 +59,7 @@
                      if (entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.isInvulnerable) {
                          return false;
@@ -25,4 +36,13 @@
 +        this.e.setGoalTarget((EntityLiving) null, EntityTargetEvent.TargetReason.FORGOT_TARGET, true); // CraftBukkit
          this.g = null;
      }
+ 
+@@ -96,7 +97,7 @@
+             return false;
+         } else {
+             if (entityinsentient instanceof EntityOwnable && ((EntityOwnable) entityinsentient).getOwnerUUID() != null) {
+-                if (entityliving instanceof EntityOwnable && ((EntityOwnable) entityinsentient).getOwnerUUID().equals(((EntityOwnable) entityliving).getOwnerUUID())) {
++                if (entityliving instanceof EntityOwnable && ((EntityOwnable) entityinsentient).getOwnerUUID().equals(entityliving.getUniqueID())) {
+                     return false;
+                 }
  

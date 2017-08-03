@@ -7,11 +7,11 @@ import org.bukkit.Locatable;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.Location;
+import org.bukkit.geometry.Vec3;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.util.RayBlockIntersection;
-import org.bukkit.geometry.Vec3;
 import org.bukkit.util.Vector;
 
 /**

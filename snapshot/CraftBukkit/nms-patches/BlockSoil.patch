@@ -12,6 +12,18 @@
  public class BlockSoil extends Block {
  
      public static final BlockStateInteger MOISTURE = BlockStateInteger.of("moisture", 0, 7);
+@@ -11,9 +16,9 @@
+ 
+     protected BlockSoil() {
+         super(Material.EARTH);
+-        this.w(this.blockStateList.getBlockData().set(BlockSoil.MOISTURE, Integer.valueOf(0)));
++        this.y(this.blockStateList.getBlockData().set(BlockSoil.MOISTURE, Integer.valueOf(0)));
+         this.a(true);
+-        this.e(255);
++        this.d(255);
+     }
+ 
+     public AxisAlignedBB b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
 @@ -35,6 +40,12 @@
              if (i > 0) {
                  world.setTypeAndData(blockposition, iblockdata.set(BlockSoil.MOISTURE, Integer.valueOf(i - 1)), 2);
@@ -25,7 +37,7 @@
                  this.b(world, blockposition);
              }
          } else if (i < 7) {
-@@ -44,11 +55,29 @@
+@@ -44,18 +55,36 @@
      }
  
      public void fallOn(World world, BlockPosition blockposition, Entity entity, float f) {
@@ -56,3 +68,20 @@
      }
  
      private void b(World world, BlockPosition blockposition) {
+         IBlockData iblockdata = Blocks.DIRT.getBlockData();
+ 
+         world.setTypeUpdate(blockposition, iblockdata);
+-        AxisAlignedBB axisalignedbb = iblockdata.d(world, blockposition).a(blockposition);
++        AxisAlignedBB axisalignedbb = iblockdata.c(world, blockposition).a(blockposition);
+         List list = world.getEntities((Entity) null, axisalignedbb);
+         Iterator iterator = list.iterator();
+ 
+@@ -120,8 +149,4 @@
+     protected BlockStateList getStateList() {
+         return new BlockStateList(this, new IBlockState[] { BlockSoil.MOISTURE});
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return enumdirection == EnumDirection.DOWN ? EnumBlockFaceShape.SOLID : EnumBlockFaceShape.UNDEFINED;
+-    }
+ }

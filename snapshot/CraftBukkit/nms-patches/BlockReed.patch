@@ -1,5 +1,14 @@
 --- a/net/minecraft/server/BlockReed.java
 +++ b/net/minecraft/server/BlockReed.java
+@@ -11,7 +11,7 @@
+ 
+     protected BlockReed() {
+         super(Material.PLANT);
+-        this.w(this.blockStateList.getBlockData().set(BlockReed.AGE, Integer.valueOf(0)));
++        this.y(this.blockStateList.getBlockData().set(BlockReed.AGE, Integer.valueOf(0)));
+         this.a(true);
+     }
+ 
 @@ -32,8 +32,12 @@
                      int j = ((Integer) iblockdata.get(BlockReed.AGE)).intValue();
  
@@ -14,3 +23,12 @@
                      } else {
                          world.setTypeAndData(blockposition, iblockdata.set(BlockReed.AGE, Integer.valueOf(j + 1)), 4);
                      }
+@@ -120,8 +124,4 @@
+     protected BlockStateList getStateList() {
+         return new BlockStateList(this, new IBlockState[] { BlockReed.AGE});
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.UNDEFINED;
+-    }
+ }

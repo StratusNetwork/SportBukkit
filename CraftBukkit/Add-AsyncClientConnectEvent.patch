@@ -16,7 +16,7 @@ diff --git a/src/main/java/net/minecraft/server/ServerConnection.java b/src/main
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/AsyncClientConnectEvent.java b/src/main/java/org/bukkit/craftbukkit/event/AsyncClientConnectEvent.java
 new file mode 100644
-index 0000000..b6d8ba9
+index 00000000..b6d8ba9c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/event/AsyncClientConnectEvent.java
 @@ -0,0 +1,34 @@

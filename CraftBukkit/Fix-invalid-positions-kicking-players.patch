@@ -6,7 +6,7 @@ Subject: [PATCH] Fix invalid positions kicking players
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -590,6 +590,12 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -622,6 +622,12 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                              double delta = Math.pow(this.lastPosX - to.getX(), 2) + Math.pow(this.lastPosY - to.getY(), 2) + Math.pow(this.lastPosZ - to.getZ(), 2);
                              float deltaAngle = Math.abs(this.lastYaw - to.getYaw()) + Math.abs(this.lastPitch - to.getPitch());
  
@@ -19,7 +19,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
                              if ((delta > 1f / 256 || deltaAngle > 10f) && !this.player.isFrozen()) {
                                  this.lastPosX = to.getX();
                                  this.lastPosY = to.getY();
-@@ -712,6 +718,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -752,6 +758,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
              f1 = 0;
          }
  

@@ -11,7 +11,7 @@
  
  public class DragonControllerManager {
  
-@@ -21,6 +25,19 @@
+@@ -21,12 +25,25 @@
                  this.currentDragonController.e();
              }
  
@@ -31,6 +31,13 @@
              this.currentDragonController = this.b(dragoncontrollerphase);
              if (!this.enderDragon.world.isClientSide) {
                  this.enderDragon.getDataWatcher().set(EntityEnderDragon.PHASE, Integer.valueOf(dragoncontrollerphase.b()));
+             }
+ 
+-            DragonControllerManager.a.debug("Dragon is now in phase {} on the {}", dragoncontrollerphase, this.enderDragon.world.isClientSide ? "client" : "server");
++            DragonControllerManager.a.debug("Dragon is now in phase {} on the {}", new Object[] { dragoncontrollerphase, this.enderDragon.world.isClientSide ? "client" : "server"});
+             this.currentDragonController.d();
+         }
+     }
 @@ -42,6 +59,6 @@
              this.dragonControllers[i] = dragoncontrollerphase.a(this.enderDragon);
          }

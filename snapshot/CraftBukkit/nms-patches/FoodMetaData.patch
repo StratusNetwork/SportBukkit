@@ -57,7 +57,7 @@
  
          boolean flag = entityhuman.world.getGameRules().getBoolean("naturalRegeneration");
  
--        if (flag && this.saturationLevel > 0.0F && entityhuman.db() && this.foodLevel >= 20) {
+-        if (flag && this.saturationLevel > 0.0F && entityhuman.dh() && this.foodLevel >= 20) {
 +        if (flag && this.saturationLevel > 0.0F && entityhuman.db() && this.foodLevel >= 20 && entityhuman.fastNaturalRegeneration) { // SportBukkit - check regen flag
              ++this.foodTickTimer;
              if (this.foodTickTimer >= 10) {
@@ -68,7 +68,7 @@
                  this.a(f);
                  this.foodTickTimer = 0;
              }
--        } else if (flag && this.foodLevel >= 18 && entityhuman.db()) {
+-        } else if (flag && this.foodLevel >= 18 && entityhuman.dh()) {
 +        } else if (flag && this.foodLevel >= 18 && entityhuman.db() && entityhuman.slowNaturalRegeneration) { // SportBukkit - check regen flag
              ++this.foodTickTimer;
              if (this.foodTickTimer >= 80) {

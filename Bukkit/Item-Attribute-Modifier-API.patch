@@ -15,7 +15,7 @@ diff --git a/src/main/java/org/bukkit/attribute/Attribute.java b/src/main/java/o
  /**
   * Types of attributes which may be present on an {@link Attributable}.
   */
-@@ -8,41 +11,66 @@ public enum Attribute {
+@@ -8,49 +11,74 @@ public enum Attribute {
      /**
       * Maximum health of an Entity.
       */
@@ -37,6 +37,11 @@ diff --git a/src/main/java/org/bukkit/attribute/Attribute.java b/src/main/java/o
 -    GENERIC_MOVEMENT_SPEED,
 +    GENERIC_MOVEMENT_SPEED("generic.movementSpeed"),
      /**
+      * Flying speed of an Entity.
+      */
+-    GENERIC_FLYING_SPEED,
++    GENERIC_FLYING_SPEED("generic.flyingSpeed"),
+     /**
       * Attack damage of an Entity.
       */
 -    GENERIC_ATTACK_DAMAGE,
@@ -51,6 +56,11 @@ diff --git a/src/main/java/org/bukkit/attribute/Attribute.java b/src/main/java/o
       */
 -    GENERIC_ARMOR,
 +    GENERIC_ARMOR("generic.armor"),
+     /**
+      * Armor durability bonus of an Entity.
+      */
+-    GENERIC_ARMOR_TOUGHNESS,
++    GENERIC_ARMOR_TOUGHNESS("generic.armorToughness"),
      /**
       * Luck bonus of an Entity.
       */
@@ -109,7 +119,7 @@ diff --git a/src/main/java/org/bukkit/attribute/AttributeModifier.java b/src/mai
  }
 diff --git a/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java b/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java
 new file mode 100644
-index 0000000..71ae14e
+index 00000000..9c68b60c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/attribute/ItemAttributeModifier.java
 @@ -0,0 +1,65 @@
@@ -178,16 +188,11 @@ index 0000000..71ae14e
 +        slotNames[EquipmentSlot.FEET.ordinal()] = "feet";
 +    }
 +}
+\ No newline at end of file
 diff --git a/src/main/java/org/bukkit/inventory/ItemFactory.java b/src/main/java/org/bukkit/inventory/ItemFactory.java
 --- a/src/main/java/org/bukkit/inventory/ItemFactory.java
 +++ b/src/main/java/org/bukkit/inventory/ItemFactory.java
-@@ -1,11 +1,18 @@
- package org.bukkit.inventory;
- 
-+import java.util.Collection;
-+import java.util.List;
-+import java.util.Map;
-+
+@@ -3,9 +3,16 @@ package org.bukkit.inventory;
  import org.bukkit.Color;
  import org.bukkit.Material;
  import org.bukkit.Server;
@@ -197,6 +202,10 @@ diff --git a/src/main/java/org/bukkit/inventory/ItemFactory.java b/src/main/java
  import org.bukkit.inventory.meta.ItemMeta;
  import org.bukkit.inventory.meta.SkullMeta;
 +import org.bukkit.material.MaterialData;
++
++import java.util.Collection;
++import java.util.List;
++import java.util.Map;
  
  /**
   * An instance of the ItemFactory can be obtained with {@link
@@ -224,7 +233,7 @@ diff --git a/src/main/java/org/bukkit/inventory/ItemFactory.java b/src/main/java
 diff --git a/src/main/java/org/bukkit/inventory/meta/ItemMeta.java b/src/main/java/org/bukkit/inventory/meta/ItemMeta.java
 --- a/src/main/java/org/bukkit/inventory/meta/ItemMeta.java
 +++ b/src/main/java/org/bukkit/inventory/meta/ItemMeta.java
-@@ -1,9 +1,13 @@
+@@ -1,9 +1,12 @@
  package org.bukkit.inventory.meta;
  
 +import java.util.Collection;
@@ -233,12 +242,11 @@ diff --git a/src/main/java/org/bukkit/inventory/meta/ItemMeta.java b/src/main/ja
  import java.util.Set;
  
 +import org.bukkit.attribute.Attribute;
-+import org.bukkit.attribute.AttributeModifier;
 +import org.bukkit.attribute.ItemAttributeModifier;
  import org.bukkit.configuration.serialization.ConfigurationSerializable;
  import org.bukkit.enchantments.Enchantment;
  import org.bukkit.inventory.ItemFlag;
-@@ -170,6 +174,30 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable {
+@@ -194,6 +197,30 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable {
       */
      void setUnbreakable(boolean unbreakable);
  

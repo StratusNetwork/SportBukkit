@@ -50,6 +50,35 @@
      }
  
      public void shoot(double d0, double d1, double d2, float f, float f1) {
+@@ -98,8 +116,8 @@
+         this.ax = 0;
+     }
+ 
+-    public void B_() {
+-        super.B_();
++    public void A_() {
++        super.A_();
+         if (this.lastPitch == 0.0F && this.lastYaw == 0.0F) {
+             float f = MathHelper.sqrt(this.motX * this.motX + this.motZ * this.motZ);
+ 
+@@ -114,7 +132,7 @@
+         Block block = iblockdata.getBlock();
+ 
+         if (iblockdata.getMaterial() != Material.AIR) {
+-            AxisAlignedBB axisalignedbb = iblockdata.d(this.world, blockposition);
++            AxisAlignedBB axisalignedbb = iblockdata.c(this.world, blockposition);
+ 
+             if (axisalignedbb != Block.k && axisalignedbb.a(blockposition).b(new Vec3D(this.locX, this.locY, this.locZ))) {
+                 this.inGround = true;
+@@ -218,7 +236,7 @@
+                 f2 = 0.6F;
+             }
+ 
+-            if (this.an()) {
++            if (this.ai()) {
+                 this.extinguish();
+             }
+ 
 @@ -236,7 +254,7 @@
  
      protected void a(MovingObjectPosition movingobjectposition) {
@@ -74,7 +103,15 @@
              }
  
              if (entity.damageEntity(damagesource, (float) i)) {
-@@ -269,7 +293,7 @@
+@@ -262,14 +286,14 @@
+                     EntityLiving entityliving = (EntityLiving) entity;
+ 
+                     if (!this.world.isClientSide) {
+-                        entityliving.setArrowCount(entityliving.getArrowCount() + 1);
++                        entityliving.f(entityliving.cc() + 1);
+                     }
+ 
+                     if (this.knockbackStrength > 0) {
                          float f1 = MathHelper.sqrt(this.motX * this.motX + this.motZ * this.motZ);
  
                          if (f1 > 0.0F) {
@@ -120,6 +157,15 @@
      public double k() {
          return this.damage;
      }
+@@ -454,7 +493,7 @@
+         this.knockbackStrength = i;
+     }
+ 
+-    public boolean bb() {
++    public boolean aV() {
+         return false;
+     }
+ 
 @@ -493,7 +532,14 @@
          }
  

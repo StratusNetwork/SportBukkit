@@ -18,10 +18,13 @@
      private final MinecraftServer a;
      private final NetworkManager b;
  
-@@ -16,16 +26,75 @@
+@@ -14,18 +24,77 @@
+         switch (packethandshakinginsetprotocol.a()) {
+         case LOGIN:
              this.b.setProtocol(EnumProtocol.LOGIN);
-             ChatComponentText chatcomponenttext;
- 
+-            ChatMessage chatmessage;
++            ChatComponentText chatcomponenttext;
++
 +            // CraftBukkit start - Connection throttle
 +            try {
 +                long currentTime = System.currentTimeMillis();
@@ -56,16 +59,23 @@
 +                org.apache.logging.log4j.LogManager.getLogger().debug("Failed to check connection throttle", t);
 +            }
 +            // CraftBukkit end
-+
-             if (packethandshakinginsetprotocol.b() > 316) {
-                 chatcomponenttext = new ChatComponentText("Outdated server! I\'m still on 1.11.1");
-                 this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
-                 this.b.close(chatcomponenttext);
--            } else if (packethandshakinginsetprotocol.b() < 316) {
+ 
+-            if (packethandshakinginsetprotocol.b() > 333) {
+-                chatmessage = new ChatMessage("multiplayer.disconnect.outdated_server", new Object[] { "1.12-pre6"});
+-                this.b.sendPacket(new PacketLoginOutDisconnect(chatmessage));
+-                this.b.close(chatmessage);
+-            } else if (packethandshakinginsetprotocol.b() < 333) {
+-                chatmessage = new ChatMessage("multiplayer.disconnect.outdated_client", new Object[] { "1.12-pre6"});
+-                this.b.sendPacket(new PacketLoginOutDisconnect(chatmessage));
+-                this.b.close(chatmessage);
++            if (packethandshakinginsetprotocol.b() > 316) {
++                chatcomponenttext = new ChatComponentText("Outdated server! I\'m still on 1.11.1");
++                this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
++                this.b.close(chatcomponenttext);
 +            } else if (packethandshakinginsetprotocol.b() < 107) { // SportBukkit - legacy protocol support
-                 chatcomponenttext = new ChatComponentText("Outdated client! Please use 1.11.1");
-                 this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
-                 this.b.close(chatcomponenttext);
++                chatcomponenttext = new ChatComponentText("Outdated client! Please use 1.11.1");
++                this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
++                this.b.close(chatcomponenttext);
              } else {
 +                this.b.protocolVersion = packethandshakinginsetprotocol.b(); // SportBukkit
                  this.b.setPacketListener(new LoginListener(this.a, this.b));

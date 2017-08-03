@@ -20,6 +20,40 @@
      public int expectedLifespan;
      private EntityLiving e;
  
+@@ -48,11 +54,11 @@
+         this.e = entityliving;
+     }
+ 
+-    public void B_() {
++    public void A_() {
+         this.M = this.locX;
+         this.N = this.locY;
+         this.O = this.locZ;
+-        super.B_();
++        super.A_();
+         if (this.j()) {
+             if (this.e == null) {
+                 Entity entity = this.world.getEntity(((Integer) this.datawatcher.get(EntityFireworks.b)).intValue());
+@@ -63,8 +69,8 @@
+             }
+ 
+             if (this.e != null) {
+-                if (this.e.cN()) {
+-                    Vec3D vec3d = this.e.aH();
++                if (this.e.cH()) {
++                    Vec3D vec3d = this.e.aB();
+                     double d0 = 1.5D;
+                     double d1 = 0.1D;
+ 
+@@ -108,7 +114,7 @@
+         this.pitch = this.lastPitch + (this.pitch - this.lastPitch) * 0.2F;
+         this.yaw = this.lastYaw + (this.yaw - this.lastYaw) * 0.2F;
+         if (this.ticksFlown == 0 && !this.isSilent()) {
+-            this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, SoundEffects.bI, SoundCategory.AMBIENT, 3.0F, 1.0F);
++            this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, SoundEffects.bC, SoundCategory.AMBIENT, 3.0F, 1.0F);
+         }
+ 
+         ++this.ticksFlown;
 @@ -117,8 +123,12 @@
          }
  
@@ -45,3 +79,12 @@
                      }
                  }
              }
+@@ -204,7 +216,7 @@
+ 
+     }
+ 
+-    public boolean bb() {
++    public boolean aV() {
+         return false;
+     }
+ }

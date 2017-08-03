@@ -6,7 +6,7 @@ Subject: [PATCH] Call onDisable before disabling the plugin
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -394,6 +394,18 @@ public final class SimplePluginManager implements PluginManager {
+@@ -391,6 +391,18 @@ public final class SimplePluginManager implements PluginManager {
  
      public void enablePlugin(final Plugin plugin) {
          if (!plugin.isEnabled()) {
@@ -28,7 +28,7 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
 diff --git a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java b/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
 --- a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
 +++ b/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
-@@ -264,13 +264,19 @@ public abstract class JavaPlugin extends PluginBase {
+@@ -257,13 +257,19 @@ public abstract class JavaPlugin extends PluginBase {
       * @param enabled true if enabled, otherwise false
       */
      protected final void setEnabled(final boolean enabled) {

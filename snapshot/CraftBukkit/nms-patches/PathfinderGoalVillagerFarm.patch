@@ -1,19 +1,34 @@
 --- a/net/minecraft/server/PathfinderGoalVillagerFarm.java
 +++ b/net/minecraft/server/PathfinderGoalVillagerFarm.java
-@@ -40,7 +40,11 @@
+@@ -19,8 +19,8 @@
+             }
+ 
+             this.f = -1;
+-            this.d = this.c.ds();
+-            this.e = this.c.dr();
++            this.d = this.c.dq();
++            this.e = this.c.dp();
+         }
+ 
+         return super.a();
+@@ -39,29 +39,42 @@
+             IBlockData iblockdata = world.getType(blockposition);
              Block block = iblockdata.getBlock();
  
-             if (this.f == 0 && block instanceof BlockCrops && ((BlockCrops) block).A(iblockdata)) {
+-            if (this.f == 0 && block instanceof BlockCrops && ((BlockCrops) block).z(iblockdata)) {
 -                world.setAir(blockposition, true);
++            if (this.f == 0 && block instanceof BlockCrops && ((BlockCrops) block).A(iblockdata)) {
 +                // CraftBukkit start
 +                if (!org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this.c, blockposition, Blocks.AIR, 0).isCancelled()) {
 +                    world.setAir(blockposition, true);
 +                }
 +                // CraftBukkit end
              } else if (this.f == 1 && iblockdata.getMaterial() == Material.AIR) {
-                 InventorySubcontainer inventorysubcontainer = this.c.dm();
+-                InventorySubcontainer inventorysubcontainer = this.c.do_();
++                InventorySubcontainer inventorysubcontainer = this.c.dm();
  
-@@ -49,19 +53,28 @@
+                 for (int i = 0; i < inventorysubcontainer.getSize(); ++i) {
+                     ItemStack itemstack = inventorysubcontainer.getItem(i);
                      boolean flag = false;
  
                      if (!itemstack.isEmpty()) {
@@ -46,3 +61,12 @@
                      }
  
                      if (flag) {
+@@ -88,7 +101,7 @@
+             IBlockData iblockdata = world.getType(blockposition);
+ 
+             block = iblockdata.getBlock();
+-            if (block instanceof BlockCrops && ((BlockCrops) block).z(iblockdata) && this.e && (this.f == 0 || this.f < 0)) {
++            if (block instanceof BlockCrops && ((BlockCrops) block).A(iblockdata) && this.e && (this.f == 0 || this.f < 0)) {
+                 this.f = 0;
+                 return true;
+             }

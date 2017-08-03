@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityHorseAbstract.java
 +++ b/net/minecraft/server/EntityHorseAbstract.java
-@@ -6,9 +6,50 @@
+@@ -6,10 +6,51 @@
  import java.util.List;
  import java.util.UUID;
  import javax.annotation.Nullable;
@@ -13,6 +13,7 @@
  
  public abstract class EntityHorseAbstract extends EntityAnimal implements IInventoryListener, IJumpable {
  
+-    private static final Predicate<Entity> bH = new Predicate() {
 +    // SportBukkit start
 +    public static final MetadataKey<Byte> META_HORSE_FLAGS = MetadataKey
 +        .builder(EntityHorseAbstract.class, DataWatcherRegistry.a)
@@ -48,32 +49,62 @@
 +        .build();
 +    // SportBukkit end
 +
-     private static final Predicate<Entity> bG = new Predicate() {
++    private static final Predicate<Entity> bG = new Predicate() {
          public boolean a(@Nullable Entity entity) {
              return entity instanceof EntityHorseAbstract && ((EntityHorseAbstract) entity).hasReproduced();
-@@ -19,8 +60,8 @@
+         }
+@@ -19,32 +60,33 @@
          }
      };
      public static final IAttribute attributeJumpStrength = (new AttributeRanged((IAttribute) null, "horse.jumpStrength", 0.7D, 0.0D, 2.0D)).a("Jump Strength").a(true);
--    private static final DataWatcherObject<Byte> bH = DataWatcher.a(EntityHorseAbstract.class, DataWatcherRegistry.a);
--    private static final DataWatcherObject<Optional<UUID>> bI = DataWatcher.a(EntityHorseAbstract.class, DataWatcherRegistry.m);
+-    private static final DataWatcherObject<Byte> bI = DataWatcher.a(EntityHorseAbstract.class, DataWatcherRegistry.a);
+-    private static final DataWatcherObject<Optional<UUID>> bJ = DataWatcher.a(EntityHorseAbstract.class, DataWatcherRegistry.m);
 +    private static final DataWatcherObject<Byte> bH = META_HORSE_FLAGS; // SportBukkit
 +    private static final DataWatcherObject<Optional<UUID>> bI = META_OWNER; // SportBukkit
-     private int bJ;
++    private int bJ;
      private int bK;
      private int bL;
-@@ -39,6 +80,7 @@
+-    private int bM;
++    public int bx;
+     public int by;
+-    public int bz;
+-    protected boolean bB;
++    protected boolean bA;
+     public InventoryHorseChest inventoryChest;
+-    protected int bD;
++    protected int bC;
+     protected float jumpPower;
+     private boolean canSlide;
++    private float bN;
+     private float bO;
+     private float bP;
+     private float bQ;
+     private float bR;
      private float bS;
-     protected boolean bE = true;
-     protected int bF;
+-    private float bT;
+-    protected boolean bF = true;
+-    protected int bG;
++    protected boolean bE = true;
++    protected int bF;
 +    public int maxDomestication = 100; // CraftBukkit - store max domestication value
  
      public EntityHorseAbstract(World world) {
          super(world);
-@@ -62,6 +104,24 @@
+         this.setSize(1.3964844F, 1.6F);
+         this.P = 1.0F;
+-        this.loadChest();
++        this.dx();
+     }
+ 
+     protected void r() {
+@@ -60,21 +102,39 @@
+ 
+     protected void i() {
          super.i();
-         this.datawatcher.register(EntityHorseAbstract.bH, Byte.valueOf((byte) 0));
-         this.datawatcher.register(EntityHorseAbstract.bI, Optional.absent());
+-        this.datawatcher.register(EntityHorseAbstract.bI, Byte.valueOf((byte) 0));
+-        this.datawatcher.register(EntityHorseAbstract.bJ, Optional.absent());
++        this.datawatcher.register(EntityHorseAbstract.bH, Byte.valueOf((byte) 0));
++        this.datawatcher.register(EntityHorseAbstract.bI, Optional.absent());
 +
 +        // SportBukkit start
 +        final int typeId;
@@ -95,20 +126,302 @@
      }
  
      protected boolean g(int i) {
-@@ -211,10 +271,10 @@
+-        return (((Byte) this.datawatcher.get(EntityHorseAbstract.bI)).byteValue() & i) != 0;
++        return (((Byte) this.datawatcher.get(EntityHorseAbstract.bH)).byteValue() & i) != 0;
+     }
+ 
+     protected void c(int i, boolean flag) {
+-        byte b0 = ((Byte) this.datawatcher.get(EntityHorseAbstract.bI)).byteValue();
++        byte b0 = ((Byte) this.datawatcher.get(EntityHorseAbstract.bH)).byteValue();
+ 
+         if (flag) {
+-            this.datawatcher.set(EntityHorseAbstract.bI, Byte.valueOf((byte) (b0 | i)));
++            this.datawatcher.set(EntityHorseAbstract.bH, Byte.valueOf((byte) (b0 | i)));
+         } else {
+-            this.datawatcher.set(EntityHorseAbstract.bI, Byte.valueOf((byte) (b0 & ~i)));
++            this.datawatcher.set(EntityHorseAbstract.bH, Byte.valueOf((byte) (b0 & ~i)));
+         }
+ 
+     }
+@@ -85,49 +145,49 @@
+ 
+     @Nullable
+     public UUID getOwnerUUID() {
+-        return (UUID) ((Optional) this.datawatcher.get(EntityHorseAbstract.bJ)).orNull();
++        return (UUID) ((Optional) this.datawatcher.get(EntityHorseAbstract.bI)).orNull();
+     }
+ 
+     public void setOwnerUUID(@Nullable UUID uuid) {
+-        this.datawatcher.set(EntityHorseAbstract.bJ, Optional.fromNullable(uuid));
++        this.datawatcher.set(EntityHorseAbstract.bI, Optional.fromNullable(uuid));
+     }
+ 
+-    public float du() {
++    public float dr() {
+         return 0.5F;
+     }
+ 
+     public void a(boolean flag) {
+-        this.a(flag ? this.du() : 1.0F);
++        this.a(flag ? this.dr() : 1.0F);
+     }
+ 
+-    public boolean dv() {
+-        return this.bB;
++    public boolean ds() {
++        return this.bA;
+     }
+ 
+     public void setTamed(boolean flag) {
+         this.c(2, flag);
+     }
+ 
+-    public void s(boolean flag) {
+-        this.bB = flag;
++    public void r(boolean flag) {
++        this.bA = flag;
+     }
+ 
+     public boolean a(EntityHuman entityhuman) {
+         return super.a(entityhuman) && this.getMonsterType() != EnumMonsterType.UNDEAD;
+     }
+ 
+-    protected void s(float f) {
+-        if (f > 6.0F && this.dw()) {
+-            this.v(false);
++    protected void q(float f) {
++        if (f > 6.0F && this.dt()) {
++            this.u(false);
+         }
+ 
+     }
+ 
+-    public boolean dw() {
++    public boolean dt() {
+         return this.g(16);
+     }
+ 
+-    public boolean dx() {
++    public boolean du() {
+         return this.g(32);
+     }
+ 
+@@ -135,20 +195,20 @@
+         return this.g(8);
+     }
+ 
+-    public void t(boolean flag) {
++    public void s(boolean flag) {
+         this.c(8, flag);
+     }
+ 
+-    public void u(boolean flag) {
++    public void t(boolean flag) {
+         this.c(4, flag);
+     }
+ 
+     public int getTemper() {
+-        return this.bD;
++        return this.bC;
+     }
+ 
+     public void setTemper(int i) {
+-        this.bD = i;
++        this.bC = i;
+     }
+ 
+     public int n(int i) {
+@@ -168,17 +228,17 @@
+         return !this.isVehicle();
+     }
+ 
+-    private void dj() {
+-        this.dn();
++    private void dh() {
++        this.dl();
+         if (!this.isSilent()) {
+-            this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, SoundEffects.cK, this.bI(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
++            this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, SoundEffects.cE, this.bC(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+         }
+ 
+     }
+ 
+     public void e(float f, float f1) {
+         if (f > 1.0F) {
+-            this.a(SoundEffects.cO, 0.4F, 1.0F);
++            this.a(SoundEffects.cI, 0.4F, 1.0F);
+         }
+ 
+         int i = MathHelper.f((f * 0.5F - 3.0F) * f1);
+@@ -186,7 +246,7 @@
+         if (i > 0) {
+             this.damageEntity(DamageSource.FALL, (float) i);
+             if (this.isVehicle()) {
+-                Iterator iterator = this.bE().iterator();
++                Iterator iterator = this.by().iterator();
+ 
+                 while (iterator.hasNext()) {
+                     Entity entity = (Entity) iterator.next();
+@@ -201,20 +261,20 @@
+             if (iblockdata.getMaterial() != Material.AIR && !this.isSilent()) {
+                 SoundEffectType soundeffecttype = block.getStepSound();
+ 
+-                this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, soundeffecttype.d(), this.bI(), soundeffecttype.a() * 0.5F, soundeffecttype.b() * 0.75F);
++                this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, soundeffecttype.d(), this.bC(), soundeffecttype.a() * 0.5F, soundeffecttype.b() * 0.75F);
+             }
+ 
+         }
+     }
+ 
+-    protected int dl() {
++    protected int di() {
          return 2;
      }
  
--    protected void dx() {
+-    public void loadChest() {
 +    public void dx() { // PAIL: protected-> public, rename
          InventoryHorseChest inventoryhorsechest = this.inventoryChest;
  
--        this.inventoryChest = new InventoryHorseChest("HorseChest", this.di());
+-        this.inventoryChest = new InventoryHorseChest("HorseChest", this.dl());
 +        this.inventoryChest = new InventoryHorseChest("HorseChest", this.di(), this); // CraftBukkit
          this.inventoryChest.a(this.getName());
          if (inventoryhorsechest != null) {
              inventoryhorsechest.b(this);
-@@ -354,7 +414,7 @@
+@@ -230,21 +290,21 @@
+         }
+ 
+         this.inventoryChest.a((IInventoryListener) this);
+-        this.dB();
++        this.dy();
+     }
+ 
+-    protected void dB() {
++    protected void dy() {
+         if (!this.world.isClientSide) {
+-            this.u(!this.inventoryChest.getItem(0).isEmpty() && this.dD());
++            this.t(!this.inventoryChest.getItem(0).isEmpty() && this.dA());
+         }
+     }
+ 
+     public void a(IInventory iinventory) {
+-        boolean flag = this.dE();
++        boolean flag = this.dB();
+ 
+-        this.dB();
+-        if (this.ticksLived > 20 && !flag && this.dE()) {
+-            this.a(SoundEffects.cP, 0.5F, 1.0F);
++        this.dy();
++        if (this.ticksLived > 20 && !flag && this.dB()) {
++            this.a(SoundEffects.cJ, 0.5F, 1.0F);
+         }
+ 
+     }
+@@ -253,7 +313,7 @@
+     protected EntityHorseAbstract a(Entity entity, double d0) {
+         double d1 = Double.MAX_VALUE;
+         Entity entity1 = null;
+-        List list = this.world.getEntities(entity, entity.getBoundingBox().b(d0, d0, d0), EntityHorseAbstract.bH);
++        List list = this.world.getEntities(entity, entity.getBoundingBox().b(d0, d0, d0), EntityHorseAbstract.bG);
+         Iterator iterator = list.iterator();
+ 
+         while (iterator.hasNext()) {
+@@ -274,43 +334,43 @@
+     }
+ 
+     @Nullable
+-    protected SoundEffect cd() {
+-        this.dn();
++    protected SoundEffect bX() {
++        this.dl();
+         return null;
+     }
+ 
+     @Nullable
+-    protected SoundEffect d(DamageSource damagesource) {
+-        this.dn();
++    protected SoundEffect bW() {
++        this.dl();
+         if (this.random.nextInt(3) == 0) {
+-            this.dr();
++            this.dL();
+         }
+ 
+         return null;
+     }
+ 
+     @Nullable
+-    protected SoundEffect F() {
+-        this.dn();
++    protected SoundEffect G() {
++        this.dl();
+         if (this.random.nextInt(10) == 0 && !this.isFrozen()) {
+-            this.dr();
++            this.dL();
+         }
+ 
+         return null;
+     }
+ 
+-    public boolean dD() {
++    public boolean dA() {
+         return true;
+     }
+ 
+-    public boolean dE() {
++    public boolean dB() {
+         return this.g(4);
+     }
+ 
+     @Nullable
+-    protected SoundEffect dm() {
+-        this.dn();
+-        this.dr();
++    protected SoundEffect dj() {
++        this.dl();
++        this.dL();
+         return null;
+     }
+ 
+@@ -322,24 +382,24 @@
+                 soundeffecttype = Blocks.SNOW_LAYER.getStepSound();
+             }
+ 
+-            if (this.isVehicle() && this.bF) {
+-                ++this.bG;
+-                if (this.bG > 5 && this.bG % 3 == 0) {
++            if (this.isVehicle() && this.bE) {
++                ++this.bF;
++                if (this.bF > 5 && this.bF % 3 == 0) {
+                     this.a(soundeffecttype);
+-                } else if (this.bG <= 5) {
+-                    this.a(SoundEffects.cR, soundeffecttype.a() * 0.15F, soundeffecttype.b());
++                } else if (this.bF <= 5) {
++                    this.a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+                 }
+             } else if (soundeffecttype == SoundEffectType.a) {
+-                this.a(SoundEffects.cR, soundeffecttype.a() * 0.15F, soundeffecttype.b());
++                this.a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+             } else {
+-                this.a(SoundEffects.cQ, soundeffecttype.a() * 0.15F, soundeffecttype.b());
++                this.a(SoundEffects.cK, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+             }
+ 
+         }
+     }
+ 
+     protected void a(SoundEffectType soundeffecttype) {
+-        this.a(SoundEffects.cL, soundeffecttype.a() * 0.15F, soundeffecttype.b());
++        this.a(SoundEffects.cF, soundeffecttype.a() * 0.15F, soundeffecttype.b());
+     }
+ 
+     protected void initAttributes() {
+@@ -349,15 +409,15 @@
+         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.22499999403953552D);
+     }
+ 
+-    public int cS() {
++    public int cQ() {
+         return 6;
      }
  
      public int getMaxDomestication() {
@@ -116,8 +429,36 @@
 +        return this.maxDomestication; // CraftBukkit - return stored max domestication instead of 100
      }
  
-     protected float ci() {
-@@ -414,7 +474,7 @@
+-    protected float co() {
++    protected float ci() {
+         return 0.8F;
+     }
+ 
+@@ -365,7 +425,7 @@
+         return 400;
+     }
+ 
+-    public void c(EntityHuman entityhuman) {
++    public void f(EntityHuman entityhuman) {
+         if (!this.world.isClientSide && (!this.isVehicle() || this.w(entityhuman)) && this.isTamed()) {
+             this.inventoryChest.a(this.getName());
+             entityhuman.openHorseInventory(this, this.inventoryChest);
+@@ -401,7 +461,7 @@
+             b0 = 5;
+             if (this.isTamed() && this.getAge() == 0 && !this.isInLove()) {
+                 flag = true;
+-                this.f(entityhuman);
++                this.c(entityhuman);
+             }
+         } else if (item == Items.GOLDEN_APPLE) {
+             f = 10.0F;
+@@ -409,12 +469,12 @@
+             b0 = 10;
+             if (this.isTamed() && this.getAge() == 0 && !this.isInLove()) {
+                 flag = true;
+-                this.f(entityhuman);
++                this.c(entityhuman);
+             }
          }
  
          if (this.getHealth() < this.getMaxHealth() && f > 0.0F) {
@@ -126,7 +467,39 @@
              flag = true;
          }
  
-@@ -465,7 +525,7 @@
+@@ -435,7 +495,7 @@
+         }
+ 
+         if (flag) {
+-            this.dj();
++            this.dh();
+         }
+ 
+         return flag;
+@@ -444,7 +504,7 @@
+     protected void g(EntityHuman entityhuman) {
+         entityhuman.yaw = this.yaw;
+         entityhuman.pitch = this.pitch;
+-        this.v(false);
++        this.u(false);
+         this.setStanding(false);
+         if (!this.world.isClientSide) {
+             entityhuman.startRiding(this);
+@@ -453,7 +513,7 @@
+     }
+ 
+     protected boolean isFrozen() {
+-        return super.isFrozen() && this.isVehicle() && this.dE() || this.dw() || this.dx();
++        return super.isFrozen() && this.isVehicle() && this.dB() || this.dt() || this.du();
+     }
+ 
+     public boolean e(ItemStack itemstack) {
+@@ -461,11 +521,11 @@
+     }
+ 
+     private void dk() {
+-        this.by = 1;
++        this.bx = 1;
      }
  
      public void die(DamageSource damagesource) {
@@ -143,7 +516,7 @@
      }
  
      public void n() {
-@@ -486,7 +547,7 @@
+@@ -486,26 +547,26 @@
          super.n();
          if (!this.world.isClientSide) {
              if (this.random.nextInt(900) == 0 && this.deathTicks == 0) {
@@ -151,8 +524,317 @@
 +                this.heal(1.0F, RegainReason.REGEN); // CraftBukkit
              }
  
-             if (this.dE()) {
-@@ -719,6 +780,7 @@
+-            if (this.dH()) {
+-                if (!this.dw() && !this.isVehicle() && this.random.nextInt(300) == 0 && this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(this.locY) - 1, MathHelper.floor(this.locZ))).getBlock() == Blocks.GRASS) {
+-                    this.v(true);
++            if (this.dE()) {
++                if (!this.dt() && !this.isVehicle() && this.random.nextInt(300) == 0 && this.world.getType(new BlockPosition(MathHelper.floor(this.locX), MathHelper.floor(this.locY) - 1, MathHelper.floor(this.locZ))).getBlock() == Blocks.GRASS) {
++                    this.u(true);
+                 }
+ 
+-                if (this.dw() && ++this.bK > 50) {
+-                    this.bK = 0;
+-                    this.v(false);
++                if (this.dt() && ++this.bJ > 50) {
++                    this.bJ = 0;
++                    this.u(false);
+                 }
+             }
+ 
+-            this.dG();
++            this.dD();
+         }
+     }
+ 
+-    protected void dG() {
+-        if (this.hasReproduced() && this.isBaby() && !this.dw()) {
++    protected void dD() {
++        if (this.hasReproduced() && this.isBaby() && !this.dt()) {
+             EntityHorseAbstract entityhorseabstract = this.a(this, 16.0D);
+ 
+             if (entityhorseabstract != null && this.h((Entity) entityhorseabstract) > 4.0D) {
+@@ -515,111 +576,111 @@
+ 
+     }
+ 
+-    public boolean dH() {
++    public boolean dE() {
+         return true;
+     }
+ 
+-    public void B_() {
+-        super.B_();
+-        if (this.bL > 0 && ++this.bL > 30) {
+-            this.bL = 0;
++    public void A_() {
++        super.A_();
++        if (this.bK > 0 && ++this.bK > 30) {
++            this.bK = 0;
+             this.c(64, false);
+         }
+ 
+-        if (this.bG() && this.bM > 0 && ++this.bM > 20) {
+-            this.bM = 0;
++        if (this.bA() && this.bL > 0 && ++this.bL > 20) {
++            this.bL = 0;
+             this.setStanding(false);
+         }
+ 
+-        if (this.by > 0 && ++this.by > 8) {
+-            this.by = 0;
++        if (this.bx > 0 && ++this.bx > 8) {
++            this.bx = 0;
+         }
+ 
+-        if (this.bz > 0) {
+-            ++this.bz;
+-            if (this.bz > 300) {
+-                this.bz = 0;
++        if (this.by > 0) {
++            ++this.by;
++            if (this.by > 300) {
++                this.by = 0;
+             }
+         }
+ 
+-        this.bP = this.bO;
+-        if (this.dw()) {
+-            this.bO += (1.0F - this.bO) * 0.4F + 0.05F;
+-            if (this.bO > 1.0F) {
+-                this.bO = 1.0F;
++        this.bO = this.bN;
++        if (this.dt()) {
++            this.bN += (1.0F - this.bN) * 0.4F + 0.05F;
++            if (this.bN > 1.0F) {
++                this.bN = 1.0F;
+             }
+         } else {
+-            this.bO += (0.0F - this.bO) * 0.4F - 0.05F;
+-            if (this.bO < 0.0F) {
+-                this.bO = 0.0F;
++            this.bN += (0.0F - this.bN) * 0.4F - 0.05F;
++            if (this.bN < 0.0F) {
++                this.bN = 0.0F;
+             }
+         }
+ 
+-        this.bR = this.bQ;
+-        if (this.dx()) {
+-            this.bO = 0.0F;
+-            this.bP = this.bO;
+-            this.bQ += (1.0F - this.bQ) * 0.4F + 0.05F;
+-            if (this.bQ > 1.0F) {
+-                this.bQ = 1.0F;
++        this.bQ = this.bP;
++        if (this.du()) {
++            this.bN = 0.0F;
++            this.bO = this.bN;
++            this.bP += (1.0F - this.bP) * 0.4F + 0.05F;
++            if (this.bP > 1.0F) {
++                this.bP = 1.0F;
+             }
+         } else {
+             this.canSlide = false;
+-            this.bQ += (0.8F * this.bQ * this.bQ * this.bQ - this.bQ) * 0.6F - 0.05F;
+-            if (this.bQ < 0.0F) {
+-                this.bQ = 0.0F;
++            this.bP += (0.8F * this.bP * this.bP * this.bP - this.bP) * 0.6F - 0.05F;
++            if (this.bP < 0.0F) {
++                this.bP = 0.0F;
+             }
+         }
+ 
+-        this.bT = this.bS;
++        this.bS = this.bR;
+         if (this.g(64)) {
+-            this.bS += (1.0F - this.bS) * 0.7F + 0.05F;
+-            if (this.bS > 1.0F) {
+-                this.bS = 1.0F;
++            this.bR += (1.0F - this.bR) * 0.7F + 0.05F;
++            if (this.bR > 1.0F) {
++                this.bR = 1.0F;
+             }
+         } else {
+-            this.bS += (0.0F - this.bS) * 0.7F - 0.05F;
+-            if (this.bS < 0.0F) {
+-                this.bS = 0.0F;
++            this.bR += (0.0F - this.bR) * 0.7F - 0.05F;
++            if (this.bR < 0.0F) {
++                this.bR = 0.0F;
+             }
+         }
+ 
+     }
+ 
+-    private void dn() {
++    private void dl() {
+         if (!this.world.isClientSide) {
+-            this.bL = 1;
++            this.bK = 1;
+             this.c(64, true);
+         }
+ 
+     }
+ 
+-    public void v(boolean flag) {
++    public void u(boolean flag) {
+         this.c(16, flag);
+     }
+ 
+     public void setStanding(boolean flag) {
+         if (flag) {
+-            this.v(false);
++            this.u(false);
+         }
+ 
+         this.c(32, flag);
+     }
+ 
+-    private void dr() {
+-        if (this.bG()) {
+-            this.bM = 1;
++    private void dL() {
++        if (this.bA()) {
++            this.bL = 1;
+             this.setStanding(true);
+         }
+ 
+     }
+ 
+-    public void dI() {
+-        this.dr();
+-        SoundEffect soundeffect = this.dm();
++    public void dF() {
++        this.dL();
++        SoundEffect soundeffect = this.dj();
+ 
+         if (soundeffect != null) {
+-            this.a(soundeffect, this.co(), this.cp());
++            this.a(soundeffect, this.ci(), this.cj());
+         }
+ 
+     }
+@@ -627,17 +688,13 @@
+     public boolean h(EntityHuman entityhuman) {
+         this.setOwnerUUID(entityhuman.getUniqueID());
+         this.setTamed(true);
+-        if (entityhuman instanceof EntityPlayer) {
+-            CriterionTriggers.w.a((EntityPlayer) entityhuman, (EntityAnimal) this);
+-        }
+-
+         this.world.broadcastEntityEffect(this, (byte) 7);
+         return true;
+     }
+ 
+-    public void a(float f, float f1, float f2) {
+-        if (this.isVehicle() && this.cT() && this.dE()) {
+-            EntityLiving entityliving = (EntityLiving) this.bC();
++    public void g(float f, float f1) {
++        if (this.isVehicle() && this.cR() && this.dB()) {
++            EntityLiving entityliving = (EntityLiving) this.bw();
+ 
+             this.yaw = entityliving.yaw;
+             this.lastYaw = this.yaw;
+@@ -646,41 +703,41 @@
+             this.aN = this.yaw;
+             this.aP = this.aN;
+             f = entityliving.be * 0.5F;
+-            f2 = entityliving.bg;
+-            if (f2 <= 0.0F) {
+-                f2 *= 0.25F;
+-                this.bG = 0;
++            f1 = entityliving.bf;
++            if (f1 <= 0.0F) {
++                f1 *= 0.25F;
++                this.bF = 0;
+             }
+ 
+-            if (this.onGround && this.jumpPower == 0.0F && this.dx() && !this.canSlide) {
++            if (this.onGround && this.jumpPower == 0.0F && this.du() && !this.canSlide) {
+                 f = 0.0F;
+-                f2 = 0.0F;
++                f1 = 0.0F;
+             }
+ 
+-            if (this.jumpPower > 0.0F && !this.dv() && this.onGround) {
++            if (this.jumpPower > 0.0F && !this.ds() && this.onGround) {
+                 this.motY = this.getJumpStrength() * (double) this.jumpPower;
+                 if (this.hasEffect(MobEffects.JUMP)) {
+                     this.motY += (double) ((float) (this.getEffect(MobEffects.JUMP).getAmplifier() + 1) * 0.1F);
+                 }
+ 
+-                this.s(true);
++                this.r(true);
+                 this.impulse = true;
+-                if (f2 > 0.0F) {
+-                    float f3 = MathHelper.sin(this.yaw * 0.017453292F);
+-                    float f4 = MathHelper.cos(this.yaw * 0.017453292F);
+-
+-                    this.motX += (double) (-0.4F * f3 * this.jumpPower);
+-                    this.motZ += (double) (0.4F * f4 * this.jumpPower);
+-                    this.a(SoundEffects.cN, 0.4F, 1.0F);
++                if (f1 > 0.0F) {
++                    float f2 = MathHelper.sin(this.yaw * 0.017453292F);
++                    float f3 = MathHelper.cos(this.yaw * 0.017453292F);
++
++                    this.motX += (double) (-0.4F * f2 * this.jumpPower);
++                    this.motZ += (double) (0.4F * f3 * this.jumpPower);
++                    this.a(SoundEffects.cH, 0.4F, 1.0F);
+                 }
+ 
+                 this.jumpPower = 0.0F;
+             }
+ 
+-            this.aR = this.cw() * 0.1F;
+-            if (this.bG()) {
+-                this.m((float) this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
+-                super.a(f, f1, f2);
++            this.aR = this.cq() * 0.1F;
++            if (this.bA()) {
++                this.l((float) this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
++                super.g(f, f1);
+             } else if (entityliving instanceof EntityHuman) {
+                 this.motX = 0.0D;
+                 this.motY = 0.0D;
+@@ -689,23 +746,23 @@
+ 
+             if (this.onGround) {
+                 this.jumpPower = 0.0F;
+-                this.s(false);
++                this.r(false);
+             }
+ 
+             this.aF = this.aG;
+             double d0 = this.locX - this.lastX;
+             double d1 = this.locZ - this.lastZ;
+-            float f5 = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
++            float f4 = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
+ 
+-            if (f5 > 1.0F) {
+-                f5 = 1.0F;
++            if (f4 > 1.0F) {
++                f4 = 1.0F;
+             }
+ 
+-            this.aG += (f5 - this.aG) * 0.4F;
++            this.aG += (f4 - this.aG) * 0.4F;
+             this.aH += this.aG;
+         } else {
+             this.aR = 0.02F;
+-            super.a(f, f1, f2);
++            super.g(f, f1);
+         }
+     }
+ 
+@@ -716,13 +773,14 @@
+ 
+     public void b(NBTTagCompound nbttagcompound) {
+         super.b(nbttagcompound);
+-        nbttagcompound.setBoolean("EatingHaystack", this.dw());
++        nbttagcompound.setBoolean("EatingHaystack", this.dt());
+         nbttagcompound.setBoolean("Bred", this.hasReproduced());
+         nbttagcompound.setInt("Temper", this.getTemper());
+         nbttagcompound.setBoolean("Tame", this.isTamed());
          if (this.getOwnerUUID() != null) {
              nbttagcompound.setString("OwnerUUID", this.getOwnerUUID().toString());
          }
@@ -160,7 +842,25 @@
  
          if (!this.inventoryChest.getItem(0).isEmpty()) {
              nbttagcompound.set("SaddleItem", this.inventoryChest.getItem(0).save(new NBTTagCompound()));
-@@ -745,6 +807,11 @@
+@@ -732,8 +790,8 @@
+ 
+     public void a(NBTTagCompound nbttagcompound) {
+         super.a(nbttagcompound);
+-        this.v(nbttagcompound.getBoolean("EatingHaystack"));
+-        this.t(nbttagcompound.getBoolean("Bred"));
++        this.u(nbttagcompound.getBoolean("EatingHaystack"));
++        this.s(nbttagcompound.getBoolean("Bred"));
+         this.setTemper(nbttagcompound.getInt("Temper"));
+         this.setTamed(nbttagcompound.getBoolean("Tame"));
+         String s;
+@@ -743,12 +801,17 @@
+         } else {
+             String s1 = nbttagcompound.getString("Owner");
+ 
+-            s = NameReferencingFileConverter.a(this.C_(), s1);
++            s = NameReferencingFileConverter.a(this.B_(), s1);
+         }
+ 
          if (!s.isEmpty()) {
              this.setOwnerUUID(UUID.fromString(s));
          }
@@ -172,10 +872,54 @@
  
          AttributeInstance attributeinstance = this.getAttributeMap().a("Speed");
  
-@@ -797,6 +864,18 @@
+@@ -764,14 +827,14 @@
+             }
+         }
+ 
+-        this.dB();
++        this.dy();
      }
  
-     public void b(int i) {
+     public boolean mate(EntityAnimal entityanimal) {
+         return false;
+     }
+ 
+-    protected boolean dJ() {
++    protected boolean dG() {
+         return !this.isVehicle() && !this.isPassenger() && this.isTamed() && !this.isBaby() && this.getHealth() >= this.getMaxHealth() && this.isInLove();
+     }
+ 
+@@ -781,31 +844,43 @@
+     }
+ 
+     protected void a(EntityAgeable entityageable, EntityHorseAbstract entityhorseabstract) {
+-        double d0 = this.getAttributeInstance(GenericAttributes.maxHealth).b() + entityageable.getAttributeInstance(GenericAttributes.maxHealth).b() + (double) this.dK();
++        double d0 = this.getAttributeInstance(GenericAttributes.maxHealth).b() + entityageable.getAttributeInstance(GenericAttributes.maxHealth).b() + (double) this.dH();
+ 
+         entityhorseabstract.getAttributeInstance(GenericAttributes.maxHealth).setValue(d0 / 3.0D);
+-        double d1 = this.getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).b() + entityageable.getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).b() + this.dL();
++        double d1 = this.getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).b() + entityageable.getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).b() + this.dI();
+ 
+         entityhorseabstract.getAttributeInstance(EntityHorseAbstract.attributeJumpStrength).setValue(d1 / 3.0D);
+-        double d2 = this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).b() + entityageable.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).b() + this.dM();
++        double d2 = this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).b() + entityageable.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).b() + this.dJ();
+ 
+         entityhorseabstract.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(d2 / 3.0D);
+     }
+ 
+-    public boolean cT() {
+-        return this.bC() instanceof EntityLiving;
++    public boolean cR() {
++        return this.bw() instanceof EntityLiving;
+     }
+ 
+     public boolean a() {
+-        return this.dE();
++        return this.dB();
+     }
+ 
+-    public void b_(int i) {
++    public void b(int i) {
 +        // CraftBukkit start
 +        float power;
 +        if (i >= 90) {
@@ -189,5 +933,83 @@
 +        }
 +        // CraftBukkit end
          this.canSlide = true;
-         this.dL();
+-        this.dr();
++        this.dL();
      }
+ 
+-    public void r_() {}
++    public void q_() {}
+ 
+     public void k(Entity entity) {
+         super.k(entity);
+@@ -815,13 +890,13 @@
+             this.aN = entityinsentient.aN;
+         }
+ 
+-        if (this.bR > 0.0F) {
++        if (this.bQ > 0.0F) {
+             float f = MathHelper.sin(this.aN * 0.017453292F);
+             float f1 = MathHelper.cos(this.aN * 0.017453292F);
+-            float f2 = 0.7F * this.bR;
+-            float f3 = 0.15F * this.bR;
++            float f2 = 0.7F * this.bQ;
++            float f3 = 0.15F * this.bQ;
+ 
+-            entity.setPosition(this.locX + (double) (f2 * f), this.locY + this.aE() + entity.aD() + (double) f3, this.locZ - (double) (f2 * f1));
++            entity.setPosition(this.locX + (double) (f2 * f), this.locY + this.ay() + entity.ax() + (double) f3, this.locZ - (double) (f2 * f1));
+             if (entity instanceof EntityLiving) {
+                 ((EntityLiving) entity).aN = this.aN;
+             }
+@@ -829,15 +904,15 @@
+ 
+     }
+ 
+-    protected float dK() {
++    protected float dH() {
+         return 15.0F + (float) this.random.nextInt(8) + (float) this.random.nextInt(9);
+     }
+ 
+-    protected double dL() {
++    protected double dI() {
+         return 0.4000000059604645D + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D;
+     }
+ 
+-    protected double dM() {
++    protected double dJ() {
+         return (0.44999998807907104D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D) * 0.25D;
+     }
+ 
+@@ -849,7 +924,7 @@
+         return this.length;
+     }
+ 
+-    public boolean dN() {
++    public boolean dK() {
+         return false;
+     }
+ 
+@@ -863,11 +938,11 @@
+         if (j >= 0 && j < 2 && j < this.inventoryChest.getSize()) {
+             if (j == 0 && itemstack.getItem() != Items.SADDLE) {
+                 return false;
+-            } else if (j == 1 && (!this.dN() || !this.f(itemstack))) {
++            } else if (j == 1 && (!this.dK() || !this.f(itemstack))) {
+                 return false;
+             } else {
+                 this.inventoryChest.setItem(j, itemstack);
+-                this.dB();
++                this.dy();
+                 return true;
+             }
+         } else {
+@@ -883,8 +958,8 @@
+     }
+ 
+     @Nullable
+-    public Entity bC() {
+-        return this.bD().isEmpty() ? null : (Entity) this.bD().get(0);
++    public Entity bw() {
++        return this.bx().isEmpty() ? null : (Entity) this.bx().get(0);
+     }
+ 
+     @Nullable

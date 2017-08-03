@@ -81,7 +81,7 @@ public class BlockIgniteEvent extends BlockEvent implements Cancellable, EntityA
     }
 
     /**
-     * Gets the block who ignited this block
+     * Gets the block which ignited this block
      *
      * @return The Block that placed/ignited the fire block, or null if not ignited by a Block.
      */

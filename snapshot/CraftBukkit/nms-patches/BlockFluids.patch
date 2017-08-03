@@ -1,6 +1,90 @@
 --- a/net/minecraft/server/BlockFluids.java
 +++ b/net/minecraft/server/BlockFluids.java
-@@ -163,14 +163,20 @@
+@@ -10,7 +10,7 @@
+ 
+     protected BlockFluids(Material material) {
+         super(material);
+-        this.w(this.blockStateList.getBlockData().set(BlockFluids.LEVEL, Integer.valueOf(0)));
++        this.y(this.blockStateList.getBlockData().set(BlockFluids.LEVEL, Integer.valueOf(0)));
+         this.a(true);
+     }
+ 
+@@ -27,7 +27,7 @@
+         return this.material != Material.LAVA;
+     }
+ 
+-    public static float b(int i) {
++    public static float e(int i) {
+         if (i >= 8) {
+             i = 0;
+         }
+@@ -35,12 +35,12 @@
+         return (float) (i + 1) / 9.0F;
+     }
+ 
+-    protected int x(IBlockData iblockdata) {
++    protected int i(IBlockData iblockdata) {
+         return iblockdata.getMaterial() == this.material ? ((Integer) iblockdata.get(BlockFluids.LEVEL)).intValue() : -1;
+     }
+ 
+-    protected int y(IBlockData iblockdata) {
+-        int i = this.x(iblockdata);
++    protected int z(IBlockData iblockdata) {
++        int i = this.i(iblockdata);
+ 
+         return i >= 8 ? 0 : i;
+     }
+@@ -57,22 +57,10 @@
+         return flag && ((Integer) iblockdata.get(BlockFluids.LEVEL)).intValue() == 0;
+     }
+ 
+-    private boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
+-        IBlockData iblockdata = iblockaccess.getType(blockposition);
+-        Block block = iblockdata.getBlock();
+-        Material material = iblockdata.getMaterial();
+-
+-        if (material == this.material) {
+-            return false;
+-        } else if (enumdirection == EnumDirection.UP) {
+-            return true;
+-        } else if (material == Material.ICE) {
+-            return false;
+-        } else {
+-            boolean flag = c(block) || block instanceof BlockStairs;
++    public boolean a(IBlockAccess iblockaccess, BlockPosition blockposition, EnumDirection enumdirection) {
++        Material material = iblockaccess.getType(blockposition).getMaterial();
+ 
+-            return !flag && iblockdata.d(iblockaccess, blockposition, enumdirection) == EnumBlockFaceShape.SOLID;
+-        }
++        return material == this.material ? false : (enumdirection == EnumDirection.UP ? true : (material == Material.ICE ? false : super.a(iblockaccess, blockposition, enumdirection)));
+     }
+ 
+     public EnumRenderType a(IBlockData iblockdata) {
+@@ -91,7 +79,7 @@
+         double d0 = 0.0D;
+         double d1 = 0.0D;
+         double d2 = 0.0D;
+-        int i = this.y(iblockdata);
++        int i = this.z(iblockdata);
+         BlockPosition.PooledBlockPosition blockposition_pooledblockposition = BlockPosition.PooledBlockPosition.s();
+         Iterator iterator = EnumDirection.EnumDirectionLimit.HORIZONTAL.iterator();
+ 
+@@ -99,12 +87,12 @@
+             EnumDirection enumdirection = (EnumDirection) iterator.next();
+ 
+             blockposition_pooledblockposition.j(blockposition).d(enumdirection);
+-            int j = this.y(iblockaccess.getType(blockposition_pooledblockposition));
++            int j = this.z(iblockaccess.getType(blockposition_pooledblockposition));
+             int k;
+ 
+             if (j < 0) {
+                 if (!iblockaccess.getType(blockposition_pooledblockposition).getMaterial().isSolid()) {
+-                    j = this.y(iblockaccess.getType(blockposition_pooledblockposition.down()));
++                    j = this.z(iblockaccess.getType(blockposition_pooledblockposition.down()));
+                     if (j >= 0) {
+                         k = j - (i - 8);
+                         d0 += (double) (enumdirection.getAdjacentX() * k);
+@@ -175,14 +163,20 @@
                  Integer integer = (Integer) iblockdata.get(BlockFluids.LEVEL);
  
                  if (integer.intValue() == 0) {
@@ -25,3 +109,34 @@
                      return true;
                  }
              }
+@@ -196,7 +190,7 @@
+         double d1 = (double) blockposition.getY();
+         double d2 = (double) blockposition.getZ();
+ 
+-        world.a((EntityHuman) null, blockposition, SoundEffects.dE, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
++        world.a((EntityHuman) null, blockposition, SoundEffects.dr, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+ 
+         for (int i = 0; i < 8; ++i) {
+             world.addParticle(EnumParticle.SMOKE_LARGE, d0 + Math.random(), d1 + 1.2D, d2 + Math.random(), 0.0D, 0.0D, 0.0D, new int[0]);
+@@ -236,17 +230,13 @@
+         }
+     }
+ 
+-    public static float g(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
++    public static float f(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
+         int i = ((Integer) iblockdata.get(BlockFluids.LEVEL)).intValue();
+ 
+-        return (i & 7) == 0 && iblockaccess.getType(blockposition.up()).getMaterial() == Material.WATER ? 1.0F : 1.0F - b(i);
+-    }
+-
+-    public static float h(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
+-        return (float) blockposition.getY() + g(iblockdata, iblockaccess, blockposition);
++        return (i & 7) == 0 && iblockaccess.getType(blockposition.up()).getMaterial() == Material.WATER ? 1.0F : 1.0F - e(i);
+     }
+ 
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.UNDEFINED;
++    public static float g(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
++        return (float) blockposition.getY() + f(iblockdata, iblockaccess, blockposition);
+     }
+ }

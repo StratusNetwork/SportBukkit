@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityHorseChestedAbstract.java
 +++ b/net/minecraft/server/EntityHorseChestedAbstract.java
-@@ -1,8 +1,18 @@
+@@ -1,45 +1,55 @@
  package net.minecraft.server;
  
 +// SportBukkit start
@@ -10,7 +10,7 @@
 +
  public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
  
--    private static final DataWatcherObject<Boolean> bG = DataWatcher.a(EntityHorseChestedAbstract.class, DataWatcherRegistry.h);
+-    private static final DataWatcherObject<Boolean> bH = DataWatcher.a(EntityHorseChestedAbstract.class, DataWatcherRegistry.h);
 +    // SportBukkit start
 +    private static final DataWatcherObject<Boolean> bG = MetadataKey
 +        .builder(EntityHorseChestedAbstract.class, DataWatcherRegistry.h)
@@ -20,3 +20,134 @@
  
      public EntityHorseChestedAbstract(World world) {
          super(world);
+-        this.bF = false;
++        this.bE = false;
+     }
+ 
+     protected void i() {
+         super.i();
+-        this.datawatcher.register(EntityHorseChestedAbstract.bH, Boolean.valueOf(false));
++        this.datawatcher.register(EntityHorseChestedAbstract.bG, Boolean.valueOf(false));
+     }
+ 
+     protected void initAttributes() {
+         super.initAttributes();
+-        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dK());
++        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dH());
+         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.17499999701976776D);
+         this.getAttributeInstance(EntityHorseChestedAbstract.attributeJumpStrength).setValue(0.5D);
+     }
+ 
+     public boolean isCarryingChest() {
+-        return ((Boolean) this.datawatcher.get(EntityHorseChestedAbstract.bH)).booleanValue();
++        return ((Boolean) this.datawatcher.get(EntityHorseChestedAbstract.bG)).booleanValue();
+     }
+ 
+     public void setCarryingChest(boolean flag) {
+-        this.datawatcher.set(EntityHorseChestedAbstract.bH, Boolean.valueOf(flag));
++        this.datawatcher.set(EntityHorseChestedAbstract.bG, Boolean.valueOf(flag));
+     }
+ 
+-    protected int dl() {
+-        return this.isCarryingChest() ? 17 : super.dl();
++    protected int di() {
++        return this.isCarryingChest() ? 17 : super.di();
+     }
+ 
+-    public double aE() {
+-        return super.aE() - 0.25D;
++    public double ay() {
++        return super.ay() - 0.25D;
+     }
+ 
+-    protected SoundEffect dm() {
+-        super.dm();
+-        return SoundEffects.aD;
++    protected SoundEffect dj() {
++        super.dj();
++        return SoundEffects.aA;
+     }
+ 
+     public void die(DamageSource damagesource) {
+@@ -88,7 +98,7 @@
+         if (this.isCarryingChest()) {
+             NBTTagList nbttaglist = nbttagcompound.getList("Items", 10);
+ 
+-            this.loadChest();
++            this.dx();
+ 
+             for (int i = 0; i < nbttaglist.size(); ++i) {
+                 NBTTagCompound nbttagcompound1 = nbttaglist.get(i);
+@@ -100,20 +110,20 @@
+             }
+         }
+ 
+-        this.dB();
++        this.dy();
+     }
+ 
+     public boolean c(int i, ItemStack itemstack) {
+         if (i == 499) {
+             if (this.isCarryingChest() && itemstack.isEmpty()) {
+                 this.setCarryingChest(false);
+-                this.loadChest();
++                this.dx();
+                 return true;
+             }
+ 
+             if (!this.isCarryingChest() && itemstack.getItem() == Item.getItemOf(Blocks.CHEST)) {
+                 this.setCarryingChest(true);
+-                this.loadChest();
++                this.dx();
+                 return true;
+             }
+         }
+@@ -129,7 +139,7 @@
+         } else {
+             if (!this.isBaby()) {
+                 if (this.isTamed() && entityhuman.isSneaking()) {
+-                    this.c(entityhuman);
++                    this.f(entityhuman);
+                     return true;
+                 }
+ 
+@@ -146,19 +156,19 @@
+                         return true;
+                     }
+ 
+-                    this.dI();
++                    this.dF();
+                     return true;
+                 }
+ 
+                 if (!flag && !this.isCarryingChest() && itemstack.getItem() == Item.getItemOf(Blocks.CHEST)) {
+                     this.setCarryingChest(true);
+-                    this.dn();
++                    this.dk();
+                     flag = true;
+-                    this.loadChest();
++                    this.dx();
+                 }
+ 
+-                if (!flag && !this.isBaby() && !this.dE() && itemstack.getItem() == Items.SADDLE) {
+-                    this.c(entityhuman);
++                if (!flag && !this.isBaby() && !this.dB() && itemstack.getItem() == Items.SADDLE) {
++                    this.f(entityhuman);
+                     return true;
+                 }
+ 
+@@ -182,11 +192,11 @@
+         }
+     }
+ 
+-    protected void dn() {
+-        this.a(SoundEffects.aE, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
++    protected void dk() {
++        this.a(SoundEffects.aB, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+     }
+ 
+-    public int dr() {
++    public int dl() {
+         return 5;
+     }
+ }

@@ -20,3 +20,23 @@
  
      public boolean a(InventoryCrafting inventorycrafting, World world) {
          if (inventorycrafting.j() == 3 && inventorycrafting.i() == 3) {
+@@ -48,6 +56,10 @@
+         }
+     }
+ 
++    public int a() {
++        return 9;
++    }
++
+     public ItemStack b() {
+         return ItemStack.a;
+     }
+@@ -55,8 +67,4 @@
+     public NonNullList<ItemStack> b(InventoryCrafting inventorycrafting) {
+         return NonNullList.a(inventorycrafting.getSize(), ItemStack.a);
+     }
+-
+-    public boolean c() {
+-        return true;
+-    }
+ }

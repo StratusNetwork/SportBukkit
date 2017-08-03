@@ -25,7 +25,7 @@ diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/j
 +            NetworkManager.g.fatal("Uncaught Exception", throwable);
          }
  
--        NetworkManager.g.debug(throwable);
+-        NetworkManager.g.debug(chatmessage.toPlainText(), throwable);
          this.close(chatmessage);
      }
  

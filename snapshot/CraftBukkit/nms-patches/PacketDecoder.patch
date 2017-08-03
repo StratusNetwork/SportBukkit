@@ -14,3 +14,12 @@
  
              if (packet == null) {
                  throw new IOException("Bad packet id " + i);
+@@ -35,7 +40,7 @@
+                 } else {
+                     list.add(packet);
+                     if (PacketDecoder.a.isDebugEnabled()) {
+-                        PacketDecoder.a.debug(PacketDecoder.b, " IN: [{}:{}] {}", channelhandlercontext.channel().attr(NetworkManager.c).get(), Integer.valueOf(i), packet.getClass().getName());
++                        PacketDecoder.a.debug(PacketDecoder.b, " IN: [{}:{}] {}", new Object[] { channelhandlercontext.channel().attr(NetworkManager.c).get(), Integer.valueOf(i), packet.getClass().getName()});
+                     }
+ 
+                 }

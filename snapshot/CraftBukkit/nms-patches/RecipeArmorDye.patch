@@ -16,3 +16,41 @@
  
      public boolean a(InventoryCrafting inventorycrafting, World world) {
          ItemStack itemstack = ItemStack.a;
+@@ -78,7 +82,7 @@
+                         return ItemStack.a;
+                     }
+ 
+-                    float[] afloat = EnumColor.fromInvColorIndex(itemstack1.getData()).f();
++                    float[] afloat = EntitySheep.a(EnumColor.fromInvColorIndex(itemstack1.getData()));
+                     int j1 = (int) (afloat[0] * 255.0F);
+                     int k1 = (int) (afloat[1] * 255.0F);
+ 
+@@ -111,6 +115,10 @@
+         }
+     }
+ 
++    public int a() {
++        return 10;
++    }
++
+     public ItemStack b() {
+         return ItemStack.a;
+     }
+@@ -121,15 +129,11 @@
+         for (int i = 0; i < nonnulllist.size(); ++i) {
+             ItemStack itemstack = inventorycrafting.getItem(i);
+ 
+-            if (itemstack.getItem().r()) {
+-                nonnulllist.set(i, new ItemStack(itemstack.getItem().q()));
++            if (itemstack.getItem().s()) {
++                nonnulllist.set(i, new ItemStack(itemstack.getItem().r()));
+             }
+         }
+ 
+         return nonnulllist;
+     }
+-
+-    public boolean c() {
+-        return true;
+-    }
+ }

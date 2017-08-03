@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/PacketPlayOutMount.java
 +++ b/net/minecraft/server/PacketPlayOutMount.java
-@@ -8,6 +8,13 @@
+@@ -8,11 +8,18 @@
      private int a;
      private int[] b;
  
@@ -14,3 +14,9 @@
      public PacketPlayOutMount() {}
  
      public PacketPlayOutMount(Entity entity) {
+         this.a = entity.getId();
+-        List list = entity.bD();
++        List list = entity.bx();
+ 
+         this.b = new int[list.size()];
+ 

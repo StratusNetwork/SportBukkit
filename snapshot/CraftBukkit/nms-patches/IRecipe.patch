@@ -1,9 +1,17 @@
 --- a/net/minecraft/server/IRecipe.java
 +++ b/net/minecraft/server/IRecipe.java
-@@ -11,4 +11,6 @@
+@@ -6,11 +6,11 @@
+ 
+     ItemStack craftItem(InventoryCrafting inventorycrafting);
+ 
++    int a();
++
      ItemStack b();
  
      NonNullList<ItemStack> b(InventoryCrafting inventorycrafting);
-+
+ 
+-    default boolean c() {
+-        return false;
+-    }
 +    org.bukkit.inventory.Recipe toBukkitRecipe(); // CraftBukkit
  }

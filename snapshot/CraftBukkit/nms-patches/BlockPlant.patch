@@ -11,6 +11,19 @@
  
  public class BlockPlant extends Block {
  
+@@ -22,10 +26,10 @@
+     }
+ 
+     public boolean canPlace(World world, BlockPosition blockposition) {
+-        return super.canPlace(world, blockposition) && this.x(world.getType(blockposition.down()));
++        return super.canPlace(world, blockposition) && this.i(world.getType(blockposition.down()));
+     }
+ 
+-    protected boolean x(IBlockData iblockdata) {
++    protected boolean i(IBlockData iblockdata) {
+         return iblockdata.getBlock() == Blocks.GRASS || iblockdata.getBlock() == Blocks.DIRT || iblockdata.getBlock() == Blocks.FARMLAND;
+     }
+ 
 @@ -40,6 +44,15 @@
  
      protected void e(World world, BlockPosition blockposition, IBlockData iblockdata) {
@@ -27,3 +40,21 @@
              this.b(world, blockposition, iblockdata, 0);
              world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 3);
          }
+@@ -47,7 +60,7 @@
+     }
+ 
+     public boolean f(World world, BlockPosition blockposition, IBlockData iblockdata) {
+-        return this.x(world.getType(blockposition.down()));
++        return this.i(world.getType(blockposition.down()));
+     }
+ 
+     public AxisAlignedBB b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
+@@ -66,8 +79,4 @@
+     public boolean c(IBlockData iblockdata) {
+         return false;
+     }
+-
+-    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
+-        return EnumBlockFaceShape.UNDEFINED;
+-    }
+ }
