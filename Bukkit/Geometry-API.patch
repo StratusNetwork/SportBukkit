@@ -6569,7 +6569,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
       */
      public Vector setX(double x) {
 -        this.x = x;
-+        setX(x);
++        super.setX(x);
          return this;
      }
  
@@ -6623,7 +6623,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
       */
      public Vector setZ(double z) {
 -        this.z = z;
-+        setZ(z);
++        super.setZ(z);
          return this;
      }
  
