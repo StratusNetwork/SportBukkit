@@ -32,9 +32,9 @@ public class Direction {
     public Vec3 toVector() {
         final double cos = Math.cos(pitch);
         return Bukkit.vectors().fine(
-            -cos * Math.sin(yaw),
-            -Math.sin(pitch),
-            cos * Math.cos(yaw)
+                -cos * Math.sin(yaw),
+                -Math.sin(pitch),
+                cos * Math.cos(yaw)
         );
     }
 
@@ -66,14 +66,14 @@ public class Direction {
         if(!(obj instanceof Direction)) return false;
         final Direction that = (Direction) obj;
         return this.yaw == that.yaw() &&
-               this.pitch == that.pitch();
+                this.pitch == that.pitch();
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() +
-               "{yaw=" + yaw +
-               " pitch=" + pitch +
-               "}";
+                "{yaw=" + yaw +
+                " pitch=" + pitch +
+                "}";
     }
 }

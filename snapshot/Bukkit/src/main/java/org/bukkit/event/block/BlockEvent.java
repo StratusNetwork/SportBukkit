@@ -1,7 +1,7 @@
 package org.bukkit.event.block;
 
-import org.bukkit.World;
 import org.bukkit.Physical;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 

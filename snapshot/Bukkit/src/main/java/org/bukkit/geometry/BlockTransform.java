@@ -29,7 +29,7 @@ import org.bukkit.Bukkit;
 class BlockTransform implements CoarseTransform {
 
     private final int xx, xz,
-                      zx, zz;
+            zx, zz;
     private final int xt, yt, zt;
 
     // The x-z determinant, might come in handy
@@ -47,7 +47,7 @@ class BlockTransform implements CoarseTransform {
 
         if(determinant != -1 && determinant != 1) {
             throw new IllegalArgumentException(
-                "Invalid block transform - coefficients do not preserve area: [ " + xx + " " + xz + " ], [ " + zx + " " + zz + " ]"
+                    "Invalid block transform - coefficients do not preserve area: [ " + xx + " " + xz + " ], [ " + zx + " " + zz + " ]"
             );
         }
 
@@ -62,8 +62,8 @@ class BlockTransform implements CoarseTransform {
     @Override
     public boolean isIdentity() {
         return xx == 1 && xz == 0 &&
-               zx == 0 && zz == 1 &&
-               xt == 0 && yt == 0 && zt == 0;
+                zx == 0 && zz == 1 &&
+                xt == 0 && yt == 0 && zt == 0;
     }
 
     @Override
@@ -74,9 +74,9 @@ class BlockTransform implements CoarseTransform {
             final double z = v.fineZ();
 
             return Bukkit.vectors().fine(
-                x * xx + z * xz + xt,
-                y + yt,
-                x * zx + z * zz + zt
+                    x * xx + z * xz + xt,
+                    y + yt,
+                    x * zx + z * zz + zt
             );
         } else {
             final int x = v.coarseX();
@@ -84,9 +84,9 @@ class BlockTransform implements CoarseTransform {
             final int z = v.coarseZ();
 
             return Bukkit.vectors().coarse(
-                x * xx + z * xz + xt,
-                y + yt,
-                x * zx + z * zz + zt
+                    x * xx + z * xz + xt,
+                    y + yt,
+                    x * zx + z * zz + zt
             );
         }
     }
@@ -99,9 +99,9 @@ class BlockTransform implements CoarseTransform {
             final double z = v.fineZ();
 
             v.set(
-                x * xx + z * xz + xt,
-                y + yt,
-                x * zx + z * zz + zt
+                    x * xx + z * xz + xt,
+                    y + yt,
+                    x * zx + z * zz + zt
             );
         } else {
             final int x = v.coarseX();
@@ -109,9 +109,9 @@ class BlockTransform implements CoarseTransform {
             final int z = v.coarseZ();
 
             v.set(
-                x * xx + z * xz + xt,
-                y + yt,
-                x * zx + z * zz + zt
+                    x * xx + z * xz + xt,
+                    y + yt,
+                    x * zx + z * zz + zt
             );
         }
     }
@@ -120,12 +120,12 @@ class BlockTransform implements CoarseTransform {
     public CoarseTransform inverse() {
         if(inverse == null) {
             inverse = new BlockTransform(
-                this,
-                xx, zx,
-                xz, zz,
-                - xx * xt - zx * zt,
-                - yt,
-                - xz * xt - zz * zt
+                    this,
+                    xx, zx,
+                    xz, zz,
+                    - xx * xt - zx * zt,
+                    - yt,
+                    - xz * xt - zz * zt
             );
         }
         return inverse;
@@ -136,11 +136,11 @@ class BlockTransform implements CoarseTransform {
         if(before instanceof BlockTransform) {
             final BlockTransform that = (BlockTransform) before;
             return new BlockTransform(
-                this.xx * that.xx + this.xz * that.zx, this.xx * that.xz + this.xz * that.zz,
-                this.zx * that.xx + this.zz * that.zx, this.zx * that.xz + this.zz * that.zz,
-                this.xx * that.xt + this.xz * that.zt + this.xt,
-                this.yt + that.yt,
-                this.zx * that.xt + this.zz * that.zt + this.zt
+                    this.xx * that.xx + this.xz * that.zx, this.xx * that.xz + this.xz * that.zz,
+                    this.zx * that.xx + this.zz * that.zx, this.zx * that.xz + this.zz * that.zz,
+                    this.xx * that.xt + this.xz * that.zt + this.xt,
+                    this.yt + that.yt,
+                    this.zx * that.xt + this.zz * that.zt + this.zt
             );
         }
 
@@ -217,12 +217,12 @@ class BlockTransform implements CoarseTransform {
         if(obj instanceof BlockTransform) {
             final BlockTransform that = (BlockTransform) obj;
             return this.xx == that.xx &&
-                   this.xz == that.xz &&
-                   this.zx == that.zx &&
-                   this.zz == that.zz &&
-                   this.xt == that.xt &&
-                   this.yt == that.yt &&
-                   this.zt == that.zt;
+                    this.xz == that.xz &&
+                    this.zx == that.zx &&
+                    this.zz == that.zz &&
+                    this.xt == that.xt &&
+                    this.yt == that.yt &&
+                    this.zt == that.zt;
         }
 
         return obj.equals(this);
@@ -231,7 +231,7 @@ class BlockTransform implements CoarseTransform {
     @Override
     public String toString() {
         return Transform.class.getSimpleName() +
-               "{orientation=" + orientation() +
-               " translation=(" + xt + ", " + yt + ", " + zt + ")}";
+                "{orientation=" + orientation() +
+                " translation=(" + xt + ", " + yt + ", " + zt + ")}";
     }
 }

@@ -1,7 +1,7 @@
 package org.bukkit.event.player;
 
-import org.bukkit.World;
 import org.bukkit.Physical;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 

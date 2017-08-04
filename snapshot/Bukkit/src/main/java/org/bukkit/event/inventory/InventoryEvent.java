@@ -3,8 +3,8 @@ package org.bukkit.event.inventory;
 
 import java.util.List;
 
-import org.bukkit.World;
 import org.bukkit.Physical;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.entity.HumanEntity;

@@ -14,7 +14,7 @@ import org.bukkit.event.PlayerAction;
  * <ol>
  * <li>The player is not in creative or adventure mode
  * <li>The player can loot the block (ie: does not destroy it completely, by
- *     using the correct tool)
+ * using the correct tool)
  * <li>The player does not have silk touch
  * <li>The block drops experience in vanilla Minecraft
  * </ol>

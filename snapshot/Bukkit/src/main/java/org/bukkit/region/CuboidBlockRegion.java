@@ -15,9 +15,9 @@ public class CuboidBlockRegion implements BlockRegion {
         a = a.coarseCopy();
         b = b.coarseCopy();
 
-        if(a.coarseX() == b.coarseX() ||
-           a.coarseY() == b.coarseY() ||
-           a.coarseZ() == b.coarseZ()) {
+        if (a.coarseX() == b.coarseX() ||
+                a.coarseY() == b.coarseY() ||
+                a.coarseZ() == b.coarseZ()) {
             return EmptyBlockRegion.INSTANCE;
         }
 
@@ -26,7 +26,7 @@ public class CuboidBlockRegion implements BlockRegion {
 
     public static BlockRegion fromMinAndSize(Vec3 min, Vec3 size) {
         size = size.coarseCopy();
-        if(size.coarseX() == 0 || size.coarseY() == 0 || size.coarseZ() == 0) {
+        if (size.coarseX() == 0 || size.coarseY() == 0 || size.coarseZ() == 0) {
             return EmptyBlockRegion.INSTANCE;
         }
         min = min.coarseCopy();
@@ -82,9 +82,9 @@ public class CuboidBlockRegion implements BlockRegion {
 
         // There is probably some crazy formula for this
         int hash = 0;
-        for(int x = x0; x < x1; x++) {
-            for(int y = y0; y < y1; y++) {
-                for(int z = z0; z < z1; z++) {
+        for (int x = x0; x < x1; x++) {
+            for (int y = y0; y < y1; y++) {
+                for (int z = z0; z < z1; z++) {
                     hash += Vec3.combineHashCodes(x, y, z);
                 }
             }
@@ -94,10 +94,10 @@ public class CuboidBlockRegion implements BlockRegion {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj instanceof CuboidBlockRegion) {
+        if (this == obj) return true;
+        if (obj instanceof CuboidBlockRegion) {
             return min.equals(((CuboidBlockRegion) obj).min) &&
-                   max.equals(((CuboidBlockRegion) obj).max);
+                    max.equals(((CuboidBlockRegion) obj).max);
         }
         return standardEquals(obj);
     }

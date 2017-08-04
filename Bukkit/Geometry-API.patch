@@ -14,6 +14,15 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
  import org.bukkit.help.HelpMap;
  import org.bukkit.inventory.Inventory;
  import org.bukkit.inventory.InventoryHolder;
+@@ -220,7 +221,7 @@ public final class Bukkit {
+     public static String getServerId() {
+         return server.getServerId();
+     }
+-    
++
+     /**
+      * Get world type (level-type setting) for default world.
+      *
 @@ -571,6 +572,10 @@ public final class Bukkit {
          return server.getWorld(uid);
      }
@@ -25,6 +34,49 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
      /**
       * Gets the map from the given item ID.
       *
+@@ -633,7 +638,7 @@ public final class Bukkit {
+     public static void savePlayers() {
+         server.savePlayers();
+     }
+-    
++
+     /**
+      * Dispatches a command on this server, and executes it if found.
+      *
+@@ -692,7 +697,7 @@ public final class Bukkit {
+     public static void resetRecipes() {
+         server.resetRecipes();
+     }
+-    
++
+     /**
+      * Gets a list of command aliases defined in the server properties.
+      *
+@@ -1028,7 +1033,7 @@ public final class Bukkit {
+     public static int getWaterAnimalSpawnLimit() {
+         return server.getWaterAnimalSpawnLimit();
+     }
+-    
++
+     /**
+      * Gets user-specified limit for number of ambient mobs that can spawn in
+      * a chunk.
+@@ -1179,12 +1184,12 @@ public final class Bukkit {
+ 
+     /**
+      * Create a ChunkData for use in a generator.
+-     * 
++     *
+      * See {@link ChunkGenerator#generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)}
+-     * 
++     *
+      * @param world the world to create the ChunkData for
+      * @return a new ChunkData for the world
+-     * 
++     *
+      */
+     public static ChunkGenerator.ChunkData createChunkData(World world) {
+         return server.createChunkData(world);
 @@ -1269,6 +1274,8 @@ public final class Bukkit {
          return runtime().key(id);
      }
@@ -56,7 +108,7 @@ diff --git a/src/main/java/org/bukkit/BukkitRuntime.java b/src/main/java/org/buk
 diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
 --- a/src/main/java/org/bukkit/Location.java
 +++ b/src/main/java/org/bukkit/Location.java
-@@ -2,23 +2,64 @@ package org.bukkit;
+@@ -2,28 +2,64 @@ package org.bukkit;
  
  import java.util.HashMap;
  import java.util.Map;
@@ -75,13 +127,20 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
 +import javax.annotation.Nullable;
 +
  /**
-  * Represents a 3-dimensional position in a world
+- * Represents a 3-dimensional position in a world.
+- * <br>
+- * No constraints are placed on any angular values other than that they be
+- * specified in degrees. This means that negative angles or angles of greater
+- * magnitude than 360 are valid, but may be normalized to any other equivalent
+- * representation by the implementation.
++ * Represents a 3-dimensional position in a world
   */
- public class Location implements Cloneable, ConfigurationSerializable, Physical {
+-public class Location implements Cloneable, ConfigurationSerializable, Physical {
 -    private World world;
 -    private double x;
 -    private double y;
 -    private double z;
++public class Location implements Cloneable, ConfigurationSerializable, Locatable {
 +
 +    private UUID worldId;
 +    private final Vector position;
@@ -125,7 +184,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      /**
       * Constructs a new Location with the given coordinates
       *
-@@ -27,7 +68,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -32,7 +68,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param y The y-coordinate of this new location
       * @param z The z-coordinate of this new location
       */
@@ -138,7 +197,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          this(world, x, y, z, 0, 0);
      }
  
-@@ -41,11 +86,13 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -46,22 +86,33 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param yaw The absolute rotation on the x-plane, in degrees
       * @param pitch The absolute rotation on the y-plane, in degrees
       */
@@ -157,46 +216,42 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          this.pitch = pitch;
          this.yaw = yaw;
      }
-@@ -56,7 +103,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+ 
++    public void setWorldId(UUID worldId) {
++        this.worldId = worldId;
++    }
++
++    @Override
++    public UUID getWorldId() {
++        return worldId;
++    }
++
+     /**
+      * Sets the world that this location resides in
+      *
       * @param world New world that this location resides in
       */
      public void setWorld(World world) {
 -        this.world = world;
 +        setWorldId(world.getUID());
-+    }
-+
-+    public void setWorldId(UUID worldId) {
-+        this.worldId = worldId;
      }
  
      /**
-@@ -65,7 +116,24 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -70,7 +121,12 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return World that contains this location
       */
      public World getWorld() {
 -        return world;
-+        return getWorld(Bukkit.getServer());
++        return Bukkit.world(getWorldId());
 +    }
 +
-+    public World getWorld(Server server) {
-+        return server.world(getWorldId());
-+    }
-+
-+    public @Nullable World getWorldIfLoaded() {
-+        return getWorldIfLoaded(Bukkit.getServer());
-+    }
-+
-+    public @Nullable
-+    World getWorldIfLoaded(Server server) {
-+        return server.getWorld(getWorldId());
-+    }
-+
-+    public UUID getWorldId() {
-+        return worldId;
++    @Override
++    public Location getLocation() {
++        return this;
      }
  
      /**
-@@ -74,7 +142,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -79,7 +135,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return Chunk at the represented location
       */
      public Chunk getChunk() {
@@ -205,7 +260,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -83,7 +151,19 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -88,7 +144,19 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return Block at the represented location
       */
      public Block getBlock() {
@@ -226,7 +281,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -92,7 +172,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -97,7 +165,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param x X-coordinate
       */
      public void setX(double x) {
@@ -235,7 +290,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -101,7 +181,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -106,7 +174,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return x-coordinate
       */
      public double getX() {
@@ -244,7 +299,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -111,7 +191,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -116,7 +184,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return block X
       */
      public int getBlockX() {
@@ -253,7 +308,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -120,7 +200,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -125,7 +193,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param y y-coordinate
       */
      public void setY(double y) {
@@ -262,7 +317,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -129,7 +209,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -134,7 +202,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return y-coordinate
       */
      public double getY() {
@@ -271,7 +326,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -139,7 +219,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -144,7 +212,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return block y
       */
      public int getBlockY() {
@@ -280,7 +335,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -148,7 +228,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -153,7 +221,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @param z z-coordinate
       */
      public void setZ(double z) {
@@ -289,7 +344,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -157,7 +237,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -162,7 +230,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return z-coordinate
       */
      public double getZ() {
@@ -298,7 +353,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -167,7 +247,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -172,7 +240,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return block z
       */
      public int getBlockZ() {
@@ -307,7 +362,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -238,6 +318,14 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -243,6 +311,14 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
          return pitch;
      }
  
@@ -322,7 +377,16 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      /**
       * Gets a unit-vector pointing in the direction that this Location is
       * facing.
-@@ -310,10 +398,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -269,7 +345,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+     /**
+      * Sets the {@link #getYaw() yaw} and {@link #getPitch() pitch} to point
+      * in the direction of the vector.
+-     * 
++     *
+      * @param vector the direction vector
+      * @return the same location
+      */
+@@ -315,10 +391,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
              throw new IllegalArgumentException("Cannot add Locations of differing worlds");
          }
  
@@ -334,7 +398,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -324,9 +409,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -329,9 +402,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location add(Vector vec) {
@@ -345,7 +409,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          return this;
      }
  
-@@ -340,9 +423,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -345,9 +416,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location add(double x, double y, double z) {
@@ -356,7 +420,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          return this;
      }
  
-@@ -359,10 +440,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -364,10 +433,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
              throw new IllegalArgumentException("Cannot add Locations of differing worlds");
          }
  
@@ -368,7 +432,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -373,9 +451,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -378,9 +444,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location subtract(Vector vec) {
@@ -379,7 +443,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          return this;
      }
  
-@@ -390,9 +466,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -395,9 +459,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location subtract(double x, double y, double z) {
@@ -390,7 +454,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          return this;
      }
  
-@@ -408,7 +482,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -413,7 +475,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the magnitude
       */
      public double length() {
@@ -399,7 +463,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -419,7 +493,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -424,7 +486,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the magnitude
       */
      public double lengthSquared() {
@@ -408,7 +472,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -455,7 +529,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -460,7 +522,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
              throw new IllegalArgumentException("Cannot measure distance between " + getWorld().getName() + " and " + o.getWorld().getName());
          }
  
@@ -417,7 +481,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -467,72 +541,59 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -472,72 +534,59 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @return the same location
       */
      public Location multiply(double m) {
@@ -523,7 +587,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -542,16 +603,16 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -547,16 +596,16 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       *     Location
       */
      public Vector toVector() {
@@ -546,7 +610,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
      }
  
      /**
-@@ -560,9 +621,9 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -565,9 +614,9 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
       * @throws IllegalArgumentException if any component is not finite
       */
      public void checkFinite() throws IllegalArgumentException {
@@ -559,7 +623,7 @@ diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/L
          NumberConversions.checkFinite(pitch, "pitch not finite");
          NumberConversions.checkFinite(yaw, "yaw not finite");
      }
-@@ -581,11 +642,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
+@@ -586,11 +635,11 @@ public class Location implements Cloneable, ConfigurationSerializable, Physical
      @Utility
      public Map<String, Object> serialize() {
          Map<String, Object> data = new HashMap<String, Object>();
@@ -587,6 +651,22 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
      /**
       * Gets the map from the given item ID.
       *
+@@ -960,12 +962,12 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
+ 
+     /**
+      * Create a ChunkData for use in a generator.
+-     * 
++     *
+      * See {@link ChunkGenerator#generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)}
+-     * 
++     *
+      * @param world the world to create the ChunkData for
+      * @return a new ChunkData for the world
+-     * 
++     *
+      */
+     public ChunkGenerator.ChunkData createChunkData(World world);
+ 
 diff --git a/src/main/java/org/bukkit/block/BlockFace.java b/src/main/java/org/bukkit/block/BlockFace.java
 --- a/src/main/java/org/bukkit/block/BlockFace.java
 +++ b/src/main/java/org/bukkit/block/BlockFace.java
@@ -723,7 +803,7 @@ diff --git a/src/main/java/org/bukkit/block/BlockFace.java b/src/main/java/org/b
      }
  
      /**
-@@ -64,7 +100,7 @@ public enum BlockFace {
+@@ -64,69 +100,219 @@ public enum BlockFace {
       * @return Amount of Z-coordinates to modify
       */
      public int getModZ() {
@@ -732,7 +812,102 @@ diff --git a/src/main/java/org/bukkit/block/BlockFace.java b/src/main/java/org/b
      }
  
      public BlockFace getOppositeFace() {
-@@ -129,4 +165,154 @@ public enum BlockFace {
+         switch (this) {
+-        case NORTH:
+-            return BlockFace.SOUTH;
++            case NORTH:
++                return BlockFace.SOUTH;
+ 
+-        case SOUTH:
+-            return BlockFace.NORTH;
++            case SOUTH:
++                return BlockFace.NORTH;
+ 
+-        case EAST:
+-            return BlockFace.WEST;
++            case EAST:
++                return BlockFace.WEST;
+ 
+-        case WEST:
+-            return BlockFace.EAST;
++            case WEST:
++                return BlockFace.EAST;
+ 
+-        case UP:
+-            return BlockFace.DOWN;
++            case UP:
++                return BlockFace.DOWN;
+ 
+-        case DOWN:
+-            return BlockFace.UP;
++            case DOWN:
++                return BlockFace.UP;
+ 
+-        case NORTH_EAST:
+-            return BlockFace.SOUTH_WEST;
++            case NORTH_EAST:
++                return BlockFace.SOUTH_WEST;
+ 
+-        case NORTH_WEST:
+-            return BlockFace.SOUTH_EAST;
++            case NORTH_WEST:
++                return BlockFace.SOUTH_EAST;
+ 
+-        case SOUTH_EAST:
+-            return BlockFace.NORTH_WEST;
++            case SOUTH_EAST:
++                return BlockFace.NORTH_WEST;
+ 
+-        case SOUTH_WEST:
+-            return BlockFace.NORTH_EAST;
++            case SOUTH_WEST:
++                return BlockFace.NORTH_EAST;
+ 
+-        case WEST_NORTH_WEST:
+-            return BlockFace.EAST_SOUTH_EAST;
++            case WEST_NORTH_WEST:
++                return BlockFace.EAST_SOUTH_EAST;
+ 
+-        case NORTH_NORTH_WEST:
+-            return BlockFace.SOUTH_SOUTH_EAST;
++            case NORTH_NORTH_WEST:
++                return BlockFace.SOUTH_SOUTH_EAST;
+ 
+-        case NORTH_NORTH_EAST:
+-            return BlockFace.SOUTH_SOUTH_WEST;
++            case NORTH_NORTH_EAST:
++                return BlockFace.SOUTH_SOUTH_WEST;
+ 
+-        case EAST_NORTH_EAST:
+-            return BlockFace.WEST_SOUTH_WEST;
++            case EAST_NORTH_EAST:
++                return BlockFace.WEST_SOUTH_WEST;
+ 
+-        case EAST_SOUTH_EAST:
+-            return BlockFace.WEST_NORTH_WEST;
++            case EAST_SOUTH_EAST:
++                return BlockFace.WEST_NORTH_WEST;
+ 
+-        case SOUTH_SOUTH_EAST:
+-            return BlockFace.NORTH_NORTH_WEST;
++            case SOUTH_SOUTH_EAST:
++                return BlockFace.NORTH_NORTH_WEST;
+ 
+-        case SOUTH_SOUTH_WEST:
+-            return BlockFace.NORTH_NORTH_EAST;
++            case SOUTH_SOUTH_WEST:
++                return BlockFace.NORTH_NORTH_EAST;
+ 
+-        case WEST_SOUTH_WEST:
+-            return BlockFace.EAST_NORTH_EAST;
++            case WEST_SOUTH_WEST:
++                return BlockFace.EAST_NORTH_EAST;
+ 
+-        case SELF:
+-            return BlockFace.SELF;
++            case SELF:
++                return BlockFace.SELF;
+         }
  
          return BlockFace.SELF;
      }
@@ -958,7 +1133,7 @@ index 00000000..d0122e61
 +}
 diff --git a/src/main/java/org/bukkit/geometry/BlockReflection.java b/src/main/java/org/bukkit/geometry/BlockReflection.java
 new file mode 100644
-index 00000000..04d175cd
+index 00000000..dd927b65
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/BlockReflection.java
 @@ -0,0 +1,56 @@
@@ -973,15 +1148,15 @@ index 00000000..04d175cd
 +    NONE(IdentityTransform.INSTANCE),
 +
 +    LEFT_RIGHT(new BlockTransform(
-+        1, 0,
-+        0, -1,
-+        0, 0, 0
++            1, 0,
++            0, -1,
++            0, 0, 0
 +    )),
 +
 +    FRONT_BACK(new BlockTransform(
-+        -1, 0,
-+        0, 1,
-+        0, 0, 0
++            -1, 0,
++            0, 1,
++            0, 0, 0
 +    ));
 +
 +    public static final BlockReflection X = FRONT_BACK;
@@ -1020,7 +1195,7 @@ index 00000000..04d175cd
 +}
 diff --git a/src/main/java/org/bukkit/geometry/BlockRotation.java b/src/main/java/org/bukkit/geometry/BlockRotation.java
 new file mode 100644
-index 00000000..5e1bb1a8
+index 00000000..bb709609
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/BlockRotation.java
 @@ -0,0 +1,94 @@
@@ -1064,9 +1239,9 @@ index 00000000..5e1bb1a8
 +
 +    private static CoarseTransform makeTransform(int turns) {
 +        return new BlockTransform(
-+            cos(turns), -sin(turns),
-+            sin(turns), cos(turns),
-+            0, 0, 0
++                cos(turns), -sin(turns),
++                sin(turns), cos(turns),
++                0, 0, 0
 +        );
 +    }
 +
@@ -1118,9 +1293,10 @@ index 00000000..5e1bb1a8
 +        return axis;
 +    }
 +}
+\ No newline at end of file
 diff --git a/src/main/java/org/bukkit/geometry/BlockRotoflection.java b/src/main/java/org/bukkit/geometry/BlockRotoflection.java
 new file mode 100644
-index 00000000..46e86559
+index 00000000..1b7cd42a
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/BlockRotoflection.java
 @@ -0,0 +1,149 @@
@@ -1139,17 +1315,17 @@ index 00000000..46e86559
 +public class BlockRotoflection {
 +
 +    private static final BlockRotoflection[] NORMAL = new BlockRotoflection[] {
-+        new BlockRotoflection(false, 0),
-+        new BlockRotoflection(false, 1),
-+        new BlockRotoflection(false, 2),
-+        new BlockRotoflection(false, 3)
++            new BlockRotoflection(false, 0),
++            new BlockRotoflection(false, 1),
++            new BlockRotoflection(false, 2),
++            new BlockRotoflection(false, 3)
 +    };
 +
 +    private static final BlockRotoflection[] INVERTED = new BlockRotoflection[] {
-+        new BlockRotoflection(true, 0),
-+        new BlockRotoflection(true, 1),
-+        new BlockRotoflection(true, 2),
-+        new BlockRotoflection(true, 3)
++            new BlockRotoflection(true, 0),
++            new BlockRotoflection(true, 1),
++            new BlockRotoflection(true, 2),
++            new BlockRotoflection(true, 3)
 +    };
 +
 +    public static BlockRotoflection identity() {
@@ -1254,28 +1430,28 @@ index 00000000..46e86559
 +    @Override
 +    public int hashCode() {
 +        return reflection.ordinal() * 4 +
-+               rotation.ordinal();
++                rotation.ordinal();
 +    }
 +
 +    @Override
 +    public boolean equals(Object that) {
 +        return this == that || (
-+            that instanceof BlockRotoflection &&
-+            this.reflection.equals(((BlockRotoflection) that).reflection) &&
-+            this.rotation.equals(((BlockRotoflection) that).rotation)
++                that instanceof BlockRotoflection &&
++                        this.reflection.equals(((BlockRotoflection) that).reflection) &&
++                        this.rotation.equals(((BlockRotoflection) that).rotation)
 +        );
 +    }
 +
 +    @Override
 +    public String toString() {
 +        return getClass().getSimpleName() +
-+               "{reflection=" + reflection +
-+               " rotation=" + rotation + "}";
++                "{reflection=" + reflection +
++                " rotation=" + rotation + "}";
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/geometry/BlockTransform.java b/src/main/java/org/bukkit/geometry/BlockTransform.java
 new file mode 100644
-index 00000000..ddd24cdd
+index 00000000..12295300
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/BlockTransform.java
 @@ -0,0 +1,237 @@
@@ -1310,7 +1486,7 @@ index 00000000..ddd24cdd
 +class BlockTransform implements CoarseTransform {
 +
 +    private final int xx, xz,
-+                      zx, zz;
++            zx, zz;
 +    private final int xt, yt, zt;
 +
 +    // The x-z determinant, might come in handy
@@ -1328,7 +1504,7 @@ index 00000000..ddd24cdd
 +
 +        if(determinant != -1 && determinant != 1) {
 +            throw new IllegalArgumentException(
-+                "Invalid block transform - coefficients do not preserve area: [ " + xx + " " + xz + " ], [ " + zx + " " + zz + " ]"
++                    "Invalid block transform - coefficients do not preserve area: [ " + xx + " " + xz + " ], [ " + zx + " " + zz + " ]"
 +            );
 +        }
 +
@@ -1343,8 +1519,8 @@ index 00000000..ddd24cdd
 +    @Override
 +    public boolean isIdentity() {
 +        return xx == 1 && xz == 0 &&
-+               zx == 0 && zz == 1 &&
-+               xt == 0 && yt == 0 && zt == 0;
++                zx == 0 && zz == 1 &&
++                xt == 0 && yt == 0 && zt == 0;
 +    }
 +
 +    @Override
@@ -1355,9 +1531,9 @@ index 00000000..ddd24cdd
 +            final double z = v.fineZ();
 +
 +            return Bukkit.vectors().fine(
-+                x * xx + z * xz + xt,
-+                y + yt,
-+                x * zx + z * zz + zt
++                    x * xx + z * xz + xt,
++                    y + yt,
++                    x * zx + z * zz + zt
 +            );
 +        } else {
 +            final int x = v.coarseX();
@@ -1365,9 +1541,9 @@ index 00000000..ddd24cdd
 +            final int z = v.coarseZ();
 +
 +            return Bukkit.vectors().coarse(
-+                x * xx + z * xz + xt,
-+                y + yt,
-+                x * zx + z * zz + zt
++                    x * xx + z * xz + xt,
++                    y + yt,
++                    x * zx + z * zz + zt
 +            );
 +        }
 +    }
@@ -1380,9 +1556,9 @@ index 00000000..ddd24cdd
 +            final double z = v.fineZ();
 +
 +            v.set(
-+                x * xx + z * xz + xt,
-+                y + yt,
-+                x * zx + z * zz + zt
++                    x * xx + z * xz + xt,
++                    y + yt,
++                    x * zx + z * zz + zt
 +            );
 +        } else {
 +            final int x = v.coarseX();
@@ -1390,9 +1566,9 @@ index 00000000..ddd24cdd
 +            final int z = v.coarseZ();
 +
 +            v.set(
-+                x * xx + z * xz + xt,
-+                y + yt,
-+                x * zx + z * zz + zt
++                    x * xx + z * xz + xt,
++                    y + yt,
++                    x * zx + z * zz + zt
 +            );
 +        }
 +    }
@@ -1401,12 +1577,12 @@ index 00000000..ddd24cdd
 +    public CoarseTransform inverse() {
 +        if(inverse == null) {
 +            inverse = new BlockTransform(
-+                this,
-+                xx, zx,
-+                xz, zz,
-+                - xx * xt - zx * zt,
-+                - yt,
-+                - xz * xt - zz * zt
++                    this,
++                    xx, zx,
++                    xz, zz,
++                    - xx * xt - zx * zt,
++                    - yt,
++                    - xz * xt - zz * zt
 +            );
 +        }
 +        return inverse;
@@ -1417,11 +1593,11 @@ index 00000000..ddd24cdd
 +        if(before instanceof BlockTransform) {
 +            final BlockTransform that = (BlockTransform) before;
 +            return new BlockTransform(
-+                this.xx * that.xx + this.xz * that.zx, this.xx * that.xz + this.xz * that.zz,
-+                this.zx * that.xx + this.zz * that.zx, this.zx * that.xz + this.zz * that.zz,
-+                this.xx * that.xt + this.xz * that.zt + this.xt,
-+                this.yt + that.yt,
-+                this.zx * that.xt + this.zz * that.zt + this.zt
++                    this.xx * that.xx + this.xz * that.zx, this.xx * that.xz + this.xz * that.zz,
++                    this.zx * that.xx + this.zz * that.zx, this.zx * that.xz + this.zz * that.zz,
++                    this.xx * that.xt + this.xz * that.zt + this.xt,
++                    this.yt + that.yt,
++                    this.zx * that.xt + this.zz * that.zt + this.zt
 +            );
 +        }
 +
@@ -1498,12 +1674,12 @@ index 00000000..ddd24cdd
 +        if(obj instanceof BlockTransform) {
 +            final BlockTransform that = (BlockTransform) obj;
 +            return this.xx == that.xx &&
-+                   this.xz == that.xz &&
-+                   this.zx == that.zx &&
-+                   this.zz == that.zz &&
-+                   this.xt == that.xt &&
-+                   this.yt == that.yt &&
-+                   this.zt == that.zt;
++                    this.xz == that.xz &&
++                    this.zx == that.zx &&
++                    this.zz == that.zz &&
++                    this.xt == that.xt &&
++                    this.yt == that.yt &&
++                    this.zt == that.zt;
 +        }
 +
 +        return obj.equals(this);
@@ -1512,13 +1688,13 @@ index 00000000..ddd24cdd
 +    @Override
 +    public String toString() {
 +        return Transform.class.getSimpleName() +
-+               "{orientation=" + orientation() +
-+               " translation=(" + xt + ", " + yt + ", " + zt + ")}";
++                "{orientation=" + orientation() +
++                " translation=(" + xt + ", " + yt + ", " + zt + ")}";
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/geometry/CoarseTransform.java b/src/main/java/org/bukkit/geometry/CoarseTransform.java
 new file mode 100644
-index 00000000..ef931bce
+index 00000000..41e7ca1f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/CoarseTransform.java
 @@ -0,0 +1,59 @@
@@ -1563,9 +1739,9 @@ index 00000000..ef931bce
 +    static CoarseTransform translation(int x, int y, int z) {
 +        if(x == 0 && y == 0 && z == 0) return Transform.identity();
 +        return new BlockTransform(
-+            1, 0,
-+            0, 1,
-+            x, y, z
++                1, 0,
++                0, 1,
++                x, y, z
 +        );
 +    }
 +
@@ -1583,7 +1759,7 @@ index 00000000..ef931bce
 +}
 diff --git a/src/main/java/org/bukkit/geometry/Cuboid.java b/src/main/java/org/bukkit/geometry/Cuboid.java
 new file mode 100644
-index 00000000..ba64e928
+index 00000000..e2fd218f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/Cuboid.java
 @@ -0,0 +1,589 @@
@@ -1656,7 +1832,7 @@ index 00000000..ba64e928
 +     */
 +    public static Cuboid fromMinAndSize(Vec3 min, Vec3 size) {
 +        if(min.anyNaN() || size.anyNaN() ||
-+           size.fineX() < 0 || size.fineY() < 0 || size.fineZ() < 0) return empty();
++                size.fineX() < 0 || size.fineY() < 0 || size.fineZ() < 0) return empty();
 +        return new NonEmptyCuboid(min, min.plus(size));
 +    }
 +
@@ -1702,7 +1878,7 @@ index 00000000..ba64e928
 +            return a;
 +        } else {
 +            return between(a.min.maximum(b.min),
-+                           a.max.minimum(b.max));
++                    a.max.minimum(b.max));
 +        }
 +    }
 +
@@ -1716,7 +1892,7 @@ index 00000000..ba64e928
 +            return b;
 +        } else {
 +            return between(a.min.minimum(b.min),
-+                           a.max.maximum(b.max));
++                    a.max.maximum(b.max));
 +        }
 +    }
 +
@@ -1732,11 +1908,11 @@ index 00000000..ba64e928
 +        boolean cy = subtracted.min.fineY() < original.min.fineY() && subtracted.max.fineY() > original.max.fineY();
 +        boolean cz = subtracted.min.fineZ() < original.min.fineZ() && subtracted.max.fineZ() > original.max.fineZ();
 +        return between(ImVector.of(cy && cz ? Math.max(original.min.fineX(), subtracted.min.fineX()) : original.min.fineX(),
-+                                   cz && cx ? Math.max(original.min.fineY(), subtracted.min.fineY()) : original.min.fineY(),
-+                                   cx && cy ? Math.max(original.min.fineZ(), subtracted.min.fineZ()) : original.min.fineZ()),
-+                       ImVector.of(cy && cz ? Math.min(original.max.fineX(), subtracted.max.fineX()) : original.max.fineX(),
-+                                   cz && cx ? Math.min(original.max.fineY(), subtracted.max.fineY()) : original.max.fineY(),
-+                                   cx && cy ? Math.min(original.max.fineZ(), subtracted.max.fineZ()) : original.max.fineZ()));
++                cz && cx ? Math.max(original.min.fineY(), subtracted.min.fineY()) : original.min.fineY(),
++                cx && cy ? Math.max(original.min.fineZ(), subtracted.min.fineZ()) : original.min.fineZ()),
++                ImVector.of(cy && cz ? Math.min(original.max.fineX(), subtracted.max.fineX()) : original.max.fineX(),
++                        cz && cx ? Math.min(original.max.fineY(), subtracted.max.fineY()) : original.max.fineY(),
++                        cx && cy ? Math.min(original.max.fineZ(), subtracted.max.fineZ()) : original.max.fineZ()));
 +    }
 +
 +    @Override
@@ -1814,14 +1990,14 @@ index 00000000..ba64e928
 +     */
 +    public ImVector[] vertices() {
 +        return new ImVector[] {
-+            min,
-+            ImVector.of(min.fineX(), min.fineY(), max.fineZ()),
-+            ImVector.of(min.fineX(), max.fineY(), min.fineZ()),
-+            ImVector.of(min.fineX(), max.fineY(), max.fineZ()),
-+            ImVector.of(max.fineX(), min.fineY(), min.fineZ()),
-+            ImVector.of(max.fineX(), min.fineY(), max.fineZ()),
-+            ImVector.of(max.fineX(), max.fineY(), min.fineZ()),
-+            max
++                min,
++                ImVector.of(min.fineX(), min.fineY(), max.fineZ()),
++                ImVector.of(min.fineX(), max.fineY(), min.fineZ()),
++                ImVector.of(min.fineX(), max.fineY(), max.fineZ()),
++                ImVector.of(max.fineX(), min.fineY(), min.fineZ()),
++                ImVector.of(max.fineX(), min.fineY(), max.fineZ()),
++                ImVector.of(max.fineX(), max.fineY(), min.fineZ()),
++                max
 +        };
 +    }
 +
@@ -1864,7 +2040,7 @@ index 00000000..ba64e928
 +class NonEmptyCuboid extends Cuboid {
 +
 +    static final Cuboid UNBOUNDED = new NonEmptyCuboid(ImVector.of(Double.NEGATIVE_INFINITY),
-+                                                       ImVector.of(Double.POSITIVE_INFINITY));
++            ImVector.of(Double.POSITIVE_INFINITY));
 +
 +    public NonEmptyCuboid(Vec3 min, Vec3 max) {
 +        super(min, max);
@@ -1945,13 +2121,13 @@ index 00000000..ba64e928
 +
 +    public boolean isFinite() {
 +        return !(Double.isInfinite(min.fineX()) || Double.isInfinite(max.fineX()) ||
-+                 Double.isInfinite(min.fineY()) || Double.isInfinite(max.fineY()) ||
-+                 Double.isInfinite(min.fineZ()) || Double.isInfinite(max.fineZ()));
++                Double.isInfinite(min.fineY()) || Double.isInfinite(max.fineY()) ||
++                Double.isInfinite(min.fineZ()) || Double.isInfinite(max.fineZ()));
 +    }
 +
 +    public boolean isBlockFinite() {
 +        return !(Double.isInfinite(min.fineX()) || Double.isInfinite(max.fineX()) ||
-+                 Double.isInfinite(min.fineZ()) || Double.isInfinite(max.fineZ()));
++                Double.isInfinite(min.fineZ()) || Double.isInfinite(max.fineZ()));
 +    }
 +
 +    public boolean isEmpty() {
@@ -1983,8 +2159,8 @@ index 00000000..ba64e928
 +        assertFinite();
 +        final ImVector size = size();
 +        return min.plus(size.fineX() * random.nextDouble(),
-+                        size.fineY() * random.nextDouble(),
-+                        size.fineZ() * random.nextDouble());
++                size.fineY() * random.nextDouble(),
++                size.fineZ() * random.nextDouble());
 +    }
 +
 +    /**
@@ -1993,8 +2169,8 @@ index 00000000..ba64e928
 +    public Vec3 minimumBlockInside() {
 +        assertBlockFinite();
 +        return Bukkit.vectors().coarse(min.fineX() + 0.5d,
-+                                       NumberConversions.clamp(min.fineY(), 0, 256) + 0.5d,
-+                                       min.fineZ() + 0.5d);
++                NumberConversions.clamp(min.fineY(), 0, 256) + 0.5d,
++                min.fineZ() + 0.5d);
 +    }
 +
 +    /**
@@ -2003,8 +2179,8 @@ index 00000000..ba64e928
 +    public Vec3 maximumBlockInside() {
 +        assertBlockFinite();
 +        return Bukkit.vectors().coarse(max.fineX() - 0.5d,
-+                                       NumberConversions.clamp(max.fineY(), 0, 256) - 0.5d,
-+                                       max.fineZ() - 0.5d);
++                NumberConversions.clamp(max.fineY(), 0, 256) - 0.5d,
++                max.fineZ() - 0.5d);
 +    }
 +
 +    /**
@@ -2016,13 +2192,13 @@ index 00000000..ba64e928
 +    public Vec3 minimumBlockOutside() {
 +        assertBlockFinite();
 +        return Bukkit.vectors().coarse(max.fineX() + 0.5d,
-+                                       NumberConversions.clamp(max.fineY(), 0, 256) + 0.5d,
-+                                       max.fineZ() + 0.5d);
++                NumberConversions.clamp(max.fineY(), 0, 256) + 0.5d,
++                max.fineZ() + 0.5d);
 +    }
 +
 +    public boolean containsBlock(Vec3 v) {
 +        return v.coarseGreaterOrEqual(minimumBlockInside()) &&
-+               v.coarseLess(minimumBlockOutside());
++                v.coarseLess(minimumBlockOutside());
 +    }
 +
 +    /**
@@ -2049,8 +2225,8 @@ index 00000000..ba64e928
 +        }
 +
 +        return minimumBlockInside().plus(random.nextInt(size.coarseX()),
-+                                         random.nextInt(size.coarseY()),
-+                                         random.nextInt(size.coarseZ()));
++                random.nextInt(size.coarseY()),
++                random.nextInt(size.coarseZ()));
 +    }
 +
 +    public BlockRegion blockRegion() {
@@ -2176,10 +2352,9 @@ index 00000000..ba64e928
 +        throw new ArithmeticException("Region is empty");
 +    }
 +}
-\ No newline at end of file
 diff --git a/src/main/java/org/bukkit/geometry/Direction.java b/src/main/java/org/bukkit/geometry/Direction.java
 new file mode 100644
-index 00000000..4b193c1b
+index 00000000..91c129b8
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/Direction.java
 @@ -0,0 +1,79 @@
@@ -2217,9 +2392,9 @@ index 00000000..4b193c1b
 +    public Vec3 toVector() {
 +        final double cos = Math.cos(pitch);
 +        return Bukkit.vectors().fine(
-+            -cos * Math.sin(yaw),
-+            -Math.sin(pitch),
-+            cos * Math.cos(yaw)
++                -cos * Math.sin(yaw),
++                -Math.sin(pitch),
++                cos * Math.cos(yaw)
 +        );
 +    }
 +
@@ -2251,15 +2426,15 @@ index 00000000..4b193c1b
 +        if(!(obj instanceof Direction)) return false;
 +        final Direction that = (Direction) obj;
 +        return this.yaw == that.yaw() &&
-+               this.pitch == that.pitch();
++                this.pitch == that.pitch();
 +    }
 +
 +    @Override
 +    public String toString() {
 +        return getClass().getSimpleName() +
-+               "{yaw=" + yaw +
-+               " pitch=" + pitch +
-+               "}";
++                "{yaw=" + yaw +
++                " pitch=" + pitch +
++                "}";
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/geometry/EmptyRegion.java b/src/main/java/org/bukkit/geometry/EmptyRegion.java
@@ -2439,7 +2614,7 @@ index 00000000..1c535db6
 +}
 diff --git a/src/main/java/org/bukkit/geometry/IdentityTransform.java b/src/main/java/org/bukkit/geometry/IdentityTransform.java
 new file mode 100644
-index 00000000..827316ce
+index 00000000..0ab8b120
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/IdentityTransform.java
 @@ -0,0 +1,75 @@
@@ -2510,7 +2685,7 @@ index 00000000..827316ce
 +    @Override
 +    public boolean equals(Object that) {
 +        return that instanceof Transform &&
-+               ((Transform) that).isIdentity();
++                ((Transform) that).isIdentity();
 +    }
 +
 +    @Override
@@ -2649,7 +2824,7 @@ index 00000000..f2b8525f
 +}
 diff --git a/src/main/java/org/bukkit/geometry/MutableVec3Coarse.java b/src/main/java/org/bukkit/geometry/MutableVec3Coarse.java
 new file mode 100644
-index 00000000..4dc203e6
+index 00000000..2dfb6d65
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/MutableVec3Coarse.java
 @@ -0,0 +1,189 @@
@@ -2713,43 +2888,43 @@ index 00000000..4dc203e6
 +    @Override
 +    default M set(double x, double y, double z) {
 +        return set(NumberConversions.floor(x),
-+                   NumberConversions.floor(y),
-+                   NumberConversions.floor(z));
++                NumberConversions.floor(y),
++                NumberConversions.floor(z));
 +    }
 +
 +    @Override
 +    default M set(Vec3 v) {
 +        return set(v.coarseX(),
-+                   v.coarseY(),
-+                   v.coarseZ());
++                v.coarseY(),
++                v.coarseZ());
 +    }
 +
 +    @Override
 +    default M modify(IntUnaryOperator op) {
 +        return set(op.applyAsInt(coarseX()),
-+                   op.applyAsInt(coarseY()),
-+                   op.applyAsInt(coarseZ()));
++                op.applyAsInt(coarseY()),
++                op.applyAsInt(coarseZ()));
 +    }
 +
 +    @Override
 +    default M modify(DoubleUnaryOperator op) {
 +        return set(op.applyAsDouble(fineX()),
-+                   op.applyAsDouble(fineY()),
-+                   op.applyAsDouble(fineZ()));
++                op.applyAsDouble(fineY()),
++                op.applyAsDouble(fineZ()));
 +    }
 +
 +    @Override
 +    default M modify(Vec3 v, IntBinaryOperator op) {
 +        return set(op.applyAsInt(coarseX(), v.coarseX()),
-+                   op.applyAsInt(coarseY(), v.coarseY()),
-+                   op.applyAsInt(coarseZ(), v.coarseZ()));
++                op.applyAsInt(coarseY(), v.coarseY()),
++                op.applyAsInt(coarseZ(), v.coarseZ()));
 +    }
 +
 +    @Override
 +    default M modify(Vec3 v, DoubleBinaryOperator op) {
 +        return set(op.applyAsDouble(fineX(), v.fineX()),
-+                   op.applyAsDouble(fineY(), v.fineY()),
-+                   op.applyAsDouble(fineZ(), v.fineZ()));
++                op.applyAsDouble(fineY(), v.fineY()),
++                op.applyAsDouble(fineZ(), v.fineZ()));
 +    }
 +
 +    @Override
@@ -2766,29 +2941,29 @@ index 00000000..4dc203e6
 +    default M clamp(Vec3 min, Vec3 max) {
 +        Preconditions.checkArgument(min.coarseLessOrEqual(max));
 +        return set(NumberConversions.clamp(coarseX(), min.coarseX(), max.coarseX()),
-+                   NumberConversions.clamp(coarseY(), min.coarseY(), max.coarseY()),
-+                   NumberConversions.clamp(coarseZ(), min.coarseZ(), max.coarseZ()));
++                NumberConversions.clamp(coarseY(), min.coarseY(), max.coarseY()),
++                NumberConversions.clamp(coarseZ(), min.coarseZ(), max.coarseZ()));
 +    }
 +
 +    @Override
 +    default M add(int x, int y, int z) {
 +        return set(coarseX() + x,
-+                   coarseY() + y,
-+                   coarseZ() + z);
++                coarseY() + y,
++                coarseZ() + z);
 +    }
 +
 +    @Override
 +    default M add(double x, double y, double z) {
 +        return add(NumberConversions.floor(x),
-+                   NumberConversions.floor(y),
-+                   NumberConversions.floor(z));
++                NumberConversions.floor(y),
++                NumberConversions.floor(z));
 +    }
 +
 +    @Override
 +    default M add(Vec3 v) {
 +        return add(v.coarseX(),
-+                   v.coarseY(),
-+                   v.coarseZ());
++                v.coarseY(),
++                v.coarseZ());
 +    }
 +
 +    @Override
@@ -2800,14 +2975,14 @@ index 00000000..4dc203e6
 +    @Override
 +    default M subtract(int x, int y, int z) {
 +        return set(coarseX() - x,
-+                   coarseY() - y,
-+                   coarseZ() - z);
++                coarseY() - y,
++                coarseZ() - z);
 +    }
 +
 +    @Override
 +    default M subtract(Vec3 v) {
 +        return v.isFine() ? subtract(v.fineX(), v.fineY(), v.fineZ())
-+                          : subtract(v.coarseX(), v.coarseY(), v.coarseZ());
++                : subtract(v.coarseX(), v.coarseY(), v.coarseZ());
 +    }
 +
 +    @Override
@@ -2823,7 +2998,7 @@ index 00000000..4dc203e6
 +    @Override
 +    default M multiply(Vec3 v) {
 +        return v.isFine() ? multiply(v.fineX(), v.fineY(), v.fineZ())
-+                          : multiply(v.coarseX(), v.coarseY(), v.coarseZ());
++                : multiply(v.coarseX(), v.coarseY(), v.coarseZ());
 +    }
 +
 +    @Override
@@ -2839,12 +3014,12 @@ index 00000000..4dc203e6
 +    @Override
 +    default M divide(Vec3 v) {
 +        return v.isFine() ? divide(v.fineX(), v.fineY(), v.fineZ())
-+                          : divide(v.coarseX(), v.coarseY(), v.coarseZ());
++                : divide(v.coarseX(), v.coarseY(), v.coarseZ());
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/geometry/MutableVec3Fine.java b/src/main/java/org/bukkit/geometry/MutableVec3Fine.java
 new file mode 100644
-index 00000000..62efc4a4
+index 00000000..842cc84f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/MutableVec3Fine.java
 @@ -0,0 +1,177 @@
@@ -2918,51 +3093,51 @@ index 00000000..62efc4a4
 +    @Override
 +    default M modify(IntUnaryOperator op) {
 +        return set(op.applyAsInt(coarseX()),
-+                   op.applyAsInt(coarseY()),
-+                   op.applyAsInt(coarseZ()));
++                op.applyAsInt(coarseY()),
++                op.applyAsInt(coarseZ()));
 +    }
 +
 +    @Override
 +    default M modify(DoubleUnaryOperator op) {
 +        return set(op.applyAsDouble(fineX()),
-+                   op.applyAsDouble(fineY()),
-+                   op.applyAsDouble(fineZ()));
++                op.applyAsDouble(fineY()),
++                op.applyAsDouble(fineZ()));
 +    }
 +
 +    @Override
 +    default M modify(Vec3 v, IntBinaryOperator op) {
 +        return set(op.applyAsInt(coarseX(), v.coarseX()),
-+                   op.applyAsInt(coarseY(), v.coarseY()),
-+                   op.applyAsInt(coarseZ(), v.coarseZ()));
++                op.applyAsInt(coarseY(), v.coarseY()),
++                op.applyAsInt(coarseZ(), v.coarseZ()));
 +    }
 +
 +    @Override
 +    default M modify(Vec3 v, DoubleBinaryOperator op) {
 +        return set(op.applyAsDouble(fineX(), v.fineX()),
-+                   op.applyAsDouble(fineY(), v.fineY()),
-+                   op.applyAsDouble(fineZ(), v.fineZ()));
++                op.applyAsDouble(fineY(), v.fineY()),
++                op.applyAsDouble(fineZ(), v.fineZ()));
 +    }
 +
 +    @Override
 +    default M minimize(Vec3 v) {
 +        return set(Math.min(fineX(), v.fineX()),
-+                   Math.min(fineY(), v.fineY()),
-+                   Math.min(fineZ(), v.fineZ()));
++                Math.min(fineY(), v.fineY()),
++                Math.min(fineZ(), v.fineZ()));
 +    }
 +
 +    @Override
 +    default M maximize(Vec3 v) {
 +        return set(Math.max(fineX(), v.fineX()),
-+                   Math.max(fineY(), v.fineY()),
-+                   Math.max(fineZ(), v.fineZ()));
++                Math.max(fineY(), v.fineY()),
++                Math.max(fineZ(), v.fineZ()));
 +    }
 +
 +    @Override
 +    default M clamp(Vec3 min, Vec3 max) {
 +        Preconditions.checkArgument(min.fineLessOrEqual(max));
 +        return set(NumberConversions.clamp(fineX(), min.fineX(), max.fineX()),
-+                   NumberConversions.clamp(fineY(), min.fineY(), max.fineY()),
-+                   NumberConversions.clamp(fineZ(), min.fineZ(), max.fineZ()));
++                NumberConversions.clamp(fineY(), min.fineY(), max.fineY()),
++                NumberConversions.clamp(fineZ(), min.fineZ(), max.fineZ()));
 +    }
 +
 +    @Override
@@ -3041,7 +3216,7 @@ index 00000000..ca7b26d8
 +}
 diff --git a/src/main/java/org/bukkit/geometry/Ray.java b/src/main/java/org/bukkit/geometry/Ray.java
 new file mode 100644
-index 00000000..ab0dfa46
+index 00000000..dbe5c3a1
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/Ray.java
 @@ -0,0 +1,79 @@
@@ -3113,15 +3288,15 @@ index 00000000..ab0dfa46
 +        if(!(obj instanceof Ray)) return false;
 +        final Ray that = (Ray) obj;
 +        return origin.equals(that.origin) &&
-+               normal.equals(that.normal);
++                normal.equals(that.normal);
 +    }
 +
 +    @Override
 +    public String toString() {
 +        return getClass().getSimpleName() +
-+               "{origin=" + origin +
-+               " normal=" + normal +
-+               "}";
++                "{origin=" + origin +
++                " normal=" + normal +
++                "}";
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/geometry/Region.java b/src/main/java/org/bukkit/geometry/Region.java
@@ -3260,7 +3435,7 @@ index 00000000..8d203b20
 +}
 diff --git a/src/main/java/org/bukkit/geometry/Transform.java b/src/main/java/org/bukkit/geometry/Transform.java
 new file mode 100644
-index 00000000..49fe0a33
+index 00000000..9b0325f0
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/Transform.java
 @@ -0,0 +1,66 @@
@@ -3301,13 +3476,13 @@ index 00000000..49fe0a33
 +    @Override
 +    default <V> Function<V, Vec3> compose(Function<? super V, ? extends Vec3> before) {
 +        return before instanceof Transform ? (Function<V, Vec3>) compose((Transform) before)
-+                                           : UnaryOperator.super.compose(before);
++                : UnaryOperator.super.compose(before);
 +    }
 +
 +    @Override
 +    default <V> Function<Vec3, V> andThen(Function<? super Vec3, ? extends V> after) {
 +        return after instanceof Transform ? (Function<Vec3, V>) andThen((Transform) after)
-+                                          : UnaryOperator.super.andThen(after);
++                : UnaryOperator.super.andThen(after);
 +    }
 +
 +    default Transform translate(int x, int y, int z) {
@@ -3332,7 +3507,7 @@ index 00000000..49fe0a33
 +}
 diff --git a/src/main/java/org/bukkit/geometry/Vec3.java b/src/main/java/org/bukkit/geometry/Vec3.java
 new file mode 100644
-index 00000000..09214614
+index 00000000..0318ef39
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/Vec3.java
 @@ -0,0 +1,602 @@
@@ -3483,16 +3658,16 @@ index 00000000..09214614
 +
 +    default boolean fineEquals(Vec3 v) {
 +        return v != null &&
-+               fineX() == v.fineX() &&
-+               fineY() == v.fineY() &&
-+               fineZ() == v.fineZ();
++                fineX() == v.fineX() &&
++                fineY() == v.fineY() &&
++                fineZ() == v.fineZ();
 +    }
 +
 +    default boolean coarseEquals(Vec3 v) {
 +        return v != null &&
-+               coarseX() == v.coarseX() &&
-+               coarseY() == v.coarseY() &&
-+               coarseZ() == v.coarseZ();
++                coarseX() == v.coarseX() &&
++                coarseY() == v.coarseY() &&
++                coarseZ() == v.coarseZ();
 +    }
 +
 +    /**
@@ -3522,17 +3697,17 @@ index 00000000..09214614
 +
 +    default int fineHashCode() {
 +        return combineHashCodes(
-+            NumberConversions.hashCode(fineX()),
-+            NumberConversions.hashCode(fineY()),
-+            NumberConversions.hashCode(fineZ())
++                NumberConversions.hashCode(fineX()),
++                NumberConversions.hashCode(fineY()),
++                NumberConversions.hashCode(fineZ())
 +        );
 +    }
 +
 +    default int coarseHashCode() {
 +        return combineHashCodes(
-+            coarseX(),
-+            coarseY(),
-+            coarseZ()
++                coarseX(),
++                coarseY(),
++                coarseZ()
 +        );
 +    }
 +
@@ -3574,8 +3749,8 @@ index 00000000..09214614
 +     */
 +    default boolean fineLess(Vec3 v) {
 +        return fineX() < v.fineX() &&
-+               fineY() < v.fineY() &&
-+               fineZ() < v.fineZ();
++                fineY() < v.fineY() &&
++                fineZ() < v.fineZ();
 +    }
 +
 +    /**
@@ -3584,8 +3759,8 @@ index 00000000..09214614
 +     */
 +    default boolean fineLessOrEqual(Vec3 v) {
 +        return fineX() <= v.fineX() &&
-+               fineY() <= v.fineY() &&
-+               fineZ() <= v.fineZ();
++                fineY() <= v.fineY() &&
++                fineZ() <= v.fineZ();
 +    }
 +
 +    /**
@@ -3594,8 +3769,8 @@ index 00000000..09214614
 +     */
 +    default boolean fineGreater(Vec3 v) {
 +        return fineX() > v.fineX() &&
-+               fineY() > v.fineY() &&
-+               fineZ() > v.fineZ();
++                fineY() > v.fineY() &&
++                fineZ() > v.fineZ();
 +    }
 +
 +    /**
@@ -3604,8 +3779,8 @@ index 00000000..09214614
 +     */
 +    default boolean fineGreaterOrEqual(Vec3 v) {
 +        return fineX() >= v.fineX() &&
-+               fineY() >= v.fineY() &&
-+               fineZ() >= v.fineZ();
++                fineY() >= v.fineY() &&
++                fineZ() >= v.fineZ();
 +    }
 +
 +    /**
@@ -3614,8 +3789,8 @@ index 00000000..09214614
 +     */
 +    default boolean coarseLess(Vec3 v) {
 +        return coarseX() < v.coarseX() &&
-+               coarseY() < v.coarseY() &&
-+               coarseZ() < v.coarseZ();
++                coarseY() < v.coarseY() &&
++                coarseZ() < v.coarseZ();
 +    }
 +
 +    /**
@@ -3624,8 +3799,8 @@ index 00000000..09214614
 +     */
 +    default boolean coarseLessOrEqual(Vec3 v) {
 +        return coarseX() <= v.coarseX() &&
-+               coarseY() <= v.coarseY() &&
-+               coarseZ() <= v.coarseZ();
++                coarseY() <= v.coarseY() &&
++                coarseZ() <= v.coarseZ();
 +    }
 +
 +    /**
@@ -3634,8 +3809,8 @@ index 00000000..09214614
 +     */
 +    default boolean coarseGreater(Vec3 v) {
 +        return coarseX() > v.coarseX() &&
-+               coarseY() > v.coarseY() &&
-+               coarseZ() > v.coarseZ();
++                coarseY() > v.coarseY() &&
++                coarseZ() > v.coarseZ();
 +    }
 +
 +    /**
@@ -3644,22 +3819,22 @@ index 00000000..09214614
 +     */
 +    default boolean coarseGreaterOrEqual(Vec3 v) {
 +        return coarseX() >= v.coarseX() &&
-+               coarseY() >= v.coarseY() &&
-+               coarseZ() >= v.coarseZ();
++                coarseY() >= v.coarseY() &&
++                coarseZ() >= v.coarseZ();
 +    }
 +
 +    default boolean isBlockCorner() {
 +        return isFine() &&
-+               fineX() == coarseX() &&
-+               fineY() == coarseY() &&
-+               fineZ() == coarseZ();
++                fineX() == coarseX() &&
++                fineY() == coarseY() &&
++                fineZ() == coarseZ();
 +    }
 +
 +    default boolean isBlockCenter() {
 +        return isFine() &&
-+               fineX() == coarseX() + 0.5 &&
-+               fineY() == coarseY() + 0.5 &&
-+               fineZ() == coarseZ() + 0.5;
++                fineX() == coarseX() + 0.5 &&
++                fineY() == coarseY() + 0.5 &&
++                fineZ() == coarseZ() + 0.5;
 +    }
 +
 +    /**
@@ -3668,32 +3843,32 @@ index 00000000..09214614
 +     */
 +    default Vec3 blockCenter() {
 +        return fineOf(coarseX() + 0.5,
-+                      coarseY() + 0.5,
-+                      coarseZ() + 0.5);
++                coarseY() + 0.5,
++                coarseZ() + 0.5);
 +    }
 +
 +    default boolean anyMatch(DoublePredicate predicate) {
 +        return predicate.test(fineX()) ||
-+               predicate.test(fineY()) ||
-+               predicate.test(fineZ());
++                predicate.test(fineY()) ||
++                predicate.test(fineZ());
 +    }
 +
 +    default boolean anyMatch(IntPredicate predicate) {
 +        return predicate.test(coarseX()) ||
-+               predicate.test(coarseY()) ||
-+               predicate.test(coarseZ());
++                predicate.test(coarseY()) ||
++                predicate.test(coarseZ());
 +    }
 +
 +    default boolean allMatch(DoublePredicate predicate) {
 +        return predicate.test(fineX()) &&
-+               predicate.test(fineY()) &&
-+               predicate.test(fineZ());
++                predicate.test(fineY()) &&
++                predicate.test(fineZ());
 +    }
 +
 +    default boolean allMatch(IntPredicate predicate) {
 +        return predicate.test(coarseX()) &&
-+               predicate.test(coarseY()) &&
-+               predicate.test(coarseZ());
++                predicate.test(coarseY()) &&
++                predicate.test(coarseZ());
 +    }
 +
 +    boolean anyNaN();
@@ -3895,8 +4070,8 @@ index 00000000..09214614
 +     */
 +    default double dot(Vec3 v) {
 +        return fineX() * v.fineX() +
-+               fineY() * v.fineY() +
-+               fineZ() * v.fineZ();
++                fineY() * v.fineY() +
++                fineZ() * v.fineZ();
 +    }
 +
 +    default double lengthSquared() {
@@ -3921,8 +4096,8 @@ index 00000000..09214614
 +    default Vec3 interpolate(Vec3 v, double n) {
 +        final double u = 1 - n;
 +        return fineOf(u * fineX() + n * v.fineX(),
-+                      u * fineY() + n * v.fineY(),
-+                      u * fineZ() + n * v.fineZ());
++                u * fineY() + n * v.fineY(),
++                u * fineZ() + n * v.fineZ());
 +    }
 +
 +    /**
@@ -3930,8 +4105,8 @@ index 00000000..09214614
 +     */
 +    default Vec3 midway(Vec3 v) {
 +        return fineOf((fineX() + v.fineX()) / 2D,
-+                      (fineY() + v.fineY()) / 2D,
-+                      (fineZ() + v.fineZ()) / 2D);
++                (fineY() + v.fineY()) / 2D,
++                (fineZ() + v.fineZ()) / 2D);
 +    }
 +
 +    default Direction direction() {
@@ -3940,7 +4115,7 @@ index 00000000..09214614
 +}
 diff --git a/src/main/java/org/bukkit/geometry/Vec3Coarse.java b/src/main/java/org/bukkit/geometry/Vec3Coarse.java
 new file mode 100644
-index 00000000..ae127262
+index 00000000..dd51b41d
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/Vec3Coarse.java
 @@ -0,0 +1,267 @@
@@ -3996,8 +4171,8 @@ index 00000000..ae127262
 +
 +    default V coarseOf(double x, double y, double z) {
 +        return coarseOf(NumberConversions.floor(x),
-+                        NumberConversions.floor(y),
-+                        NumberConversions.floor(z));
++                NumberConversions.floor(y),
++                NumberConversions.floor(z));
 +    }
 +
 +    @Override
@@ -4023,25 +4198,25 @@ index 00000000..ae127262
 +    @Override
 +    default boolean fineLess(Vec3 v) {
 +        return v.isCoarse() ? coarseLess(v)
-+                            : Vec3.super.fineLess(v);
++                : Vec3.super.fineLess(v);
 +    }
 +
 +    @Override
 +    default boolean fineLessOrEqual(Vec3 v) {
 +        return v.isCoarse() ? coarseLessOrEqual(v)
-+                            : Vec3.super.fineLessOrEqual(v);
++                : Vec3.super.fineLessOrEqual(v);
 +    }
 +
 +    @Override
 +    default boolean fineGreater(Vec3 v) {
 +        return v.isCoarse() ? coarseGreater(v)
-+                            : Vec3.super.fineGreater(v);
++                : Vec3.super.fineGreater(v);
 +    }
 +
 +    @Override
 +    default boolean fineGreaterOrEqual(Vec3 v) {
 +        return v.isCoarse() ? coarseGreaterOrEqual(v)
-+                            : Vec3.super.fineGreaterOrEqual(v);
++                : Vec3.super.fineGreaterOrEqual(v);
 +    }
 +
 +    @Override
@@ -4077,29 +4252,29 @@ index 00000000..ae127262
 +    @Override
 +    default V map(IntUnaryOperator op) {
 +        return coarseOf(op.applyAsInt(coarseX()),
-+                        op.applyAsInt(coarseY()),
-+                        op.applyAsInt(coarseZ()));
++                op.applyAsInt(coarseY()),
++                op.applyAsInt(coarseZ()));
 +    }
 +
 +    @Override
 +    default V map(DoubleUnaryOperator op) {
 +        return coarseOf(op.applyAsDouble(fineX()),
-+                        op.applyAsDouble(fineY()),
-+                        op.applyAsDouble(fineZ()));
++                op.applyAsDouble(fineY()),
++                op.applyAsDouble(fineZ()));
 +    }
 +
 +    @Override
 +    default V map(Vec3 v, IntBinaryOperator op) {
 +        return coarseOf(op.applyAsInt(coarseX(), v.coarseX()),
-+                        op.applyAsInt(coarseY(), v.coarseY()),
-+                        op.applyAsInt(coarseZ(), v.coarseZ()));
++                op.applyAsInt(coarseY(), v.coarseY()),
++                op.applyAsInt(coarseZ(), v.coarseZ()));
 +    }
 +
 +    @Override
 +    default V map(Vec3 v, DoubleBinaryOperator op) {
 +        return coarseOf(op.applyAsDouble(fineX(), v.fineX()),
-+                        op.applyAsDouble(fineY(), v.fineY()),
-+                        op.applyAsDouble(fineZ(), v.fineZ()));
++                op.applyAsDouble(fineY(), v.fineY()),
++                op.applyAsDouble(fineZ(), v.fineZ()));
 +    }
 +
 +    @Override
@@ -4116,8 +4291,8 @@ index 00000000..ae127262
 +    default V clamped(Vec3 min, Vec3 max) {
 +        Preconditions.checkArgument(min.coarseLessOrEqual(max));
 +        return coarseOf(NumberConversions.clamp(coarseX(), min.coarseX(), max.coarseX()),
-+                        NumberConversions.clamp(coarseY(), min.coarseY(), max.coarseY()),
-+                        NumberConversions.clamp(coarseZ(), min.coarseZ(), max.coarseZ()));
++                NumberConversions.clamp(coarseY(), min.coarseY(), max.coarseY()),
++                NumberConversions.clamp(coarseZ(), min.coarseZ(), max.coarseZ()));
 +    }
 +
 +    @Override
@@ -4128,15 +4303,15 @@ index 00000000..ae127262
 +    @Override
 +    default V plus(int x, int y, int z) {
 +        return x == 0 && y == 0 && z == 0
-+               ? copy()
-+               : coarseOf(coarseX() + x, coarseY() + y, coarseZ() + z);
++                ? copy()
++                : coarseOf(coarseX() + x, coarseY() + y, coarseZ() + z);
 +    }
 +
 +    @Override
 +    default V plus(double x, double y, double z) {
 +        return x == 0D && y == 0D && z == 0D
-+               ? copy()
-+               : coarseOf(coarseX() + x, coarseY() + y, coarseZ() + z);
++                ? copy()
++                : coarseOf(coarseX() + x, coarseY() + y, coarseZ() + z);
 +    }
 +
 +    @Override
@@ -4189,7 +4364,7 @@ index 00000000..ae127262
 +    default V times(Vec3 v) {
 +        if(v.isZero() || isCoarseZero()) return coarseZero();
 +        return v.isFine() ? coarseOf(coarseX() * v.fineX(), coarseY() * v.fineY(), coarseZ() * v.fineZ())
-+                          : coarseOf(coarseX() * v.coarseX(), coarseY() * v.coarseY(), coarseZ() * v.coarseZ());
++                : coarseOf(coarseX() * v.coarseX(), coarseY() * v.coarseY(), coarseZ() * v.coarseZ());
 +    }
 +
 +    @Override
@@ -4208,12 +4383,12 @@ index 00000000..ae127262
 +    @Override
 +    default V over(Vec3 v) {
 +        return v.isFine() ? coarseOf(coarseX() / v.fineX(), coarseY() / v.fineY(), coarseZ() / v.fineZ())
-+                          : coarseOf(coarseX() / v.coarseX(), coarseY() / v.coarseY(), coarseZ() / v.coarseZ());
++                : coarseOf(coarseX() / v.coarseX(), coarseY() / v.coarseY(), coarseZ() / v.coarseZ());
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/geometry/Vec3Fine.java b/src/main/java/org/bukkit/geometry/Vec3Fine.java
 new file mode 100644
-index 00000000..2004d4d5
+index 00000000..f66c5c6f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/geometry/Vec3Fine.java
 @@ -0,0 +1,232 @@
@@ -4326,29 +4501,29 @@ index 00000000..2004d4d5
 +    @Override
 +    default V map(IntUnaryOperator op) {
 +        return fineOf(op.applyAsInt(coarseX()),
-+                      op.applyAsInt(coarseY()),
-+                      op.applyAsInt(coarseZ()));
++                op.applyAsInt(coarseY()),
++                op.applyAsInt(coarseZ()));
 +    }
 +
 +    @Override
 +    default V map(DoubleUnaryOperator op) {
 +        return fineOf(op.applyAsDouble(fineX()),
-+                      op.applyAsDouble(fineY()),
-+                      op.applyAsDouble(fineZ()));
++                op.applyAsDouble(fineY()),
++                op.applyAsDouble(fineZ()));
 +    }
 +
 +    @Override
 +    default V map(Vec3 v, IntBinaryOperator op) {
 +        return fineOf(op.applyAsInt(coarseX(), v.coarseX()),
-+                      op.applyAsInt(coarseY(), v.coarseY()),
-+                      op.applyAsInt(coarseZ(), v.coarseZ()));
++                op.applyAsInt(coarseY(), v.coarseY()),
++                op.applyAsInt(coarseZ(), v.coarseZ()));
 +    }
 +
 +    @Override
 +    default V map(Vec3 v, DoubleBinaryOperator op) {
 +        return fineOf(op.applyAsDouble(fineX(), v.fineX()),
-+                      op.applyAsDouble(fineY(), v.fineY()),
-+                      op.applyAsDouble(fineZ(), v.fineZ()));
++                op.applyAsDouble(fineY(), v.fineY()),
++                op.applyAsDouble(fineZ(), v.fineZ()));
 +    }
 +
 +    @Override
@@ -4365,8 +4540,8 @@ index 00000000..2004d4d5
 +    default V clamped(Vec3 min, Vec3 max) {
 +        Preconditions.checkArgument(min.fineLessOrEqual(max));
 +        return fineOf(NumberConversions.clamp(fineX(), min.fineX(), max.fineX()),
-+                      NumberConversions.clamp(fineY(), min.fineY(), max.fineY()),
-+                      NumberConversions.clamp(fineZ(), min.fineZ(), max.fineZ()));
++                NumberConversions.clamp(fineY(), min.fineY(), max.fineY()),
++                NumberConversions.clamp(fineZ(), min.fineZ(), max.fineZ()));
 +    }
 +
 +    @Override
@@ -4643,7 +4818,7 @@ index 00000000..7a3041fd
 +}
 diff --git a/src/main/java/org/bukkit/region/BlockRegion.java b/src/main/java/org/bukkit/region/BlockRegion.java
 new file mode 100644
-index 00000000..7c4bcef9
+index 00000000..a74decd2
 --- /dev/null
 +++ b/src/main/java/org/bukkit/region/BlockRegion.java
 @@ -0,0 +1,158 @@
@@ -4699,7 +4874,7 @@ index 00000000..7c4bcef9
 +    @Override
 +    default boolean containsAll(Collection<?> c) {
 +        return c instanceof BlockRegion ? containsAll((BlockRegion) c)
-+                                        : SetBase.super.containsAll(c);
++                : SetBase.super.containsAll(c);
 +    }
 +
 +    /**
@@ -4758,8 +4933,8 @@ index 00000000..7c4bcef9
 +
 +    default boolean standardEquals(Object that) {
 +        return that instanceof Set &&
-+               size() == ((Set) that).size() &&
-+               containsAll((Set) that);
++                size() == ((Set) that).size() &&
++                containsAll((Set) that);
 +    }
 +
 +    /**
@@ -5021,7 +5196,7 @@ index 00000000..5648660f
 +}
 diff --git a/src/main/java/org/bukkit/region/CuboidBlockRegion.java b/src/main/java/org/bukkit/region/CuboidBlockRegion.java
 new file mode 100644
-index 00000000..690caa00
+index 00000000..77ef45b0
 --- /dev/null
 +++ b/src/main/java/org/bukkit/region/CuboidBlockRegion.java
 @@ -0,0 +1,104 @@
@@ -5042,9 +5217,9 @@ index 00000000..690caa00
 +        a = a.coarseCopy();
 +        b = b.coarseCopy();
 +
-+        if(a.coarseX() == b.coarseX() ||
-+           a.coarseY() == b.coarseY() ||
-+           a.coarseZ() == b.coarseZ()) {
++        if (a.coarseX() == b.coarseX() ||
++                a.coarseY() == b.coarseY() ||
++                a.coarseZ() == b.coarseZ()) {
 +            return EmptyBlockRegion.INSTANCE;
 +        }
 +
@@ -5053,7 +5228,7 @@ index 00000000..690caa00
 +
 +    public static BlockRegion fromMinAndSize(Vec3 min, Vec3 size) {
 +        size = size.coarseCopy();
-+        if(size.coarseX() == 0 || size.coarseY() == 0 || size.coarseZ() == 0) {
++        if (size.coarseX() == 0 || size.coarseY() == 0 || size.coarseZ() == 0) {
 +            return EmptyBlockRegion.INSTANCE;
 +        }
 +        min = min.coarseCopy();
@@ -5109,9 +5284,9 @@ index 00000000..690caa00
 +
 +        // There is probably some crazy formula for this
 +        int hash = 0;
-+        for(int x = x0; x < x1; x++) {
-+            for(int y = y0; y < y1; y++) {
-+                for(int z = z0; z < z1; z++) {
++        for (int x = x0; x < x1; x++) {
++            for (int y = y0; y < y1; y++) {
++                for (int z = z0; z < z1; z++) {
 +                    hash += Vec3.combineHashCodes(x, y, z);
 +                }
 +            }
@@ -5121,10 +5296,10 @@ index 00000000..690caa00
 +
 +    @Override
 +    public boolean equals(Object obj) {
-+        if(this == obj) return true;
-+        if(obj instanceof CuboidBlockRegion) {
++        if (this == obj) return true;
++        if (obj instanceof CuboidBlockRegion) {
 +            return min.equals(((CuboidBlockRegion) obj).min) &&
-+                   max.equals(((CuboidBlockRegion) obj).max);
++                    max.equals(((CuboidBlockRegion) obj).max);
 +        }
 +        return standardEquals(obj);
 +    }
@@ -5568,7 +5743,7 @@ diff --git a/src/main/java/org/bukkit/util/BlockVector.java b/src/main/java/org/
      }
  
      /**
-@@ -66,9 +59,26 @@ public class BlockVector extends Vector {
+@@ -66,11 +59,29 @@ public class BlockVector extends Vector {
       * @param z Z component
       */
      public BlockVector(float x, float y, float z) {
@@ -5576,8 +5751,8 @@ diff --git a/src/main/java/org/bukkit/util/BlockVector.java b/src/main/java/org/
 -        this.y = y;
 -        this.z = z;
 +        super(x, y, z);
-+    }
-+
+     }
+ 
 +    public BlockVector(Vec3 v) {
 +        super(v);
 +    }
@@ -5595,10 +5770,13 @@ diff --git a/src/main/java/org/bukkit/util/BlockVector.java b/src/main/java/org/
 +    @Override
 +    public boolean equals(Vec3 v) {
 +        return v != null && v.isCoarse() && coarseEquals(v);
-     }
- 
++    }
++
++
      /**
-@@ -79,13 +89,7 @@ public class BlockVector extends Vector {
+      * Checks if another object is equivalent.
+      *
+@@ -79,13 +90,7 @@ public class BlockVector extends Vector {
       */
      @Override
      public boolean equals(Object obj) {
@@ -5613,7 +5791,7 @@ diff --git a/src/main/java/org/bukkit/util/BlockVector.java b/src/main/java/org/
      }
  
      /**
-@@ -95,7 +99,7 @@ public class BlockVector extends Vector {
+@@ -95,7 +100,7 @@ public class BlockVector extends Vector {
       */
      @Override
      public int hashCode() {
@@ -5624,7 +5802,7 @@ diff --git a/src/main/java/org/bukkit/util/BlockVector.java b/src/main/java/org/
      /**
 diff --git a/src/main/java/org/bukkit/util/ImVector.java b/src/main/java/org/bukkit/util/ImVector.java
 new file mode 100644
-index 00000000..0c53b965
+index 00000000..ef3b6256
 --- /dev/null
 +++ b/src/main/java/org/bukkit/util/ImVector.java
 @@ -0,0 +1,190 @@
@@ -5667,7 +5845,7 @@ index 00000000..0c53b965
 +
 +    public static ImVector copyOf(Vec3 v) {
 +        return v instanceof ImVector ? (ImVector) v
-+                                     : new ImVector(v.fineX(), v.fineY(), v.fineZ());
++                : new ImVector(v.fineX(), v.fineY(), v.fineZ());
 +    }
 +
 +    private static class Corner extends ImVector {
@@ -5722,14 +5900,14 @@ index 00000000..0c53b965
 +
 +    public static ImVector minimum(Vec3 a, Vec3 b) {
 +        return of(Math.min(a.fineX(), b.fineX()),
-+                  Math.min(a.fineY(), b.fineY()),
-+                  Math.min(a.fineZ(), b.fineZ()));
++                Math.min(a.fineY(), b.fineY()),
++                Math.min(a.fineZ(), b.fineZ()));
 +    }
 +
 +    public static ImVector maximum(Vec3 a, Vec3 b) {
 +        return of(Math.max(a.fineX(), b.fineX()),
-+                  Math.max(a.fineY(), b.fineY()),
-+                  Math.max(a.fineZ(), b.fineZ()));
++                Math.max(a.fineY(), b.fineY()),
++                Math.max(a.fineZ(), b.fineZ()));
 +    }
 +
 +    public static ImVector min(Vec3... a) {
@@ -5756,8 +5934,8 @@ index 00000000..0c53b965
 +
 +    public static ImVector interpolate(Vec3 a, Vec3 b, double n) {
 +        return of(NumberConversions.interpolate(a.fineX(), b.fineX(), n),
-+                  NumberConversions.interpolate(a.fineY(), b.fineY(), n),
-+                  NumberConversions.interpolate(a.fineZ(), b.fineZ(), n));
++                NumberConversions.interpolate(a.fineY(), b.fineY(), n),
++                NumberConversions.interpolate(a.fineZ(), b.fineZ(), n));
 +    }
 +
 +    @Override
@@ -5798,15 +5976,15 @@ index 00000000..0c53b965
 +    @Override
 +    public ImVector getCrossProduct(Vector v) {
 +        return of(this.fineY() * v.fineZ() - v.fineY() * this.fineZ(),
-+                  this.fineZ() * v.fineX() - v.fineZ() * this.fineX(),
-+                  this.fineX() * v.fineY() - v.fineX() * this.fineY());
++                this.fineZ() * v.fineX() - v.fineZ() * this.fineX(),
++                this.fineX() * v.fineY() - v.fineX() * this.fineY());
 +    }
 +
 +    @Override
 +    public ImVector getMidpoint(Vector v) {
 +        return of((fineX() + v.getX()) / 2,
-+                  (fineY() + v.getY()) / 2,
-+                  (fineZ() + v.getZ()) / 2);
++                (fineY() + v.getY()) / 2,
++                (fineZ() + v.getZ()) / 2);
 +    }
 +
 +    private UnsupportedOperationException ex() {
@@ -6391,7 +6569,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
       */
      public Vector setX(double x) {
 -        this.x = x;
-+        super.setX(x);
++        setX(x);
          return this;
      }
  
@@ -6445,7 +6623,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
       */
      public Vector setZ(double z) {
 -        this.z = z;
-+        super.setZ(z);
++        setZ(z);
          return this;
      }
  
@@ -6501,7 +6679,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -591,7 +593,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -591,19 +593,19 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return the location
       */
      public Location toLocation(World world) {
@@ -6510,7 +6688,12 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -603,7 +605,7 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+      * Gets a Location version of this vector.
+      *
+      * @param world The world to link the location to.
+-     * @param yaw The desired yaw.
++     * @param yaw   The desired yaw.
+      * @param pitch The desired pitch.
       * @return the location
       */
      public Location toLocation(World world, float yaw, float pitch) {
@@ -6550,7 +6733,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
      }
  
      /**
-@@ -654,7 +656,19 @@ public class Vector implements Cloneable, ConfigurationSerializable {
+@@ -654,7 +656,20 @@ public class Vector implements Cloneable, ConfigurationSerializable {
       * @return maximum
       */
      public static Vector getMaximum(Vector v1, Vector v2) {
@@ -6568,6 +6751,7 @@ diff --git a/src/main/java/org/bukkit/util/Vector.java b/src/main/java/org/bukki
 +        return new Vector(Math.max(a.fineX(), b.fineX()),
 +                Math.max(a.fineY(), b.fineY()),
 +                Math.max(a.fineZ(), b.fineZ()));
++
      }
  
      /**

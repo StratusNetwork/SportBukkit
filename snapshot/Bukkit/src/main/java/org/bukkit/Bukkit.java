@@ -224,7 +224,7 @@ public final class Bukkit {
     public static String getServerId() {
         return server.getServerId();
     }
-    
+
     /**
      * Get world type (level-type setting) for default world.
      *
@@ -652,7 +652,7 @@ public final class Bukkit {
     public static void savePlayers() {
         server.savePlayers();
     }
-    
+
     /**
      * Dispatches a command on this server, and executes it if found.
      *
@@ -711,7 +711,7 @@ public final class Bukkit {
     public static void resetRecipes() {
         server.resetRecipes();
     }
-    
+
     /**
      * Gets a list of command aliases defined in the server properties.
      *
@@ -1047,7 +1047,7 @@ public final class Bukkit {
     public static int getWaterAnimalSpawnLimit() {
         return server.getWaterAnimalSpawnLimit();
     }
-    
+
     /**
      * Gets user-specified limit for number of ambient mobs that can spawn in
      * a chunk.
@@ -1202,12 +1202,12 @@ public final class Bukkit {
 
     /**
      * Create a ChunkData for use in a generator.
-     * 
+     *
      * See {@link ChunkGenerator#generateChunkData(org.bukkit.World, java.util.Random, int, int, org.bukkit.generator.ChunkGenerator.BiomeGrid)}
-     * 
+     *
      * @param world the world to create the ChunkData for
      * @return a new ChunkData for the world
-     * 
+     *
      */
     public static ChunkGenerator.ChunkData createChunkData(World world) {
         return server.createChunkData(world);

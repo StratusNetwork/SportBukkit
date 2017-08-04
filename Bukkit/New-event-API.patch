@@ -2330,7 +2330,7 @@ diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main
      }
  
      public Permission getPermission(String name) {
-@@ -752,15 +639,6 @@ public final class SimplePluginManager implements PluginManager {
+@@ -767,15 +654,6 @@ public final class SimplePluginManager implements PluginManager {
      }
  
      public boolean useTimings() {

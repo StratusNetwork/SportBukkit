@@ -66,14 +66,14 @@ public class Ray {
         if(!(obj instanceof Ray)) return false;
         final Ray that = (Ray) obj;
         return origin.equals(that.origin) &&
-               normal.equals(that.normal);
+                normal.equals(that.normal);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() +
-               "{origin=" + origin +
-               " normal=" + normal +
-               "}";
+                "{origin=" + origin +
+                " normal=" + normal +
+                "}";
     }
 }

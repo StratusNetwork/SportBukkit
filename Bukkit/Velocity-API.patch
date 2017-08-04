@@ -38,7 +38,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
-@@ -54,6 +54,48 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+@@ -55,6 +55,48 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
      public Vector getVelocity();
  
      /**

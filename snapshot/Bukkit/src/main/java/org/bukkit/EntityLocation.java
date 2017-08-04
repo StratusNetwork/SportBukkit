@@ -85,15 +85,15 @@ public class EntityLocation extends Location {
     @Override
     public String toString() {
         return getClass().getSimpleName() +
-               "{world=" + getWorld() +
-               " x=" + getX() +
-               " y=" + getY() +
-               " z=" + getZ() +
-               " pitch=" + getPitch() +
-               " yaw=" + getYaw() +
-               " velocity=" + velocity() +
-               " poseFlags=" + poseFlags() +
-               '}';
+                "{world=" + getWorld() +
+                " x=" + getX() +
+                " y=" + getY() +
+                " z=" + getZ() +
+                " pitch=" + getPitch() +
+                " yaw=" + getYaw() +
+                " velocity=" + velocity() +
+                " poseFlags=" + poseFlags() +
+                '}';
     }
 
     @Override

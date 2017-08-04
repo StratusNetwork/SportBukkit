@@ -81,6 +81,7 @@ public class BlockVector extends Vector {
         return v != null && v.isCoarse() && coarseEquals(v);
     }
 
+
     /**
      * Checks if another object is equivalent.
      *

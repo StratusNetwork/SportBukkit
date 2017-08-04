@@ -1,7 +1,6 @@
 package org.bukkit.event.entity;
 
 import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EntityAction;

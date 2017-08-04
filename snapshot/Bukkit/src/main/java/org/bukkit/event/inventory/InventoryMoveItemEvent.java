@@ -1,8 +1,8 @@
 package org.bukkit.event.inventory;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.World;
 import org.bukkit.Physical;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EntityAction;
