@@ -72,7 +72,7 @@ diff --git a/src/main/java/org/bukkit/block/BlockState.java b/src/main/java/org/
  import org.bukkit.geometry.*;
  import org.bukkit.material.MaterialData;
  import org.bukkit.metadata.Metadatable;
-@@ -258,4 +259,23 @@ public interface BlockState extends Metadatable, Locatable {
+@@ -256,4 +257,23 @@ public interface BlockState extends Metadatable, Locatable {
      boolean isPlaced();
  
      boolean hasPosition();
