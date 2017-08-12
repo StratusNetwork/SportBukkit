@@ -27,7 +27,15 @@ diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/
              } catch (IOException ioexception) {
                  DedicatedServer.LOGGER.warn("**** FAILED TO BIND TO PORT!");
                  DedicatedServer.LOGGER.warn("The exception was: {}", ioexception.toString());
-@@ -402,6 +407,10 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -293,7 +293,6 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+                     watchdogThread = thread1; // SportBukkit
+                 }
+
+-                Items.a.a(CreativeModeTab.g, NonNullList.a());
+                 return true;
+             }
+         }
+@@ -402,6 +406,10 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
          super.processTasks();
          processCommands();
      }
@@ -38,7 +46,7 @@ diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/
      // SportBukkit end
  
      public void processCommands() { aP(); } // SportBukkit - alias
-@@ -465,7 +474,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -465,7 +473,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
      }
  
      public int e_() {

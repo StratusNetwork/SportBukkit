@@ -3,6 +3,28 @@ Date: Tue, 1 Mar 2016 05:48:53 -0500
 Subject: [PATCH] Fix decompilation errors
 
 
+diff --git a/src/main/java/net/minecraft/server/EntityZombieVillager.java b/src/main/java/net/minecraft/server/EntityZombieVillager.java
+--- a/src/main/java/net/minecraft/server/EntityZombieVillager.java
++++ b/src/main/java/net/minecraft/server/EntityZombieVillager.java
+@@ -178,15 +178,15 @@ public class EntityZombieVillager extends EntityZombie {
+     }
+
+     public SoundEffect d(DamageSource damagesource) {
+-        return SoundEffects.jB;
++        return SoundEffects.jy;
+     }
+
+     public SoundEffect cf() {
+-        return SoundEffects.jA;
++        return SoundEffects.jx;
+     }
+
+     public SoundEffect dm() {
+-        return SoundEffects.jC;
++        return SoundEffects.jz;
+     }
+
+     @Nullable
 diff --git a/src/main/java/net/minecraft/server/EnumProtocol.java b/src/main/java/net/minecraft/server/EnumProtocol.java
 --- a/src/main/java/net/minecraft/server/EnumProtocol.java
 +++ b/src/main/java/net/minecraft/server/EnumProtocol.java
@@ -40,6 +62,84 @@ diff --git a/src/main/java/net/minecraft/server/Item.java b/src/main/java/net/mi
      }
  
      public static Item getById(int i) {
+diff --git a/src/main/java/net/minecraft/server/ItemBlock.java b/src/main/java/net/minecraft/server/ItemBlock.java
+--- a/src/main/java/net/minecraft/server/ItemBlock.java
++++ b/src/main/java/net/minecraft/server/ItemBlock.java
+@@ -93,13 +93,6 @@ public class ItemBlock extends Item {
+         return this.a.q();
+     }
+
+-    public void a(CreativeModeTab creativemodetab, NonNullList<ItemStack> nonnulllist) {
+-        if (this.a(creativemodetab)) {
+-            this.a.a(creativemodetab, nonnulllist);
+-        }
+-
+-    }
+-
+     public Block getBlock() {
+         return this.a;
+     }
+diff --git a/src/main/java/net/minecraft/server/ItemDye.java b/src/main/java/net/minecraft/server/ItemDye.java
+--- a/src/main/java/net/minecraft/server/ItemDye.java
++++ b/src/main/java/net/minecraft/server/ItemDye.java
+@@ -111,13 +111,4 @@ public class ItemDye extends Item {
+             return false;
+         }
+     }
+-
+-    public void a(CreativeModeTab creativemodetab, NonNullList<ItemStack> nonnulllist) {
+-        if (this.a(creativemodetab)) {
+-            for (int i = 0; i < 16; ++i) {
+-                nonnulllist.add(new ItemStack(this, 1, i));
+-            }
+-        }
+-
+-    }
+ }
+diff --git a/src/main/java/net/minecraft/server/ItemMonsterEgg.java b/src/main/java/net/minecraft/server/ItemMonsterEgg.java
+--- a/src/main/java/net/minecraft/server/ItemMonsterEgg.java
++++ b/src/main/java/net/minecraft/server/ItemMonsterEgg.java
+@@ -227,21 +227,6 @@ public class ItemMonsterEgg extends Item {
+         }
+     }
+
+-    public void a(CreativeModeTab creativemodetab, NonNullList<ItemStack> nonnulllist) {
+-        if (this.a(creativemodetab)) {
+-            Iterator iterator = EntityTypes.eggInfo.values().iterator();
+-
+-            while (iterator.hasNext()) {
+-                EntityTypes.MonsterEggInfo entitytypes_monsteregginfo = (EntityTypes.MonsterEggInfo) iterator.next();
+-                ItemStack itemstack = new ItemStack(this, 1);
+-
+-                a(itemstack, entitytypes_monsteregginfo.a);
+-                nonnulllist.add(itemstack);
+-            }
+-        }
+-
+-    }
+-
+     public static void a(ItemStack itemstack, MinecraftKey minecraftkey) {
+         NBTTagCompound nbttagcompound = itemstack.hasTag() ? itemstack.getTag() : new NBTTagCompound();
+         NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+diff --git a/src/main/java/net/minecraft/server/ItemSkull.java b/src/main/java/net/minecraft/server/ItemSkull.java
+--- a/src/main/java/net/minecraft/server/ItemSkull.java
++++ b/src/main/java/net/minecraft/server/ItemSkull.java
+@@ -83,15 +83,6 @@ public class ItemSkull extends Item {
+         }
+     }
+
+-    public void a(CreativeModeTab creativemodetab, NonNullList<ItemStack> nonnulllist) {
+-        if (this.a(creativemodetab)) {
+-            for (int i = 0; i < ItemSkull.a.length; ++i) {
+-                nonnulllist.add(new ItemStack(this, 1, i));
+-            }
+-        }
+-
+-    }
+-
+     public int filterData(int i) {
+         return i;
+     }
 diff --git a/src/main/java/net/minecraft/server/OpList.java b/src/main/java/net/minecraft/server/OpList.java
 --- a/src/main/java/net/minecraft/server/OpList.java
 +++ b/src/main/java/net/minecraft/server/OpList.java

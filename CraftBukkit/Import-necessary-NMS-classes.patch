@@ -1091,24 +1091,24 @@ index 00000000..9830cb32
 +            }
 +        }
 +
-+        this.dB();
++        this.dD();
 +    }
 +
 +    public void setVariant(int i) {
 +        this.datawatcher.set(EntityHorse.bI, Integer.valueOf(i));
-+        this.dO();
++        this.dQ();
 +    }
 +
 +    public int getVariant() {
 +        return ((Integer) this.datawatcher.get(EntityHorse.bI)).intValue();
 +    }
 +
-+    private void dO() {
++    private void dQ() {
 +        this.bO = null;
 +    }
 +
-+    protected void dB() {
-+        super.dB();
++    protected void dD() {
++        super.dD();
 +        this.g(this.inventoryChest.getItem(1));
 +    }
 +
@@ -1116,7 +1116,7 @@ index 00000000..9830cb32
 +        EnumHorseArmor enumhorsearmor = EnumHorseArmor.a(itemstack);
 +
 +        this.datawatcher.set(EntityHorse.bJ, Integer.valueOf(enumhorsearmor.a()));
-+        this.dO();
++        this.dQ();
 +        if (!this.world.isClientSide) {
 +            this.getAttributeInstance(GenericAttributes.h).b(EntityHorse.bH);
 +            int i = enumhorsearmor.c();
@@ -1128,15 +1128,15 @@ index 00000000..9830cb32
 +
 +    }
 +
-+    public EnumHorseArmor dr() {
++    public EnumHorseArmor dt() {
 +        return EnumHorseArmor.a(((Integer) this.datawatcher.get(EntityHorse.bJ)).intValue());
 +    }
 +
 +    public void a(IInventory iinventory) {
-+        EnumHorseArmor enumhorsearmor = this.dr();
++        EnumHorseArmor enumhorsearmor = this.dt();
 +
 +        super.a(iinventory);
-+        EnumHorseArmor enumhorsearmor1 = this.dr();
++        EnumHorseArmor enumhorsearmor1 = this.dt();
 +
 +        if (this.ticksLived > 20 && enumhorsearmor != enumhorsearmor1 && enumhorsearmor1 != EnumHorseArmor.NONE) {
 +            this.a(SoundEffects.cH, 0.5F, 1.0F);
@@ -1154,16 +1154,16 @@ index 00000000..9830cb32
 +
 +    protected void initAttributes() {
 +        super.initAttributes();
-+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dK());
-+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.dM());
-+        this.getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(this.dL());
++        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dM());
++        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(this.dO());
++        this.getAttributeInstance(EntityHorse.attributeJumpStrength).setValue(this.dN());
 +    }
 +
 +    public void B_() {
 +        super.B_();
 +        if (this.world.isClientSide && this.datawatcher.a()) {
 +            this.datawatcher.e();
-+            this.dO();
++            this.dQ();
 +        }
 +
 +    }
@@ -1173,8 +1173,8 @@ index 00000000..9830cb32
 +        return SoundEffects.cF;
 +    }
 +
-+    protected SoundEffect cd() {
-+        super.cd();
++    protected SoundEffect cf() {
++        super.cf();
 +        return SoundEffects.cJ;
 +    }
 +
@@ -1183,8 +1183,8 @@ index 00000000..9830cb32
 +        return SoundEffects.cM;
 +    }
 +
-+    protected SoundEffect dm() {
-+        super.dm();
++    protected SoundEffect do_() {
++        super.do_();
 +        return SoundEffects.cG;
 +    }
 +
@@ -1224,12 +1224,12 @@ index 00000000..9830cb32
 +                }
 +
 +                if (!this.isTamed()) {
-+                    this.dI();
++                    this.dK();
 +                    return true;
 +                }
 +
 +                boolean flag1 = EnumHorseArmor.a(itemstack) != EnumHorseArmor.NONE;
-+                boolean flag2 = !this.isBaby() && !this.dE() && itemstack.getItem() == Items.SADDLE;
++                boolean flag2 = !this.isBaby() && !this.dG() && itemstack.getItem() == Items.SADDLE;
 +
 +                if (flag1 || flag2) {
 +                    this.c(entityhuman);
@@ -1247,7 +1247,7 @@ index 00000000..9830cb32
 +    }
 +
 +    public boolean mate(EntityAnimal entityanimal) {
-+        return entityanimal == this ? false : (!(entityanimal instanceof EntityHorseDonkey) && !(entityanimal instanceof EntityHorse) ? false : this.dJ() && ((EntityHorseAbstract) entityanimal).dJ());
++        return entityanimal == this ? false : (!(entityanimal instanceof EntityHorseDonkey) && !(entityanimal instanceof EntityHorse) ? false : this.dL() && ((EntityHorseAbstract) entityanimal).dL());
 +    }
 +
 +    public EntityAgeable createChild(EntityAgeable entityageable) {
@@ -1287,7 +1287,7 @@ index 00000000..9830cb32
 +        return (EntityAgeable) object;
 +    }
 +
-+    public boolean dN() {
++    public boolean dP() {
 +        return true;
 +    }
 +
@@ -1304,7 +1304,7 @@ index 00000000..9830cb32
 +            i = ((EntityHorse.a) object).a;
 +        } else {
 +            i = this.random.nextInt(7);
-+            object = new a(i);
++            object = new EntityHorse.a(i);
 +        }
 +
 +        this.setVariant(i | this.random.nextInt(5) << 8);
@@ -1320,131 +1320,6 @@ index 00000000..9830cb32
 +        }
 +    }
 +}
-diff --git a/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java b/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java
---- a/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java
-+++ b/src/main/java/net/minecraft/server/EntityHorseChestedAbstract.java
-@@ -16,7 +16,11 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
- 
-     protected void initAttributes() {
-         super.initAttributes();
-+<<<<<<< HEAD
-         this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dM());
-+=======
-+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dK());
-+>>>>>>> Import necessary NMS classes
-         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.17499999701976776D);
-         this.getAttributeInstance(EntityHorseChestedAbstract.attributeJumpStrength).setValue(0.5D);
-     }
-@@ -29,6 +33,7 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
-         this.datawatcher.set(EntityHorseChestedAbstract.bH, Boolean.valueOf(flag));
-     }
- 
-+<<<<<<< HEAD
-     protected int dn() {
-         return this.isCarryingChest() ? 17 : super.dn();
-     }
-@@ -39,11 +44,27 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
- 
-     protected SoundEffect do_() {
-         super.do_();
-+=======
-+    protected int dl() {
-+        return this.isCarryingChest() ? 17 : super.dl();
-+    }
-+
-+    public double aE() {
-+        return super.aE() - 0.25D;
-+    }
-+
-+    protected SoundEffect dm() {
-+        super.dm();
-+>>>>>>> Import necessary NMS classes
-         return SoundEffects.aD;
-     }
- 
-     public void die(DamageSource damagesource) {
-+<<<<<<< HEAD
-         // super.die(damagesource); // CraftBukkit - moved down
-+=======
-+        super.die(damagesource);
-+>>>>>>> Import necessary NMS classes
-         if (this.isCarryingChest()) {
-             if (!this.world.isClientSide) {
-                 this.a(Item.getItemOf(Blocks.CHEST), 1);
-@@ -51,7 +72,10 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
- 
-             this.setCarryingChest(false);
-         }
-+<<<<<<< HEAD
-         super.die(damagesource); // CraftBukkit
-+=======
-+>>>>>>> Import necessary NMS classes
- 
-     }
- 
-@@ -101,7 +125,11 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
-             }
-         }
- 
-+<<<<<<< HEAD
-         this.dD();
-+=======
-+        this.dB();
-+>>>>>>> Import necessary NMS classes
-     }
- 
-     public boolean c(int i, ItemStack itemstack) {
-@@ -147,18 +175,30 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
-                         return true;
-                     }
- 
-+<<<<<<< HEAD
-                     this.dK();
-+=======
-+                    this.dI();
-+>>>>>>> Import necessary NMS classes
-                     return true;
-                 }
- 
-                 if (!flag && !this.isCarryingChest() && itemstack.getItem() == Item.getItemOf(Blocks.CHEST)) {
-                     this.setCarryingChest(true);
-+<<<<<<< HEAD
-                     this.dp();
-+=======
-+                    this.dn();
-+>>>>>>> Import necessary NMS classes
-                     flag = true;
-                     this.loadChest();
-                 }
- 
-+<<<<<<< HEAD
-                 if (!flag && !this.isBaby() && !this.dG() && itemstack.getItem() == Items.SADDLE) {
-+=======
-+                if (!flag && !this.isBaby() && !this.dE() && itemstack.getItem() == Items.SADDLE) {
-+>>>>>>> Import necessary NMS classes
-                     this.c(entityhuman);
-                     return true;
-                 }
-@@ -183,11 +223,19 @@ public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
-         }
-     }
- 
-+<<<<<<< HEAD
-     protected void dp() {
-         this.a(SoundEffects.aE, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-     }
- 
-     public int dt() {
-+=======
-+    protected void dn() {
-+        this.a(SoundEffects.aE, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-+    }
-+
-+    public int dr() {
-+>>>>>>> Import necessary NMS classes
-         return 5;
-     }
- }
 diff --git a/src/main/java/net/minecraft/server/EnumProtocol.java b/src/main/java/net/minecraft/server/EnumProtocol.java
 new file mode 100644
 index 00000000..1d04959e
@@ -6903,7 +6778,7 @@ index 00000000..b7469346
 +    }
 +
 +    public void a(NBTTagCompound nbttagcompound) {
-+        super.a(nbttagcompound);
++        super.load(nbttagcompound);
 +        this.a = nbttagcompound.getByte("SkullType");
 +        this.rotation = nbttagcompound.getByte("Rot");
 +        if (this.a == 3) {
