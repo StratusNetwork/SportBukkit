@@ -1,18 +1,9 @@
 --- a/net/minecraft/server/EntityAgeable.java
 +++ b/net/minecraft/server/EntityAgeable.java
-@@ -4,12 +4,13 @@
- 
- public abstract class EntityAgeable extends EntityCreature {
- 
--    private static final DataWatcherObject<Boolean> bx = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
-+    private static final DataWatcherObject<Boolean> bw = DataWatcher.a(EntityAgeable.class, DataWatcherRegistry.h);
-     protected int a;
-     protected int b;
+@@ -10,6 +10,7 @@
      protected int c;
--    private float by = -1.0F;
--    private float bz;
-+    private float bx = -1.0F;
-+    private float by;
+     private float by = -1.0F;
+     private float bz;
 +    public boolean ageLocked; // CraftBukkit
  
      public EntityAgeable(World world) {
@@ -26,39 +17,7 @@
                          if (itemstack.hasName()) {
                              entityageable.setCustomName(itemstack.getName());
                          }
-@@ -61,11 +62,11 @@
- 
-     protected void i() {
-         super.i();
--        this.datawatcher.register(EntityAgeable.bx, Boolean.valueOf(false));
-+        this.datawatcher.register(EntityAgeable.bw, Boolean.valueOf(false));
-     }
- 
-     public int getAge() {
--        return this.world.isClientSide ? (((Boolean) this.datawatcher.get(EntityAgeable.bx)).booleanValue() ? -1 : 1) : this.a;
-+        return this.world.isClientSide ? (((Boolean) this.datawatcher.get(EntityAgeable.bw)).booleanValue() ? -1 : 1) : this.a;
-     }
- 
-     public void setAge(int i, boolean flag) {
-@@ -76,7 +77,7 @@
-         if (j > 0) {
-             j = 0;
-             if (k < 0) {
--                this.p();
-+                this.o();
-             }
-         }
- 
-@@ -101,7 +102,7 @@
-     }
- 
-     public void setAgeRaw(int i) {
--        this.datawatcher.set(EntityAgeable.bx, Boolean.valueOf(i < 0));
-+        this.datawatcher.set(EntityAgeable.bw, Boolean.valueOf(i < 0));
-         this.a = i;
-         this.a(this.isBaby());
-     }
-@@ -110,16 +111,18 @@
+@@ -110,12 +111,14 @@
          super.b(nbttagcompound);
          nbttagcompound.setInt("Age", this.getAge());
          nbttagcompound.setInt("ForcedAge", this.b);
@@ -73,11 +32,6 @@
      }
  
      public void a(DataWatcherObject<?> datawatcherobject) {
--        if (EntityAgeable.bx.equals(datawatcherobject)) {
-+        if (EntityAgeable.bw.equals(datawatcherobject)) {
-             this.a(this.isBaby());
-         }
- 
 @@ -128,7 +131,7 @@
  
      public void n() {
@@ -87,43 +41,3 @@
              if (this.c > 0) {
                  if (this.c % 4 == 0) {
                      this.world.addParticle(EnumParticle.VILLAGER_HAPPY, this.locX + (double) (this.random.nextFloat() * this.width * 2.0F) - (double) this.width, this.locY + 0.5D + (double) (this.random.nextFloat() * this.length), this.locZ + (double) (this.random.nextFloat() * this.width * 2.0F) - (double) this.width, 0.0D, 0.0D, 0.0D, new int[0]);
-@@ -143,7 +146,7 @@
-                 ++i;
-                 this.setAgeRaw(i);
-                 if (i == 0) {
--                    this.p();
-+                    this.o();
-                 }
-             } else if (i > 0) {
-                 --i;
-@@ -153,7 +156,7 @@
- 
-     }
- 
--    protected void p() {}
-+    protected void o() {}
- 
-     public boolean isBaby() {
-         return this.getAge() < 0;
-@@ -164,10 +167,10 @@
-     }
- 
-     public final void setSize(float f, float f1) {
--        boolean flag = this.by > 0.0F;
-+        boolean flag = this.bx > 0.0F;
- 
--        this.by = f;
--        this.bz = f1;
-+        this.bx = f;
-+        this.by = f1;
-         if (!flag) {
-             this.a(1.0F);
-         }
-@@ -175,6 +178,6 @@
-     }
- 
-     protected final void a(float f) {
--        super.setSize(this.by * f, this.bz * f);
-+        super.setSize(this.bx * f, this.by * f);
-     }
- }

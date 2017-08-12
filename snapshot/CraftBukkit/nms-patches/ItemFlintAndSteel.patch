@@ -1,33 +1,15 @@
 --- a/net/minecraft/server/ItemFlintAndSteel.java
 +++ b/net/minecraft/server/ItemFlintAndSteel.java
-@@ -5,7 +5,7 @@
-     public ItemFlintAndSteel() {
-         this.maxStackSize = 1;
-         this.setMaxDurability(64);
--        this.b(CreativeModeTab.i);
-+        this.a(CreativeModeTab.i);
-     }
- 
-     public EnumInteractionResult a(EntityHuman entityhuman, World world, BlockPosition blockposition, EnumHand enumhand, EnumDirection enumdirection, float f, float f1, float f2) {
-@@ -16,14 +16,16 @@
+@@ -16,6 +16,12 @@
              return EnumInteractionResult.FAIL;
          } else {
              if (world.getType(blockposition).getMaterial() == Material.AIR) {
--                world.a(entityhuman, blockposition, SoundEffects.bO, SoundCategory.BLOCKS, 1.0F, ItemFlintAndSteel.j.nextFloat() * 0.4F + 0.8F);
 +                // CraftBukkit start - Store the clicked block
 +                if (org.bukkit.craftbukkit.event.CraftEventFactory.callBlockIgniteEvent(world, blockposition.getX(), blockposition.getY(), blockposition.getZ(), org.bukkit.event.block.BlockIgniteEvent.IgniteCause.FLINT_AND_STEEL, entityhuman).isCancelled()) {
 +                    itemstack.damage(1, entityhuman);
 +                    return EnumInteractionResult.PASS;
 +                }
 +                // CraftBukkit end
-+                world.a(entityhuman, blockposition, SoundEffects.bI, SoundCategory.BLOCKS, 1.0F, ItemFlintAndSteel.j.nextFloat() * 0.4F + 0.8F);
+                 world.a(entityhuman, blockposition, SoundEffects.bO, SoundCategory.BLOCKS, 1.0F, ItemFlintAndSteel.j.nextFloat() * 0.4F + 0.8F);
                  world.setTypeAndData(blockposition, Blocks.FIRE.getBlockData(), 11);
              }
- 
--            if (entityhuman instanceof EntityPlayer) {
--                CriterionTriggers.x.a((EntityPlayer) entityhuman, blockposition, itemstack);
--            }
--
-             itemstack.damage(1, entityhuman);
-             return EnumInteractionResult.SUCCESS;
-         }

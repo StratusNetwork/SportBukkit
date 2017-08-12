@@ -167,7 +167,7 @@ diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -1748,6 +1748,41 @@ public abstract class World implements IBlockAccess {
+@@ -1752,6 +1752,41 @@ public abstract class World implements IBlockAccess {
          return false;
      }
  
@@ -235,7 +235,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b
              } else if (source == DamageSource.HOT_FLOOR) {
                  cause = DamageCause.HOT_FLOOR;
              } else {
-@@ -533,6 +531,8 @@ public class CraftEventFactory {
+@@ -535,6 +533,8 @@ public class CraftEventFactory {
          DamageCause cause = null;
          if (source == DamageSource.FIRE) {
              cause = DamageCause.FIRE;

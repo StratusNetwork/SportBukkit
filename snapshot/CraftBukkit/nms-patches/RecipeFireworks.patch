@@ -11,39 +11,10 @@
  
 +    // CraftBukkit start - Delegate to new parent class with bogus info
      public RecipeFireworks() {
-+        super(new ItemStack(Items.FIREWORKS, 0, 0), java.util.Arrays.asList(new ItemStack(Items.GUNPOWDER, 0, 5)));
++        super("", new ItemStack(Items.FIREWORKS, 0, 0), NonNullList.a(RecipeItemStack.a, RecipeItemStack.a(Items.GUNPOWDER)));
          this.a = ItemStack.a;
      }
 +    // CraftBukkit end
  
      public boolean a(InventoryCrafting inventorycrafting, World world) {
          this.a = ItemStack.a;
-@@ -166,6 +169,10 @@
-         return this.a.cloneItemStack();
-     }
- 
-+    public int a() {
-+        return 10;
-+    }
-+
-     public ItemStack b() {
-         return this.a;
-     }
-@@ -176,15 +183,11 @@
-         for (int i = 0; i < nonnulllist.size(); ++i) {
-             ItemStack itemstack = inventorycrafting.getItem(i);
- 
--            if (itemstack.getItem().r()) {
--                nonnulllist.set(i, new ItemStack(itemstack.getItem().q()));
-+            if (itemstack.getItem().s()) {
-+                nonnulllist.set(i, new ItemStack(itemstack.getItem().r()));
-             }
-         }
- 
-         return nonnulllist;
-     }
--
--    public boolean c() {
--        return true;
--    }
- }

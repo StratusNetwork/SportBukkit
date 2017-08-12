@@ -1,25 +1,14 @@
 --- a/net/minecraft/server/PathfinderGoalHurtByTarget.java
 +++ b/net/minecraft/server/PathfinderGoalHurtByTarget.java
-@@ -17,16 +17,16 @@
-     }
- 
-     public boolean a() {
--        int i = this.e.bR();
-+        int i = this.e.bL();
-         EntityLiving entityliving = this.e.getLastDamager();
- 
-         return i != this.b && entityliving != null && this.a(entityliving, false);
+@@ -24,7 +24,7 @@
      }
  
      public void c() {
 -        this.e.setGoalTarget(this.e.getLastDamager());
 +        this.e.setGoalTarget(this.e.getLastDamager(), org.bukkit.event.entity.EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true); // CraftBukkit - reason
          this.g = this.e.getGoalTarget();
--        this.b = this.e.bR();
-+        this.b = this.e.bL();
+         this.b = this.e.bT();
          this.h = 300;
-         if (this.a) {
-             this.f();
 @@ -66,6 +66,6 @@
      }
  

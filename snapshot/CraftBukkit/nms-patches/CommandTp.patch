@@ -1,20 +1,9 @@
 --- a/net/minecraft/server/CommandTp.java
 +++ b/net/minecraft/server/CommandTp.java
-@@ -31,7 +31,7 @@
-             if (astring.length != 2 && astring.length != 4 && astring.length != 6) {
-                 object = a(icommandlistener);
+@@ -53,17 +53,11 @@
              } else {
--                object = c(minecraftserver, icommandlistener, astring[0]);
-+                object = b(minecraftserver, icommandlistener, astring[0]);
-                 b0 = 1;
-             }
+                 Entity entity = c(minecraftserver, icommandlistener, astring[astring.length - 1]);
  
-@@ -51,19 +51,13 @@
-                     a(icommandlistener, (ICommand) this, "commands.tp.success.coordinates", new Object[] { ((Entity) object).getName(), Double.valueOf(commandabstract_commandnumber.a()), Double.valueOf(commandabstract_commandnumber1.a()), Double.valueOf(commandabstract_commandnumber2.a())});
-                 }
-             } else {
--                Entity entity = c(minecraftserver, icommandlistener, astring[astring.length - 1]);
--
 -                if (entity.world != ((Entity) object).world) {
 -                    throw new CommandException("commands.tp.notSameDimension", new Object[0]);
 -                } else {
@@ -24,8 +13,7 @@
 -                    } else {
 -                        ((Entity) object).setPositionRotation(entity.locX, entity.locY, entity.locZ, entity.yaw, entity.pitch);
 -                    }
-+                Entity entity = b(minecraftserver, icommandlistener, astring[astring.length - 1]);
- 
+-
 +                // CraftBukkit Start
 +                // Use Bukkit teleport method in all cases. It has cross dimensional handling, events
 +                if (((Entity) object).getBukkitEntity().teleport(entity.getBukkitEntity(), org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.COMMAND)) {
@@ -34,35 +22,16 @@
                  }
              }
          }
-@@ -108,17 +102,17 @@
+@@ -107,7 +101,7 @@
+             }
  
              entity.stopRiding();
-             ((EntityPlayer) entity).playerConnection.a(commandabstract_commandnumber.b(), commandabstract_commandnumber1.b(), commandabstract_commandnumber2.b(), f, f1, enumset);
--            entity.setHeadRotation(f);
-+            entity.h(f);
+-            ((EntityPlayer) entity).playerConnection.a(commandabstract_commandnumber.b(), commandabstract_commandnumber1.b(), commandabstract_commandnumber2.b(), f, f1, enumset);
++            ((EntityPlayer) entity).playerConnection.a(commandabstract_commandnumber.b(), commandabstract_commandnumber1.b(), commandabstract_commandnumber2.b(), f, f1, enumset, org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.COMMAND); // CraftBukkit
+             entity.setHeadRotation(f);
          } else {
              float f2 = (float) MathHelper.g(commandabstract_commandnumber3.a());
- 
-             f = (float) MathHelper.g(commandabstract_commandnumber4.a());
-             f = MathHelper.a(f, -90.0F, 90.0F);
-             entity.setPositionRotation(commandabstract_commandnumber.a(), commandabstract_commandnumber1.a(), commandabstract_commandnumber2.a(), f2, f);
--            entity.setHeadRotation(f2);
-+            entity.h(f2);
-         }
- 
--        if (!(entity instanceof EntityLiving) || !((EntityLiving) entity).cN()) {
-+        if (!(entity instanceof EntityLiving) || !((EntityLiving) entity).cH()) {
-             entity.motY = 0.0D;
-             entity.onGround = true;
-         }
-@@ -126,10 +120,17 @@
-     }
- 
-     public List<String> tabComplete(MinecraftServer minecraftserver, ICommandListener icommandlistener, String[] astring, @Nullable BlockPosition blockposition) {
--        return astring.length != 1 && astring.length != 2 ? Collections.emptyList() : a(astring, minecraftserver.getPlayers());
-+        return astring.length != 1 && astring.length != 2 ? Collections.<String>emptyList() : a(astring, minecraftserver.getPlayers()); // CraftBukkit - decompile error
-     }
- 
+@@ -132,4 +126,11 @@
      public boolean isListStart(String[] astring, int i) {
          return i == 0;
      }

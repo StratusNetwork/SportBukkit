@@ -44,15 +44,6 @@
      public TileEntityDispenser() {
          this.items = NonNullList.a(9, ItemStack.a);
      }
-@@ -16,7 +47,7 @@
-         return 9;
-     }
- 
--    public boolean x_() {
-+    public boolean w_() {
-         Iterator iterator = this.items.iterator();
- 
-         ItemStack itemstack;
 @@ -92,7 +123,7 @@
      }
  

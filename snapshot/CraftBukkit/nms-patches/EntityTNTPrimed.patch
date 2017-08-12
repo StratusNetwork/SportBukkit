@@ -8,7 +8,7 @@
  
  public class EntityTNTPrimed extends Entity {
  
-@@ -8,12 +9,13 @@
+@@ -8,6 +9,8 @@
      @Nullable
      private EntityLiving source;
      private int c;
@@ -17,22 +17,7 @@
  
      public EntityTNTPrimed(World world) {
          super(world);
-         this.c = 80;
-         this.i = true;
--        this.fireProof = true;
-         this.setSize(0.98F, 0.98F);
-     }
- 
-@@ -44,7 +46,7 @@
-         return !this.dead;
-     }
- 
--    public void B_() {
-+    public void A_() {
-         this.lastX = this.locX;
-         this.lastY = this.locY;
-         this.lastZ = this.locZ;
-@@ -64,21 +66,66 @@
+@@ -64,10 +67,13 @@
  
          --this.c;
          if (this.c <= 0) {
@@ -45,24 +30,23 @@
 +            this.die();
 +            // CraftBukkit end
          } else {
--            this.aq();
-+            this.ak();
+             this.aq();
              this.world.addParticle(EnumParticle.SMOKE_NORMAL, this.locX, this.locY + 0.5D, this.locZ, 0.0D, 0.0D, 0.0D, new int[0]);
-         }
+@@ -75,10 +81,52 @@
  
      }
  
 +    // SportBukkit start - Prevent TNT from being pushed in water by overriding the method that applies the motion
 +    @Override
-+    public boolean ak() {
-+        if(this.world.getServer().getWaterPushesTNT()) return super.ak();
++    public boolean aq() {
++        if(this.world.getServer().getWaterPushesTNT()) return super.aq();
 +
 +        // Preserve velocity while calling the super method
 +        double oldMotX = this.motX;
 +        double oldMotY = this.motY;
 +        double oldMotZ = this.motZ;
 +
-+        super.ak();
++        super.aq();
 +
 +        this.motX = oldMotX;
 +        this.motY = oldMotY;
@@ -103,7 +87,7 @@
      }
  
      protected void b(NBTTagCompound nbttagcompound) {
-@@ -95,7 +142,7 @@
+@@ -95,7 +143,7 @@
      }
  
      public float getHeadHeight() {

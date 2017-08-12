@@ -1,14 +1,5 @@
 --- a/net/minecraft/server/ItemRecord.java
 +++ b/net/minecraft/server/ItemRecord.java
-@@ -13,7 +13,7 @@
-         this.c = "item.record." + s + ".desc";
-         this.b = soundeffect;
-         this.maxStackSize = 1;
--        this.b(CreativeModeTab.f);
-+        this.a(CreativeModeTab.f);
-         ItemRecord.a.put(this.b, this);
-     }
- 
 @@ -22,6 +22,7 @@
  
          if (iblockdata.getBlock() == Blocks.JUKEBOX && !((Boolean) iblockdata.get(BlockJukeBox.HAS_RECORD)).booleanValue()) {

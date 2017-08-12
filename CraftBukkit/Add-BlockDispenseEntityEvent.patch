@@ -242,7 +242,7 @@ diff --git a/src/main/java/net/minecraft/server/ItemMinecart.java b/src/main/jav
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-@@ -266,6 +266,13 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -267,6 +267,13 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
          return entity.world.getWorld();
      }
  

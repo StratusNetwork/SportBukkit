@@ -19,15 +19,6 @@
          this.beacon = iinventory1;
          this.f = new ContainerBeacon.SlotBeacon(iinventory1, 0, 136, 110);
          this.a((Slot) this.f);
-@@ -37,7 +44,7 @@
- 
-     public void b(EntityHuman entityhuman) {
-         super.b(entityhuman);
--        if (!entityhuman.world.isClientSide) {
-+        if (entityhuman != null && !entityhuman.world.isClientSide) {
-             ItemStack itemstack = this.f.a(this.f.getMaxStackSize());
- 
-             if (!itemstack.isEmpty()) {
 @@ -48,6 +55,7 @@
      }
  

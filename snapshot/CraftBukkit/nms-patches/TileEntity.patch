@@ -9,29 +9,6 @@
  public abstract class TileEntity {
  
      private static final Logger a = LogManager.getLogger();
-@@ -74,7 +76,7 @@
-                 tileentity = (TileEntity) oclass.newInstance();
-             }
-         } catch (Throwable throwable) {
--            TileEntity.a.error("Failed to create block entity {}", s, throwable);
-+            TileEntity.a.error("Failed to create block entity {}", new Object[] { s, throwable});
-         }
- 
-         if (tileentity != null) {
-@@ -82,11 +84,11 @@
-                 tileentity.b(world);
-                 tileentity.a(nbttagcompound);
-             } catch (Throwable throwable1) {
--                TileEntity.a.error("Failed to load data for block entity {}", s, throwable1);
-+                TileEntity.a.error("Failed to load data for block entity {}", new Object[] { s, throwable1});
-                 tileentity = null;
-             }
-         } else {
--            TileEntity.a.warn("Skipping BlockEntity with id {}", s);
-+            TileEntity.a.warn("Skipping BlockEntity with id {}", new Object[] { s});
-         }
- 
-         return tileentity;
 @@ -142,6 +144,7 @@
          return this.d;
      }
@@ -40,11 +17,9 @@
      public void z() {
          this.d = true;
      }
-@@ -249,6 +252,14 @@
-         a("end_gateway", TileEntityEndGateway.class);
-         a("command_block", TileEntityCommand.class);
+@@ -251,4 +254,13 @@
          a("shulker_box", TileEntityShulkerBox.class);
--        a("bed", TileEntityBed.class);
+         a("bed", TileEntityBed.class);
      }
 +
 +    // CraftBukkit start - add method

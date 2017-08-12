@@ -1,17 +1,10 @@
 --- a/net/minecraft/server/EntityPlayer.java
 +++ b/net/minecraft/server/EntityPlayer.java
-@@ -1,55 +1,237 @@
- package net.minecraft.server;
- 
- import com.google.common.collect.Lists;
-+import com.google.common.collect.Sets;
- import com.mojang.authlib.GameProfile;
+@@ -5,16 +5,41 @@
  import io.netty.buffer.Unpooled;
--import java.util.ArrayList;
-+
+ import java.util.ArrayList;
  import java.util.Collection;
 +import java.util.HashMap;
-+import java.util.HashSet;
  import java.util.Iterator;
  import java.util.List;
 +import java.util.Map;
@@ -20,78 +13,37 @@
  import org.apache.logging.log4j.Logger;
  
 +// CraftBukkit start
++import com.google.common.base.Preconditions;
 +import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.CraftLogging;
++import org.bukkit.GameMode;
 +import org.bukkit.WeatherType;
 +import org.bukkit.craftbukkit.CraftWorld;
 +import org.bukkit.craftbukkit.entity.CraftPlayer;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
 +import org.bukkit.craftbukkit.inventory.CraftItemStack;
++import org.bukkit.craftbukkit.util.Skins;
 +import org.bukkit.event.inventory.InventoryType;
 +import org.bukkit.event.player.PlayerChangedMainHandEvent;
-+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-+import org.bukkit.inventory.MainHand;
-+// CraftBukkit end
-+
-+// SportBukkit start
-+import org.bukkit.craftbukkit.CraftLogging;
-+import org.bukkit.craftbukkit.util.Skins;
-+import org.bukkit.event.player.PlayerSkinPartsChangeEvent;
++import org.bukkit.event.player.PlayerGameModeChangeEvent;
 +import org.bukkit.event.player.PlayerKnockbackEvent;
++import org.bukkit.event.player.PlayerLocaleChangeEvent;
++import org.bukkit.event.player.PlayerSkinPartsChangeEvent;
++import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 +import org.bukkit.event.player.PlayerVelocityEvent;
++import org.bukkit.inventory.MainHand;
 +import org.bukkit.util.Vector;
-+// SportBukkit end
++// CraftBukkit end
 +
  public class EntityPlayer extends EntityHuman implements ICrafting {
  
--    private static final Logger bV = LogManager.getLogger();
+     private static final Logger bV = LogManager.getLogger();
 -    public String locale = "en_US";
-+    private static final Logger bR = LogManager.getLogger();
 +    public String locale = null; // SportBukkit - make public and default to null
      public PlayerConnection playerConnection;
      public final MinecraftServer server;
      public final PlayerInteractManager playerInteractManager;
-     public double d;
-     public double e;
-     public final List<Integer> removeQueue = Lists.newLinkedList();
--    private final AdvancementDataPlayer bY;
--    private final ServerStatisticManager bZ;
--    private float ca = Float.MIN_VALUE;
--    private int cb = Integer.MIN_VALUE;
--    private int cc = Integer.MIN_VALUE;
--    private int cd = Integer.MIN_VALUE;
--    private int ce = Integer.MIN_VALUE;
--    private int cf = Integer.MIN_VALUE;
-+    private final ServerStatisticManager bU;
-+    private float bV = Float.MIN_VALUE;
-+    private int bW = Integer.MIN_VALUE;
-+    private int bX = Integer.MIN_VALUE;
-+    private int bY = Integer.MIN_VALUE;
-+    private int bZ = Integer.MIN_VALUE;
-+    private int ca = Integer.MIN_VALUE;
-     private float lastHealthSent = -1.0E8F;
--    private int ch = -99999999;
--    private boolean ci = true;
-+    private int cc = -99999999;
-+    private boolean cd = true;
-     public int lastSentExp = -99999999;
-     public int invulnerableTicks = 60;
--    private EntityHuman.EnumChatVisibility cl;
--    private boolean cm = true;
--    private long cn = System.currentTimeMillis();
--    private Entity co;
-+    private EntityHuman.EnumChatVisibility cg;
-+    private boolean ch = true;
-+    private long ci = System.currentTimeMillis();
-+    private Entity cj;
-     public boolean worldChangeInvuln;
--    private boolean cq;
--    private final RecipeBookServer cr = new RecipeBookServer();
--    private Vec3D cs;
--    private int ct;
--    private boolean cu;
--    private Vec3D cv;
-     private int containerCounter;
-     public boolean f;
+@@ -50,6 +75,170 @@
      public int ping;
      public boolean viewingCredits;
  
@@ -107,6 +59,7 @@
 +    public boolean keepLevel = false;
 +    public double maxHealthCache;
 +    public boolean joining = true;
++    public boolean sentListPacket = false;
 +    public String hostname;
 +    public int protocolVersion;
 +    // CraftBukkit end
@@ -261,89 +214,31 @@
      public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
          super(worldserver, gameprofile);
          playerinteractmanager.player = this;
-@@ -72,38 +254,32 @@
-         }
- 
-         this.server = minecraftserver;
--        this.bZ = minecraftserver.getPlayerList().a((EntityHuman) this);
--        this.bY = minecraftserver.getPlayerList().h(this);
--        this.P = 1.0F;
-+        this.bU = minecraftserver.getPlayerList().a((EntityHuman) this);
-+        this.P = 1.0F; // CraftBukkit - hit when sneaking
-         this.setPositionRotation(blockposition, 0.0F, 0.0F);
- 
-         while (!worldserver.getCubes(this, this.getBoundingBox()).isEmpty() && this.locY < 255.0D) {
+@@ -81,6 +270,11 @@
              this.setPosition(this.locX, this.locY + 1.0D, this.locZ);
          }
  
 +        // CraftBukkit start
 +        this.displayName = this.getName();
-+        // this.canPickUpLoot = true; TODO
++        this.canPickUpLoot = true;
 +        this.maxHealthCache = this.getMaxHealth();
 +        // CraftBukkit end
      }
  
      public void a(NBTTagCompound nbttagcompound) {
-         super.a(nbttagcompound);
-         if (nbttagcompound.hasKeyOfType("playerGameType", 99)) {
--            if (this.C_().getForceGamemode()) {
--                this.playerInteractManager.setGameMode(this.C_().getGamemode());
-+            if (this.B_().getForceGamemode()) {
-+                this.playerInteractManager.setGameMode(this.B_().getGamemode());
-             } else {
-                 this.playerInteractManager.setGameMode(EnumGamemode.getById(nbttagcompound.getInt("playerGameType")));
-             }
+@@ -103,6 +297,7 @@
+         if (nbttagcompound.hasKeyOfType("recipeBook", 10)) {
+             this.cr.a(nbttagcompound.getCompound("recipeBook"));
          }
- 
--        if (nbttagcompound.hasKeyOfType("enteredNetherPosition", 10)) {
--            NBTTagCompound nbttagcompound1 = nbttagcompound.getCompound("enteredNetherPosition");
--
--            this.cv = new Vec3D(nbttagcompound1.getDouble("x"), nbttagcompound1.getDouble("y"), nbttagcompound1.getDouble("z"));
--        }
--
--        this.cq = nbttagcompound.getBoolean("seenCredits");
--        if (nbttagcompound.hasKeyOfType("recipeBook", 10)) {
--            this.cr.a(nbttagcompound.getCompound("recipeBook"));
--        }
--
 +        this.getBukkitEntity().readExtraData(nbttagcompound); // CraftBukkit
+ 
      }
  
-     public static void a(DataConverterManager dataconvertermanager) {
-@@ -125,39 +301,53 @@
-     public void b(NBTTagCompound nbttagcompound) {
-         super.b(nbttagcompound);
-         nbttagcompound.setInt("playerGameType", this.playerInteractManager.getGameMode().getId());
--        nbttagcompound.setBoolean("seenCredits", this.cq);
--        if (this.cv != null) {
--            NBTTagCompound nbttagcompound1 = new NBTTagCompound();
--
--            nbttagcompound1.setDouble("x", this.cv.x);
--            nbttagcompound1.setDouble("y", this.cv.y);
--            nbttagcompound1.setDouble("z", this.cv.z);
--            nbttagcompound.set("enteredNetherPosition", nbttagcompound1);
--        }
--
-         Entity entity = this.getVehicle();
--        Entity entity1 = this.bH();
-+        Entity entity1 = this.bB();
+@@ -149,7 +344,33 @@
+         }
  
--        if (entity1 != null && entity != this && entity.b(EntityPlayer.class).size() == 1) {
-+        if (entity1 != null && entity != this & entity.b(EntityPlayer.class).size() == 1) {
-+            NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-             NBTTagCompound nbttagcompound2 = new NBTTagCompound();
--            NBTTagCompound nbttagcompound3 = new NBTTagCompound();
- 
--            entity.d(nbttagcompound3);
--            nbttagcompound2.a("Attach", entity1.getUniqueID());
--            nbttagcompound2.set("Entity", nbttagcompound3);
--            nbttagcompound.set("RootVehicle", nbttagcompound2);
-+            entity.d(nbttagcompound2);
-+            nbttagcompound1.a("Attach", entity1.getUniqueID());
-+            nbttagcompound1.set("Entity", nbttagcompound2);
-+            nbttagcompound.set("RootVehicle", nbttagcompound1);
-+        }
-+		this.getBukkitEntity().setExtraData(nbttagcompound); // CraftBukkit
+         nbttagcompound.set("recipeBook", this.cr.c());
++        this.getBukkitEntity().setExtraData(nbttagcompound); // CraftBukkit
 +    }
 +
 +    // CraftBukkit start - World fallback code, either respawn location or global spawn
@@ -365,9 +260,7 @@
 +            }
 +            this.world = world;
 +            this.setPosition(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
-         }
--
--        nbttagcompound.set("recipeBook", this.cr.c());
++        }
 +        this.dimension = ((WorldServer) this.world).dimension;
 +        this.playerInteractManager.a((WorldServer) world);
      }
@@ -375,18 +268,8 @@
  
      public void levelDown(int i) {
          super.levelDown(i);
-         this.lastSentExp = -1;
-     }
- 
--    public void enchantDone(ItemStack itemstack, int i) {
--        super.enchantDone(itemstack, i);
-+    public void enchantDone(int i) {
-+        super.enchantDone(i);
-         this.lastSentExp = -1;
-     }
- 
-@@ -170,20 +360,33 @@
-         this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.ENTER_COMBAT));
+@@ -175,6 +396,18 @@
+         this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.END_COMBAT));
      }
  
 +    // CraftBukkit start
@@ -401,21 +284,13 @@
 +    }
 +    // CraftBukkit end
 +
-     public void exitCombat() {
-         super.exitCombat();
-         this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.END_COMBAT));
+     protected void a(IBlockData iblockdata) {
+         CriterionTriggers.d.a(this, iblockdata);
+     }
+@@ -184,6 +417,11 @@
      }
  
--    protected void a(IBlockData iblockdata) {
--        CriterionTriggers.d.a(this, iblockdata);
--    }
--
-     protected ItemCooldown l() {
-         return new ItemCooldownPlayer(this);
-     }
- 
--    public void B_() {
-+    public void A_() {
+     public void B_() {
 +        // CraftBukkit start
 +        if (this.joining) {
 +            this.joining = false;
@@ -424,103 +299,30 @@
          this.playerInteractManager.a();
          --this.invulnerableTicks;
          if (this.noDamageTicks > 0) {
-@@ -224,17 +427,11 @@
-             }
-         }
- 
--        CriterionTriggers.v.a(this);
--        if (this.cs != null) {
--            CriterionTriggers.t.a(this, this.cs, this.ticksLived - this.ct);
--        }
--
--        this.bY.b(this);
-     }
- 
-     public void playerTick() {
-         try {
--            super.B_();
-+            super.A_();
- 
-             for (int i = 0; i < this.inventory.getSize(); ++i) {
-                 ItemStack itemstack = this.inventory.getItem(i);
-@@ -248,41 +445,47 @@
-                 }
+@@ -249,7 +487,7 @@
              }
  
--            if (this.getHealth() != this.lastHealthSent || this.ch != this.foodData.getFoodLevel() || this.foodData.getSaturationLevel() == 0.0F != this.ci) {
+             if (this.getHealth() != this.lastHealthSent || this.ch != this.foodData.getFoodLevel() || this.foodData.getSaturationLevel() == 0.0F != this.ci) {
 -                this.playerConnection.sendPacket(new PacketPlayOutUpdateHealth(this.getHealth(), this.foodData.getFoodLevel(), this.foodData.getSaturationLevel()));
-+            if (this.getHealth() != this.lastHealthSent || this.cc != this.foodData.getFoodLevel() || this.foodData.getSaturationLevel() == 0.0F != this.cd) {
 +                this.playerConnection.sendPacket(new PacketPlayOutUpdateHealth(this.getBukkitEntity().getScaledHealth(), this.foodData.getFoodLevel(), this.foodData.getSaturationLevel())); // CraftBukkit
                  this.lastHealthSent = this.getHealth();
--                this.ch = this.foodData.getFoodLevel();
--                this.ci = this.foodData.getSaturationLevel() == 0.0F;
-+                this.cc = this.foodData.getFoodLevel();
-+                this.cd = this.foodData.getSaturationLevel() == 0.0F;
-+            }
-+
-+            if (this.getHealth() + this.getAbsorptionHearts() != this.bV) {
-+                this.bV = this.getHealth() + this.getAbsorptionHearts();
-+                this.a(IScoreboardCriteria.g, MathHelper.f(this.bV));
+                 this.ch = this.foodData.getFoodLevel();
+                 this.ci = this.foodData.getSaturationLevel() == 0.0F;
+@@ -270,6 +508,12 @@
+                 this.a(IScoreboardCriteria.i, MathHelper.f((float) this.cc));
              }
  
--            if (this.getHealth() + this.getAbsorptionHearts() != this.ca) {
--                this.ca = this.getHealth() + this.getAbsorptionHearts();
--                this.a(IScoreboardCriteria.g, MathHelper.f(this.ca));
-+            if (this.foodData.getFoodLevel() != this.bW) {
-+                this.bW = this.foodData.getFoodLevel();
-+                this.a(IScoreboardCriteria.h, MathHelper.f((float) this.bW));
-             }
- 
--            if (this.foodData.getFoodLevel() != this.cb) {
--                this.cb = this.foodData.getFoodLevel();
--                this.a(IScoreboardCriteria.h, MathHelper.f((float) this.cb));
-+            if (this.getAirTicks() != this.bX) {
-+                this.bX = this.getAirTicks();
-+                this.a(IScoreboardCriteria.i, MathHelper.f((float) this.bX));
-             }
- 
--            if (this.getAirTicks() != this.cc) {
--                this.cc = this.getAirTicks();
--                this.a(IScoreboardCriteria.i, MathHelper.f((float) this.cc));
 +            // CraftBukkit start - Force max health updates
 +            if (this.maxHealthCache != this.getMaxHealth()) {
 +                this.getBukkitEntity().updateScaledHealth();
-             }
++            }
 +            // CraftBukkit end
- 
--            if (this.getArmorStrength() != this.cd) {
--                this.cd = this.getArmorStrength();
--                this.a(IScoreboardCriteria.j, MathHelper.f((float) this.cd));
-+            if (this.getArmorStrength() != this.bY) {
-+                this.bY = this.getArmorStrength();
-+                this.a(IScoreboardCriteria.j, MathHelper.f((float) this.bY));
-             }
- 
--            if (this.expTotal != this.cf) {
--                this.cf = this.expTotal;
--                this.a(IScoreboardCriteria.k, MathHelper.f((float) this.cf));
-+            if (this.expTotal != this.ca) {
-+                this.ca = this.expTotal;
-+                this.a(IScoreboardCriteria.k, MathHelper.f((float) this.ca));
-             }
- 
--            if (this.expLevel != this.ce) {
--                this.ce = this.expLevel;
--                this.a(IScoreboardCriteria.l, MathHelper.f((float) this.ce));
-+            if (this.expLevel != this.bZ) {
-+                this.bZ = this.expLevel;
-+                this.a(IScoreboardCriteria.l, MathHelper.f((float) this.bZ));
-             }
- 
-             if (this.expTotal != this.lastSentExp) {
-@@ -290,76 +493,156 @@
-                 this.playerConnection.sendPacket(new PacketPlayOutExperience(this.exp, this.expTotal, this.expLevel));
-             }
- 
--            if (this.ticksLived % 20 == 0) {
--                CriterionTriggers.o.a(this);
-+            if (this.ticksLived % 100 == 0 && !this.getStatisticManager().hasAchievement(AchievementList.L)) {
-+                this.o();
++
+             if (this.getArmorStrength() != this.cd) {
+                 this.cd = this.getArmorStrength();
+                 this.a(IScoreboardCriteria.j, MathHelper.f((float) this.cd));
+@@ -294,22 +538,35 @@
+                 CriterionTriggers.o.a(this);
              }
  
 +            // CraftBukkit start - initialize oldLevel and fire PlayerLevelChangeEvent
@@ -559,63 +361,22 @@
  
              scoreboardscore.setScore(i);
          }
- 
-     }
- 
-+    protected void o() {
-+        BiomeBase biomebase = this.world.getBiome(new BlockPosition(MathHelper.floor(this.locX), 0, MathHelper.floor(this.locZ)));
-+        String s = biomebase.l();
-+        AchievementSet achievementset = (AchievementSet) this.getStatisticManager().b((Statistic) AchievementList.L);
-+
-+        if (achievementset == null) {
-+            achievementset = (AchievementSet) this.getStatisticManager().a(AchievementList.L, new AchievementSet());
-+        }
-+
-+        achievementset.add(s);
-+        if (this.getStatisticManager().b(AchievementList.L) && achievementset.size() >= BiomeBase.i.size()) {
-+            HashSet hashset = Sets.newHashSet(BiomeBase.i);
-+            Iterator iterator = achievementset.iterator();
-+
-+            while (iterator.hasNext()) {
-+                String s1 = (String) iterator.next();
-+                Iterator iterator1 = hashset.iterator();
-+
-+                while (iterator1.hasNext()) {
-+                    BiomeBase biomebase1 = (BiomeBase) iterator1.next();
-+
-+                    if (biomebase1.l().equals(s1)) {
-+                        iterator1.remove();
-+                    }
-+                }
-+
-+                if (hashset.isEmpty()) {
-+                    break;
-+                }
-+            }
-+
-+            if (hashset.isEmpty()) {
-+                this.b((Statistic) AchievementList.L);
-+            }
-+        }
-+
-+    }
-+
-     public void die(DamageSource damagesource) {
+@@ -320,39 +577,69 @@
          boolean flag = this.world.getGameRules().getBoolean("showDeathMessages");
  
          this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.ENTITY_DIED, flag));
 -        if (flag) {
--            ScoreboardTeamBase scoreboardteambase = this.aW();
+-            ScoreboardTeamBase scoreboardteambase = this.aY();
 +        // CraftBukkit start - fire PlayerDeathEvent
 +        if (this.dead) {
 +            return;
 +        }
 +        java.util.List<org.bukkit.inventory.ItemStack> loot = new java.util.ArrayList<org.bukkit.inventory.ItemStack>(this.inventory.getSize());
-+        boolean keepInventory = this.world.getGameRules().getBoolean("keepInventory");
++        boolean keepInventory = this.world.getGameRules().getBoolean("keepInventory") || this.isSpectator();
 +
 +        if (!keepInventory) {
 +            for (ItemStack item : this.inventory.getContents()) {
-+                if (!item.isEmpty() && !EnchantmentManager.e(item)) { // PAIL: shouldNotDrop (Vanishing enchant)
++                if (!item.isEmpty() && !EnchantmentManager.shouldNotDrop(item)) {
 +                    loot.add(CraftItemStack.asCraftMirror(item));
 +                }
 +            }
@@ -635,7 +396,7 @@
 +
 +        if (deathMessage != null && deathMessage.length() > 0 && flag) { // TODO: allow plugins to override?
 +            if (deathMessage.equals(deathmessage)) {
-+                ScoreboardTeamBase scoreboardteambase = this.aQ();
++                ScoreboardTeamBase scoreboardteambase = this.aY();
 +
 +                if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != ScoreboardTeamBase.EnumNameTagVisibility.ALWAYS) {
 +                    if (scoreboardteambase.getDeathMessageVisibility() == ScoreboardTeamBase.EnumNameTagVisibility.HIDE_FOR_OTHER_TEAMS) {
@@ -652,9 +413,9 @@
              }
          }
  
--        this.releaseShoulderEntities();
+         this.releaseShoulderEntities();
 -        if (!this.world.getGameRules().getBoolean("keepInventory") && !this.isSpectator()) {
--            this.cT();
+-            this.cV();
 -            this.inventory.o();
 +        // we clean the player's inventory after the EntityDeathEvent is called so plugins can get the exact state of the inventory.
 +        if (!event.getKeepInventory()) {
@@ -678,88 +439,69 @@
              scoreboardscore.incrementScore();
          }
  
--        EntityLiving entityliving = this.cg();
-+        EntityLiving entityliving = this.ca();
+         EntityLiving entityliving = this.ci();
  
 -        if (entityliving != null) {
 +        if (entityliving != null && damagesource != DamageSource.GENERIC) { // SportBukkit - can't have a combat tracked killer with a generic damage source
              EntityTypes.MonsterEggInfo entitytypes_monsteregginfo = (EntityTypes.MonsterEggInfo) EntityTypes.eggInfo.get(EntityTypes.a((Entity) entityliving));
  
              if (entitytypes_monsteregginfo != null) {
-                 this.b(entitytypes_monsteregginfo.killedByEntityStatistic);
+@@ -373,29 +660,36 @@
+         if (entity != this) {
+             super.a(entity, i, damagesource);
+             this.addScore(i);
+-            Collection collection = this.getScoreboard().getObjectivesForCriteria(IScoreboardCriteria.f);
++            // CraftBukkit - Get our scores instead
++            Collection<ScoreboardScore> collection = this.world.getServer().getScoreboardManager().getScoreboardScores(IScoreboardCriteria.f, this.getName(), new java.util.ArrayList<ScoreboardScore>());
+ 
+             if (entity instanceof EntityHuman) {
+                 this.b(StatisticList.D);
+-                collection.addAll(this.getScoreboard().getObjectivesForCriteria(IScoreboardCriteria.e));
++                // CraftBukkit - Get our scores instead
++                this.world.getServer().getScoreboardManager().getScoreboardScores(IScoreboardCriteria.e, this.getName(), collection);
++                // collection.addAll(this.getScoreboard().getObjectivesForCriteria(IScoreboardCriteria.e));
++                // CraftBukkit end
+             } else {
+                 this.b(StatisticList.B);
              }
  
--            entityliving.a(this, this.bb, damagesource);
-+            entityliving.b(this, this.bb);
-         }
+             collection.addAll(this.E(entity));
+-            Iterator iterator = collection.iterator();
++            Iterator<ScoreboardScore> iterator = collection.iterator(); // CraftBukkit
  
-         this.b(StatisticList.A);
-@@ -369,64 +652,6 @@
-         this.getCombatTracker().g();
+             while (iterator.hasNext()) {
+-                ScoreboardObjective scoreboardobjective = (ScoreboardObjective) iterator.next();
++                // CraftBukkit start
++                // ScoreboardObjective scoreboardobjective = (ScoreboardObjective) iterator.next();
+ 
+-                this.getScoreboard().getPlayerScoreForObjective(this.getName(), scoreboardobjective).incrementScore();
++                // this.getScoreboard().getPlayerScoreForObjective(this.getName(), scoreboardobjective).incrementScore();
++                iterator.next().incrementScore();
++                // CraftBukkit end
+             }
+ 
+             CriterionTriggers.b.a(this, entity, damagesource);
+         }
      }
  
--    public void a(Entity entity, int i, DamageSource damagesource) {
--        if (entity != this) {
--            super.a(entity, i, damagesource);
--            this.addScore(i);
--            Collection collection = this.getScoreboard().getObjectivesForCriteria(IScoreboardCriteria.f);
--
--            if (entity instanceof EntityHuman) {
--                this.b(StatisticList.D);
--                collection.addAll(this.getScoreboard().getObjectivesForCriteria(IScoreboardCriteria.e));
--            } else {
--                this.b(StatisticList.B);
--            }
--
--            collection.addAll(this.E(entity));
--            Iterator iterator = collection.iterator();
--
--            while (iterator.hasNext()) {
--                ScoreboardObjective scoreboardobjective = (ScoreboardObjective) iterator.next();
--
--                this.getScoreboard().getPlayerScoreForObjective(this.getName(), scoreboardobjective).incrementScore();
--            }
--
--            CriterionTriggers.b.a(this, entity, damagesource);
--        }
--    }
--
 -    private Collection<ScoreboardObjective> E(Entity entity) {
--        String s = entity instanceof EntityHuman ? entity.getName() : entity.bl();
--        ScoreboardTeam scoreboardteam = this.getScoreboard().getPlayerTeam(this.getName());
--
--        if (scoreboardteam != null) {
--            int i = scoreboardteam.getColor().b();
--
--            if (i >= 0 && i < IScoreboardCriteria.n.length) {
--                Iterator iterator = this.getScoreboard().getObjectivesForCriteria(IScoreboardCriteria.n[i]).iterator();
--
--                while (iterator.hasNext()) {
--                    ScoreboardObjective scoreboardobjective = (ScoreboardObjective) iterator.next();
--                    ScoreboardScore scoreboardscore = this.getScoreboard().getPlayerScoreForObjective(s, scoreboardobjective);
--
--                    scoreboardscore.incrementScore();
--                }
--            }
--        }
--
--        ScoreboardTeam scoreboardteam1 = this.getScoreboard().getPlayerTeam(s);
--
--        if (scoreboardteam1 != null) {
--            int j = scoreboardteam1.getColor().b();
--
--            if (j >= 0 && j < IScoreboardCriteria.m.length) {
++    private Collection<ScoreboardScore> E(Entity entity) { // CraftBukkit
+         String s = entity instanceof EntityHuman ? entity.getName() : entity.bn();
+         ScoreboardTeam scoreboardteam = this.getScoreboard().getPlayerTeam(this.getName());
+ 
+@@ -420,7 +714,10 @@
+             int j = scoreboardteam1.getColor().b();
+ 
+             if (j >= 0 && j < IScoreboardCriteria.m.length) {
 -                return this.getScoreboard().getObjectivesForCriteria(IScoreboardCriteria.m[j]);
--            }
--        }
--
--        return Lists.newArrayList();
--    }
--
-     public boolean damageEntity(DamageSource damagesource, float f) {
-         if (this.isInvulnerable(damagesource)) {
-             return false;
-@@ -436,7 +661,7 @@
++                // CraftBukkit - Get our scores instead
++                return this.world.getServer().getScoreboardManager().getScoreboardScores(IScoreboardCriteria.m[j], this.getName(), new java.util.ArrayList<ScoreboardScore>());
++                // return this.getScoreboard().getObjectivesForCriteria(IScoreboardCriteria.m[j]);
++                // CraftBukkit end
+             }
+         }
+ 
+@@ -436,7 +733,7 @@
              if (!flag && this.invulnerableTicks > 0 && damagesource != DamageSource.OUT_OF_WORLD) {
                  return false;
              } else {
@@ -768,7 +510,7 @@
                      Entity entity = damagesource.getEntity();
  
                      if (entity instanceof EntityHuman && !this.a((EntityHuman) entity)) {
-@@ -458,41 +683,48 @@
+@@ -458,16 +755,19 @@
      }
  
      public boolean a(EntityHuman entityhuman) {
@@ -783,38 +525,23 @@
      }
  
      @Nullable
--    public Entity b(int i) {
+     public Entity b(int i) {
 -        this.worldChangeInvuln = true;
--        if (this.dimension == 0 && i == -1) {
--            this.cv = new Vec3D(this.locX, this.locY, this.locZ);
--        } else if (this.dimension != -1 && i != 0) {
--            this.cv = null;
--        }
--
-+    public Entity c(int i) {
++        if (this.isSleeping()) return this; // CraftBukkit - SPIGOT-3154
 +        // this.worldChangeInvuln = true; // CraftBukkit - Moved down and into PlayerList#changeDimension
+         if (this.dimension == 0 && i == -1) {
+             this.cv = new Vec3D(this.locX, this.locY, this.locZ);
+         } else if (this.dimension != -1 && i != 0) {
+@@ -475,6 +775,7 @@
+         }
+ 
          if (this.dimension == 1 && i == 1) {
 +            this.worldChangeInvuln = true; // CraftBukkit - Moved down from above
              this.world.kill(this);
              if (!this.viewingCredits) {
                  this.viewingCredits = true;
--                this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, this.cq ? 0.0F : 1.0F));
--                this.cq = true;
-+                if (this.a(AchievementList.D)) {
-+                    this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, 0.0F));
-+                } else {
-+                    this.b((Statistic) AchievementList.D);
-+                    this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(4, 1.0F));
-+                }
-             }
- 
-             return this;
-         } else {
-             if (this.dimension == 0 && i == 1) {
-+                this.b((Statistic) AchievementList.C);
+@@ -488,7 +789,10 @@
                  i = 1;
-+            } else {
-+                this.b((Statistic) AchievementList.y);
              }
  
 -            this.server.getPlayerList().a(this, i);
@@ -825,19 +552,7 @@
              this.playerConnection.sendPacket(new PacketPlayOutWorldEvent(1032, BlockPosition.ZERO, 0, false));
              this.lastSentExp = -1;
              this.lastHealthSent = -1.0F;
--            this.ch = -1;
-+            this.cc = -1;
-             return this;
-         }
-     }
-@@ -527,13 +759,13 @@
-             this.x().getTracker().a((Entity) this, (Packet) packetplayoutbed);
-             this.playerConnection.a(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
-             this.playerConnection.sendPacket(packetplayoutbed);
--            CriterionTriggers.p.a(this);
-         }
- 
-         return entityhuman_enumbedresult;
+@@ -534,6 +838,7 @@
      }
  
      public void a(boolean flag, boolean flag1, boolean flag2) {
@@ -845,44 +560,7 @@
          if (this.isSleeping()) {
              this.x().getTracker().sendPacketToEntity(this, new PacketPlayOutAnimation(this, 2));
          }
-@@ -546,12 +778,12 @@
-     }
- 
-     public boolean a(Entity entity, boolean flag) {
--        Entity entity1 = this.bH();
-+        Entity entity1 = this.bB();
- 
-         if (!super.a(entity, flag)) {
-             return false;
-         } else {
--            Entity entity2 = this.bH();
-+            Entity entity2 = this.bB();
- 
-             if (entity2 != entity1 && this.playerConnection != null) {
-                 this.playerConnection.a(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
-@@ -562,10 +794,10 @@
-     }
- 
-     public void stopRiding() {
--        Entity entity = this.bH();
-+        Entity entity = this.bB();
- 
-         super.stopRiding();
--        Entity entity1 = this.bH();
-+        Entity entity1 = this.bB();
- 
-         if (entity1 != entity && this.playerConnection != null) {
-             this.playerConnection.a(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
-@@ -574,7 +806,7 @@
-     }
- 
-     public boolean isInvulnerable(DamageSource damagesource) {
--        return super.isInvulnerable(damagesource) || this.L();
-+        return super.isInvulnerable(damagesource) || this.K();
-     }
- 
-     protected void a(double d0, boolean flag, IBlockData iblockdata, BlockPosition blockposition) {}
-@@ -612,23 +844,52 @@
+@@ -612,23 +917,55 @@
          this.playerConnection.sendPacket(new PacketPlayOutOpenSignEditor(tileentitysign.getPosition()));
      }
  
@@ -904,9 +582,9 @@
 +                return;
 +            }
              this.nextContainerCounter();
++            this.activeContainer = container;
              this.playerConnection.sendPacket(new PacketPlayOutOpenWindow(this.containerCounter, itileentitycontainer.getContainerName(), itileentitycontainer.getScoreboardDisplayName()));
 -            this.activeContainer = itileentitycontainer.createContainer(this.inventory, this);
-+            this.activeContainer = container;
 +            // CraftBukkit end
              this.activeContainer.windowId = this.containerCounter;
              this.activeContainer.addSlotListener(this);
@@ -924,6 +602,9 @@
 +
 +        Container container;
 +        if (iinventory instanceof ITileEntityContainer) {
++            if (iinventory instanceof TileEntity) {
++                Preconditions.checkArgument(((TileEntity) iinventory).getWorld() != null, "Container must have world to be opened");
++            }
 +            container = ((ITileEntityContainer) iinventory).createContainer(this.inventory, this);
 +        } else {
 +            container = new ContainerChest(this.inventory, iinventory, this);
@@ -938,14 +619,10 @@
          if (iinventory instanceof ILootable && ((ILootable) iinventory).b() != null && this.isSpectator()) {
              this.a((new ChatMessage("container.spectatorCantOpen", new Object[0])).setChatModifier((new ChatModifier()).setColor(EnumChatFormat.RED)), true);
          } else {
-@@ -640,20 +901,23 @@
-                 ITileInventory itileinventory = (ITileInventory) iinventory;
- 
+@@ -642,18 +979,21 @@
                  if (itileinventory.isLocked() && !this.a(itileinventory.getLock()) && !this.isSpectator()) {
--                    this.playerConnection.sendPacket(new PacketPlayOutChat(new ChatMessage("container.isLocked", new Object[] { iinventory.getScoreboardDisplayName()}), ChatMessageType.GAME_INFO));
--                    this.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect(SoundEffects.ab, SoundCategory.BLOCKS, this.locX, this.locY, this.locZ, 1.0F, 1.0F));
-+                    this.playerConnection.sendPacket(new PacketPlayOutChat(new ChatMessage("container.isLocked", new Object[] { iinventory.getScoreboardDisplayName()}), (byte) 2));
-+                    this.playerConnection.sendPacket(new PacketPlayOutCustomSoundEffect(SoundEffects.Y, SoundCategory.BLOCKS, this.locX, this.locY, this.locZ, 1.0F, 1.0F)); // SportBukkit - use named sounds
+                     this.playerConnection.sendPacket(new PacketPlayOutChat(new ChatMessage("container.isLocked", new Object[] { iinventory.getScoreboardDisplayName()}), ChatMessageType.GAME_INFO));
+                     this.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect(SoundEffects.ab, SoundCategory.BLOCKS, this.locX, this.locY, this.locZ, 1.0F, 1.0F));
 +                    iinventory.closeContainer(this); // CraftBukkit
                      return;
                  }
@@ -966,7 +643,7 @@
  
              this.activeContainer.windowId = this.containerCounter;
              this.activeContainer.addSlotListener(this);
-@@ -661,8 +925,14 @@
+@@ -661,8 +1001,14 @@
      }
  
      public void openTrade(IMerchant imerchant) {
@@ -982,7 +659,7 @@
          this.activeContainer.windowId = this.containerCounter;
          this.activeContainer.addSlotListener(this);
          InventoryMerchant inventorymerchant = ((ContainerMerchant) this.activeContainer).e();
-@@ -682,13 +952,20 @@
+@@ -682,13 +1028,20 @@
      }
  
      public void openHorseInventory(EntityHorseAbstract entityhorseabstract, IInventory iinventory) {
@@ -1004,25 +681,7 @@
          this.activeContainer.windowId = this.containerCounter;
          this.activeContainer.addSlotListener(this);
      }
-@@ -706,16 +983,12 @@
-     }
- 
-     public void a(TileEntityCommand tileentitycommand) {
--        tileentitycommand.c(true);
-+        tileentitycommand.d(true);
-         this.a((TileEntity) tileentitycommand);
-     }
- 
-     public void a(Container container, int i, ItemStack itemstack) {
-         if (!(container.getSlot(i) instanceof SlotResult)) {
--            if (container == this.defaultContainer) {
--                CriterionTriggers.e.a(this, this.inventory);
--            }
--
-             if (!this.f) {
-                 this.playerConnection.sendPacket(new PacketPlayOutSetSlot(container.windowId, i, itemstack));
-             }
-@@ -729,6 +1002,11 @@
+@@ -729,6 +1082,11 @@
      public void a(Container container, NonNullList<ItemStack> nonnulllist) {
          this.playerConnection.sendPacket(new PacketPlayOutWindowItems(container.windowId, nonnulllist));
          this.playerConnection.sendPacket(new PacketPlayOutSetSlot(-1, -1, this.inventory.getCarried()));
@@ -1034,119 +693,34 @@
      }
  
      public void setContainerData(Container container, int i, int j) {
-@@ -743,8 +1021,9 @@
+@@ -743,6 +1101,7 @@
      }
  
      public void closeInventory() {
 +        CraftEventFactory.handleInventoryCloseEvent(this); // CraftBukkit
          this.playerConnection.sendPacket(new PacketPlayOutCloseWindow(this.activeContainer.windowId));
--        this.r();
-+        this.s();
+         this.r();
      }
+@@ -814,10 +1173,16 @@
+         for (int j = 0; j < i; ++j) {
+             MinecraftKey minecraftkey = aminecraftkey1[j];
  
-     public void broadcastCarriedItem() {
-@@ -753,7 +1032,7 @@
-         }
-     }
- 
--    public void r() {
-+    public void s() {
-         this.activeContainer.b((EntityHuman) this);
-         this.activeContainer = this.defaultContainer;
-     }
-@@ -765,7 +1044,7 @@
-             }
- 
-             if (f1 >= -1.0F && f1 <= 1.0F) {
--                this.bg = f1;
-+                this.bf = f1;
-             }
- 
-             this.bd = flag;
-@@ -774,10 +1053,14 @@
- 
-     }
- 
-+    public boolean a(Achievement achievement) {
-+        return this.bU.hasAchievement(achievement);
-+    }
-+
-     public void a(Statistic statistic, int i) {
-         if (statistic != null) {
--            this.bZ.b(this, statistic, i);
--            Iterator iterator = this.getScoreboard().getObjectivesForCriteria(statistic.f()).iterator();
-+            this.bU.b(this, statistic, i);
-+            Iterator iterator = this.getScoreboard().getObjectivesForCriteria(statistic.k()).iterator();
- 
-             while (iterator.hasNext()) {
-                 ScoreboardObjective scoreboardobjective = (ScoreboardObjective) iterator.next();
-@@ -785,13 +1068,17 @@
-                 this.getScoreboard().getPlayerScoreForObjective(this.getName(), scoreboardobjective).addScore(i);
-             }
- 
-+            if (this.bU.e()) {
-+                this.bU.a(this);
++            // CraftBukkit start
++            if (CraftingManager.a(minecraftkey) == null) {
++                Bukkit.getLogger().warning("Ignoring grant of non existent recipe " + minecraftkey);
++                continue;
 +            }
-+
++            // CraftBukit end
+             arraylist.add(CraftingManager.a(minecraftkey));
          }
-     }
  
-     public void a(Statistic statistic) {
-         if (statistic != null) {
--            this.bZ.setStatistic(this, statistic, 0);
--            Iterator iterator = this.getScoreboard().getObjectivesForCriteria(statistic.f()).iterator();
-+            this.bU.setStatistic(this, statistic, 0);
-+            Iterator iterator = this.getScoreboard().getObjectivesForCriteria(statistic.k()).iterator();
- 
-             while (iterator.hasNext()) {
-                 ScoreboardObjective scoreboardobjective = (ScoreboardObjective) iterator.next();
-@@ -799,50 +1086,36 @@
-                 this.getScoreboard().getPlayerScoreForObjective(this.getName(), scoreboardobjective).setScore(0);
-             }
- 
--        }
--    }
--
--    public void a(List<IRecipe> list) {
--        this.cr.a(list, this);
--    }
--
--    public void a(MinecraftKey[] aminecraftkey) {
--        ArrayList arraylist = Lists.newArrayList();
--        MinecraftKey[] aminecraftkey1 = aminecraftkey;
--        int i = aminecraftkey.length;
--
--        for (int j = 0; j < i; ++j) {
--            MinecraftKey minecraftkey = aminecraftkey1[j];
-+            if (this.bU.e()) {
-+                this.bU.a(this);
-+            }
- 
--            arraylist.add(CraftingManager.a(minecraftkey));
-         }
--
 -        this.a((List) arraylist);
++        this.a((List<IRecipe>) arraylist); // CraftBukkit - decompile error
      }
  
--    public void b(List<IRecipe> list) {
--        this.cr.b(list, this);
--    }
--
--    public void s() {
--        this.cu = true;
--        this.ejectPassengers();
-+    public void t() {
-+        this.az();
-         if (this.sleeping) {
-             this.a(true, false, false);
-         }
+     public void b(List<IRecipe> list) {
+@@ -839,7 +1204,16 @@
  
-     }
- 
--    public boolean t() {
--        return this.cu;
--    }
--
      public void triggerHealthUpdate() {
          this.lastHealthSent = -1.0E8F;
 +        this.lastSentExp = -1; // CraftBukkit - Added to reset
@@ -1161,77 +735,25 @@
 +    // CraftBukkit end
  
      public void a(IChatBaseComponent ichatbasecomponent, boolean flag) {
--        this.playerConnection.sendPacket(new PacketPlayOutChat(ichatbasecomponent, flag ? ChatMessageType.GAME_INFO : ChatMessageType.CHAT));
-+        this.playerConnection.sendPacket(new PacketPlayOutChat(ichatbasecomponent, (byte) (flag ? 2 : 0)));
-     }
+         this.playerConnection.sendPacket(new PacketPlayOutChat(ichatbasecomponent, flag ? ChatMessageType.GAME_INFO : ChatMessageType.CHAT));
+@@ -875,11 +1249,11 @@
  
-     protected void v() {
-@@ -853,66 +1126,41 @@
- 
-     }
- 
--    public void copyFrom(EntityPlayer entityplayer, boolean flag) {
--        if (flag) {
--            this.inventory.a(entityplayer.inventory);
--            this.setHealth(entityplayer.getHealth());
--            this.foodData = entityplayer.foodData;
--            this.expLevel = entityplayer.expLevel;
--            this.expTotal = entityplayer.expTotal;
--            this.exp = entityplayer.exp;
--            this.setScore(entityplayer.getScore());
--            this.an = entityplayer.an;
--            this.ao = entityplayer.ao;
--            this.ap = entityplayer.ap;
--        } else if (this.world.getGameRules().getBoolean("keepInventory") || entityplayer.isSpectator()) {
--            this.inventory.a(entityplayer.inventory);
--            this.expLevel = entityplayer.expLevel;
--            this.expTotal = entityplayer.expTotal;
--            this.exp = entityplayer.exp;
--            this.setScore(entityplayer.getScore());
--        }
--
--        this.bS = entityplayer.bS;
--        this.enderChest = entityplayer.enderChest;
+         this.bS = entityplayer.bS;
+         this.enderChest = entityplayer.enderChest;
 -        this.getDataWatcher().set(EntityPlayer.br, entityplayer.getDataWatcher().get(EntityPlayer.br));
-+    public void copyTo(EntityHuman entityhuman, boolean flag) {
-+        super.copyTo(entityhuman, flag);
++        this.getDataWatcher().set(EntityPlayer.bq, entityplayer.getDataWatcher().get(EntityPlayer.bq));
          this.lastSentExp = -1;
          this.lastHealthSent = -1.0F;
--        this.ch = -1;
+         this.ch = -1;
 -        this.cr.a((RecipeBook) entityplayer.cr);
--        this.removeQueue.addAll(entityplayer.removeQueue);
--        this.cq = entityplayer.cq;
--        this.cv = entityplayer.cv;
--        this.setShoulderEntityLeft(entityplayer.getShoulderEntityLeft());
--        this.setShoulderEntityRight(entityplayer.getShoulderEntityRight());
-+        this.cc = -1;
-+        this.removeQueue.addAll(((EntityPlayer) entityhuman).removeQueue);
++        // this.cr.a((RecipeBook) entityplayer.cr); // CraftBukkit
+         this.removeQueue.addAll(entityplayer.removeQueue);
+         this.cq = entityplayer.cq;
+         this.cv = entityplayer.cv;
+@@ -914,6 +1288,19 @@
+         CriterionTriggers.z.a(this);
      }
  
-     protected void a(MobEffect mobeffect) {
-         super.a(mobeffect);
-         this.playerConnection.sendPacket(new PacketPlayOutEntityEffect(this.getId(), mobeffect));
--        if (mobeffect.getMobEffect() == MobEffects.LEVITATION) {
--            this.ct = this.ticksLived;
--            this.cs = new Vec3D(this.locX, this.locY, this.locZ);
--        }
--
--        CriterionTriggers.z.a(this);
-     }
- 
-     protected void a(MobEffect mobeffect, boolean flag) {
-         super.a(mobeffect, flag);
-         this.playerConnection.sendPacket(new PacketPlayOutEntityEffect(this.getId(), mobeffect));
--        CriterionTriggers.z.a(this);
-     }
- 
-     protected void b(MobEffect mobeffect) {
-         super.b(mobeffect);
-         this.playerConnection.sendPacket(new PacketPlayOutRemoveEntityEffect(this.getId(), mobeffect.getMobEffect()));
--        if (mobeffect.getMobEffect() == MobEffects.LEVITATION) {
--            this.cs = null;
-+    }
-+
 +    // SportBukkit start - refresh effects while paused to keep time in sync
 +    @Override
 +    protected void tickPotionEffects() {
@@ -1239,47 +761,35 @@
 +            for(MobEffect effect : this.getEffects()) {
 +                this.playerConnection.sendPacket(new PacketPlayOutEntityEffect(this.getId(), effect));
 +            }
-         }
++        }
 +        super.tickPotionEffects();
- 
--        CriterionTriggers.z.a(this);
-     }
++
++    }
 +    // SportBukkit end
- 
++
      public void enderTeleportTo(double d0, double d1, double d2) {
          this.playerConnection.a(d0, d1, d2, this.yaw, this.pitch);
-@@ -929,7 +1177,7 @@
-     public void updateAbilities() {
-         if (this.playerConnection != null) {
-             this.playerConnection.sendPacket(new PacketPlayOutAbilities(this.abilities));
--            this.G();
-+            this.F();
-         }
      }
- 
-@@ -938,17 +1186,19 @@
+@@ -938,6 +1325,18 @@
      }
  
      public void a(EnumGamemode enumgamemode) {
-+        getBukkitEntity().setGameMode(org.bukkit.GameMode.getByValue(enumgamemode.getId()));
-+        /* CraftBukkit start - defer to our setGameMode
++        // CraftBukkit start
++        if (enumgamemode == this.playerInteractManager.getGameMode()) {
++            return;
++        }
++
++        PlayerGameModeChangeEvent event = new PlayerGameModeChangeEvent(getBukkitEntity(), GameMode.getByValue(enumgamemode.getId()));
++        world.getServer().getPluginManager().callEvent(event);
++        if (event.isCancelled()) {
++            return;
++        }
++        // CraftBukkit end
++
          this.playerInteractManager.setGameMode(enumgamemode);
          this.playerConnection.sendPacket(new PacketPlayOutGameStateChange(3, (float) enumgamemode.getId()));
          if (enumgamemode == EnumGamemode.SPECTATOR) {
--            this.releaseShoulderEntities();
-             this.stopRiding();
-         } else {
-             this.setSpectatorTarget(this);
-         }
- 
-         this.updateAbilities();
--        this.cC();
-+        this.cw();
-+        // CraftBukkit end */
-     }
- 
-     public boolean isSpectator() {
-@@ -964,6 +1214,7 @@
+@@ -964,6 +1363,7 @@
      }
  
      public boolean a(int i, String s) {
@@ -1287,7 +797,7 @@
          if ("seed".equals(s) && !this.server.aa()) {
              return true;
          } else if (!"tell".equals(s) && !"help".equals(s) && !"me".equals(s) && !"trigger".equals(s)) {
-@@ -977,6 +1228,15 @@
+@@ -977,6 +1377,15 @@
          } else {
              return true;
          }
@@ -1303,7 +813,7 @@
      }
  
      public String A() {
-@@ -988,15 +1248,37 @@
+@@ -988,11 +1397,33 @@
      }
  
      public void a(PacketPlayInSettings packetplayinsettings) {
@@ -1315,10 +825,6 @@
 +        // CraftBukkit end
 +        String oldLocale = this.locale; // SportBukkit
          this.locale = packetplayinsettings.a();
--        this.cl = packetplayinsettings.c();
--        this.cm = packetplayinsettings.d();
--        this.getDataWatcher().set(EntityPlayer.br, Byte.valueOf((byte) packetplayinsettings.e()));
--        this.getDataWatcher().set(EntityPlayer.bs, Byte.valueOf((byte) (packetplayinsettings.getMainHand() == EnumMainHand.LEFT ? 0 : 1)));
 +        // SportBukkit start - add PlayerLocaleChangeEvent
 +        // Since the field is initialized to null, this event should always fire the first time the packet is received
 +        if (!this.locale.equals(oldLocale)) {
@@ -1326,10 +832,11 @@
 +        }
 +        // SportBukkit end
 +
-+        this.cg = packetplayinsettings.c();
-+        this.ch = packetplayinsettings.d();
-+        // this.getDataWatcher().set(EntityPlayer.bq, Byte.valueOf((byte) packetplayinsettings.e())); SportBukkit - move this below
-+        this.getDataWatcher().set(EntityPlayer.br, Byte.valueOf((byte) (packetplayinsettings.getMainHand() == EnumMainHand.LEFT ? 0 : 1)));
+         this.cl = packetplayinsettings.c();
+         this.cm = packetplayinsettings.d();
+-        this.getDataWatcher().set(EntityPlayer.br, Byte.valueOf((byte) packetplayinsettings.e()));
++        //this.getDataWatcher().set(EntityPlayer.br, Byte.valueOf((byte) packetplayinsettings.e()));
+         this.getDataWatcher().set(EntityPlayer.bs, Byte.valueOf((byte) (packetplayinsettings.getMainHand() == EnumMainHand.LEFT ? 0 : 1)));
 +
 +        // SportBukkit start - skin parts event
 +        int skinFlags = (int) datawatcher.get(EntityPlayer.SKIN_PARTS);
@@ -1341,81 +848,16 @@
      }
  
      public EntityHuman.EnumChatVisibility getChatFlags() {
--        return this.cl;
-+        return this.cg;
-     }
- 
-     public void setResourcePack(String s, String s1) {
-@@ -1008,15 +1290,11 @@
-     }
- 
-     public void resetIdleTimer() {
--        this.cn = MinecraftServer.aw();
-+        this.ci = MinecraftServer.aw();
-     }
- 
-     public ServerStatisticManager getStatisticManager() {
--        return this.bZ;
--    }
--
--    public RecipeBookServer F() {
--        return this.cr;
-+        return this.bU;
-     }
- 
-     public void c(Entity entity) {
-@@ -1032,33 +1310,33 @@
-         this.removeQueue.remove(Integer.valueOf(entity.getId()));
-     }
- 
--    protected void G() {
-+    protected void F() {
-         if (this.isSpectator()) {
--            this.bW();
-+            this.bQ();
-             this.setInvisible(true);
-         } else {
--            super.G();
-+            super.F();
-         }
- 
-         this.x().getTracker().a(this);
-     }
- 
-     public Entity getSpecatorTarget() {
--        return (Entity) (this.co == null ? this : this.co);
-+        return (Entity) (this.cj == null ? this : this.cj);
-     }
- 
-     public void setSpectatorTarget(Entity entity) {
-         Entity entity1 = this.getSpecatorTarget();
- 
--        this.co = (Entity) (entity == null ? this : entity);
--        if (entity1 != this.co) {
--            this.playerConnection.sendPacket(new PacketPlayOutCamera(this.co));
+@@ -1053,7 +1484,7 @@
+         this.co = (Entity) (entity == null ? this : entity);
+         if (entity1 != this.co) {
+             this.playerConnection.sendPacket(new PacketPlayOutCamera(this.co));
 -            this.enderTeleportTo(this.co.locX, this.co.locY, this.co.locZ);
-+        this.cj = (Entity) (entity == null ? this : entity);
-+        if (entity1 != this.cj) {
-+            this.playerConnection.sendPacket(new PacketPlayOutCamera(this.cj));
-+            this.enderTeleportTo(this.cj.locX, this.cj.locY, this.cj.locZ);
++            this.playerConnection.a(this.co.locX, this.co.locY, this.co.locZ, this.yaw, this.pitch, TeleportCause.SPECTATE); // CraftBukkit
          }
  
      }
- 
--    protected void I() {
-+    protected void H() {
-         if (this.portalCooldown > 0 && !this.worldChangeInvuln) {
-             --this.portalCooldown;
-         }
-@@ -1074,43 +1352,188 @@
- 
-     }
- 
--    public long J() {
--        return this.cn;
-+    public long I() {
-+        return this.ci;
-     }
+@@ -1080,7 +1511,7 @@
  
      @Nullable
      public IChatBaseComponent getPlayerListName() {
@@ -1424,38 +866,28 @@
      }
  
      public void a(EnumHand enumhand) {
-         super.a(enumhand);
--        this.dq();
-+        this.dh();
+@@ -1097,12 +1528,17 @@
      }
  
--    public boolean L() {
-+    public boolean K() {
-         return this.worldChangeInvuln;
-     }
- 
--    public void M() {
-+    public void L() {
-         this.worldChangeInvuln = false;
-     }
- 
--    public void N() {
-+    public void M() {
+     public void N() {
 +        if (!CraftEventFactory.callToggleGlideEvent(this, true).isCancelled()) // CraftBukkit
          this.setFlag(7, true);
      }
  
--    public void O() {
--        this.setFlag(7, true);
--        this.setFlag(7, false);
-+    public void N() {
+     public void O() {
 +        // CraftBukkit start
 +        if (!CraftEventFactory.callToggleGlideEvent(this, false).isCancelled()) {
-+            this.setFlag(7, true);
-+            this.setFlag(7, false);
+         this.setFlag(7, true);
+         this.setFlag(7, false);
 +        }
 +        // CraftBukkit end
-+    }
+     }
+ 
+     public AdvancementDataPlayer getAdvancementData() {
+@@ -1113,4 +1549,154 @@
+     public Vec3D Q() {
+         return this.cv;
+     }
 +
 +    // CraftBukkit start - Add per-player time and weather.
 +    public long timeOffset = 0;
@@ -1469,19 +901,14 @@
 +            // Adds timeOffset to the beginning of this day.
 +            return this.world.getDayTime() - (this.world.getDayTime() % 24000) + this.timeOffset;
 +        }
-     }
- 
--    public AdvancementDataPlayer getAdvancementData() {
--        return this.bY;
++    }
++
 +    public WeatherType weather = null;
 +
 +    public WeatherType getPlayerWeather() {
 +        return this.weather;
-     }
- 
--    @Nullable
--    public Vec3D Q() {
--        return this.cv;
++    }
++
 +    public void setPlayerWeather(WeatherType type, boolean plugin) {
 +        if (!plugin && this.weather != null) {
 +            return;
@@ -1575,6 +1002,7 @@
 +        this.expTotal = this.newTotalExp;
 +        this.exp = 0;
 +        this.deathTicks = 0;
++        this.f(0); // PAIL: setArrowCount
 +        this.removeAllEffects();
 +        this.updateEffects = true;
 +
@@ -1608,6 +1036,6 @@
 +    @Override
 +    public Scoreboard getScoreboard() {
 +        return getBukkitEntity().getScoreboard().getHandle();
-     }
++    }
 +    // SportBukkit end
  }

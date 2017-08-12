@@ -58,7 +58,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b
  import java.util.ArrayList;
  import java.util.EnumMap;
  import java.util.List;
-@@ -1069,4 +1070,59 @@ public class CraftEventFactory {
+@@ -1071,4 +1072,59 @@ public class CraftEventFactory {
          Bukkit.getPluginManager().callEvent(event);
          return event;
      }

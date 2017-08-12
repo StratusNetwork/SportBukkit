@@ -11,6 +11,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.BookMeta;
 
 import com.google.common.base.Strings;
@@ -29,8 +30,9 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
     static final ItemMetaKey BOOK_PAGES = new ItemMetaKey("pages");
     static final ItemMetaKey RESOLVED = new ItemMetaKey("resolved");
     static final ItemMetaKey GENERATION = new ItemMetaKey("generation");
-    static final int MAX_PAGE_LENGTH = Short.MAX_VALUE; // TODO: Check me
-    static final int MAX_TITLE_LENGTH = 0xffff;
+    static final int MAX_PAGES = 50;
+    static final int MAX_PAGE_LENGTH = 320; // 256 limit + 64 characters to allow for psuedo colour codes
+    static final int MAX_TITLE_LENGTH = 32;
 
     protected String title;
     protected String author;
@@ -68,13 +70,13 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
         if (tag.hasKey(RESOLVED.NBT)) {
             resolved = tag.getBoolean(RESOLVED.NBT);
         }
-        
+
         if (tag.hasKey(GENERATION.NBT)) {
             generation = tag.getInt(GENERATION.NBT);
         }
 
         if (tag.hasKey(BOOK_PAGES.NBT) && handlePages) {
-            NBTTagList pages = tag.getList(BOOK_PAGES.NBT, 8);
+            NBTTagList pages = tag.getList(BOOK_PAGES.NBT, CraftMagicNumbers.NBT.TAG_STRING);
 
             for (int i = 0; i < pages.size(); i++) {
                 String page = pages.getString(i);
@@ -106,7 +108,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
                 }
             }
         }
-        
+
         generation = SerializableMeta.getObject(Integer.class, map, GENERATION.BUKKIT, true);
     }
 
@@ -235,6 +237,10 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
 
     public void addPage(final String... pages) {
         for (String page : pages) {
+            if (this.pages.size() >= MAX_PAGES) {
+                return;
+            }
+
             if (page == null) {
                 page = "";
             } else if (page.length() > MAX_PAGE_LENGTH) {
@@ -342,7 +348,7 @@ public class CraftMetaBook extends CraftMetaItem implements BookMeta {
             }
             builder.put(BOOK_PAGES.BUKKIT, pagesString);
         }
-        
+
         if (generation != null) {
             builder.put(GENERATION.BUKKIT, generation);
         }

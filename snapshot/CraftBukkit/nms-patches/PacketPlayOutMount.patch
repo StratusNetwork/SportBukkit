@@ -15,8 +15,8 @@
  
      public PacketPlayOutMount(Entity entity) {
          this.a = entity.getId();
--        List list = entity.bD();
-+        List list = entity.bx();
+-        List list = entity.bF();
++        List list = entity.bD();
  
          this.b = new int[list.size()];
  

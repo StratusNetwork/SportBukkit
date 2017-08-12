@@ -62,15 +62,6 @@
      public Chunk(World world, ChunkSnapshot chunksnapshot, int i, int j) {
          this(world, i, j);
          boolean flag = true;
-@@ -354,7 +393,7 @@
-     }
- 
-     public IBlockData a(final int i, final int j, final int k) {
--        if (this.world.N() == WorldType.DEBUG_ALL_BLOCK_STATES) {
-+        if (this.world.L() == WorldType.DEBUG_ALL_BLOCK_STATES) {
-             IBlockData iblockdata = null;
- 
-             if (j == 60) {
 @@ -467,7 +506,8 @@
                      }
                  }
@@ -80,15 +71,6 @@
 +                if (!this.world.isClientSide && block1 != block  && (!this.world.captureBlockStates || block instanceof BlockTileEntity)) {
                      block.onPlace(this.world, blockposition, iblockdata);
                  }
- 
-@@ -549,7 +589,7 @@
-         int j = MathHelper.floor(entity.locZ / 16.0D);
- 
-         if (i != this.locX || j != this.locZ) {
--            Chunk.e.warn("Wrong location! ({}, {}) should be ({}, {}), {}", Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(this.locX), Integer.valueOf(this.locZ), entity);
-+            Chunk.e.warn("Wrong location! ({}, {}) should be ({}, {}), {}", new Object[] { Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(this.locX), Integer.valueOf(this.locZ), entity});
-             entity.die();
-         }
  
 @@ -604,7 +644,15 @@
  
@@ -125,7 +107,7 @@
      public void d(BlockPosition blockposition) {
          if (this.j) {
              TileEntity tileentity = (TileEntity) this.tileEntities.remove(blockposition);
-@@ -681,14 +737,26 @@
+@@ -681,9 +737,21 @@
          int i = aentityslice.length;
  
          for (int j = 0; j < i; ++j) {
@@ -149,21 +131,6 @@
          }
  
      }
- 
--    public void markDirty() {
-+    public void e() {
-         this.s = true;
-     }
- 
-@@ -711,7 +779,7 @@
-                             list.add(entity1);
-                         }
- 
--                        Entity[] aentity = entity1.aZ();
-+                        Entity[] aentity = entity1.aT();
- 
-                         if (aentity != null) {
-                             Entity[] aentity1 = aentity;
 @@ -745,8 +813,8 @@
              while (iterator.hasNext()) {
                  Entity entity = (Entity) iterator.next();
@@ -211,17 +178,10 @@
          Chunk chunk = ichunkprovider.getLoadedChunkAt(this.locX, this.locZ - 1);
          Chunk chunk1 = ichunkprovider.getLoadedChunkAt(this.locX + 1, this.locZ);
          Chunk chunk2 = ichunkprovider.getLoadedChunkAt(this.locX, this.locZ + 1);
-@@ -804,12 +899,35 @@
-     protected void a(ChunkGenerator chunkgenerator) {
-         if (this.isDone()) {
-             if (chunkgenerator.a(this, this.locX, this.locZ)) {
--                this.markDirty();
-+                this.e();
-             }
+@@ -809,6 +904,29 @@
          } else {
              this.o();
              chunkgenerator.recreateStructures(this.locX, this.locZ);
--            this.markDirty();
 +
 +            // CraftBukkit start
 +            BlockSand.instaFall = true;
@@ -245,57 +205,6 @@
 +            BlockSand.instaFall = false;
 +            this.world.getServer().getPluginManager().callEvent(new org.bukkit.event.world.ChunkPopulateEvent(bukkitChunk));
 +            // CraftBukkit end
-+            this.e();
+             this.markDirty();
          }
  
-     }
-@@ -900,7 +1018,7 @@
- 
-     public void a(ChunkSection[] achunksection) {
-         if (this.sections.length != achunksection.length) {
--            Chunk.e.warn("Could not set level chunk sections, array length is {} instead of {}", Integer.valueOf(achunksection.length), Integer.valueOf(this.sections.length));
-+            Chunk.e.warn("Could not set level chunk sections, array length is {} instead of {}", new Object[] { Integer.valueOf(achunksection.length), Integer.valueOf(this.sections.length)});
-         } else {
-             System.arraycopy(achunksection, 0, this.sections, 0, this.sections.length);
-         }
-@@ -928,7 +1046,7 @@
- 
-     public void a(byte[] abyte) {
-         if (this.g.length != abyte.length) {
--            Chunk.e.warn("Could not set level chunk biomes, array length is {} instead of {}", Integer.valueOf(abyte.length), Integer.valueOf(this.g.length));
-+            Chunk.e.warn("Could not set level chunk biomes, array length is {} instead of {}", new Object[] { Integer.valueOf(abyte.length), Integer.valueOf(this.g.length)});
-         } else {
-             System.arraycopy(abyte, 0, this.g, 0, this.g.length);
-         }
-@@ -984,7 +1102,7 @@
-         BlockPosition blockposition = new BlockPosition(this.locX << 4, 0, this.locZ << 4);
- 
-         if (this.world.worldProvider.m()) {
--            if (this.world.areChunksLoadedBetween(blockposition.a(-1, 0, -1), blockposition.a(16, this.world.getSeaLevel(), 16))) {
-+            if (this.world.areChunksLoadedBetween(blockposition.a(-1, 0, -1), blockposition.a(16, this.world.K(), 16))) {
-                 label42:
-                 for (int i = 0; i < 16; ++i) {
-                     for (int j = 0; j < 16; ++j) {
-@@ -1055,11 +1173,11 @@
- 
-         int l;
- 
--        for (l = k + 16 - 1; l > this.world.getSeaLevel() || l > 0 && !flag1; --l) {
-+        for (l = k + 16 - 1; l > this.world.K() || l > 0 && !flag1; --l) {
-             blockposition_mutableblockposition.c(blockposition_mutableblockposition.getX(), l, blockposition_mutableblockposition.getZ());
-             int i1 = this.b((BlockPosition) blockposition_mutableblockposition);
- 
--            if (i1 == 255 && blockposition_mutableblockposition.getY() < this.world.getSeaLevel()) {
-+            if (i1 == 255 && blockposition_mutableblockposition.getY() < this.world.K()) {
-                 flag1 = true;
-             }
- 
-@@ -1094,7 +1212,7 @@
- 
-     public void a(int[] aint) {
-         if (this.heightMap.length != aint.length) {
--            Chunk.e.warn("Could not set level chunk heightmap, array length is {} instead of {}", Integer.valueOf(aint.length), Integer.valueOf(this.heightMap.length));
-+            Chunk.e.warn("Could not set level chunk heightmap, array length is {} instead of {}", new Object[] { Integer.valueOf(aint.length), Integer.valueOf(this.heightMap.length)});
-         } else {
-             System.arraycopy(aint, 0, this.heightMap, 0, this.heightMap.length);
-         }

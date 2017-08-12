@@ -1,8 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Preconditions;
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.PacketPlayOutHeldItemSlot;
@@ -17,6 +15,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import tc.oc.collection.ConcatenatedList;
+
+import java.util.List;
 
 public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.inventory.PlayerInventory, EntityEquipment {
 
@@ -52,7 +52,6 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
     public List<ItemStack> storage() {
         return storage;
     }
-
 
     @Override
     public ItemStack getItemInMainHand() {
@@ -232,7 +231,6 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
         setSlots(items, getInventory().items.size(), getInventory().armor.size());
     }
 
-    @Override
     public List<ItemStack> extra() {
         return extra;
     }

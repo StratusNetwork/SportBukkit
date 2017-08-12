@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/BlockMycel.java
 +++ b/net/minecraft/server/BlockMycel.java
-@@ -2,13 +2,20 @@
+@@ -2,6 +2,13 @@
  
  import java.util.Random;
  
@@ -14,15 +14,6 @@
  public class BlockMycel extends Block {
  
      public static final BlockStateBoolean SNOWY = BlockStateBoolean.of("snowy");
- 
-     protected BlockMycel() {
--        super(Material.GRASS, MaterialMapColor.A);
--        this.w(this.blockStateList.getBlockData().set(BlockMycel.SNOWY, Boolean.valueOf(false)));
-+        super(Material.GRASS, MaterialMapColor.z);
-+        this.y(this.blockStateList.getBlockData().set(BlockMycel.SNOWY, Boolean.valueOf(false)));
-         this.a(true);
-         this.a(CreativeModeTab.b);
-     }
 @@ -22,7 +29,19 @@
      public void b(World world, BlockPosition blockposition, IBlockData iblockdata, Random random) {
          if (!world.isClientSide) {

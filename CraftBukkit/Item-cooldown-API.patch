@@ -6,7 +6,7 @@ Subject: [PATCH] Item cooldown API
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2029,4 +2029,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2066,4 +2066,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      public int getProtocolVersion() {
          return getHandle().protocolVersion;
      }

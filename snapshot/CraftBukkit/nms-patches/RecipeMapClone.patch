@@ -9,38 +9,9 @@
 -    public RecipeMapClone() {}
 +    // CraftBukkit start - Delegate to new parent class
 +    public RecipeMapClone() {
-+        super(new ItemStack(Items.MAP, 0, -1), java.util.Arrays.asList(new ItemStack(Items.MAP, 0, 0)));
++        super("", new ItemStack(Items.MAP, 0, -1), NonNullList.a(RecipeItemStack.a, RecipeItemStack.a(Items.MAP)));
 +    }
 +    // CraftBukkit end
  
      public boolean a(InventoryCrafting inventorycrafting, World world) {
          int i = 0;
-@@ -72,6 +76,10 @@
-         }
-     }
- 
-+    public int a() {
-+        return 9;
-+    }
-+
-     public ItemStack b() {
-         return ItemStack.a;
-     }
-@@ -82,15 +90,11 @@
-         for (int i = 0; i < nonnulllist.size(); ++i) {
-             ItemStack itemstack = inventorycrafting.getItem(i);
- 
--            if (itemstack.getItem().r()) {
--                nonnulllist.set(i, new ItemStack(itemstack.getItem().q()));
-+            if (itemstack.getItem().s()) {
-+                nonnulllist.set(i, new ItemStack(itemstack.getItem().r()));
-             }
-         }
- 
-         return nonnulllist;
-     }
--
--    public boolean c() {
--        return true;
--    }
- }

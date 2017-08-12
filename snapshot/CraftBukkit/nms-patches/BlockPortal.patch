@@ -10,36 +10,16 @@
  public class BlockPortal extends BlockHalfTransparent {
  
      public static final BlockStateEnum<EnumDirection.EnumAxis> AXIS = BlockStateEnum.of("axis", EnumDirection.EnumAxis.class, new EnumDirection.EnumAxis[] { EnumDirection.EnumAxis.X, EnumDirection.EnumAxis.Z});
-@@ -13,7 +16,7 @@
- 
-     public BlockPortal() {
-         super(Material.PORTAL, false);
--        this.w(this.blockStateList.getBlockData().set(BlockPortal.AXIS, EnumDirection.EnumAxis.X));
-+        this.y(this.blockStateList.getBlockData().set(BlockPortal.AXIS, EnumDirection.EnumAxis.X));
-         this.a(true);
-     }
- 
-@@ -38,15 +41,16 @@
- 
-             BlockPosition blockposition1;
- 
--            for (blockposition1 = blockposition; !world.getType(blockposition1).q() && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
-+            for (blockposition1 = blockposition; !world.getType(blockposition1).r() && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
-                 ;
+@@ -43,7 +46,8 @@
              }
  
--            if (i > 0 && !world.getType(blockposition1.up()).l()) {
+             if (i > 0 && !world.getType(blockposition1.up()).l()) {
 -                Entity entity = ItemMonsterEgg.a(world, EntityTypes.getName(EntityPigZombie.class), (double) blockposition1.getX() + 0.5D, (double) blockposition1.getY() + 1.1D, (double) blockposition1.getZ() + 0.5D);
-+            if (i > 0 && !world.getType(blockposition1.up()).m()) {
 +                // CraftBukkit - set spawn reason to NETHER_PORTAL
 +                Entity entity = ItemMonsterEgg.spawnCreature(world, EntityTypes.getName(EntityPigZombie.class), (double) blockposition1.getX() + 0.5D, (double) blockposition1.getY() + 1.1D, (double) blockposition1.getZ() + 0.5D, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NETHER_PORTAL);
  
                  if (entity != null) {
--                    entity.portalCooldown = entity.aK();
-+                    entity.portalCooldown = entity.aE();
-                 }
-             }
-         }
+                     entity.portalCooldown = entity.aM();
 @@ -70,14 +74,16 @@
          BlockPortal.Shape blockportal_shape = new BlockPortal.Shape(world, blockposition, EnumDirection.EnumAxis.X);
  
@@ -61,12 +41,10 @@
              } else {
                  return false;
              }
-@@ -107,7 +113,11 @@
-     }
+@@ -108,6 +114,10 @@
  
      public void a(World world, BlockPosition blockposition, IBlockData iblockdata, Entity entity) {
--        if (!entity.isPassenger() && !entity.isVehicle() && entity.bd()) {
-+        if (!entity.isPassenger() && !entity.isVehicle() && entity.aX()) {
+         if (!entity.isPassenger() && !entity.isVehicle() && entity.bf()) {
 +            // CraftBukkit start - Entity in portal
 +            EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
 +            world.getServer().getPluginManager().callEvent(event);
@@ -74,18 +52,7 @@
              entity.e(blockposition);
          }
  
-@@ -202,10 +212,6 @@
-         }
-     }
- 
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return EnumBlockFaceShape.UNDEFINED;
--    }
--
-     public static class Shape {
- 
-         private final World a;
-@@ -216,6 +222,7 @@
+@@ -216,6 +226,7 @@
          private BlockPosition position;
          private int height;
          private int width;
@@ -93,7 +60,7 @@
  
          public Shape(World world, BlockPosition blockposition, EnumDirection.EnumAxis enumdirection_enumaxis) {
              this.a = world;
-@@ -274,6 +281,10 @@
+@@ -274,6 +285,10 @@
          }
  
          protected int c() {
@@ -104,7 +71,7 @@
              int i;
  
              label56:
-@@ -294,11 +305,21 @@
+@@ -294,11 +309,21 @@
                          block = this.a.getType(blockposition.shift(this.d)).getBlock();
                          if (block != Blocks.OBSIDIAN) {
                              break label56;
@@ -126,7 +93,7 @@
                          }
                      }
                  }
-@@ -308,6 +329,11 @@
+@@ -308,6 +333,11 @@
                  if (this.a.getType(this.position.shift(this.c, i).up(this.height)).getBlock() != Blocks.OBSIDIAN) {
                      this.height = 0;
                      break;
@@ -138,7 +105,7 @@
                  }
              }
  
-@@ -329,7 +355,27 @@
+@@ -329,7 +359,27 @@
              return this.position != null && this.width >= 2 && this.width <= 21 && this.height >= 3 && this.height <= 21;
          }
  
@@ -167,7 +134,7 @@
              for (int i = 0; i < this.width; ++i) {
                  BlockPosition blockposition = this.position.shift(this.c, i);
  
-@@ -338,6 +384,7 @@
+@@ -338,6 +388,7 @@
                  }
              }
  

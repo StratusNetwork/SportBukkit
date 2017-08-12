@@ -1,25 +1,5 @@
 --- a/net/minecraft/server/PathfinderGoalTargetNearestPlayer.java
 +++ b/net/minecraft/server/PathfinderGoalTargetNearestPlayer.java
-@@ -35,7 +35,7 @@
-                     }
- 
-                     if (entity.isInvisible()) {
--                        float f = ((EntityHuman) entity).cU();
-+                        float f = ((EntityHuman) entity).cO();
- 
-                         if (f < 0.1F) {
-                             f = 0.1F;
-@@ -78,8 +78,8 @@
-         } else if (entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.isInvulnerable) {
-             return false;
-         } else {
--            ScoreboardTeamBase scoreboardteambase = this.b.aW();
--            ScoreboardTeamBase scoreboardteambase1 = entityliving.aW();
-+            ScoreboardTeamBase scoreboardteambase = this.b.aQ();
-+            ScoreboardTeamBase scoreboardteambase1 = entityliving.aQ();
- 
-             if (scoreboardteambase != null && scoreboardteambase1 == scoreboardteambase) {
-                 return false;
 @@ -92,7 +92,7 @@
      }
  

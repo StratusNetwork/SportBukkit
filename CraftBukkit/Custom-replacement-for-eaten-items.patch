@@ -6,7 +6,7 @@ Subject: [PATCH] Custom replacement for eaten items
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -2369,9 +2369,10 @@ public abstract class EntityLiving extends Entity {
+@@ -2367,9 +2367,10 @@ public abstract class EntityLiving extends Entity {
              this.b(this.activeItem, 16);
              // CraftBukkit start - fire PlayerItemConsumeEvent
              ItemStack itemstack;
@@ -18,7 +18,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
                  world.getServer().getPluginManager().callEvent(event);
  
                  if (event.isCancelled()) {
-@@ -2386,9 +2387,25 @@ public abstract class EntityLiving extends Entity {
+@@ -2384,9 +2385,25 @@ public abstract class EntityLiving extends Entity {
                  itemstack = this.activeItem.a(this.world, this);
              }
  
@@ -32,9 +32,9 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
 +            }
 +            // SportBukkit end
 +
-             this.a(this.cF(), itemstack);
+             this.a(this.cH(), itemstack);
              // CraftBukkit end
-             this.cL();
+             this.cN();
 +
 +            // SportBukkit start - if the replacement is anything but the default, update the client inventory
 +            if(event != null && defaultReplacement != null && this instanceof EntityPlayer && !com.google.common.base.Objects.equal(defaultReplacement, itemstack)) {

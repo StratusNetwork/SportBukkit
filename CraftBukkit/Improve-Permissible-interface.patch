@@ -171,7 +171,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/
  import java.util.List;
  import java.util.Set;
  import java.util.UUID;
-@@ -618,6 +620,66 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -619,6 +621,66 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
      }
  
      @Override

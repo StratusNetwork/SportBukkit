@@ -1,64 +1,17 @@
 --- a/net/minecraft/server/EntityZombieVillager.java
 +++ b/net/minecraft/server/EntityZombieVillager.java
-@@ -1,14 +1,13 @@
- package net.minecraft.server;
- 
--import java.util.UUID;
- import javax.annotation.Nullable;
- 
- public class EntityZombieVillager extends EntityZombie {
- 
--    private static final DataWatcherObject<Boolean> b = DataWatcher.a(EntityZombieVillager.class, DataWatcherRegistry.h);
--    private static final DataWatcherObject<Integer> c = DataWatcher.a(EntityZombieVillager.class, DataWatcherRegistry.b);
-+    private static final DataWatcherObject<Boolean> b = META_CONVERTING; // SportBukkit
-+    private static final DataWatcherObject<Integer> c = META_PROFESSION; // SportBukkit
+@@ -9,6 +9,7 @@
+     private static final DataWatcherObject<Integer> c = DataWatcher.a(EntityZombieVillager.class, DataWatcherRegistry.b);
      private int conversionTime;
--    private UUID by;
+     private UUID by;
 +    private int lastTick = MinecraftServer.currentTick; // CraftBukkit - add field
  
      public EntityZombieVillager(World world) {
          super(world);
-@@ -16,8 +15,10 @@
- 
-     protected void i() {
-         super.i();
--        this.datawatcher.register(EntityZombieVillager.b, Boolean.valueOf(false));
--        this.datawatcher.register(EntityZombieVillager.c, Integer.valueOf(0));
-+        // SportBukkit start - registered already in superclass
-+        //this.datawatcher.register(EntityZombieVillager.b, Boolean.valueOf(false));
-+        //this.datawatcher.register(EntityZombieVillager.c, Integer.valueOf(0));
-+        // SportBukkit end
-     }
- 
-     public void setProfession(int i) {
-@@ -36,17 +37,13 @@
-         super.b(nbttagcompound);
-         nbttagcompound.setInt("Profession", this.getProfession());
-         nbttagcompound.setInt("ConversionTime", this.isConverting() ? this.conversionTime : -1);
--        if (this.by != null) {
--            nbttagcompound.a("ConversionPlayer", this.by);
--        }
--
-     }
- 
-     public void a(NBTTagCompound nbttagcompound) {
-         super.a(nbttagcompound);
-         this.setProfession(nbttagcompound.getInt("Profession"));
-         if (nbttagcompound.hasKeyOfType("ConversionTime", 99) && nbttagcompound.getInt("ConversionTime") > -1) {
--            this.a(nbttagcompound.b("ConversionPlayer") ? nbttagcompound.a("ConversionPlayer") : null, nbttagcompound.getInt("ConversionTime"));
-+            this.b(nbttagcompound.getInt("ConversionTime"));
-         }
- 
-     }
-@@ -57,17 +54,22 @@
-         return super.prepare(difficultydamagescaler, groupdataentity);
-     }
- 
--    public void B_() {
-+    public void A_() {
+@@ -60,6 +61,11 @@
+     public void B_() {
          if (!this.world.isClientSide && this.isConverting()) {
--            int i = this.ds();
-+            int i = this.dq();
+             int i = this.du();
 +            // CraftBukkit start - Use wall time instead of ticks for villager conversion
 +            int elapsedTicks = MinecraftServer.currentTick - this.lastTick;
 +            this.lastTick = MinecraftServer.currentTick;
@@ -67,119 +20,12 @@
  
              this.conversionTime -= i;
              if (this.conversionTime <= 0) {
--                this.dr();
-+                this.dp();
-             }
-         }
- 
--        super.B_();
-+        super.A_();
-     }
- 
-     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-@@ -79,7 +81,7 @@
-             }
- 
-             if (!this.world.isClientSide) {
--                this.a(entityhuman.getUniqueID(), this.random.nextInt(2401) + 3600);
-+                this.b(this.random.nextInt(2401) + 3600);
-             }
- 
-             return true;
-@@ -96,8 +98,7 @@
-         return ((Boolean) this.getDataWatcher().get(EntityZombieVillager.b)).booleanValue();
-     }
- 
--    protected void a(@Nullable UUID uuid, int i) {
--        this.by = uuid;
-+    protected void b(int i) {
-         this.conversionTime = i;
-         this.getDataWatcher().set(EntityZombieVillager.b, Boolean.valueOf(true));
-         this.removeEffect(MobEffects.WEAKNESS);
-@@ -105,38 +106,30 @@
-         this.world.broadcastEntityEffect(this, (byte) 16);
-     }
- 
--    protected void dr() {
-+    protected void dp() {
-         EntityVillager entityvillager = new EntityVillager(this.world);
- 
-         entityvillager.u(this);
-         entityvillager.setProfession(this.getProfession());
-         entityvillager.a(this.world.D(new BlockPosition(entityvillager)), (GroupDataEntity) null, false);
--        entityvillager.dn();
-+        entityvillager.dl();
-         if (this.isBaby()) {
-             entityvillager.setAgeRaw(-24000);
-         }
- 
-         this.world.kill(this);
--        entityvillager.setNoAI(this.isNoAI());
-+        entityvillager.setAI(this.hasAI());
-         if (this.hasCustomName()) {
-             entityvillager.setCustomName(this.getCustomName());
+@@ -123,7 +129,7 @@
              entityvillager.setCustomNameVisible(this.getCustomNameVisible());
          }
  
 -        this.world.addEntity(entityvillager);
--        if (this.by != null) {
--            EntityHuman entityhuman = this.world.b(this.by);
--
--            if (entityhuman instanceof EntityPlayer) {
--                CriterionTriggers.q.a((EntityPlayer) entityhuman, this, entityvillager);
--            }
--        }
--
 +        this.world.addEntity(entityvillager, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.CURED); // CraftBukkit - add SpawnReason
-         entityvillager.addEffect(new MobEffect(MobEffects.CONFUSION, 200, 0));
-         this.world.a((EntityHuman) null, 1027, new BlockPosition((int) this.locX, (int) this.locY, (int) this.locZ), 0);
-     }
+         if (this.by != null) {
+             EntityHuman entityhuman = this.world.b(this.by);
  
--    protected int ds() {
-+    protected int dq() {
-         int i = 1;
- 
-         if (this.random.nextFloat() < 0.01F) {
-@@ -163,24 +156,24 @@
-         return i;
-     }
- 
--    protected float cp() {
-+    protected float cj() {
-         return this.isBaby() ? (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 2.0F : (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F;
-     }
- 
--    public SoundEffect F() {
--        return SoundEffects.ju;
-+    public SoundEffect G() {
-+        return SoundEffects.it;
-     }
- 
--    public SoundEffect d(DamageSource damagesource) {
--        return SoundEffects.jy;
-+    public SoundEffect bW() {
-+        return SoundEffects.ix;
-     }
- 
--    public SoundEffect cd() {
--        return SoundEffects.jx;
-+    public SoundEffect bX() {
-+        return SoundEffects.iw;
-     }
- 
--    public SoundEffect dk() {
--        return SoundEffects.jz;
-+    public SoundEffect di() {
-+        return SoundEffects.iy;
-     }
- 
-     @Nullable
-@@ -188,7 +181,7 @@
-         return LootTables.as;
-     }
- 
--    protected ItemStack dl() {
-+    protected ItemStack dj() {
-         return ItemStack.a;
-     }
- }

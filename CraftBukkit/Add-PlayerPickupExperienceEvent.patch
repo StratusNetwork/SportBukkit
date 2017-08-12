@@ -17,7 +17,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityExperienceOrb.java b/src/m
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 --- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-@@ -950,6 +950,13 @@ public class CraftEventFactory {
+@@ -952,6 +952,13 @@ public class CraftEventFactory {
          return event;
      }
  

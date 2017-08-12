@@ -12,6 +12,7 @@ import net.minecraft.server.EntityHuman;
 import net.minecraft.server.IInventory;
 import net.minecraft.server.PacketPlayOutOpenWindow;
 import net.minecraft.server.Slot;
+import net.minecraft.server.SlotShulkerBox;
 
 public class CraftContainer extends Container {
 
@@ -101,8 +102,6 @@ public class CraftContainer extends Container {
                 return "minecraft:furnace";
             case DISPENSER:
                 return "minecraft:dispenser";
-        case DROPPER:
-            return "minecraft:dropper";
             case ENCHANTING:
                 return "minecraft:enchanting_table";
             case BREWING:
@@ -113,6 +112,10 @@ public class CraftContainer extends Container {
                 return "minecraft:anvil";
             case HOPPER:
                 return "minecraft:hopper";
+            case DROPPER:
+                return "minecraft:dropper";
+            case SHULKER_BOX:
+                return "minecraft:shulker_box";
             default:
                 return "minecraft:chest";
         }
@@ -127,7 +130,7 @@ public class CraftContainer extends Container {
                 setupChest(top, bottom);
                 break;
             case DISPENSER:
-        case DROPPER:
+            case DROPPER:
                 setupDispenser(top, bottom);
                 break;
             case FURNACE:
@@ -148,6 +151,12 @@ public class CraftContainer extends Container {
                 break;
             case ANVIL:
                 setupAnvil(top, bottom);
+                break;
+            case BEACON:
+                setupBeacon(top, bottom);
+                break;
+            case SHULKER_BOX:
+                setupShulkerBox(top, bottom);
                 break;
         }
     }
@@ -325,6 +334,47 @@ public class CraftContainer extends Container {
             this.a(new Slot(bottom, i, 8 + i * 18, 142));
         }
         // End copy from ContainerAnvil
+    }
+
+    private void setupBeacon(IInventory top, IInventory bottom) {
+        // This code is copied from ContainerBeacon
+        this.a(new Slot(top, 0, 136, 110));
+
+        int i;
+
+        for (i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                this.a(new Slot(bottom, j + i * 9 + 9, 36 + j * 18, 137 + i * 18));
+            }
+        }
+
+        for (i = 0; i < 9; ++i) {
+            this.a(new Slot(bottom, i, 36 + i * 18, 195));
+        }
+        // End copy from ContainerBeacon
+    }
+
+    private void setupShulkerBox(IInventory top, IInventory bottom) {
+        // This code is copied from ContainerShulkerBox
+        int i;
+        int j;
+
+        for (i = 0; i < 3; ++i) {
+            for (j = 0; j < 9; ++j) {
+                this.a((Slot) (new SlotShulkerBox(top, j + i * 9, 8 + j * 18, 18 + i * 18)));
+            }
+        }
+
+        for (i = 0; i < 3; ++i) {
+            for (j = 0; j < 9; ++j) {
+                this.a(new Slot(bottom, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+            }
+        }
+
+        for (i = 0; i < 9; ++i) {
+            this.a(new Slot(bottom, i, 8 + i * 18, 142));
+        }
+        // End copy from ContainerShulkerBox
     }
 
     public boolean a(EntityHuman entity) {

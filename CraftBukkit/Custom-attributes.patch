@@ -58,7 +58,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
      private static final Logger a = LogManager.getLogger();
      private static final UUID b = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");
      private static final AttributeModifier c = (new AttributeModifier(EntityLiving.b, "Sprinting speed boost", 0.30000001192092896D, 2)).a(false);
-@@ -152,6 +159,11 @@ public abstract class EntityLiving extends Entity {
+@@ -153,6 +160,11 @@ public abstract class EntityLiving extends Entity {
          this.getAttributeMap().b(GenericAttributes.MOVEMENT_SPEED);
          this.getAttributeMap().b(GenericAttributes.h);
          this.getAttributeMap().b(GenericAttributes.i);
@@ -70,7 +70,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
      }
  
      protected void a(double d0, boolean flag, IBlockData iblockdata, BlockPosition blockposition) {
-@@ -1297,7 +1309,7 @@ public abstract class EntityLiving extends Entity {
+@@ -1295,7 +1307,7 @@ public abstract class EntityLiving extends Entity {
              Function<Double, Double> blocking = new Function<Double, Double>() {
                  @Override
                  public Double apply(Double f) {

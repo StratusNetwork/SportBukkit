@@ -18,27 +18,7 @@
      public EntityFallingBlock(World world) {
          super(world);
      }
-@@ -36,10 +40,6 @@
-         this.a(new BlockPosition(this));
-     }
- 
--    public boolean bb() {
--        return false;
--    }
--
-     public void a(BlockPosition blockposition) {
-         this.datawatcher.set(EntityFallingBlock.d, blockposition);
-     }
-@@ -56,7 +56,7 @@
-         return !this.dead;
-     }
- 
--    public void B_() {
-+    public void A_() {
-         Block block = this.block.getBlock();
- 
-         if (this.block.getMaterial() == Material.AIR) {
-@@ -69,7 +69,7 @@
+@@ -69,7 +73,7 @@
  
              if (this.ticksLived++ == 0) {
                  blockposition = new BlockPosition(this);
@@ -47,91 +27,32 @@
                      this.world.setAir(blockposition);
                  } else if (!this.world.isClientSide) {
                      this.die();
-@@ -82,35 +82,17 @@
-             }
+@@ -110,7 +114,7 @@
  
-             this.move(EnumMoveType.SELF, this.motX, this.motY, this.motZ);
-+            this.motX *= 0.9800000190734863D;
-+            this.motY *= 0.9800000190734863D;
-+            this.motZ *= 0.9800000190734863D;
-             if (!this.world.isClientSide) {
-                 blockposition = new BlockPosition(this);
--                boolean flag = this.block.getBlock() == Blocks.dS;
--                boolean flag1 = flag && this.world.getType(blockposition).getMaterial() == Material.WATER;
--                double d0 = this.motX * this.motX + this.motY * this.motY + this.motZ * this.motZ;
--
--                if (flag && d0 > 1.0D) {
--                    MovingObjectPosition movingobjectposition = this.world.rayTrace(new Vec3D(this.lastX, this.lastY, this.lastZ), new Vec3D(this.locX, this.locY, this.locZ), true);
--
--                    if (movingobjectposition != null && this.world.getType(movingobjectposition.a()).getMaterial() == Material.WATER) {
--                        blockposition = movingobjectposition.a();
--                        flag1 = true;
--                    }
--                }
--
--                if (!this.onGround && !flag1) {
--                    if (this.ticksLived > 100 && !this.world.isClientSide && (blockposition.getY() < 1 || blockposition.getY() > 256) || this.ticksLived > 600) {
--                        if (this.dropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
--                            this.a(new ItemStack(block, 1, block.getDropData(this.block)), 0.0F);
--                        }
--
--                        this.die();
--                    }
--                } else {
-+                if (this.onGround) {
-                     IBlockData iblockdata = this.world.getType(blockposition);
- 
--                    if (!flag1 && BlockFalling.x(this.world.getType(new BlockPosition(this.locX, this.locY - 0.009999999776482582D, this.locZ)))) {
-+                    if (BlockFalling.i(this.world.getType(new BlockPosition(this.locX, this.locY - 0.009999999776482582D, this.locZ)))) {
+                     if (!flag1 && BlockFalling.x(this.world.getType(new BlockPosition(this.locX, this.locY - 0.009999999776482582D, this.locZ)))) {
                          this.onGround = false;
 -                        return;
 +                        // return; // CraftBukkit
                      }
  
                      this.motX *= 0.699999988079071D;
-@@ -119,9 +101,16 @@
+@@ -119,7 +123,14 @@
                      if (iblockdata.getBlock() != Blocks.PISTON_EXTENSION) {
                          this.die();
                          if (!this.f) {
 -                            if (this.world.a(block, blockposition, true, EnumDirection.UP, (Entity) null) && (flag1 || !BlockFalling.x(this.world.getType(blockposition.down()))) && this.world.setTypeAndData(blockposition, this.block, 3)) {
 +                            if(!formBlock) return; // SportBukkit
 +                            // CraftBukkit start
-+                            if (this.world.a(block, blockposition, true, EnumDirection.UP, (Entity) null) && !BlockFalling.i(this.world.getType(blockposition.down()))) {
++                            if (this.world.a(block, blockposition, true, EnumDirection.UP, (Entity) null) && (flag1 || !BlockFalling.x(this.world.getType(blockposition.down())))) {
 +                                if (CraftEventFactory.callEntityChangeBlockEvent(this, blockposition, this.block.getBlock(), this.block.getBlock().toLegacyData(this.block)).isCancelled()) {
 +                                    return;
 +                                }
 +                                this.world.setTypeAndData(blockposition, this.block, 3);
 +                                // CraftBukkit end
                                  if (block instanceof BlockFalling) {
--                                    ((BlockFalling) block).a(this.world, blockposition, this.block, iblockdata);
-+                                    ((BlockFalling) block).a_(this.world, blockposition);
+                                     ((BlockFalling) block).a(this.world, blockposition, this.block, iblockdata);
                                  }
- 
-                                 if (this.tileEntityData != null && block instanceof ITileEntity) {
-@@ -148,15 +137,18 @@
-                                 this.a(new ItemStack(block, 1, block.getDropData(this.block)), 0.0F);
-                             }
-                         } else if (block instanceof BlockFalling) {
--                            ((BlockFalling) block).a_(this.world, blockposition);
-+                            ((BlockFalling) block).b(this.world, blockposition);
-                         }
-                     }
-+                } else if (this.ticksLived > 100 && !this.world.isClientSide && (blockposition.getY() < 1 || blockposition.getY() > 256) || this.ticksLived > 600) {
-+                    if (this.dropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
-+                        this.a(new ItemStack(block, 1, block.getDropData(this.block)), 0.0F);
-+                    }
-+
-+                    this.die();
-                 }
-             }
- 
--            this.motX *= 0.9800000190734863D;
--            this.motY *= 0.9800000190734863D;
--            this.motZ *= 0.9800000190734863D;
-         }
-     }
- 
-@@ -175,7 +167,9 @@
+@@ -175,7 +186,9 @@
                  while (iterator.hasNext()) {
                      Entity entity = (Entity) iterator.next();
  
@@ -141,12 +62,3 @@
                  }
  
                  if (flag && (double) this.random.nextFloat() < 0.05000000074505806D + (double) i * 0.05D) {
-@@ -268,7 +262,7 @@
-         return this.block;
-     }
- 
--    public boolean bA() {
-+    public boolean bu() {
-         return true;
-     }
- }

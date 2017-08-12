@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.Skin;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.util.Skins;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -40,9 +41,9 @@ class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
     CraftMetaSkull(NBTTagCompound tag) {
         super(tag);
 
-        if (tag.hasKeyOfType(SKULL_OWNER.NBT, 10)) {
+        if (tag.hasKeyOfType(SKULL_OWNER.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
             profile = GameProfileSerializer.deserialize(tag.getCompound(SKULL_OWNER.NBT));
-        } else if (tag.hasKeyOfType(SKULL_OWNER.NBT, 8) && !tag.getString(SKULL_OWNER.NBT).isEmpty()) {
+        } else if (tag.hasKeyOfType(SKULL_OWNER.NBT, CraftMagicNumbers.NBT.TAG_STRING) && !tag.getString(SKULL_OWNER.NBT).isEmpty()) {
             profile = new GameProfile(null, tag.getString(SKULL_OWNER.NBT));
         }
     }
@@ -56,7 +57,7 @@ class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
 
     @Override
     void deserializeInternal(NBTTagCompound tag) {
-        if (tag.hasKeyOfType(SKULL_PROFILE.NBT, 10)) {
+        if (tag.hasKeyOfType(SKULL_PROFILE.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
             profile = GameProfileSerializer.deserialize(tag.getCompound(SKULL_PROFILE.NBT));
         }
     }

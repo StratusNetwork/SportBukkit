@@ -41,11 +41,11 @@ public class InventoryWrapper implements IInventory {
         // Copied from CraftItemStack
         ItemStack stack = getItem(i);
         ItemStack result;
-        if (stack == null) {
-            return null;
+        if (stack.isEmpty()) {
+            return stack;
         }
         if (stack.getCount() <= j) {
-            this.setItem(i, null);
+            this.setItem(i, ItemStack.a);
             result = stack;
         } else {
             result = CraftItemStack.copyNMSStack(stack, j);
@@ -60,11 +60,11 @@ public class InventoryWrapper implements IInventory {
         // Copied from CraftItemStack
         ItemStack stack = getItem(i);
         ItemStack result;
-        if (stack == null) {
-            return null;
+        if (stack.isEmpty()) {
+            return stack;
         }
         if (stack.getCount() <= 1) {
-            this.setItem(i, null);
+            this.setItem(i, ItemStack.a);
             result = stack;
         } else {
             result = CraftItemStack.copyNMSStack(stack, 1);
@@ -175,7 +175,7 @@ public class InventoryWrapper implements IInventory {
     }
 
     @Override
-    public boolean w_() {
+    public boolean x_() {
         return Iterables.any(inventory, Predicates.notNull());
     }
 }

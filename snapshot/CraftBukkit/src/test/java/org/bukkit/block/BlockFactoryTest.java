@@ -2,16 +2,16 @@ package org.bukkit.block;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.geometry.BlockRotoflection;
 import org.bukkit.geometry.BlockReflection;
 import org.bukkit.geometry.BlockRotation;
+import org.bukkit.geometry.BlockRotoflection;
 import org.bukkit.material.Directional;
 import org.bukkit.material.Lever;
 import org.bukkit.material.MaterialData;
 import org.bukkit.support.BukkitRuntimeTest;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BlockFactoryTest extends BukkitRuntimeTest {
 

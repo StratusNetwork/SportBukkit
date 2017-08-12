@@ -30,17 +30,3 @@
              while (i > 0) {
                  j = EntityExperienceOrb.getOrbValue(i);
                  i -= j;
-@@ -59,5 +76,13 @@
-         }
- 
-         this.b = 0;
-+        if (itemstack.getItem() == Items.IRON_INGOT) {
-+            this.a.b((Statistic) AchievementList.k);
-+        }
-+
-+        if (itemstack.getItem() == Items.COOKED_FISH) {
-+            this.a.b((Statistic) AchievementList.p);
-+        }
-+
-     }
- }

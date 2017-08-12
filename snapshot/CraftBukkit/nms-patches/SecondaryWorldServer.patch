@@ -15,7 +15,7 @@
          worldserver.getWorldBorder().a(new IWorldBorderListener() {
              public void a(WorldBorder worldborder, double d0) {
                  SecondaryWorldServer.this.getWorldBorder().setSize(d0);
-@@ -36,15 +39,15 @@
+@@ -36,9 +39,10 @@
                  SecondaryWorldServer.this.getWorldBorder().setDamageBuffer(d0);
              }
          });
@@ -26,16 +26,8 @@
 +    // protected void a() {} // CraftBukkit
  
      public World b() {
--        this.worldMaps = this.a.Z();
-+        this.worldMaps = this.a.X();
-         this.scoreboard = this.a.getScoreboard();
--        this.B = this.a.getLootTableRegistry();
--        this.C = this.a.z();
-+        this.B = this.a.ak();
-         String s = PersistentVillage.a(this.worldProvider);
-         PersistentVillage persistentvillage = (PersistentVillage) this.worldMaps.get(PersistentVillage.class, s);
- 
-@@ -56,7 +59,7 @@
+         this.worldMaps = this.a.Z();
+@@ -56,7 +60,7 @@
              this.villages.a((World) this);
          }
  

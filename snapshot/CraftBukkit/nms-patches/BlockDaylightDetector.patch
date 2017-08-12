@@ -1,23 +1,5 @@
 --- a/net/minecraft/server/BlockDaylightDetector.java
 +++ b/net/minecraft/server/BlockDaylightDetector.java
-@@ -11,7 +11,7 @@
-     public BlockDaylightDetector(boolean flag) {
-         super(Material.WOOD);
-         this.c = flag;
--        this.w(this.blockStateList.getBlockData().set(BlockDaylightDetector.POWER, Integer.valueOf(0)));
-+        this.y(this.blockStateList.getBlockData().set(BlockDaylightDetector.POWER, Integer.valueOf(0)));
-         this.a(CreativeModeTab.d);
-         this.c(0.2F);
-         this.a(SoundEffectType.a);
-@@ -29,7 +29,7 @@
-     public void c(World world, BlockPosition blockposition) {
-         if (world.worldProvider.m()) {
-             IBlockData iblockdata = world.getType(blockposition);
--            int i = world.getBrightness(EnumSkyBlock.SKY, blockposition) - world.ah();
-+            int i = world.getBrightness(EnumSkyBlock.SKY, blockposition) - world.af();
-             float f = world.d(1.0F);
- 
-             if (this.c) {
 @@ -45,6 +45,7 @@
  
              i = MathHelper.clamp(i, 0, 15);
@@ -26,21 +8,3 @@
                  world.setTypeAndData(blockposition, iblockdata.set(BlockDaylightDetector.POWER, Integer.valueOf(i)), 3);
              }
  
-@@ -52,7 +53,7 @@
-     }
- 
-     public boolean interact(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman, EnumHand enumhand, EnumDirection enumdirection, float f, float f1, float f2) {
--        if (entityhuman.di()) {
-+        if (entityhuman.dc()) {
-             if (world.isClientSide) {
-                 return true;
-             } else {
-@@ -110,8 +111,4 @@
-     protected BlockStateList getStateList() {
-         return new BlockStateList(this, new IBlockState[] { BlockDaylightDetector.POWER});
-     }
--
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return enumdirection == EnumDirection.DOWN ? EnumBlockFaceShape.SOLID : EnumBlockFaceShape.UNDEFINED;
--    }
- }

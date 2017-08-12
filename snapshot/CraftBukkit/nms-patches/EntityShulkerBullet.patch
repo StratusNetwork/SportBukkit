@@ -1,14 +1,5 @@
 --- a/net/minecraft/server/EntityShulkerBullet.java
 +++ b/net/minecraft/server/EntityShulkerBullet.java
-@@ -30,7 +30,7 @@
-         this.noclip = true;
-     }
- 
--    public SoundCategory bI() {
-+    public SoundCategory bC() {
-         return SoundCategory.HOSTILE;
-     }
- 
 @@ -46,8 +46,29 @@
          this.target = entity;
          this.c = EnumDirection.UP;
@@ -39,43 +30,11 @@
      protected void b(NBTTagCompound nbttagcompound) {
          BlockPosition blockposition;
          NBTTagCompound nbttagcompound1;
-@@ -189,11 +210,11 @@
-         this.d = 10 + this.random.nextInt(5) * 10;
-     }
- 
--    public void B_() {
-+    public void A_() {
-         if (!this.world.isClientSide && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
-             this.die();
-         } else {
--            super.B_();
-+            super.A_();
-             if (!this.world.isClientSide) {
-                 List list;
-                 Iterator iterator;
-@@ -282,14 +303,14 @@
-         return false;
-     }
- 
--    public float f(float f) {
-+    public float e(float f) {
-         return 1.0F;
+@@ -287,6 +308,7 @@
      }
  
      protected void a(MovingObjectPosition movingobjectposition) {
++        org.bukkit.craftbukkit.event.CraftEventFactory.callProjectileHitEvent(this, movingobjectposition); // Craftbukkit - Call event
          if (movingobjectposition.entity == null) {
              ((WorldServer) this.world).a(EnumParticle.EXPLOSION_LARGE, this.locX, this.locY, this.locZ, 2, 0.2D, 0.2D, 0.2D, 0.0D, new int[0]);
--            this.a(SoundEffects.gD, 1.0F, 1.0F);
-+            this.a(SoundEffects.fC, 1.0F, 1.0F);
-         } else {
-             boolean flag = movingobjectposition.entity.damageEntity(DamageSource.a(this, this.shooter).b(), 4.0F);
- 
-@@ -310,7 +331,7 @@
- 
-     public boolean damageEntity(DamageSource damagesource, float f) {
-         if (!this.world.isClientSide) {
--            this.a(SoundEffects.gE, 1.0F, 1.0F);
-+            this.a(SoundEffects.fD, 1.0F, 1.0F);
-             ((WorldServer) this.world).a(EnumParticle.CRIT, this.locX, this.locY, this.locZ, 15, 0.2D, 0.2D, 0.2D, 0.0D, new int[0]);
-             this.die();
-         }
+             this.a(SoundEffects.gD, 1.0F, 1.0F);

@@ -1,13 +1,9 @@
 --- a/net/minecraft/server/RemoteControlCommandListener.java
 +++ b/net/minecraft/server/RemoteControlCommandListener.java
-@@ -21,6 +21,16 @@
+@@ -21,6 +21,12 @@
          return "Rcon";
      }
  
-+    public IChatBaseComponent getScoreboardDisplayName() {
-+        return new ChatComponentText(this.getName());
-+    }
-+
 +    // CraftBukkit start - Send a String
 +    public void sendMessage(String message) {
 +        this.a.append(message);
@@ -17,34 +13,3 @@
      public void sendMessage(IChatBaseComponent ichatbasecomponent) {
          this.a.append(ichatbasecomponent.toPlainText());
      }
-@@ -29,15 +39,29 @@
-         return true;
-     }
- 
-+    public BlockPosition getChunkCoordinates() {
-+        return BlockPosition.ZERO;
-+    }
-+
-+    public Vec3D d() {
-+        return Vec3D.a;
-+    }
-+
-     public World getWorld() {
-         return this.b.getWorld();
-     }
- 
-+    public Entity f() {
-+        return null;
-+    }
-+
-     public boolean getSendCommandFeedback() {
-         return true;
-     }
- 
--    public MinecraftServer C_() {
-+    public void a(CommandObjectiveExecutor.EnumCommandResult commandobjectiveexecutor_enumcommandresult, int i) {}
-+
-+    public MinecraftServer B_() {
-         return this.b;
-     }
- }

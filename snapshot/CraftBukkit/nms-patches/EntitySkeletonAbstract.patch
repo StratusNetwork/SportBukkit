@@ -1,101 +1,21 @@
 --- a/net/minecraft/server/EntitySkeletonAbstract.java
 +++ b/net/minecraft/server/EntitySkeletonAbstract.java
-@@ -2,27 +2,48 @@
+@@ -2,12 +2,13 @@
  
  import java.util.Calendar;
  import javax.annotation.Nullable;
 +import org.bukkit.event.entity.EntityCombustEvent; // CraftBukkit
-+
-+// SportBukkit start
-+import org.bukkit.craftbukkit.protocol.MetadataKey;
-+import com.google.common.collect.Range;
-+// SportBukkit end
  
  public abstract class EntitySkeletonAbstract extends EntityMonster implements IRangedEntity {
  
--    private static final DataWatcherObject<Boolean> a = DataWatcher.a(EntitySkeletonAbstract.class, DataWatcherRegistry.h);
--    private final PathfinderGoalBowShoot<EntitySkeletonAbstract> b = new PathfinderGoalBowShoot(this, 1.0D, 20, 15.0F);
+     private static final DataWatcherObject<Boolean> a = DataWatcher.a(EntitySkeletonAbstract.class, DataWatcherRegistry.h);
+     private final PathfinderGoalBowShoot<EntitySkeletonAbstract> b = new PathfinderGoalBowShoot(this, 1.0D, 20, 15.0F);
 -    private final PathfinderGoalMeleeAttack c = new PathfinderGoalMeleeAttack(this, 1.2D, flag) {
-+    // SportBukkit start
-+    public static final MetadataKey<Integer> META_SKELETON_TYPE = MetadataKey
-+        .builder(EntitySkeletonAbstract.class, DataWatcherRegistry.b)
-+        .id(Range.lessThan(201), 11)
-+        .id(Range.closedOpen(201, 301), 12)
-+        .build();
-+
-+    public static final MetadataKey<Boolean> META_SWINGING_ARMS = MetadataKey
-+        .builder(EntitySkeletonAbstract.class, DataWatcherRegistry.h)
-+        .id(Range.lessThan(201), 12)
-+        .id(Range.closedOpen(201, 301), 13)
-+        .id(Range.atLeast(301), 12)
-+        .build();
-+    // SportBukkit end
-+
-+    private static final DataWatcherObject<Boolean> a = META_SWINGING_ARMS; // SportBukkit
-+    private final PathfinderGoalBowShoot b = new PathfinderGoalBowShoot(this, 1.0D, 20, 15.0F);
 +    private final PathfinderGoalMeleeAttack c = new PathfinderGoalMeleeAttack(this, 1.2D, false) { // CraftBukkit - decompile error
          public void d() {
              super.d();
--            EntitySkeletonAbstract.this.p(false);
-+            EntitySkeletonAbstract.this.a(false);
-         }
- 
-         public void c() {
-             super.c();
--            EntitySkeletonAbstract.this.p(true);
-+            EntitySkeletonAbstract.this.a(true);
-         }
-     };
- 
-     public EntitySkeletonAbstract(World world) {
-         super(world);
-         this.setSize(0.6F, 1.99F);
--        this.dk();
-+        this.dh();
-     }
- 
-     protected void r() {
-@@ -46,22 +67,34 @@
-     protected void i() {
-         super.i();
-         this.datawatcher.register(EntitySkeletonAbstract.a, Boolean.valueOf(false));
-+
-+        // SportBukkit start
-+        final int skeletonType;
-+        if(this instanceof EntitySkeletonStray) {
-+            skeletonType = 2;
-+        } else if(this instanceof EntitySkeletonWither) {
-+            skeletonType = 1;
-+        } else {
-+            skeletonType = 0;
-+        }
-+        this.datawatcher.register(META_SKELETON_TYPE, skeletonType);
-+        // SportBukkit end
-     }
- 
-     protected void a(BlockPosition blockposition, Block block) {
--        this.a(this.p(), 0.15F, 1.0F);
-+        this.a(this.o(), 0.15F, 1.0F);
-     }
- 
--    abstract SoundEffect p();
-+    abstract SoundEffect o();
- 
-     public EnumMonsterType getMonsterType() {
-         return EnumMonsterType.UNDEAD;
-     }
- 
-     public void n() {
--        if (this.world.D() && !this.world.isClientSide) {
--            float f = this.f(1.0F);
--            BlockPosition blockposition = this.bH() instanceof EntityBoat ? (new BlockPosition(this.locX, (double) Math.round(this.locY), this.locZ)).up() : new BlockPosition(this.locX, (double) Math.round(this.locY), this.locZ);
-+        if (this.world.B() && !this.world.isClientSide) {
-+            float f = this.e(1.0F);
-+            BlockPosition blockposition = this.bB() instanceof EntityBoat ? (new BlockPosition(this.locX, (double) Math.round(this.locY), this.locZ)).up() : new BlockPosition(this.locX, (double) Math.round(this.locY), this.locZ);
- 
-             if (f > 0.5F && this.random.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.world.h(blockposition)) {
-                 boolean flag = true;
-@@ -80,7 +113,14 @@
+             EntitySkeletonAbstract.this.p(false);
+@@ -80,7 +81,14 @@
                  }
  
                  if (flag) {
@@ -111,70 +31,10 @@
                  }
              }
          }
-@@ -88,16 +128,31 @@
-         super.n();
-     }
- 
--    public void aC() {
--        super.aC();
--        if (this.bH() instanceof EntityCreature) {
--            EntityCreature entitycreature = (EntityCreature) this.bH();
-+    public void aw() {
-+        super.aw();
-+        if (this.bB() instanceof EntityCreature) {
-+            EntityCreature entitycreature = (EntityCreature) this.bB();
- 
-             this.aN = entitycreature.aN;
-         }
- 
-     }
- 
-+    public void die(DamageSource damagesource) {
-+        // super.die(damagesource); // CraftBukkit
-+        if (damagesource.i() instanceof EntityArrow && damagesource.getEntity() instanceof EntityHuman) {
-+            EntityHuman entityhuman = (EntityHuman) damagesource.getEntity();
-+            double d0 = entityhuman.locX - this.locX;
-+            double d1 = entityhuman.locZ - this.locZ;
-+
-+            if (d0 * d0 + d1 * d1 >= 2500.0D) {
-+                entityhuman.b((Statistic) AchievementList.v);
-+            }
-+        }
-+        super.die(damagesource); // CraftBukkit - moved from above
-+
-+    }
-+
-     protected void a(DifficultyDamageScaler difficultydamagescaler) {
-         super.a(difficultydamagescaler);
-         this.setSlot(EnumItemSlot.MAINHAND, new ItemStack(Items.BOW));
-@@ -108,10 +163,10 @@
-         groupdataentity = super.prepare(difficultydamagescaler, groupdataentity);
-         this.a(difficultydamagescaler);
-         this.b(difficultydamagescaler);
--        this.dk();
-+        this.dh();
-         this.m(this.random.nextFloat() < 0.55F * difficultydamagescaler.d());
-         if (this.getEquipment(EnumItemSlot.HEAD).isEmpty()) {
--            Calendar calendar = this.world.ae();
-+            Calendar calendar = this.world.ac();
- 
-             if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.random.nextFloat() < 0.25F) {
-                 this.setSlot(EnumItemSlot.HEAD, new ItemStack(this.random.nextFloat() < 0.1F ? Blocks.LIT_PUMPKIN : Blocks.PUMPKIN));
-@@ -122,7 +177,7 @@
-         return groupdataentity;
-     }
- 
--    public void dk() {
-+    public void dh() {
-         if (this.world != null && !this.world.isClientSide) {
-             this.goalSelector.a((PathfinderGoal) this.c);
-             this.goalSelector.a((PathfinderGoal) this.b);
-@@ -152,8 +207,19 @@
+@@ -152,8 +160,19 @@
          double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
  
          entityarrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().a() * 4));
--        this.a(SoundEffects.gW, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
--        this.world.addEntity(entityarrow);
 +        // CraftBukkit start
 +        org.bukkit.event.entity.EntityShootBowEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityShootBowEvent(this, this.getItemInMainHand(), entityarrow, 0.8F);
 +        if (event.isCancelled()) {
@@ -186,38 +46,9 @@
 +            world.addEntity(entityarrow);
 +        }
 +        // CraftBukkit end
-+        this.a(SoundEffects.fV, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+         this.a(SoundEffects.gW, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+-        this.world.addEntity(entityarrow);
 +        // this.world.addEntity(entityarrow); // CraftBukkit - moved up
      }
  
      protected EntityArrow a(float f) {
-@@ -165,13 +231,13 @@
- 
-     public void a(NBTTagCompound nbttagcompound) {
-         super.a(nbttagcompound);
--        this.dk();
-+        this.dh();
-     }
- 
-     public void setSlot(EnumItemSlot enumitemslot, ItemStack itemstack) {
-         super.setSlot(enumitemslot, itemstack);
-         if (!this.world.isClientSide && enumitemslot == EnumItemSlot.MAINHAND) {
--            this.dk();
-+            this.dh();
-         }
- 
-     }
-@@ -180,11 +246,11 @@
-         return 1.74F;
-     }
- 
--    public double aD() {
-+    public double ax() {
-         return -0.6D;
-     }
- 
--    public void p(boolean flag) {
-+    public void a(boolean flag) {
-         this.datawatcher.set(EntitySkeletonAbstract.a, Boolean.valueOf(flag));
-     }
- }

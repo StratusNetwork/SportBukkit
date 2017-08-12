@@ -79,7 +79,7 @@
  
                      if (k <= l1) {
                          BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
-@@ -72,14 +105,16 @@
+@@ -72,8 +105,10 @@
  
                          label120:
                          while (iterator1.hasNext()) {
@@ -92,13 +92,6 @@
                              int i2 = blockposition1.getX();
                              int j2 = blockposition1.getY();
                              int k2 = blockposition1.getZ();
-                             IBlockData iblockdata = worldserver.getType(blockposition1);
- 
--                            if (!iblockdata.l()) {
-+                            if (!iblockdata.m()) {
-                                 int l2 = 0;
-                                 int i3 = 0;
- 
 @@ -103,7 +138,7 @@
                                                  float f = (float) j3 + 0.5F;
                                                  float f1 = (float) l3 + 0.5F;
@@ -108,50 +101,21 @@
                                                      if (biomebase_biomemeta == null) {
                                                          biomebase_biomemeta = worldserver.a(enumcreaturetype, (BlockPosition) blockposition_mutableblockposition);
                                                          if (biomebase_biomemeta == null) {
-@@ -122,16 +157,16 @@
-                                                         }
- 
-                                                         entityinsentient.setPositionRotation((double) f, (double) k3, (double) f1, worldserver.random.nextFloat() * 360.0F, 0.0F);
--                                                        if (entityinsentient.P() && entityinsentient.canSpawn()) {
-+                                                        if (entityinsentient.cM() && entityinsentient.canSpawn()) {
+@@ -125,8 +160,11 @@
+                                                         if (entityinsentient.P() && entityinsentient.canSpawn()) {
                                                              groupdataentity = entityinsentient.prepare(worldserver.D(new BlockPosition(entityinsentient)), groupdataentity);
                                                              if (entityinsentient.canSpawn()) {
-                                                                 ++l2;
+-                                                                ++l2;
 -                                                                worldserver.addEntity(entityinsentient);
-+                                                                worldserver.addEntity(entityinsentient, SpawnReason.NATURAL); // CraftBukkit - Added a reason for spawning this creature
++                                                                // CraftBukkit start
++                                                                if (worldserver.addEntity(entityinsentient, SpawnReason.NATURAL)) {
++                                                                    ++l2;
++                                                                }
++                                                                // CraftBukkit end
                                                              } else {
                                                                  entityinsentient.die();
                                                              }
- 
--                                                            if (l2 >= entityinsentient.cS()) {
-+                                                            if (l2 >= entityinsentient.cQ()) {
-                                                                 continue label120;
-                                                             }
-                                                         }
-@@ -170,7 +205,7 @@
-     }
- 
-     public static boolean a(IBlockData iblockdata) {
--        return iblockdata.k() ? false : (iblockdata.m() ? false : (iblockdata.getMaterial().isLiquid() ? false : !BlockMinecartTrackAbstract.i(iblockdata)));
-+        return iblockdata.l() ? false : (iblockdata.n() ? false : (iblockdata.getMaterial().isLiquid() ? false : !BlockMinecartTrackAbstract.i(iblockdata)));
-     }
- 
-     public static boolean a(EntityInsentient.EnumEntityPositionType entityinsentient_enumentitypositiontype, World world, BlockPosition blockposition) {
-@@ -180,11 +215,11 @@
-             IBlockData iblockdata = world.getType(blockposition);
- 
-             if (entityinsentient_enumentitypositiontype == EntityInsentient.EnumEntityPositionType.IN_WATER) {
--                return iblockdata.getMaterial() == Material.WATER && world.getType(blockposition.down()).getMaterial() == Material.WATER && !world.getType(blockposition.up()).l();
-+                return iblockdata.getMaterial() == Material.WATER && world.getType(blockposition.down()).getMaterial() == Material.WATER && !world.getType(blockposition.up()).m();
-             } else {
-                 BlockPosition blockposition1 = blockposition.down();
- 
--                if (!world.getType(blockposition1).q()) {
-+                if (!world.getType(blockposition1).r()) {
-                     return false;
-                 } else {
-                     Block block = world.getType(blockposition1).getBlock();
-@@ -226,8 +261,10 @@
+@@ -226,8 +264,10 @@
                              }
  
                              entityinsentient.setPositionRotation((double) ((float) j1 + 0.5F), (double) blockposition.getY(), (double) ((float) k1 + 0.5F), random.nextFloat() * 360.0F, 0.0F);

@@ -29,7 +29,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
 --- a/src/main/java/net/minecraft/server/EntityInsentient.java
 +++ b/src/main/java/net/minecraft/server/EntityInsentient.java
-@@ -611,7 +611,7 @@ public abstract class EntityInsentient extends EntityLiving {
+@@ -621,7 +621,7 @@ public abstract class EntityInsentient extends EntityLiving {
          if (this.persistent) {
              this.ticksFarFromPlayer = 0;
          } else {
@@ -98,7 +98,7 @@ diff --git a/src/main/java/net/minecraft/server/SpawnerCreature.java b/src/main/
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -2623,6 +2623,16 @@ public abstract class World implements IBlockAccess {
+@@ -2627,6 +2627,16 @@ public abstract class World implements IBlockAccess {
          return this.a(d0, d1, d2, d3, predicate);
      }
  
@@ -115,7 +115,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
      @Nullable
      public EntityHuman a(double d0, double d1, double d2, double d3, Predicate<Entity> predicate) {
          double d4 = -1.0D;
-@@ -2650,9 +2660,17 @@ public abstract class World implements IBlockAccess {
+@@ -2654,9 +2664,17 @@ public abstract class World implements IBlockAccess {
      }
  
      public boolean isPlayerNearby(double d0, double d1, double d2, double d3) {

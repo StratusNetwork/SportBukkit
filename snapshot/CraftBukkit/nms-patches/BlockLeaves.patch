@@ -9,15 +9,6 @@
  public abstract class BlockLeaves extends Block {
  
      public static final BlockStateBoolean DECAYABLE = BlockStateBoolean.of("decayable");
-@@ -14,7 +16,7 @@
-         this.a(true);
-         this.a(CreativeModeTab.c);
-         this.c(0.2F);
--        this.e(1);
-+        this.d(1);
-         this.a(SoundEffectType.c);
-     }
- 
 @@ -132,6 +134,14 @@
      }
  
@@ -33,33 +24,3 @@
          this.b(world, blockposition, world.getType(blockposition), 0);
          world.setAir(blockposition);
      }
-@@ -146,7 +156,7 @@
- 
-     public void dropNaturally(World world, BlockPosition blockposition, IBlockData iblockdata, float f, int i) {
-         if (!world.isClientSide) {
--            int j = this.x(iblockdata);
-+            int j = this.i(iblockdata);
- 
-             if (i > 0) {
-                 j -= 2 << i;
-@@ -176,7 +186,7 @@
- 
-     protected void a(World world, BlockPosition blockposition, IBlockData iblockdata, int i) {}
- 
--    protected int x(IBlockData iblockdata) {
-+    protected int i(IBlockData iblockdata) {
-         return 20;
-     }
- 
-@@ -184,9 +194,9 @@
-         return !this.c;
-     }
- 
--    public boolean t(IBlockData iblockdata) {
-+    public boolean u(IBlockData iblockdata) {
-         return false;
-     }
- 
--    public abstract BlockWood.EnumLogVariant b(int i);
-+    public abstract BlockWood.EnumLogVariant e(int i);
- }

@@ -6,7 +6,7 @@ Subject: [PATCH] Block digging API
 diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src/main/java/net/minecraft/server/PlayerInteractManager.java
 --- a/src/main/java/net/minecraft/server/PlayerInteractManager.java
 +++ b/src/main/java/net/minecraft/server/PlayerInteractManager.java
-@@ -13,9 +13,9 @@ public class PlayerInteractManager {
+@@ -14,9 +14,9 @@ public class PlayerInteractManager {
      public World world;
      public EntityPlayer player;
      private EnumGamemode gamemode;
@@ -18,7 +18,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src
      private int currentTick;
      private boolean h;
      private BlockPosition i;
-@@ -239,6 +239,7 @@ public class PlayerInteractManager {
+@@ -240,6 +240,7 @@ public class PlayerInteractManager {
      public void e() {
          this.d = false;
          this.world.c(this.player.getId(), this.f, -1);
@@ -29,7 +29,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1878,4 +1878,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1916,4 +1916,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                          java.util.EnumSet.allOf(PacketPlayOutPosition.EnumPlayerTeleportFlags.class),
                          cause);
      }

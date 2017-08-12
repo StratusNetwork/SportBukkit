@@ -6,7 +6,7 @@ Subject: [PATCH] Complete resource pack API
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1068,7 +1068,9 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1073,7 +1073,9 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
      // CraftBukkit start
      public void a(PacketPlayInResourcePackStatus packetplayinresourcepackstatus) {
          PlayerConnectionUtils.ensureMainThread(packetplayinresourcepackstatus, this, this.player.x());
@@ -20,7 +20,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -52,10 +52,7 @@ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+@@ -61,10 +61,7 @@ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
  import org.bukkit.craftbukkit.util.Skins;
  import org.bukkit.entity.EntityType;
  import org.bukkit.entity.Player;
@@ -32,7 +32,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
  import org.bukkit.inventory.InventoryView.Property;
  import org.bukkit.map.MapCursor;
  import org.bukkit.map.MapView;
-@@ -79,6 +76,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -88,6 +85,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      private double healthScale = 20;
      private Skin realSkin;
      private boolean showInvisibles;
@@ -40,7 +40,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
  
      private final Map<CommandSender, String> fakeNames = new WeakHashMap<CommandSender, String>();
      private final Map<CommandSender, String> fakeDisplayNames = new WeakHashMap<CommandSender, String>();
-@@ -1372,9 +1370,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1410,9 +1408,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
  
      @Override
      public void setResourcePack(String url) {
@@ -58,7 +58,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
      }
  
      @Override
-@@ -1386,6 +1391,20 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1424,6 +1429,20 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          getHandle().setResourcePack(url, BaseEncoding.base16().lowerCase().encode(hash));
      }
  

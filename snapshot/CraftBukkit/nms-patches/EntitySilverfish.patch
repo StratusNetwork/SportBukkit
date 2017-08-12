@@ -1,102 +1,18 @@
 --- a/net/minecraft/server/EntitySilverfish.java
 +++ b/net/minecraft/server/EntitySilverfish.java
-@@ -26,7 +26,7 @@
-         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));
-     }
+@@ -98,7 +98,7 @@
  
--    public double aD() {
-+    public double ax() {
-         return 0.1D;
-     }
- 
-@@ -45,20 +45,20 @@
-         return false;
-     }
- 
--    protected SoundEffect F() {
--        return SoundEffects.gM;
-+    protected SoundEffect G() {
-+        return SoundEffects.fL;
-     }
- 
--    protected SoundEffect d(DamageSource damagesource) {
--        return SoundEffects.gO;
-+    protected SoundEffect bW() {
-+        return SoundEffects.fN;
-     }
- 
--    protected SoundEffect cd() {
--        return SoundEffects.gN;
-+    protected SoundEffect bX() {
-+        return SoundEffects.fM;
-     }
- 
-     protected void a(BlockPosition blockposition, Block block) {
--        this.a(SoundEffects.gP, 0.15F, 1.0F);
-+        this.a(SoundEffects.fO, 0.15F, 1.0F);
-     }
- 
-     public boolean damageEntity(DamageSource damagesource, float f) {
-@@ -78,27 +78,27 @@
-         return LootTables.v;
-     }
- 
--    public void B_() {
-+    public void A_() {
-         this.aN = this.yaw;
--        super.B_();
-+        super.A_();
-     }
- 
--    public void j(float f) {
-+    public void i(float f) {
-         this.yaw = f;
--        super.j(f);
-+        super.i(f);
-     }
- 
-     public float a(BlockPosition blockposition) {
-         return this.world.getType(blockposition.down()).getBlock() == Blocks.STONE ? 10.0F : super.a(blockposition);
-     }
- 
--    protected boolean s_() {
-+    protected boolean r_() {
-         return true;
-     }
- 
--    public boolean P() {
--        if (super.P()) {
+     public boolean P() {
+         if (super.P()) {
 -            EntityHuman entityhuman = this.world.b(this, 5.0D);
-+    public boolean cM() {
-+        if (super.cM()) {
 +            EntityHuman entityhuman = this.world.findNearbyMortalPlayer(this, 5.0D, EntityHuman.affectsSpawningFilter()); // SportBukkit - affectsSpawning filter
  
              return entityhuman == null;
          } else {
-@@ -123,7 +123,7 @@
-         public boolean a() {
-             if (this.a.getGoalTarget() != null) {
-                 return false;
--            } else if (!this.a.getNavigation().o()) {
-+            } else if (!this.a.getNavigation().n()) {
-                 return false;
-             } else {
-                 Random random = this.a.getRandom();
-@@ -133,7 +133,7 @@
-                     BlockPosition blockposition = (new BlockPosition(this.a.locX, this.a.locY + 0.5D, this.a.locZ)).shift(this.h);
-                     IBlockData iblockdata = this.a.world.getType(blockposition);
- 
--                    if (BlockMonsterEggs.x(iblockdata)) {
-+                    if (BlockMonsterEggs.i(iblockdata)) {
-                         this.i = true;
-                         return true;
-                     }
-@@ -156,7 +156,12 @@
-                 BlockPosition blockposition = (new BlockPosition(this.a.locX, this.a.locY + 0.5D, this.a.locZ)).shift(this.h);
+@@ -157,6 +157,11 @@
                  IBlockData iblockdata = world.getType(blockposition);
  
--                if (BlockMonsterEggs.x(iblockdata)) {
-+                if (BlockMonsterEggs.i(iblockdata)) {
+                 if (BlockMonsterEggs.x(iblockdata)) {
 +                    // CraftBukkit start
 +                    if (org.bukkit.craftbukkit.event.CraftEventFactory.callEntityChangeBlockEvent(this.a, blockposition, Blocks.MONSTER_EGG, Block.getId(BlockMonsterEggs.getById(iblockdata.getBlock().toLegacyData(iblockdata)))).isCancelled()) {
 +                        return;

@@ -21,7 +21,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBanner.java
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
-@@ -498,4 +498,13 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
+@@ -499,4 +499,13 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
          blockEntityTag = new NBTTagCompound();
          te.save(blockEntityTag);
      }

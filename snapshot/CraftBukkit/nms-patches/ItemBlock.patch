@@ -1,21 +1,6 @@
 --- a/net/minecraft/server/ItemBlock.java
 +++ b/net/minecraft/server/ItemBlock.java
-@@ -8,6 +8,7 @@
- 
-     public ItemBlock(Block block) {
-         this.a = block;
-+        proto(block.proto()); // SportBukkit - copy proto from block to item
-     }
- 
-     public EnumInteractionResult a(EntityHuman entityhuman, World world, BlockPosition blockposition, EnumHand enumhand, EnumDirection enumdirection, float f, float f1, float f2) {
-@@ -29,14 +30,11 @@
-                 if (iblockdata1.getBlock() == this.a) {
-                     a(world, entityhuman, blockposition, itemstack);
-                     this.a.postPlace(world, blockposition, iblockdata1, entityhuman, itemstack);
--                    if (entityhuman instanceof EntityPlayer) {
--                        CriterionTriggers.x.a((EntityPlayer) entityhuman, blockposition, itemstack);
--                    }
-                 }
+@@ -36,7 +36,7 @@
  
                  SoundEffectType soundeffecttype = this.a.getStepSound();
  
@@ -23,13 +8,4 @@
 +                // world.a(entityhuman, blockposition, soundeffecttype.e(), SoundCategory.BLOCKS, (soundeffecttype.a() + 1.0F) / 2.0F, soundeffecttype.b() * 0.8F); // CraftBukkit - SPIGOT-1288
                  itemstack.subtract(1);
              }
- 
-@@ -58,7 +56,7 @@
-                 TileEntity tileentity = world.getTileEntity(blockposition);
- 
-                 if (tileentity != null) {
--                    if (!world.isClientSide && tileentity.isFilteredNBT() && (entityhuman == null || !entityhuman.isCreativeAndOp())) {
-+                    if (!world.isClientSide && tileentity.isFilteredNBT() && (entityhuman == null || !entityhuman.dk())) {
-                         return false;
-                     }
  

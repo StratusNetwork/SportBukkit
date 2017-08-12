@@ -49,31 +49,11 @@
      public TileEntityFurnace() {
          this.items = NonNullList.a(3, ItemStack.a);
      }
-@@ -22,7 +57,7 @@
-         return this.items.size();
+@@ -119,11 +154,29 @@
      }
  
--    public boolean x_() {
-+    public boolean w_() {
-         Iterator iterator = this.items.iterator();
- 
-         ItemStack itemstack;
-@@ -75,7 +110,7 @@
-         return this.m != null && !this.m.isEmpty();
-     }
- 
--    public void setCustomName(String s) {
-+    public void a(String s) {
-         this.m = s;
-     }
- 
-@@ -118,12 +153,30 @@
-         return this.burnTime > 0;
-     }
- 
--    public void e() {
+     public void e() {
 -        boolean flag = this.isBurning();
-+    public void F_() {
 +        boolean flag = (this.getBlock() == Blocks.LIT_FURNACE); // CraftBukkit - SPIGOT-844 - Check if furnace block is lit using the block instead of burn time
          boolean flag1 = false;
  
@@ -101,7 +81,7 @@
          }
  
          if (!this.world.isClientSide) {
-@@ -134,17 +187,28 @@
+@@ -134,10 +187,21 @@
                      this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.cookTimeTotal);
                  }
              } else {
@@ -127,14 +107,6 @@
                          flag1 = true;
                          if (!itemstack.isEmpty()) {
                              Item item = itemstack.getItem();
- 
-                             itemstack.subtract(1);
-                             if (itemstack.isEmpty()) {
--                                Item item1 = item.q();
-+                                Item item1 = item.r();
- 
-                                 this.items.set(1, item1 == null ? ItemStack.a : new ItemStack(item1));
-                             }
 @@ -152,6 +216,7 @@
                      }
                  }

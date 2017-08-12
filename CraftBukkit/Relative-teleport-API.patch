@@ -6,7 +6,7 @@ Subject: [PATCH] Relative teleport API
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -706,14 +706,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -711,14 +711,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
      // CraftBukkit start - Delegate to teleport(Location)
      public void a(double d0, double d1, double d2, float f, float f1, PlayerTeleportEvent.TeleportCause cause) {
@@ -27,7 +27,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
          Player player = this.getPlayer();
          Location from = player.getLocation();
  
-@@ -754,6 +758,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -759,6 +763,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          }
  
          this.internalTeleport(d0, d1, d2, f, f1, set);
@@ -35,7 +35,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
      }
  
      public void teleport(Location dest) {
-@@ -770,15 +775,15 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -775,15 +780,15 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          }
  
          if(Double.isNaN(d0)) {
@@ -54,7 +54,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
          }
  
          this.justTeleported = true;
-@@ -1206,7 +1211,6 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1209,7 +1214,6 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                  }
              }
          }
@@ -65,7 +65,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1845,4 +1845,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1883,4 +1883,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      public void hideTitle() {
          getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.CLEAR, (BaseComponent[]) null, 0, 0, 0));
      }

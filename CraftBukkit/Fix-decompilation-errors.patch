@@ -133,7 +133,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketStatusOutServerInfo.java b
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -752,7 +752,7 @@ public abstract class PlayerList {
+@@ -758,7 +758,7 @@ public abstract class PlayerList {
  
      public void f(EntityPlayer entityplayer) {
          GameProfile gameprofile = entityplayer.getProfile();

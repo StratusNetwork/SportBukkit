@@ -1,11 +1,7 @@
 --- a/net/minecraft/server/CommandGamemode.java
 +++ b/net/minecraft/server/CommandGamemode.java
-@@ -25,9 +25,15 @@
-             throw new ExceptionUsage("commands.gamemode.usage", new Object[0]);
-         } else {
-             EnumGamemode enumgamemode = this.c(icommandlistener, astring[0]);
--            EntityPlayer entityplayer = astring.length >= 2 ? b(minecraftserver, icommandlistener, astring[1]) : a(icommandlistener);
-+            EntityPlayer entityplayer = astring.length >= 2 ? a(minecraftserver, icommandlistener, astring[1]) : a(icommandlistener);
+@@ -28,6 +28,12 @@
+             EntityPlayer entityplayer = astring.length >= 2 ? b(minecraftserver, icommandlistener, astring[1]) : a(icommandlistener);
  
              entityplayer.a(enumgamemode);
 +            // CraftBukkit start - handle event cancelling the change

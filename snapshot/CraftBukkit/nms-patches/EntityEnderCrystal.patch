@@ -6,22 +6,13 @@
  
 +// CraftBukkit start
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
-+import org.bukkit.event.entity.ExplosionPrimeEvent;
 +import org.bukkit.event.entity.ExplosionPrimeByEntityEvent;
++import org.bukkit.event.entity.ExplosionPrimeEvent;
 +// CraftBukkit end
 +
  public class EntityEnderCrystal extends Entity {
  
      private static final DataWatcherObject<Optional<BlockPosition>> b = DataWatcher.a(EntityEnderCrystal.class, DataWatcherRegistry.k);
-@@ -30,7 +36,7 @@
-         this.getDataWatcher().register(EntityEnderCrystal.c, Boolean.valueOf(true));
-     }
- 
--    public void B_() {
-+    public void A_() {
-         this.lastX = this.locX;
-         this.lastY = this.locY;
-         this.lastZ = this.locZ;
 @@ -39,7 +45,11 @@
              BlockPosition blockposition = new BlockPosition(this);
  
@@ -35,7 +26,7 @@
              }
          }
  
-@@ -75,12 +85,27 @@
+@@ -75,10 +85,29 @@
              return false;
          } else {
              if (!this.dead && !this.world.isClientSide) {
@@ -46,35 +37,23 @@
 +                // CraftBukkit end
                  this.die();
                  if (!this.world.isClientSide) {
--                    if (!damagesource.isExplosion()) {
+                     if (!damagesource.isExplosion()) {
 -                        this.world.explode((Entity) null, this.locX, this.locY, this.locZ, 6.0F, true);
-+                    // CraftBukkit start
-+                    final ExplosionPrimeEvent event;
-+                    if(damagesource.getEntity() != null) {
-+                        event = new ExplosionPrimeByEntityEvent(this.getBukkitEntity(), 6.0F, false, damagesource.getEntity().getBukkitEntity());
-+                    } else {
-+                        event = new ExplosionPrimeEvent(this.getBukkitEntity(), 6.0F, false);
++                        // CraftBukkit start
++                        final ExplosionPrimeEvent event;
++                        if(damagesource.getEntity() != null) {
++                            event = new ExplosionPrimeByEntityEvent(this.getBukkitEntity(), 6.0F, false, damagesource.getEntity().getBukkitEntity());
++                        } else {
++                            event = new ExplosionPrimeEvent(this.getBukkitEntity(), 6.0F, false);
++                        }
++
++                        this.world.getServer().getPluginManager().callEvent(event);
++                        if (event.isCancelled()) {
++                            this.dead = false;
++                            return false;
++                        }
++                        this.world.explode(this, this.locX, this.locY, this.locZ, event.getRadius(), event.getFire());
++                        // CraftBukkit end
                      }
--
-+                    this.world.getServer().getPluginManager().callEvent(event);
-+                    if (event.isCancelled()) {
-+                        this.dead = false;
-+                        return false;
-+                    }
-+                    this.world.explode(this, this.locX, this.locY, this.locZ, event.getRadius(), event.getFire());
-+                    // CraftBukkit end
+ 
                      this.a(damagesource);
-                 }
-             }
-@@ -89,9 +114,9 @@
-         }
-     }
- 
--    public void killEntity() {
-+    public void Q() {
-         this.a(DamageSource.GENERIC);
--        super.killEntity();
-+        super.Q();
-     }
- 
-     private void a(DamageSource damagesource) {

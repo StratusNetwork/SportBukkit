@@ -9,21 +9,3 @@
                  ++this.l;
              }
          }
-@@ -84,7 +84,7 @@
-     }
- 
-     private boolean a(BlockPosition blockposition, BlockPosition blockposition1) {
--        if (!this.a.getType(blockposition1.down()).q()) {
-+        if (!this.a.getType(blockposition1.down()).r()) {
-             return false;
-         } else {
-             int i = blockposition1.getX() - blockposition.getX() / 2;
-@@ -93,7 +93,7 @@
-             for (int k = i; k < i + blockposition.getX(); ++k) {
-                 for (int l = blockposition1.getY(); l < blockposition1.getY() + blockposition.getY(); ++l) {
-                     for (int i1 = j; i1 < j + blockposition.getZ(); ++i1) {
--                        if (this.a.getType(new BlockPosition(k, l, i1)).l()) {
-+                        if (this.a.getType(new BlockPosition(k, l, i1)).m()) {
-                             return false;
-                         }
-                     }

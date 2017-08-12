@@ -13,11 +13,10 @@
  
      public PacketPlayOutEntityMetadata() {}
  
-@@ -18,7 +20,7 @@
-         } else {
+@@ -19,6 +21,7 @@
              this.b = datawatcher.b();
          }
--
+ 
 +        DataWatcher.deepCopy(this.b); // SportBukkit - send unshared copy of metadata
      }
  

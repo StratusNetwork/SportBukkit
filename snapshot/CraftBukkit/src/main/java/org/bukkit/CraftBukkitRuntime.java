@@ -1,20 +1,20 @@
 package org.bukkit;
 
-import javax.annotation.Nullable;
-
 import com.google.inject.Injector;
 import net.minecraft.server.DispenserRegistry;
+import org.bukkit.craftbukkit.CraftVectorFactory;
 import org.bukkit.block.BlockFactory;
 import org.bukkit.craftbukkit.block.CraftBlockFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemFactory;
 import org.bukkit.craftbukkit.potion.CraftPotionBrewRegistry;
 import org.bukkit.craftbukkit.potion.CraftPotionEffectRegistry;
 import org.bukkit.craftbukkit.registry.CraftKey;
-import org.bukkit.craftbukkit.util.CraftVectorFactory;
+import org.bukkit.geometry.VectorFactory;
 import org.bukkit.potion.PotionBrewRegistry;
 import org.bukkit.potion.PotionEffectRegistry;
 import org.bukkit.registry.Key;
-import org.bukkit.geometry.VectorFactory;
+
+import javax.annotation.Nullable;
 
 public class CraftBukkitRuntime implements BukkitRuntime {
 

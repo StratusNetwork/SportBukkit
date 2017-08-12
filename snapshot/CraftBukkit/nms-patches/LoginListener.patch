@@ -1,20 +1,5 @@
 --- a/net/minecraft/server/LoginListener.java
 +++ b/net/minecraft/server/LoginListener.java
-@@ -1,5 +1,6 @@
- package net.minecraft.server;
- 
-+import com.google.common.base.Charsets;
- import com.mojang.authlib.GameProfile;
- import com.mojang.authlib.exceptions.AuthenticationUnavailableException;
- import io.netty.channel.ChannelFuture;
-@@ -10,7 +11,6 @@
- import java.net.InetAddress;
- import java.net.InetSocketAddress;
- import java.net.SocketAddress;
--import java.nio.charset.StandardCharsets;
- import java.security.PrivateKey;
- import java.util.Arrays;
- import java.util.Random;
 @@ -22,6 +22,12 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -36,26 +21,12 @@
  
      public LoginListener(MinecraftServer minecraftserver, NetworkManager networkmanager) {
          this.g = LoginListener.EnumProtocolState.HELLO;
-@@ -45,7 +52,7 @@
-         LoginListener.random.nextBytes(this.e);
-     }
- 
--    public void e() {
-+    public void F_() {
-         if (this.g == LoginListener.EnumProtocolState.READY_TO_ACCEPT) {
-             this.b();
-         } else if (this.g == LoginListener.EnumProtocolState.DELAY_ACCEPT) {
-@@ -59,16 +66,24 @@
-         }
- 
-         if (this.h++ == 600) {
--            this.disconnect(new ChatMessage("multiplayer.disconnect.slow_login", new Object[0]));
-+            this.disconnect("Took too long to log in");
-         }
+@@ -64,6 +71,26 @@
  
      }
  
--    public void disconnect(IChatBaseComponent ichatbasecomponent) {
++    // CraftBukkit start
++    @Deprecated
 +    public void disconnect(String s) {
 +        // SportBukkit start - postpone disconnect until after pre-login event
 +        if(!this.preLoginEventFired) {
@@ -63,19 +34,21 @@
 +            return;
 +        }
 +        // SportBukkit end
-         try {
--            LoginListener.c.info("Disconnecting {}: {}", this.c(), ichatbasecomponent.toPlainText());
--            this.networkManager.sendPacket(new PacketLoginOutDisconnect(ichatbasecomponent));
--            this.networkManager.close(ichatbasecomponent);
-+            LoginListener.c.info("Disconnecting {}: {}", new Object[] { this.d(), s});
-+            ChatComponentText chatcomponenttext = new ChatComponentText(s);
++        try {
++            IChatBaseComponent ichatbasecomponent = new ChatComponentText(s);
++            LoginListener.c.info("Disconnecting {}: {}", this.c(), s);
++            this.networkManager.sendPacket(new PacketLoginOutDisconnect(ichatbasecomponent));
++            this.networkManager.close(ichatbasecomponent);
++        } catch (Exception exception) {
++            LoginListener.c.error("Error whilst disconnecting player", exception);
++        }
++    }
++    // CraftBukkit end
 +
-+            this.networkManager.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
-+            this.networkManager.close(chatcomponenttext);
-         } catch (Exception exception) {
-             LoginListener.c.error("Error whilst disconnecting player", exception);
-         }
-@@ -76,14 +91,18 @@
+     public void disconnect(IChatBaseComponent ichatbasecomponent) {
+         try {
+             LoginListener.c.info("Disconnecting {}: {}", this.c(), ichatbasecomponent.toPlainText());
+@@ -76,14 +103,18 @@
      }
  
      public void b() {
@@ -92,12 +65,12 @@
 -        if (s != null) {
 -            this.disconnect(new ChatMessage(s, new Object[0]));
 +        if (s == null) {
-+            // this.disconnect(s);
++            // this.disconnect(new ChatMessage(s, new Object[0]));
 +            // CraftBukkit end
          } else {
              this.g = LoginListener.EnumProtocolState.ACCEPTED;
              if (this.server.aG() >= 0 && !this.networkManager.isLocal()) {
-@@ -92,7 +111,7 @@
+@@ -92,7 +123,7 @@
                          LoginListener.this.networkManager.setCompressionLevel(LoginListener.this.server.aG());
                      }
  
@@ -106,7 +79,7 @@
                          this.a((ChannelFuture) future);
                      }
                  }, new GenericFutureListener[0]);
-@@ -103,19 +122,19 @@
+@@ -103,9 +134,9 @@
  
              if (entityplayer != null) {
                  this.g = LoginListener.EnumProtocolState.DELAY_ACCEPT;
@@ -118,19 +91,7 @@
              }
          }
  
-     }
- 
-     public void a(IChatBaseComponent ichatbasecomponent) {
--        LoginListener.c.info("{} lost connection: {}", this.c(), ichatbasecomponent.toPlainText());
-+        LoginListener.c.info("{} lost connection: {}", new Object[] { this.d(), ichatbasecomponent.toPlainText()});
-     }
- 
--    public String c() {
-+    public String d() {
-         return this.i != null ? this.i + " (" + this.networkManager.getSocketAddress() + ")" : String.valueOf(this.networkManager.getSocketAddress());
-     }
- 
-@@ -126,7 +145,15 @@
+@@ -126,7 +157,15 @@
              this.g = LoginListener.EnumProtocolState.KEY;
              this.networkManager.sendPacket(new PacketLoginOutEncryptionBegin("", this.server.O().getPublic(), this.e));
          } else {
@@ -138,7 +99,7 @@
 +            // SportBukkit start - call pre-login event in offline mode
 +            new Thread("User Authenticator #" + LoginListener.b.incrementAndGet()) {
 +                public void run() {
-+                    LoginListener.this.i = LoginListener.this.completeOfflineProfile(LoginListener.this.i);
++                    LoginListener.this.i = LoginListener.this.a(LoginListener.this.i);
 +                    LoginListener.c.info("UUID (offline) of player " + LoginListener.this.i.getName() + " is " + LoginListener.this.i.getId());
 +                    callPreLoginEvent();
 +                }
@@ -147,7 +108,7 @@
          }
  
      }
-@@ -150,27 +177,30 @@
+@@ -150,12 +189,11 @@
  
                          LoginListener.this.i = LoginListener.this.server.az().hasJoinedServer(new GameProfile((UUID) null, gameprofile.getName()), s, this.a());
                          if (LoginListener.this.i != null) {
@@ -160,19 +121,15 @@
                              LoginListener.this.i = LoginListener.this.a(gameprofile);
 -                            LoginListener.this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
                          } else {
--                            LoginListener.this.disconnect(new ChatMessage("multiplayer.disconnect.unverified_username", new Object[0]));
--                            LoginListener.c.error("Username \'{}\' tried to join with an invalid session", gameprofile.getName());
-+                            LoginListener.this.disconnect("Failed to verify username!");
-+                            LoginListener.c.error("Username \'{}\' tried to join with an invalid session", new Object[] { gameprofile.getName()});
-                         }
-                     } catch (AuthenticationUnavailableException authenticationunavailableexception) {
+                             LoginListener.this.disconnect(new ChatMessage("multiplayer.disconnect.unverified_username", new Object[0]));
+                             LoginListener.c.error("Username \'{}\' tried to join with an invalid session", gameprofile.getName());
+@@ -164,13 +202,18 @@
                          if (LoginListener.this.server.R()) {
                              LoginListener.c.warn("Authentication servers are down but will let them in anyway!");
                              LoginListener.this.i = LoginListener.this.a(gameprofile);
 -                            LoginListener.this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
                          } else {
--                            LoginListener.this.disconnect(new ChatMessage("multiplayer.disconnect.authservers_down", new Object[0]));
-+                            LoginListener.this.disconnect("Authentication servers are down. Please try again later, sorry!");
+                             LoginListener.this.disconnect(new ChatMessage("multiplayer.disconnect.authservers_down", new Object[0]));
                              LoginListener.c.error("Couldn\'t verify username because servers are unavailable");
                          }
 +                        // CraftBukkit start - catch all exceptions
@@ -181,12 +138,12 @@
 +                        server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + gameprofile.getName(), exception);
 +                        // CraftBukkit end
                      }
--
+ 
 +                    callPreLoginEvent(); // SportBukkit
                  }
  
                  @Nullable
-@@ -183,8 +213,77 @@
+@@ -183,8 +226,78 @@
          }
      }
  
@@ -242,6 +199,7 @@
 +        this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
 +    }
 +
++
 +    public GameProfile completeOfflineProfile(GameProfile profile) {
 +        if (networkManager.spoofedUUID != null) {
 +            profile = new GameProfile(networkManager.spoofedUUID, profile.getName());
@@ -261,7 +219,7 @@
 +
      protected GameProfile a(GameProfile gameprofile) {
 -        UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameprofile.getName()).getBytes(StandardCharsets.UTF_8));
-+        UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameprofile.getName().toLowerCase()).getBytes(Charsets.UTF_8));
++        UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + gameprofile.getName().toLowerCase()).getBytes(StandardCharsets.UTF_8));
  
          return new GameProfile(uuid, gameprofile.getName());
      }

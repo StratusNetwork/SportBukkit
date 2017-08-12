@@ -1,14 +1,5 @@
 --- a/net/minecraft/server/BlockCake.java
 +++ b/net/minecraft/server/BlockCake.java
-@@ -9,7 +9,7 @@
- 
-     protected BlockCake() {
-         super(Material.CAKE);
--        this.w(this.blockStateList.getBlockData().set(BlockCake.BITES, Integer.valueOf(0)));
-+        this.y(this.blockStateList.getBlockData().set(BlockCake.BITES, Integer.valueOf(0)));
-         this.a(true);
-     }
- 
 @@ -40,7 +40,18 @@
              return false;
          } else {
@@ -29,12 +20,3 @@
              int i = ((Integer) iblockdata.get(BlockCake.BITES)).intValue();
  
              if (i < 6) {
-@@ -99,8 +110,4 @@
-     public boolean isComplexRedstone(IBlockData iblockdata) {
-         return true;
-     }
--
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return EnumBlockFaceShape.UNDEFINED;
--    }
- }

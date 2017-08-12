@@ -1,11 +1,11 @@
 package org.bukkit.craftbukkit;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import net.minecraft.server.CrashReport;
 import net.minecraft.server.CrashReportSystemDetails;
 import org.bukkit.Bukkit;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CraftLogging {
 

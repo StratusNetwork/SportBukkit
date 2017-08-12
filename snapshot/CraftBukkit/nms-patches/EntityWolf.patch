@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityWolf.java
 +++ b/net/minecraft/server/EntityWolf.java
-@@ -4,17 +4,22 @@
+@@ -4,6 +4,11 @@
  import java.util.UUID;
  import javax.annotation.Nullable;
  
@@ -12,22 +12,6 @@
  public class EntityWolf extends EntityTameableAnimal {
  
      private static final DataWatcherObject<Float> DATA_HEALTH = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.c);
--    private static final DataWatcherObject<Boolean> bC = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.h);
--    private static final DataWatcherObject<Integer> bD = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.b);
-+    private static final DataWatcherObject<Boolean> bB = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.h);
-+    private static final DataWatcherObject<Integer> bC = DataWatcher.a(EntityWolf.class, DataWatcherRegistry.b);
-+    private float bD;
-     private float bE;
--    private float bF;
-+    private boolean bF;
-     private boolean bG;
--    private boolean bH;
-+    private float bH;
-     private float bI;
--    private float bJ;
- 
-     public EntityWolf(World world) {
-         super(world);
 @@ -62,6 +67,22 @@
          this.getAttributeMap().b(GenericAttributes.ATTACK_DAMAGE).setValue(2.0D);
      }
@@ -51,135 +35,19 @@
      public void setGoalTarget(@Nullable EntityLiving entityliving) {
          super.setGoalTarget(entityliving);
          if (entityliving == null) {
-@@ -79,12 +100,12 @@
-     protected void i() {
-         super.i();
-         this.datawatcher.register(EntityWolf.DATA_HEALTH, Float.valueOf(this.getHealth()));
--        this.datawatcher.register(EntityWolf.bC, Boolean.valueOf(false));
--        this.datawatcher.register(EntityWolf.bD, Integer.valueOf(EnumColor.RED.getInvColorIndex()));
-+        this.datawatcher.register(EntityWolf.bB, Boolean.valueOf(false));
-+        this.datawatcher.register(EntityWolf.bC, Integer.valueOf(EnumColor.RED.getInvColorIndex()));
-     }
- 
-     protected void a(BlockPosition blockposition, Block block) {
--        this.a(SoundEffects.iQ, 0.15F, 1.0F);
-+        this.a(SoundEffects.hP, 0.15F, 1.0F);
-     }
- 
-     public static void a(DataConverterManager dataconvertermanager) {
-@@ -106,19 +127,19 @@
- 
-     }
- 
--    protected SoundEffect F() {
--        return this.isAngry() ? SoundEffects.iL : (this.random.nextInt(3) == 0 ? (this.isTamed() && ((Float) this.datawatcher.get(EntityWolf.DATA_HEALTH)).floatValue() < 10.0F ? SoundEffects.iR : SoundEffects.iO) : SoundEffects.iJ);
-+    protected SoundEffect G() {
-+        return this.isAngry() ? SoundEffects.hK : (this.random.nextInt(3) == 0 ? (this.isTamed() && ((Float) this.datawatcher.get(EntityWolf.DATA_HEALTH)).floatValue() < 10.0F ? SoundEffects.hQ : SoundEffects.hN) : SoundEffects.hI);
-     }
- 
--    protected SoundEffect d(DamageSource damagesource) {
--        return SoundEffects.iN;
-+    protected SoundEffect bW() {
-+        return SoundEffects.hM;
-     }
- 
--    protected SoundEffect cd() {
--        return SoundEffects.iK;
-+    protected SoundEffect bX() {
-+        return SoundEffects.hJ;
-     }
- 
--    protected float co() {
-+    protected float ci() {
-         return 0.4F;
-     }
- 
-@@ -129,10 +150,10 @@
- 
-     public void n() {
-         super.n();
--        if (!this.world.isClientSide && this.bG && !this.bH && !this.dc() && this.onGround) {
--            this.bH = true;
-+        if (!this.world.isClientSide && this.bF && !this.bG && !this.da() && this.onGround) {
-+            this.bG = true;
-+            this.bH = 0.0F;
-             this.bI = 0.0F;
--            this.bJ = 0.0F;
-             this.world.broadcastEntityEffect(this, (byte) 8);
-         }
- 
-@@ -142,37 +163,37 @@
- 
-     }
- 
--    public void B_() {
--        super.B_();
--        this.bF = this.bE;
--        if (this.dv()) {
--            this.bE += (1.0F - this.bE) * 0.4F;
-+    public void A_() {
-+        super.A_();
-+        this.bE = this.bD;
-+        if (this.dt()) {
-+            this.bD += (1.0F - this.bD) * 0.4F;
-         } else {
--            this.bE += (0.0F - this.bE) * 0.4F;
-+            this.bD += (0.0F - this.bD) * 0.4F;
-         }
- 
--        if (this.an()) {
--            this.bG = true;
--            this.bH = false;
-+        if (this.ai()) {
-+            this.bF = true;
-+            this.bG = false;
-+            this.bH = 0.0F;
-             this.bI = 0.0F;
--            this.bJ = 0.0F;
--        } else if ((this.bG || this.bH) && this.bH) {
--            if (this.bI == 0.0F) {
--                this.a(SoundEffects.iP, this.co(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-+        } else if ((this.bF || this.bG) && this.bG) {
-+            if (this.bH == 0.0F) {
-+                this.a(SoundEffects.hO, this.ci(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-             }
- 
--            this.bJ = this.bI;
--            this.bI += 0.05F;
--            if (this.bJ >= 2.0F) {
-+            this.bI = this.bH;
-+            this.bH += 0.05F;
-+            if (this.bI >= 2.0F) {
-+                this.bF = false;
-                 this.bG = false;
--                this.bH = false;
--                this.bJ = 0.0F;
-                 this.bI = 0.0F;
-+                this.bH = 0.0F;
-             }
- 
--            if (this.bI > 0.4F) {
-+            if (this.bH > 0.4F) {
-                 float f = (float) this.getBoundingBox().b;
--                int i = (int) (MathHelper.sin((this.bI - 0.4F) * 3.1415927F) * 7.0F);
-+                int i = (int) (MathHelper.sin((this.bH - 0.4F) * 3.1415927F) * 7.0F);
- 
-                 for (int j = 0; j < i; ++j) {
-                     float f1 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-@@ -200,9 +221,10 @@
+@@ -200,9 +221,9 @@
              Entity entity = damagesource.getEntity();
  
              if (this.goalSit != null) {
 -                this.goalSit.setSitting(false);
 +                // CraftBukkit - moved into EntityLiving.d(DamageSource, float)
-+                // PAIL : checkme
 +                // this.goalSit.setSitting(false);
              }
 -
              if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow)) {
                  f = (f + 1.0F) / 2.0F;
              }
-@@ -245,7 +267,7 @@
+@@ -245,7 +266,7 @@
                              itemstack.subtract(1);
                          }
  
@@ -188,101 +56,28 @@
                          return true;
                      }
                  } else if (itemstack.getItem() == Items.DYE) {
-@@ -265,8 +287,8 @@
-             if (this.e((EntityLiving) entityhuman) && !this.world.isClientSide && !this.e(itemstack)) {
+@@ -266,7 +287,7 @@
                  this.goalSit.setSitting(!this.isSitting());
                  this.bd = false;
--                this.navigation.p();
+                 this.navigation.p();
 -                this.setGoalTarget((EntityLiving) null);
-+                this.navigation.o();
 +                this.setGoalTarget((EntityLiving) null, TargetReason.FORGOT_TARGET, true); // CraftBukkit - reason
              }
          } else if (itemstack.getItem() == Items.BONE && !this.isAngry()) {
              if (!entityhuman.abilities.canInstantlyBuild) {
-@@ -274,12 +296,15 @@
+@@ -274,12 +295,13 @@
              }
  
              if (!this.world.isClientSide) {
 -                if (this.random.nextInt(3) == 0) {
--                    this.c(entityhuman);
--                    this.navigation.p();
 +                // CraftBukkit - added event call and isCancelled check.
 +                if (this.random.nextInt(3) == 0 && !CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled()) {
-+                    this.setTamed(true);
-+                    this.navigation.o();
+                     this.c(entityhuman);
+                     this.navigation.p();
                      this.setGoalTarget((EntityLiving) null);
                      this.goalSit.setSitting(true);
-                     this.setHealth(20.0F);
+-                    this.setHealth(20.0F);
 +                    this.setHealth(this.getMaxHealth()); // CraftBukkit - 20.0 -> getMaxHealth()
-+                    this.setOwnerUUID(entityhuman.getUniqueID());
                      this.p(true);
                      this.world.broadcastEntityEffect(this, (byte) 7);
                  } else {
-@@ -298,31 +323,31 @@
-         return itemstack.getItem() instanceof ItemFood && ((ItemFood) itemstack.getItem()).g();
-     }
- 
--    public int cS() {
-+    public int cQ() {
-         return 8;
-     }
- 
-     public boolean isAngry() {
--        return (((Byte) this.datawatcher.get(EntityWolf.bx)).byteValue() & 2) != 0;
-+        return (((Byte) this.datawatcher.get(EntityWolf.bw)).byteValue() & 2) != 0;
-     }
- 
-     public void setAngry(boolean flag) {
--        byte b0 = ((Byte) this.datawatcher.get(EntityWolf.bx)).byteValue();
-+        byte b0 = ((Byte) this.datawatcher.get(EntityWolf.bw)).byteValue();
- 
-         if (flag) {
--            this.datawatcher.set(EntityWolf.bx, Byte.valueOf((byte) (b0 | 2)));
-+            this.datawatcher.set(EntityWolf.bw, Byte.valueOf((byte) (b0 | 2)));
-         } else {
--            this.datawatcher.set(EntityWolf.bx, Byte.valueOf((byte) (b0 & -3)));
-+            this.datawatcher.set(EntityWolf.bw, Byte.valueOf((byte) (b0 & -3)));
-         }
- 
-     }
- 
-     public EnumColor getCollarColor() {
--        return EnumColor.fromInvColorIndex(((Integer) this.datawatcher.get(EntityWolf.bD)).intValue() & 15);
-+        return EnumColor.fromInvColorIndex(((Integer) this.datawatcher.get(EntityWolf.bC)).intValue() & 15);
-     }
- 
-     public void setCollarColor(EnumColor enumcolor) {
--        this.datawatcher.set(EntityWolf.bD, Integer.valueOf(enumcolor.getInvColorIndex()));
-+        this.datawatcher.set(EntityWolf.bC, Integer.valueOf(enumcolor.getInvColorIndex()));
-     }
- 
-     public EntityWolf b(EntityAgeable entityageable) {
-@@ -338,7 +363,7 @@
-     }
- 
-     public void t(boolean flag) {
--        this.datawatcher.set(EntityWolf.bC, Boolean.valueOf(flag));
-+        this.datawatcher.set(EntityWolf.bB, Boolean.valueOf(flag));
-     }
- 
-     public boolean mate(EntityAnimal entityanimal) {
-@@ -355,8 +380,8 @@
-         }
-     }
- 
--    public boolean dv() {
--        return ((Boolean) this.datawatcher.get(EntityWolf.bC)).booleanValue();
-+    public boolean dt() {
-+        return ((Boolean) this.datawatcher.get(EntityWolf.bB)).booleanValue();
-     }
- 
-     public boolean a(EntityLiving entityliving, EntityLiving entityliving1) {
-@@ -397,7 +422,7 @@
-         }
- 
-         private boolean a(EntityLlama entityllama) {
--            return entityllama.getStrength() >= EntityWolf.this.random.nextInt(5);
-+            return entityllama.dL() >= EntityWolf.this.random.nextInt(5);
-         }
- 
-         public void c() {

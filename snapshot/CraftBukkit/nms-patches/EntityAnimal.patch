@@ -1,52 +1,14 @@
 --- a/net/minecraft/server/EntityAnimal.java
 +++ b/net/minecraft/server/EntityAnimal.java
-@@ -1,22 +1,20 @@
- package net.minecraft.server;
- 
--import java.util.UUID;
--import javax.annotation.Nullable;
--
- public abstract class EntityAnimal extends EntityAgeable implements IAnimal {
- 
--    protected Block bA;
--    private int bx;
--    private UUID by;
-+    protected Block bz;
-+    private int bw;
-+    private EntityHuman bx;
+@@ -8,6 +8,7 @@
+     protected Block bA;
+     private int bx;
+     private UUID by;
 +    public ItemStack breedItem; // CraftBukkit - Add breedItem variable
  
      public EntityAnimal(World world) {
          super(world);
--        this.bA = Blocks.GRASS;
-+        this.bz = Blocks.GRASS;
-     }
- 
-     protected void M() {
-         if (this.getAge() != 0) {
--            this.bx = 0;
-+            this.bw = 0;
-         }
- 
-         super.M();
-@@ -25,12 +23,12 @@
-     public void n() {
-         super.n();
-         if (this.getAge() != 0) {
--            this.bx = 0;
-+            this.bw = 0;
-         }
- 
--        if (this.bx > 0) {
--            --this.bx;
--            if (this.bx % 10 == 0) {
-+        if (this.bw > 0) {
-+            --this.bw;
-+            if (this.bw % 10 == 0) {
-                 double d0 = this.random.nextGaussian() * 0.02D;
-                 double d1 = this.random.nextGaussian() * 0.02D;
-                 double d2 = this.random.nextGaussian() * 0.02D;
-@@ -41,45 +39,44 @@
+@@ -41,6 +42,9 @@
  
      }
  
@@ -56,103 +18,19 @@
      public boolean damageEntity(DamageSource damagesource, float f) {
          if (this.isInvulnerable(damagesource)) {
              return false;
-         } else {
--            this.bx = 0;
-+            this.bw = 0;
+@@ -49,6 +53,7 @@
              return super.damageEntity(damagesource, f);
          }
      }
 +    // CraftBukkit end */
  
      public float a(BlockPosition blockposition) {
--        return this.world.getType(blockposition.down()).getBlock() == this.bA ? 10.0F : this.world.n(blockposition) - 0.5F;
-+        return this.world.getType(blockposition.down()).getBlock() == this.bz ? 10.0F : this.world.n(blockposition) - 0.5F;
-     }
- 
-     public void b(NBTTagCompound nbttagcompound) {
-         super.b(nbttagcompound);
--        nbttagcompound.setInt("InLove", this.bx);
--        if (this.by != null) {
--            nbttagcompound.a("LoveCause", this.by);
--        }
--
-+        nbttagcompound.setInt("InLove", this.bw);
-     }
- 
--    public double aD() {
-+    public double ax() {
-         return 0.14D;
-     }
- 
-     public void a(NBTTagCompound nbttagcompound) {
-         super.a(nbttagcompound);
--        this.bx = nbttagcompound.getInt("InLove");
--        this.by = nbttagcompound.b("LoveCause") ? nbttagcompound.a("LoveCause") : null;
-+        this.bw = nbttagcompound.getInt("InLove");
-     }
- 
--    public boolean P() {
-+    public boolean cM() {
-         int i = MathHelper.floor(this.locX);
-         int j = MathHelper.floor(this.getBoundingBox().b);
-         int k = MathHelper.floor(this.locZ);
-         BlockPosition blockposition = new BlockPosition(i, j, k);
- 
--        return this.world.getType(blockposition.down()).getBlock() == this.bA && this.world.j(blockposition) > 8 && super.P();
-+        return this.world.getType(blockposition.down()).getBlock() == this.bz && this.world.j(blockposition) > 8 && super.cM();
-     }
- 
-     public int C() {
-@@ -102,9 +99,9 @@
-         ItemStack itemstack = entityhuman.b(enumhand);
- 
-         if (!itemstack.isEmpty()) {
--            if (this.e(itemstack) && this.getAge() == 0 && this.bx <= 0) {
-+            if (this.e(itemstack) && this.getAge() == 0 && this.bw <= 0) {
-                 this.a(entityhuman, itemstack);
--                this.f(entityhuman);
-+                this.c(entityhuman);
-                 return true;
-             }
- 
-@@ -125,32 +122,23 @@
- 
-     }
- 
--    public void f(@Nullable EntityHuman entityhuman) {
--        this.bx = 600;
--        if (entityhuman != null) {
--            this.by = entityhuman.getUniqueID();
--        }
--
-+    public void c(EntityHuman entityhuman) {
-+        this.bw = 600;
-+        this.bx = entityhuman;
+         return this.world.getType(blockposition.down()).getBlock() == this.bA ? 10.0F : this.world.n(blockposition) - 0.5F;
+@@ -130,6 +135,7 @@
+         if (entityhuman != null) {
+             this.by = entityhuman.getUniqueID();
+         }
 +        this.breedItem = entityhuman.inventory.getItemInHand(); // CraftBukkit
+ 
          this.world.broadcastEntityEffect(this, (byte) 18);
      }
- 
--    @Nullable
--    public EntityPlayer getBreedCause() {
--        if (this.by == null) {
--            return null;
--        } else {
--            EntityHuman entityhuman = this.world.b(this.by);
--
--            return entityhuman instanceof EntityPlayer ? (EntityPlayer) entityhuman : null;
--        }
-+    public EntityHuman getBreedCause() {
-+        return this.bx;
-     }
- 
-     public boolean isInLove() {
--        return this.bx > 0;
-+        return this.bw > 0;
-     }
- 
-     public void resetLove() {
--        this.bx = 0;
-+        this.bw = 0;
-     }
- 
-     public boolean mate(EntityAnimal entityanimal) {

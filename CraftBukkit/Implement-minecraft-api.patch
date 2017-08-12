@@ -39,7 +39,7 @@ diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/j
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -487,6 +487,7 @@ public abstract class PlayerList {
+@@ -493,6 +493,7 @@ public abstract class PlayerList {
  
          EntityPlayer entity = new EntityPlayer(server, server.getWorldServer(0), gameprofile, new PlayerInteractManager(server.getWorldServer(0)));
          entity.hostname = hostname;
@@ -58,7 +58,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  import net.md_5.bungee.api.chat.BaseComponent;
  import net.minecraft.server.*;
  
-@@ -118,10 +119,6 @@ import org.apache.commons.lang.Validate;
+@@ -119,10 +120,6 @@ import org.apache.commons.lang.Validate;
  import com.google.common.base.Charsets;
  import com.google.common.base.Function;
  import com.google.common.base.Preconditions;
@@ -69,7 +69,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  import com.mojang.authlib.GameProfile;
  
  import io.netty.buffer.ByteBuf;
-@@ -132,6 +129,7 @@ import jline.console.ConsoleReader;
+@@ -133,6 +130,7 @@ import jline.console.ConsoleReader;
  import org.bukkit.NamespacedKey;
  import org.bukkit.craftbukkit.util.CraftNamespacedKey;
  import org.bukkit.event.server.TabCompleteEvent;
@@ -77,7 +77,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  
  public final class CraftServer implements Server {
      private static final Player[] EMPTY_PLAYER_ARRAY = new Player[0];
-@@ -626,6 +624,11 @@ public final class CraftServer implements Server {
+@@ -625,6 +623,11 @@ public final class CraftServer implements Server {
      }
  
      @Override
@@ -89,7 +89,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      public CraftScheduler getScheduler() {
          return scheduler;
      }
-@@ -1800,4 +1803,16 @@ public final class CraftServer implements Server {
+@@ -1808,4 +1811,16 @@ public final class CraftServer implements Server {
              player.sendMessage(components);
          }
      }
@@ -171,7 +171,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/
  import net.minecraft.server.*;
  
  import org.bukkit.EntityEffect;
-@@ -560,6 +561,14 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -561,6 +562,14 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
      }
  
      @Override
@@ -189,7 +189,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -15,7 +15,10 @@ import java.util.*;
+@@ -24,7 +24,10 @@ import java.util.WeakHashMap;
  import java.util.logging.Level;
  import java.util.logging.Logger;
  
@@ -200,7 +200,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
  import net.minecraft.server.*;
  import net.minecraft.server.PacketPlayOutTitle.EnumTitleAction;
  
-@@ -1800,6 +1803,41 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1838,6 +1841,41 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      }
  
      @Override
@@ -242,7 +242,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
      public void sendMessage(BaseComponent component) {
          sendMessage( new BaseComponent[] { component } );
      }
-@@ -1910,4 +1948,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1948,4 +1986,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      public RayBlockIntersection getTargetedBlock(boolean nonSolids, boolean liquids) {
          return getTargetedBlock(getBlockReach(), nonSolids, liquids);
      }

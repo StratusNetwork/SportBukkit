@@ -9,40 +9,6 @@
  public class BlockDoor extends Block {
  
      public static final BlockStateDirection FACING = BlockFacingHorizontal.FACING;
-@@ -16,11 +18,11 @@
- 
-     protected BlockDoor(Material material) {
-         super(material);
--        this.w(this.blockStateList.getBlockData().set(BlockDoor.FACING, EnumDirection.NORTH).set(BlockDoor.OPEN, Boolean.valueOf(false)).set(BlockDoor.HINGE, BlockDoor.EnumDoorHinge.LEFT).set(BlockDoor.POWERED, Boolean.valueOf(false)).set(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER));
-+        this.y(this.blockStateList.getBlockData().set(BlockDoor.FACING, EnumDirection.NORTH).set(BlockDoor.OPEN, Boolean.valueOf(false)).set(BlockDoor.HINGE, BlockDoor.EnumDoorHinge.LEFT).set(BlockDoor.POWERED, Boolean.valueOf(false)).set(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER));
-     }
- 
-     public AxisAlignedBB b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
--        iblockdata = iblockdata.c(iblockaccess, blockposition);
-+        iblockdata = iblockdata.b(iblockaccess, blockposition);
-         EnumDirection enumdirection = (EnumDirection) iblockdata.get(BlockDoor.FACING);
-         boolean flag = !((Boolean) iblockdata.get(BlockDoor.OPEN)).booleanValue();
-         boolean flag1 = iblockdata.get(BlockDoor.HINGE) == BlockDoor.EnumDoorHinge.RIGHT;
-@@ -65,8 +67,8 @@
-         return this.material == Material.ORE ? 1005 : 1006;
-     }
- 
--    public MaterialMapColor c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
--        return iblockdata.getBlock() == Blocks.IRON_DOOR ? MaterialMapColor.i : (iblockdata.getBlock() == Blocks.WOODEN_DOOR ? BlockWood.EnumLogVariant.OAK.c() : (iblockdata.getBlock() == Blocks.SPRUCE_DOOR ? BlockWood.EnumLogVariant.SPRUCE.c() : (iblockdata.getBlock() == Blocks.BIRCH_DOOR ? BlockWood.EnumLogVariant.BIRCH.c() : (iblockdata.getBlock() == Blocks.JUNGLE_DOOR ? BlockWood.EnumLogVariant.JUNGLE.c() : (iblockdata.getBlock() == Blocks.ACACIA_DOOR ? BlockWood.EnumLogVariant.ACACIA.c() : (iblockdata.getBlock() == Blocks.DARK_OAK_DOOR ? BlockWood.EnumLogVariant.DARK_OAK.c() : super.c(iblockdata, iblockaccess, blockposition)))))));
-+    public MaterialMapColor r(IBlockData iblockdata) {
-+        return iblockdata.getBlock() == Blocks.IRON_DOOR ? MaterialMapColor.h : (iblockdata.getBlock() == Blocks.WOODEN_DOOR ? BlockWood.EnumLogVariant.OAK.c() : (iblockdata.getBlock() == Blocks.SPRUCE_DOOR ? BlockWood.EnumLogVariant.SPRUCE.c() : (iblockdata.getBlock() == Blocks.BIRCH_DOOR ? BlockWood.EnumLogVariant.BIRCH.c() : (iblockdata.getBlock() == Blocks.JUNGLE_DOOR ? BlockWood.EnumLogVariant.JUNGLE.c() : (iblockdata.getBlock() == Blocks.ACACIA_DOOR ? BlockWood.EnumLogVariant.ACACIA.c() : (iblockdata.getBlock() == Blocks.DARK_OAK_DOOR ? BlockWood.EnumLogVariant.DARK_OAK.c() : super.r(iblockdata)))))));
-     }
- 
-     public boolean interact(World world, BlockPosition blockposition, IBlockData iblockdata, EntityHuman entityhuman, EnumHand enumhand, EnumDirection enumdirection, float f, float f1, float f2) {
-@@ -124,7 +126,7 @@
-                 flag = true;
-             }
- 
--            if (!world.getType(blockposition.down()).q()) {
-+            if (!world.getType(blockposition.down()).r()) {
-                 world.setAir(blockposition);
-                 flag = true;
-                 if (iblockdata2.getBlock() == this) {
 @@ -137,9 +139,23 @@
                      this.b(world, blockposition, iblockdata, 0);
                  }
@@ -69,41 +35,3 @@
                      world.setTypeAndData(blockposition3, iblockdata2.set(BlockDoor.POWERED, Boolean.valueOf(flag1)), 2);
                      if (flag1 != ((Boolean) iblockdata.get(BlockDoor.OPEN)).booleanValue()) {
                          world.setTypeAndData(blockposition, iblockdata.set(BlockDoor.OPEN, Boolean.valueOf(flag1)), 2);
-@@ -157,7 +173,7 @@
-     }
- 
-     public boolean canPlace(World world, BlockPosition blockposition) {
--        return blockposition.getY() >= 255 ? false : world.getType(blockposition.down()).q() && super.canPlace(world, blockposition) && super.canPlace(world, blockposition.up());
-+        return blockposition.getY() >= 255 ? false : world.getType(blockposition.down()).r() && super.canPlace(world, blockposition) && super.canPlace(world, blockposition.up());
-     }
- 
-     public EnumPistonReaction h(IBlockData iblockdata) {
-@@ -177,7 +193,7 @@
-         boolean flag1 = (i1 & 1) != 0;
-         boolean flag2 = (i1 & 2) != 0;
- 
--        return b(k) | (flag ? 8 : 0) | (flag1 ? 16 : 0) | (flag2 ? 32 : 0);
-+        return e(k) | (flag ? 8 : 0) | (flag1 ? 16 : 0) | (flag2 ? 32 : 0);
-     }
- 
-     public ItemStack a(World world, BlockPosition blockposition, IBlockData iblockdata) {
-@@ -259,7 +275,7 @@
-         return i;
-     }
- 
--    protected static int b(int i) {
-+    protected static int e(int i) {
-         return i & 7;
-     }
- 
-@@ -287,10 +303,6 @@
-         return new BlockStateList(this, new IBlockState[] { BlockDoor.HALF, BlockDoor.FACING, BlockDoor.OPEN, BlockDoor.HINGE, BlockDoor.POWERED});
-     }
- 
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return EnumBlockFaceShape.UNDEFINED;
--    }
--
-     public static enum EnumDoorHinge implements INamable {
- 
-         LEFT, RIGHT;

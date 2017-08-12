@@ -1,17 +1,14 @@
 --- a/net/minecraft/server/PacketPlayOutPlayerInfo.java
 +++ b/net/minecraft/server/PacketPlayOutPlayerInfo.java
-@@ -1,6 +1,6 @@
- package net.minecraft.server;
+@@ -11,12 +11,27 @@
  
--import com.google.common.base.MoreObjects;
-+import com.google.common.base.Objects;
- import com.google.common.collect.Lists;
- import com.mojang.authlib.GameProfile;
- import com.mojang.authlib.properties.Property;
-@@ -14,6 +14,20 @@
-     private PacketPlayOutPlayerInfo.EnumPlayerInfoAction a;
-     private final List<PacketPlayOutPlayerInfo.PlayerInfoData> b = Lists.newArrayList();
+ public class PacketPlayOutPlayerInfo implements Packet<PacketListenerPlayOut> {
  
+-    private PacketPlayOutPlayerInfo.EnumPlayerInfoAction a;
+-    private final List<PacketPlayOutPlayerInfo.PlayerInfoData> b = Lists.newArrayList();
++    private EnumPlayerInfoAction a;
++    private final List<PlayerInfoData> b = Lists.newArrayList();
++
 +    // SportBukkit start - add constructor
 +    public PacketPlayOutPlayerInfo(EnumPlayerInfoAction a) {
 +        this.a = a;
@@ -26,10 +23,63 @@
 +    }
 +    // SportBukkit end
 +
+ 
      public PacketPlayOutPlayerInfo() {}
  
-     public PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, EntityPlayer... aentityplayer) {
-@@ -130,6 +144,15 @@
+-    public PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, EntityPlayer... aentityplayer) {
++    public PacketPlayOutPlayerInfo(EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, EntityPlayer... aentityplayer) {
+         this.a = packetplayoutplayerinfo_enumplayerinfoaction;
+         EntityPlayer[] aentityplayer1 = aentityplayer;
+         int i = aentityplayer.length;
+@@ -24,25 +39,25 @@
+         for (int j = 0; j < i; ++j) {
+             EntityPlayer entityplayer = aentityplayer1[j];
+ 
+-            this.b.add(new PacketPlayOutPlayerInfo.PlayerInfoData(entityplayer.getProfile(), entityplayer.ping, entityplayer.playerInteractManager.getGameMode(), entityplayer.getPlayerListName()));
++            this.b.add(new PlayerInfoData(entityplayer.getProfile(), entityplayer.ping, entityplayer.playerInteractManager.getGameMode(), entityplayer.getPlayerListName()));
+         }
+ 
+     }
+ 
+-    public PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, Iterable<EntityPlayer> iterable) {
++    public PacketPlayOutPlayerInfo(EnumPlayerInfoAction packetplayoutplayerinfo_enumplayerinfoaction, Iterable<EntityPlayer> iterable) {
+         this.a = packetplayoutplayerinfo_enumplayerinfoaction;
+         Iterator iterator = iterable.iterator();
+ 
+         while (iterator.hasNext()) {
+             EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+ 
+-            this.b.add(new PacketPlayOutPlayerInfo.PlayerInfoData(entityplayer.getProfile(), entityplayer.ping, entityplayer.playerInteractManager.getGameMode(), entityplayer.getPlayerListName()));
++            this.b.add(new PlayerInfoData(entityplayer.getProfile(), entityplayer.ping, entityplayer.playerInteractManager.getGameMode(), entityplayer.getPlayerListName()));
+         }
+ 
+     }
+ 
+     public void a(PacketDataSerializer packetdataserializer) throws IOException {
+-        this.a = (PacketPlayOutPlayerInfo.EnumPlayerInfoAction) packetdataserializer.a(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.class);
++        this.a = (EnumPlayerInfoAction) packetdataserializer.a(EnumPlayerInfoAction.class);
+         int i = packetdataserializer.g();
+ 
+         for (int j = 0; j < i; ++j) {
+@@ -95,7 +110,7 @@
+                 gameprofile = new GameProfile(packetdataserializer.i(), (String) null);
+             }
+ 
+-            this.b.add(new PacketPlayOutPlayerInfo.PlayerInfoData(gameprofile, k, enumgamemode, ichatbasecomponent));
++            this.b.add(new PlayerInfoData(gameprofile, k, enumgamemode, ichatbasecomponent));
+         }
+ 
+     }
+@@ -106,7 +121,7 @@
+         Iterator iterator = this.b.iterator();
+ 
+         while (iterator.hasNext()) {
+-            PacketPlayOutPlayerInfo.PlayerInfoData packetplayoutplayerinfo_playerinfodata = (PacketPlayOutPlayerInfo.PlayerInfoData) iterator.next();
++            PlayerInfoData packetplayoutplayerinfo_playerinfodata = (PlayerInfoData) iterator.next();
+ 
+             switch (this.a) {
+             case ADD_PLAYER:
+@@ -130,6 +145,15 @@
  
                  packetdataserializer.d(packetplayoutplayerinfo_playerinfodata.c().getId());
                  packetdataserializer.d(packetplayoutplayerinfo_playerinfodata.b());
@@ -45,7 +95,7 @@
                  if (packetplayoutplayerinfo_playerinfodata.d() == null) {
                      packetdataserializer.writeBoolean(false);
                  } else {
-@@ -150,6 +173,15 @@
+@@ -150,6 +174,15 @@
  
              case UPDATE_DISPLAY_NAME:
                  packetdataserializer.a(packetplayoutplayerinfo_playerinfodata.a().getId());
@@ -61,13 +111,7 @@
                  if (packetplayoutplayerinfo_playerinfodata.d() == null) {
                      packetdataserializer.writeBoolean(false);
                  } else {
-@@ -170,11 +202,13 @@
-     }
- 
-     public String toString() {
--        return MoreObjects.toStringHelper(this).add("action", this.a).add("entries", this.b).toString();
-+        return Objects.toStringHelper(this).add("action", this.a).add("entries", this.b).toString();
-     }
+@@ -175,6 +208,8 @@
  
      public class PlayerInfoData {
  
@@ -76,12 +120,3 @@
          private final int b;
          private final EnumGamemode c;
          private final GameProfile d;
-@@ -205,7 +239,7 @@
-         }
- 
-         public String toString() {
--            return MoreObjects.toStringHelper(this).add("latency", this.b).add("gameMode", this.c).add("profile", this.d).add("displayName", this.e == null ? null : IChatBaseComponent.ChatSerializer.a(this.e)).toString();
-+            return Objects.toStringHelper(this).add("latency", this.b).add("gameMode", this.c).add("profile", this.d).add("displayName", this.e == null ? null : IChatBaseComponent.ChatSerializer.a(this.e)).toString();
-         }
-     }
- 

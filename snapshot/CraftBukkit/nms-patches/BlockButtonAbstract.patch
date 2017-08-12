@@ -12,50 +12,7 @@
  public abstract class BlockButtonAbstract extends BlockDirectional {
  
      public static final BlockStateBoolean POWERED = BlockStateBoolean.of("powered");
-@@ -23,7 +28,7 @@
- 
-     protected BlockButtonAbstract(boolean flag) {
-         super(Material.ORIENTABLE);
--        this.w(this.blockStateList.getBlockData().set(BlockButtonAbstract.FACING, EnumDirection.NORTH).set(BlockButtonAbstract.POWERED, Boolean.valueOf(false)));
-+        this.y(this.blockStateList.getBlockData().set(BlockButtonAbstract.FACING, EnumDirection.NORTH).set(BlockButtonAbstract.POWERED, Boolean.valueOf(false)));
-         this.a(true);
-         this.a(CreativeModeTab.d);
-         this.I = flag;
-@@ -47,7 +52,7 @@
-     }
- 
-     public boolean canPlace(World world, BlockPosition blockposition, EnumDirection enumdirection) {
--        return a(world, blockposition, enumdirection);
-+        return a(world, blockposition, enumdirection.opposite());
-     }
- 
-     public boolean canPlace(World world, BlockPosition blockposition) {
-@@ -66,20 +71,17 @@
-     }
- 
-     protected static boolean a(World world, BlockPosition blockposition, EnumDirection enumdirection) {
--        BlockPosition blockposition1 = blockposition.shift(enumdirection.opposite());
--        IBlockData iblockdata = world.getType(blockposition1);
--        boolean flag = iblockdata.d(world, blockposition1, enumdirection) == EnumBlockFaceShape.SOLID;
--        Block block = iblockdata.getBlock();
-+        BlockPosition blockposition1 = blockposition.shift(enumdirection);
- 
--        return enumdirection == EnumDirection.UP ? block == Blocks.HOPPER || !b(block) && flag : !c(block) && flag;
-+        return enumdirection == EnumDirection.DOWN ? world.getType(blockposition1).r() : world.getType(blockposition1).m();
-     }
- 
-     public IBlockData getPlacedState(World world, BlockPosition blockposition, EnumDirection enumdirection, float f, float f1, float f2, int i, EntityLiving entityliving) {
--        return a(world, blockposition, enumdirection) ? this.getBlockData().set(BlockButtonAbstract.FACING, enumdirection).set(BlockButtonAbstract.POWERED, Boolean.valueOf(false)) : this.getBlockData().set(BlockButtonAbstract.FACING, EnumDirection.DOWN).set(BlockButtonAbstract.POWERED, Boolean.valueOf(false));
-+        return a(world, blockposition, enumdirection.opposite()) ? this.getBlockData().set(BlockButtonAbstract.FACING, enumdirection).set(BlockButtonAbstract.POWERED, Boolean.valueOf(false)) : this.getBlockData().set(BlockButtonAbstract.FACING, EnumDirection.DOWN).set(BlockButtonAbstract.POWERED, Boolean.valueOf(false));
-     }
- 
-     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Block block, BlockPosition blockposition1) {
--        if (this.e(world, blockposition, iblockdata) && !a(world, blockposition, (EnumDirection) iblockdata.get(BlockButtonAbstract.FACING))) {
-+        if (this.e(world, blockposition, iblockdata) && !a(world, blockposition, ((EnumDirection) iblockdata.get(BlockButtonAbstract.FACING)).opposite())) {
-             this.b(world, blockposition, iblockdata, 0);
-             world.setAir(blockposition);
-         }
-@@ -126,6 +128,19 @@
+@@ -126,6 +131,19 @@
          if (((Boolean) iblockdata.get(BlockButtonAbstract.POWERED)).booleanValue()) {
              return true;
          } else {
@@ -75,7 +32,7 @@
              world.setTypeAndData(blockposition, iblockdata.set(BlockButtonAbstract.POWERED, Boolean.valueOf(true)), 3);
              world.b(blockposition, blockposition);
              this.a(entityhuman, world, blockposition);
-@@ -167,6 +182,16 @@
+@@ -167,6 +185,16 @@
                  if (this.I) {
                      this.d(iblockdata, world, blockposition);
                  } else {
@@ -92,12 +49,7 @@
                      world.setTypeUpdate(blockposition, iblockdata.set(BlockButtonAbstract.POWERED, Boolean.valueOf(false)));
                      this.c(world, blockposition, (EnumDirection) iblockdata.get(BlockButtonAbstract.FACING));
                      this.b(world, blockposition);
-@@ -188,11 +213,45 @@
-     }
- 
-     private void d(IBlockData iblockdata, World world, BlockPosition blockposition) {
--        List list = world.a(EntityArrow.class, iblockdata.e(world, blockposition).a(blockposition));
-+        List list = world.a(EntityArrow.class, iblockdata.d(world, blockposition).a(blockposition));
+@@ -192,7 +220,41 @@
          boolean flag = !list.isEmpty();
          boolean flag1 = ((Boolean) iblockdata.get(BlockButtonAbstract.POWERED)).booleanValue();
  
@@ -139,7 +91,7 @@
              world.setTypeUpdate(blockposition, iblockdata.set(BlockButtonAbstract.POWERED, Boolean.valueOf(true)));
              this.c(world, blockposition, (EnumDirection) iblockdata.get(BlockButtonAbstract.FACING));
              world.b(blockposition, blockposition);
-@@ -200,6 +259,16 @@
+@@ -200,6 +262,16 @@
          }
  
          if (!flag && flag1) {
@@ -156,12 +108,3 @@
              world.setTypeUpdate(blockposition, iblockdata.set(BlockButtonAbstract.POWERED, Boolean.valueOf(false)));
              this.c(world, blockposition, (EnumDirection) iblockdata.get(BlockButtonAbstract.FACING));
              world.b(blockposition, blockposition);
-@@ -296,8 +365,4 @@
-     protected BlockStateList getStateList() {
-         return new BlockStateList(this, new IBlockState[] { BlockButtonAbstract.FACING, BlockButtonAbstract.POWERED});
-     }
--
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return EnumBlockFaceShape.UNDEFINED;
--    }
- }

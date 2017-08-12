@@ -15,7 +15,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/
      private final GameProfileBanList k;
      private final IpBanList l;
      private final OpList operators;
-@@ -75,7 +75,7 @@ public abstract class PlayerList {
+@@ -77,7 +77,7 @@ public abstract class PlayerList {
  
      public PlayerList(MinecraftServer minecraftserver) {
          this.cserver = minecraftserver.server = new CraftServer(minecraftserver, this);
@@ -93,15 +93,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
  import org.bukkit.craftbukkit.entity.CraftPlayer;
  import org.bukkit.craftbukkit.generator.CraftChunkData;
-@@ -66,13 +69,12 @@ import org.bukkit.craftbukkit.metadata.WorldMetadataStore;
- import org.bukkit.craftbukkit.potion.CraftPotionBrewer;
- import org.bukkit.craftbukkit.scheduler.CraftScheduler;
- import org.bukkit.craftbukkit.scoreboard.CraftScoreboardManager;
--import org.bukkit.craftbukkit.util.CraftIconCache;
--import org.bukkit.craftbukkit.util.CraftMagicNumbers;
--import org.bukkit.craftbukkit.util.DatFileFilter;
--import org.bukkit.craftbukkit.util.Versioning;
-+import org.bukkit.craftbukkit.util.*;
+@@ -73,6 +76,8 @@ import org.bukkit.craftbukkit.util.Versioning;
  import org.bukkit.craftbukkit.util.permissions.CraftDefaultPermissions;
  import org.bukkit.entity.Entity;
  import org.bukkit.entity.Player;
@@ -109,19 +101,11 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
 +import org.bukkit.event.SimpleEventBus;
  import org.bukkit.event.inventory.InventoryType;
  import org.bukkit.event.player.PlayerChatTabCompleteEvent;
- import org.bukkit.event.world.WorldInitEvent;
-@@ -114,7 +116,6 @@ import io.netty.buffer.ByteBufOutputStream;
- import io.netty.buffer.Unpooled;
- import io.netty.handler.codec.base64.Base64;
- import jline.console.ConsoleReader;
--import org.bukkit.craftbukkit.util.CraftNamespacedKey;
- import org.bukkit.event.server.TabCompleteEvent;
- import tc.oc.minecraft.api.plugin.PluginFinder;
- 
-@@ -130,9 +131,13 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+ import org.bukkit.event.server.BroadcastMessageEvent;
+@@ -131,9 +136,13 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      private final SimpleHelpMap helpMap = new SimpleHelpMap(this);
      private final StandardMessenger messenger = new StandardMessenger();
-     private final PluginManager pluginManager = new SimplePluginManager(this, commandMap);
+     private final SimplePluginManager pluginManager = new SimplePluginManager(this, commandMap);
 +    private final EventBus eventBus;
      protected final MinecraftServer console;
      protected final DedicatedPlayerList playerList;
@@ -132,7 +116,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      private YamlConfiguration configuration;
      private YamlConfiguration commandsConfiguration;
      private final Yaml yaml = new Yaml(new SafeConstructor());
-@@ -148,6 +153,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -149,6 +158,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      public int chunkGCLoadThresh = 0;
      private File container;
      private WarningState warningState = WarningState.DEFAULT;
@@ -140,7 +124,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      private final BooleanWrapper online = new BooleanWrapper();
      public CraftScoreboardManager scoreboardManager;
      public boolean playerCommandState;
-@@ -157,6 +163,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -158,6 +168,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      private final Pattern validUserPattern = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
      private final UUID invalidUserUUID = UUID.nameUUIDFromBytes("InvalidUsername".getBytes(Charsets.UTF_8));
      private final List<CraftPlayer> playerView;
@@ -148,7 +132,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      public int reloadCount;
      public boolean bungee = false;
      public static final com.google.gson.Gson gson = new com.google.gson.Gson();
-@@ -172,13 +179,10 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -173,13 +184,10 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
  
      public CraftServer(MinecraftServer console, PlayerList playerList) {
          this.console = console;
@@ -165,34 +149,16 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
          this.serverVersion = CraftServer.class.getPackage().getImplementationVersion();
          online.value = console.getPropertyManager().getBoolean("online-mode", true);
  
-@@ -235,7 +239,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -236,7 +244,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
          saveCommandsConfig();
          bungee = configuration.getBoolean("settings.bungeecord");
          overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
--        ((SimplePluginManager) pluginManager).useTimings(configuration.getBoolean("settings.plugin-profiling"));
+-        pluginManager.useTimings(configuration.getBoolean("settings.plugin-profiling"));
 +        pluginProfiling = configuration.getBoolean("settings.plugin-profiling");
          monsterSpawn = configuration.getInt("spawn-limits.monsters");
          animalSpawn = configuration.getInt("spawn-limits.animals");
          waterAnimalSpawn = configuration.getInt("spawn-limits.water-animals");
-@@ -291,6 +295,17 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
- 
-         if (pluginFolder.exists()) {
-             Plugin[] plugins = pluginManager.loadPlugins(pluginFolder);
-+
-+            final Stage stage = console.options.valueOf(Main.GUICE_STAGE_OPTION);
-+            logger.info("Creating injector in stage " + stage);
-+
-+            try {
-+                injector = Guice.createInjector(stage, new ServerInstanceModule(this, Arrays.asList(plugins)));
-+            } catch(RuntimeException ex) {
-+                logger.log(Level.SEVERE, "Injector creation failed, server will shut down", ex);
-+                throw ex;
-+            }
-+
-             for (Plugin plugin : plugins) {
-                 try {
-                     String message = String.format("Loading %s", plugin.getDescription().getFullName());
-@@ -385,6 +400,11 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -384,6 +392,11 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      }
  
      @Override
@@ -204,7 +170,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      @Deprecated
      public Player getPlayer(final String name, final CommandSender viewer) {
          Validate.notNull(name, "Name cannot be null");
-@@ -631,10 +651,25 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -630,10 +643,25 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
      }
  
      @Override
@@ -230,7 +196,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      public DedicatedPlayerList getHandle() {
          return playerList;
      }
-@@ -1035,6 +1070,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -1034,6 +1062,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
              }
          }
  
@@ -238,7 +204,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
          worlds.remove(world.getName().toLowerCase(java.util.Locale.ENGLISH));
          console.worlds.remove(console.worlds.indexOf(handle));
  
-@@ -1096,6 +1132,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -1095,6 +1124,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
              System.out.println("World " + world.getName() + " is a duplicate of another world and has been prevented from loading. Please delete the uid.dat file from " + world.getName() + "'s world directory if you want to be able to load the duplicate world.");
              return;
          }
@@ -246,7 +212,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
          worlds.put(world.getName().toLowerCase(java.util.Locale.ENGLISH), world);
      }
  
-@@ -1470,6 +1507,9 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -1478,6 +1508,9 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
  
      @Override
      public ConsoleCommandSender getConsoleSender() {
@@ -256,7 +222,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
          return console.console;
      }
  
-@@ -1615,6 +1655,11 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -1623,6 +1656,11 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
          return warningState;
      }
  
@@ -271,7 +237,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -11,12 +11,18 @@ import java.util.TimeZone;
+@@ -11,12 +11,17 @@ import java.util.TimeZone;
  import java.util.concurrent.TimeUnit;
  import java.util.logging.Level;
  import java.util.logging.Logger;
@@ -284,13 +250,12 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/
  import org.fusesource.jansi.AnsiConsole;
  
  public class Main {
-+
 +    public static OptionSpec<Stage> GUICE_STAGE_OPTION;
 +
      public static boolean useJline = true;
      public static boolean useConsole = true;
  
-@@ -118,6 +124,11 @@ public class Main {
+@@ -118,6 +123,11 @@ public class Main {
                  acceptsAll(asList("v", "version"), "Show the CraftBukkit Version");
  
                  acceptsAll(asList("demo"), "Demo mode");
@@ -351,7 +316,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java 
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CaseInsensitiveNameMap.java b/src/main/java/org/bukkit/craftbukkit/util/CaseInsensitiveNameMap.java
 new file mode 100644
-index 00000000..8db42e6a
+index 00000000..2cca819f
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CaseInsensitiveNameMap.java
 @@ -0,0 +1,74 @@
@@ -377,8 +342,8 @@ index 00000000..8db42e6a
 +            @Override
 +            public Iterator<Entry<String, V>> iterator() {
 +                return Iterators.transform(
-+                    values.iterator(),
-+                    value -> Maps.immutableEntry(nameGetter.apply(value), value)
++                        values.iterator(),
++                        value -> Maps.immutableEntry(nameGetter.apply(value), value)
 +                );
 +            }
 +

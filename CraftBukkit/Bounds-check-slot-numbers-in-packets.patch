@@ -42,7 +42,7 @@ diff --git a/src/main/java/net/minecraft/server/Container.java b/src/main/java/n
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1721,6 +1721,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1724,6 +1724,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
      public void a(PacketPlayInWindowClick packetplayinwindowclick) {
          PlayerConnectionUtils.ensureMainThread(packetplayinwindowclick, this, this.player.x());
          if (this.player.isFrozen()) return; // CraftBukkit

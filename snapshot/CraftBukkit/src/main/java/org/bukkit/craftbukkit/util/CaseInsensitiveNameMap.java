@@ -1,14 +1,10 @@
 package org.bukkit.craftbukkit.util;
 
-import java.util.AbstractMap;
-import java.util.AbstractSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.function.Function;
-
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
+
+import java.util.*;
+import java.util.function.Function;
 
 public class CaseInsensitiveNameMap<V> extends AbstractMap<String, V> {
 
@@ -24,8 +20,8 @@ public class CaseInsensitiveNameMap<V> extends AbstractMap<String, V> {
             @Override
             public Iterator<Entry<String, V>> iterator() {
                 return Iterators.transform(
-                    values.iterator(),
-                    value -> Maps.immutableEntry(nameGetter.apply(value), value)
+                        values.iterator(),
+                        value -> Maps.immutableEntry(nameGetter.apply(value), value)
                 );
             }
 

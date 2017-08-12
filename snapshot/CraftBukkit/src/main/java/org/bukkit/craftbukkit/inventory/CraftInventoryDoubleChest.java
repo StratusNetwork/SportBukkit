@@ -1,8 +1,5 @@
 package org.bukkit.craftbukkit.inventory;
 
-import java.util.List;
-
-import net.minecraft.server.ITileEntityContainer;
 import net.minecraft.server.ITileInventory;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.inventory.DoubleChestInventory;
@@ -11,6 +8,8 @@ import org.bukkit.inventory.ItemStack;
 
 import net.minecraft.server.InventoryLargeChest;
 import org.bukkit.Location;
+
+import java.util.List;
 
 public class CraftInventoryDoubleChest extends CraftInventory implements DoubleChestInventory {
     private final CraftInventory left;
@@ -47,7 +46,7 @@ public class CraftInventoryDoubleChest extends CraftInventory implements DoubleC
     @Override
     public void setContents(List<ItemStack> items) {
         if (getInventory().getContents().size() < items.size()) {
-            throw new IllegalArgumentException("Invalid inventory size; expected " + getInventory().getContents().size() + " or less");
+            throw new IllegalArgumentException("Invalid inventory size; expected " + getInventory().getSize() + " or less");
         }
         if(items.size() <= left.getSize()) {
             left.setContents(items);

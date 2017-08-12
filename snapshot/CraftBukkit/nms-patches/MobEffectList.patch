@@ -53,10 +53,8 @@
 +                ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutUpdateHealth(((EntityPlayer) entityhuman).getBukkitEntity().getScaledHealth(), entityhuman.getFoodData().foodLevel, entityhuman.getFoodData().saturationLevel));
 +                // CraftBukkit end
              }
--        } else if ((this != MobEffects.HEAL || entityliving.ca()) && (this != MobEffects.HARM || !entityliving.ca())) {
--            if (this == MobEffects.HARM && !entityliving.ca() || this == MobEffects.HEAL && entityliving.ca()) {
-+        } else if ((this != MobEffects.HEAL || entityliving.bT()) && (this != MobEffects.HARM || !entityliving.bT())) {
-+            if (this == MobEffects.HARM && !entityliving.bT() || this == MobEffects.HEAL && entityliving.bT()) {
+         } else if ((this != MobEffects.HEAL || entityliving.cc()) && (this != MobEffects.HARM || !entityliving.cc())) {
+             if (this == MobEffects.HARM && !entityliving.cc() || this == MobEffects.HEAL && entityliving.cc()) {
                  entityliving.damageEntity(DamageSource.MAGIC, (float) (6 << i));
              }
          } else {
@@ -65,17 +63,6 @@
          }
  
      }
-@@ -78,8 +94,8 @@
-     public void applyInstantEffect(@Nullable Entity entity, @Nullable Entity entity1, EntityLiving entityliving, int i, double d0) {
-         int j;
- 
--        if ((this != MobEffects.HEAL || entityliving.ca()) && (this != MobEffects.HARM || !entityliving.ca())) {
--            if (this == MobEffects.HARM && !entityliving.ca() || this == MobEffects.HEAL && entityliving.ca()) {
-+        if ((this != MobEffects.HEAL || entityliving.bT()) && (this != MobEffects.HARM || !entityliving.bT())) {
-+            if (this == MobEffects.HARM && !entityliving.bT() || this == MobEffects.HEAL && entityliving.bT()) {
-                 j = (int) (d0 * (double) (6 << i) + 0.5D);
-                 if (entity == null) {
-                     entityliving.damageEntity(DamageSource.MAGIC, (float) j);
 @@ -89,7 +105,7 @@
              }
          } else {
@@ -85,24 +72,3 @@
          }
  
      }
-@@ -183,8 +199,8 @@
-     public static void k() {
-         MobEffectList.REGISTRY.a(1, new MinecraftKey("speed"), (new MobEffectList(false, 8171462)).c("effect.moveSpeed").b(0, 0).a(GenericAttributes.MOVEMENT_SPEED, "91AEAA56-376B-4498-935B-2F7F68070635", 0.20000000298023224D, 2).j());
-         MobEffectList.REGISTRY.a(2, new MinecraftKey("slowness"), (new MobEffectList(true, 5926017)).c("effect.moveSlowdown").b(1, 0).a(GenericAttributes.MOVEMENT_SPEED, "7107DE5E-7CE8-4030-940E-514C1F160890", -0.15000000596046448D, 2));
--        MobEffectList.REGISTRY.a(3, new MinecraftKey("haste"), (new MobEffectList(false, 14270531)).c("effect.digSpeed").b(2, 0).a(1.5D).j().a(GenericAttributes.g, "AF8B6E3F-3328-4C0A-AA36-5BA2BB9DBEF3", 0.10000000149011612D, 2));
--        MobEffectList.REGISTRY.a(4, new MinecraftKey("mining_fatigue"), (new MobEffectList(true, 4866583)).c("effect.digSlowDown").b(3, 0).a(GenericAttributes.g, "55FCED67-E92A-486E-9800-B47F202C4386", -0.10000000149011612D, 2));
-+        MobEffectList.REGISTRY.a(3, new MinecraftKey("haste"), (new MobEffectList(false, 14270531)).c("effect.digSpeed").b(2, 0).a(1.5D).j().a(GenericAttributes.f, "AF8B6E3F-3328-4C0A-AA36-5BA2BB9DBEF3", 0.10000000149011612D, 2));
-+        MobEffectList.REGISTRY.a(4, new MinecraftKey("mining_fatigue"), (new MobEffectList(true, 4866583)).c("effect.digSlowDown").b(3, 0).a(GenericAttributes.f, "55FCED67-E92A-486E-9800-B47F202C4386", -0.10000000149011612D, 2));
-         MobEffectList.REGISTRY.a(5, new MinecraftKey("strength"), (new MobEffectAttackDamage(false, 9643043, 3.0D)).c("effect.damageBoost").b(4, 0).a(GenericAttributes.ATTACK_DAMAGE, "648D7064-6A60-4F59-8ABE-C2C23A6DD7A9", 0.0D, 0).j());
-         MobEffectList.REGISTRY.a(6, new MinecraftKey("instant_health"), (new InstantMobEffect(false, 16262179)).c("effect.heal").j());
-         MobEffectList.REGISTRY.a(7, new MinecraftKey("instant_damage"), (new InstantMobEffect(true, 4393481)).c("effect.harm").j());
-@@ -206,7 +222,7 @@
-         MobEffectList.REGISTRY.a(23, new MinecraftKey("saturation"), (new InstantMobEffect(false, 16262179)).c("effect.saturation").j());
-         MobEffectList.REGISTRY.a(24, new MinecraftKey("glowing"), (new MobEffectList(false, 9740385)).c("effect.glowing").b(4, 2));
-         MobEffectList.REGISTRY.a(25, new MinecraftKey("levitation"), (new MobEffectList(true, 13565951)).c("effect.levitation").b(3, 2));
--        MobEffectList.REGISTRY.a(26, new MinecraftKey("luck"), (new MobEffectList(false, 3381504)).c("effect.luck").b(5, 2).j().a(GenericAttributes.j, "03C3C89D-7037-4B42-869F-B146BCB64D2E", 1.0D, 0));
--        MobEffectList.REGISTRY.a(27, new MinecraftKey("unluck"), (new MobEffectList(true, 12624973)).c("effect.unluck").b(6, 2).a(GenericAttributes.j, "CC5AF142-2BD2-4215-B636-2605AED11727", -1.0D, 0));
-+        MobEffectList.REGISTRY.a(26, new MinecraftKey("luck"), (new MobEffectList(false, 3381504)).c("effect.luck").b(5, 2).j().a(GenericAttributes.i, "03C3C89D-7037-4B42-869F-B146BCB64D2E", 1.0D, 0));
-+        MobEffectList.REGISTRY.a(27, new MinecraftKey("unluck"), (new MobEffectList(true, 12624973)).c("effect.unluck").b(6, 2).a(GenericAttributes.i, "CC5AF142-2BD2-4215-B636-2605AED11727", -1.0D, 0));
-     }
- }

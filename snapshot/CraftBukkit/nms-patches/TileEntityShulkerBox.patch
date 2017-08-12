@@ -43,15 +43,6 @@
      public TileEntityShulkerBox() {
          this((EnumColor) null);
      }
-@@ -26,7 +55,7 @@
-         this.l = enumcolor;
-     }
- 
--    public void e() {
-+    public void F_() {
-         this.o();
-         if (this.i == TileEntityShulkerBox.AnimationPhase.OPENING || this.i == TileEntityShulkerBox.AnimationPhase.CLOSING) {
-             this.G();
 @@ -144,7 +173,7 @@
      }
  
@@ -61,39 +52,3 @@
      }
  
      public boolean c(int i, int j) {
-@@ -173,7 +202,7 @@
-             ++this.h;
-             this.world.playBlockAction(this.position, this.getBlock(), 1, this.h);
-             if (this.h == 1) {
--                this.world.a((EntityHuman) null, this.position, SoundEffects.gC, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
-+                this.world.a((EntityHuman) null, this.position, SoundEffects.fB, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
-             }
-         }
- 
-@@ -184,7 +213,7 @@
-             --this.h;
-             this.world.playBlockAction(this.position, this.getBlock(), 1, this.h);
-             if (this.h <= 0) {
--                this.world.a((EntityHuman) null, this.position, SoundEffects.gB, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
-+                this.world.a((EntityHuman) null, this.position, SoundEffects.fA, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
-             }
-         }
- 
-@@ -248,7 +277,7 @@
-         return this.f;
-     }
- 
--    public boolean x_() {
-+    public boolean w_() {
-         Iterator iterator = this.f.iterator();
- 
-         ItemStack itemstack;
-@@ -303,7 +332,7 @@
-     }
- 
-     public boolean F() {
--        return !this.E() || !this.x_() || this.hasCustomName() || this.m != null;
-+        return !this.E() || !this.w_() || this.hasCustomName() || this.m != null;
-     }
- 
-     static {

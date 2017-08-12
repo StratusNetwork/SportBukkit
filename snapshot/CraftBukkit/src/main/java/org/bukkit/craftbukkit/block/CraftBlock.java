@@ -1,17 +1,14 @@
 package org.bukkit.craftbukkit.block;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import net.minecraft.server.*;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -21,13 +18,13 @@ import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.geometry.Vec3;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.RayBlockIntersection;
-import org.bukkit.geometry.Vec3;
 import org.bukkit.util.Vector;
 
 public class CraftBlock implements Block {
@@ -346,6 +343,8 @@ public class CraftBlock implements Block {
         case REDSTONE_COMPARATOR_OFF:
         case REDSTONE_COMPARATOR_ON:
             return new CraftComparator(this);
+        case BED_BLOCK:
+            return new CraftBed(this);
         default:
             return new CraftBlockState(this);
         }
@@ -364,7 +363,7 @@ public class CraftBlock implements Block {
             return null;
         }
 
-        return Biome.valueOf(BiomeBase.REGISTRY_ID.b(base).a().toUpperCase(java.util.Locale.ENGLISH));
+        return Biome.valueOf(BiomeBase.REGISTRY_ID.b(base).getKey().toUpperCase(java.util.Locale.ENGLISH));
     }
 
     public static BiomeBase biomeToBiomeBase(Biome bio) {

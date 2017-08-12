@@ -9,15 +9,6 @@
  public class BlockCocoa extends BlockFacingHorizontal implements IBlockFragilePlantElement {
  
      public static final BlockStateInteger AGE = BlockStateInteger.of("age", 0, 2);
-@@ -12,7 +14,7 @@
- 
-     public BlockCocoa() {
-         super(Material.PLANT);
--        this.w(this.blockStateList.getBlockData().set(BlockCocoa.FACING, EnumDirection.NORTH).set(BlockCocoa.AGE, Integer.valueOf(0)));
-+        this.y(this.blockStateList.getBlockData().set(BlockCocoa.FACING, EnumDirection.NORTH).set(BlockCocoa.AGE, Integer.valueOf(0)));
-         this.a(true);
-     }
- 
 @@ -23,7 +25,10 @@
              int i = ((Integer) iblockdata.get(BlockCocoa.AGE)).intValue();
  
@@ -42,12 +33,3 @@
      }
  
      public IBlockData fromLegacyData(int i) {
-@@ -142,8 +150,4 @@
-     protected BlockStateList getStateList() {
-         return new BlockStateList(this, new IBlockState[] { BlockCocoa.FACING, BlockCocoa.AGE});
-     }
--
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return EnumBlockFaceShape.UNDEFINED;
--    }
- }

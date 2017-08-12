@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/ItemLeash.java
 +++ b/net/minecraft/server/ItemLeash.java
-@@ -3,10 +3,12 @@
+@@ -3,6 +3,8 @@
  import java.util.Iterator;
  import java.util.List;
  
@@ -9,11 +9,6 @@
  public class ItemLeash extends Item {
  
      public ItemLeash() {
--        this.b(CreativeModeTab.i);
-+        this.a(CreativeModeTab.i);
-     }
- 
-     public EnumInteractionResult a(EntityHuman entityhuman, World world, BlockPosition blockposition, EnumHand enumhand, EnumDirection enumdirection, float f, float f1, float f2) {
 @@ -39,7 +41,23 @@
              if (entityinsentient.isLeashed() && entityinsentient.getLeashHolder() == entityhuman) {
                  if (entityleash == null) {

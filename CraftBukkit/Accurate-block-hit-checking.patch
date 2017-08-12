@@ -89,7 +89,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -61,6 +61,7 @@ import org.bukkit.metadata.MetadataValue;
+@@ -70,6 +70,7 @@ import org.bukkit.metadata.MetadataValue;
  import org.bukkit.plugin.Plugin;
  import org.bukkit.plugin.messaging.StandardMessenger;
  import org.bukkit.scoreboard.Scoreboard;
@@ -97,7 +97,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
  
  @DelegateDeserialization(CraftOfflinePlayer.class)
  public class CraftPlayer extends CraftHumanEntity implements Player {
-@@ -1889,4 +1890,19 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1927,4 +1928,19 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          BlockPosition pos = getHandle().playerInteractManager.f;
          return getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
      }

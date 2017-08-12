@@ -1,142 +1,52 @@
 --- a/net/minecraft/server/NameReferencingFileConverter.java
 +++ b/net/minecraft/server/NameReferencingFileConverter.java
-@@ -1,5 +1,6 @@
- package net.minecraft.server;
- 
-+import com.google.common.base.Charsets;
- import com.google.common.base.Predicate;
- import com.google.common.collect.Iterators;
- import com.google.common.collect.Lists;
-@@ -12,7 +13,6 @@
- import java.io.File;
- import java.io.FileNotFoundException;
- import java.io.IOException;
--import java.nio.charset.StandardCharsets;
- import java.text.ParseException;
- import java.util.ArrayList;
- import java.util.Collection;
-@@ -36,7 +36,7 @@
-     public static final File d = new File("white-list.txt");
- 
-     static List<String> a(File file, Map<String, String[]> map) throws IOException {
--        List list = Files.readLines(file, StandardCharsets.UTF_8);
-+        List list = Files.readLines(file, Charsets.UTF_8);
-         Iterator iterator = list.iterator();
- 
-         while (iterator.hasNext()) {
 @@ -88,8 +88,9 @@
              if (gameprofilebanlist.c().exists()) {
                  try {
                      gameprofilebanlist.load();
 -                } catch (FileNotFoundException filenotfoundexception) {
 -                    NameReferencingFileConverter.e.warn("Could not load existing file {}", gameprofilebanlist.c().getName(), filenotfoundexception);
-+                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacetrace
++                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacktrace
 +                } catch (IOException filenotfoundexception) {
-+                    NameReferencingFileConverter.e.warn("Could not load existing file {}", new Object[] { gameprofilebanlist.c().getName()});
++                    NameReferencingFileConverter.e.warn("Could not load existing file {}", gameprofilebanlist.c().getName());
                  }
              }
  
-@@ -103,7 +104,7 @@
-                         String[] astring = (String[]) hashmap.get(gameprofile.getName().toLowerCase(Locale.ROOT));
- 
-                         if (astring == null) {
--                            NameReferencingFileConverter.e.warn("Could not convert user banlist entry for {}", gameprofile.getName());
-+                            NameReferencingFileConverter.e.warn("Could not convert user banlist entry for {}", new Object[] { gameprofile.getName()});
-                             throw new NameReferencingFileConverter.FileConversionException("Profile not in the conversionlist", null);
-                         } else {
-                             Date date = astring.length > 1 ? NameReferencingFileConverter.b(astring[1], (Date) null) : null;
-@@ -116,7 +117,7 @@
-                     }
- 
-                     public void onProfileLookupFailed(GameProfile gameprofile, Exception exception) {
--                        NameReferencingFileConverter.e.warn("Could not lookup user banlist entry for {}", gameprofile.getName(), exception);
-+                        NameReferencingFileConverter.e.warn("Could not lookup user banlist entry for {}", new Object[] { gameprofile.getName(), exception});
-                         if (!(exception instanceof ProfileNotFoundException)) {
-                             throw new NameReferencingFileConverter.FileConversionException("Could not request user " + gameprofile.getName() + " from backend systems", exception, null);
-                         }
 @@ -146,8 +147,9 @@
              if (ipbanlist.c().exists()) {
                  try {
                      ipbanlist.load();
 -                } catch (FileNotFoundException filenotfoundexception) {
 -                    NameReferencingFileConverter.e.warn("Could not load existing file {}", ipbanlist.c().getName(), filenotfoundexception);
-+                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacetrace
++                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacktrace
 +                } catch (IOException filenotfoundexception) {
-+                    NameReferencingFileConverter.e.warn("Could not load existing file {}", new Object[] { ipbanlist.c().getName()});
++                    NameReferencingFileConverter.e.warn("Could not load existing file {}", ipbanlist.c().getName());
                  }
              }
  
-@@ -187,13 +189,14 @@
+@@ -187,8 +189,9 @@
              if (oplist.c().exists()) {
                  try {
                      oplist.load();
 -                } catch (FileNotFoundException filenotfoundexception) {
 -                    NameReferencingFileConverter.e.warn("Could not load existing file {}", oplist.c().getName(), filenotfoundexception);
-+                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacetrace
++                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacktrace
 +                } catch (IOException filenotfoundexception) {
-+                    NameReferencingFileConverter.e.warn("Could not load existing file {}", new Object[] { oplist.c().getName()});
++                    NameReferencingFileConverter.e.warn("Could not load existing file {}", oplist.c().getName());
                  }
              }
  
-             try {
--                List list = Files.readLines(NameReferencingFileConverter.c, StandardCharsets.UTF_8);
-+                List list = Files.readLines(NameReferencingFileConverter.c, Charsets.UTF_8);
-                 ProfileLookupCallback profilelookupcallback = new ProfileLookupCallback() {
-                     public void onProfileLookupSucceeded(GameProfile gameprofile) {
-                         minecraftserver.getUserCache().a(gameprofile);
-@@ -201,7 +204,7 @@
-                     }
- 
-                     public void onProfileLookupFailed(GameProfile gameprofile, Exception exception) {
--                        NameReferencingFileConverter.e.warn("Could not lookup oplist entry for {}", gameprofile.getName(), exception);
-+                        NameReferencingFileConverter.e.warn("Could not lookup oplist entry for {}", new Object[] { gameprofile.getName(), exception});
-                         if (!(exception instanceof ProfileNotFoundException)) {
-                             throw new NameReferencingFileConverter.FileConversionException("Could not request user " + gameprofile.getName() + " from backend systems", exception, null);
-                         }
-@@ -231,13 +234,14 @@
+@@ -231,8 +234,9 @@
              if (whitelist.c().exists()) {
                  try {
                      whitelist.load();
 -                } catch (FileNotFoundException filenotfoundexception) {
 -                    NameReferencingFileConverter.e.warn("Could not load existing file {}", whitelist.c().getName(), filenotfoundexception);
-+                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacetrace
++                // CraftBukkit start - FileNotFoundException -> IOException, don't print stacktrace
 +                } catch (IOException filenotfoundexception) {
-+                    NameReferencingFileConverter.e.warn("Could not load existing file {}", new Object[] { whitelist.c().getName()});
++                    NameReferencingFileConverter.e.warn("Could not load existing file {}", whitelist.c().getName());
                  }
              }
- 
-             try {
--                List list = Files.readLines(NameReferencingFileConverter.d, StandardCharsets.UTF_8);
-+                List list = Files.readLines(NameReferencingFileConverter.d, Charsets.UTF_8);
-                 ProfileLookupCallback profilelookupcallback = new ProfileLookupCallback() {
-                     public void onProfileLookupSucceeded(GameProfile gameprofile) {
-                         minecraftserver.getUserCache().a(gameprofile);
-@@ -245,7 +249,7 @@
-                     }
- 
-                     public void onProfileLookupFailed(GameProfile gameprofile, Exception exception) {
--                        NameReferencingFileConverter.e.warn("Could not lookup user whitelist entry for {}", gameprofile.getName(), exception);
-+                        NameReferencingFileConverter.e.warn("Could not lookup user whitelist entry for {}", new Object[] { gameprofile.getName(), exception});
-                         if (!(exception instanceof ProfileNotFoundException)) {
-                             throw new NameReferencingFileConverter.FileConversionException("Could not request user " + gameprofile.getName() + " from backend systems", exception, null);
-                         }
-@@ -283,7 +287,7 @@
-                     }
- 
-                     public void onProfileLookupFailed(GameProfile gameprofile, Exception exception) {
--                        NameReferencingFileConverter.e.warn("Could not lookup user whitelist entry for {}", gameprofile.getName(), exception);
-+                        NameReferencingFileConverter.e.warn("Could not lookup user whitelist entry for {}", new Object[] { gameprofile.getName(), exception});
-                     }
-                 };
- 
-@@ -336,7 +340,7 @@
-                     }
- 
-                     public void onProfileLookupFailed(GameProfile gameprofile, Exception exception) {
--                        NameReferencingFileConverter.e.warn("Could not lookup user uuid for {}", gameprofile.getName(), exception);
-+                        NameReferencingFileConverter.e.warn("Could not lookup user uuid for {}", new Object[] { gameprofile.getName(), exception});
-                         if (exception instanceof ProfileNotFoundException) {
-                             String s = this.a(gameprofile);
  
 @@ -350,6 +354,30 @@
                          File file1 = new File(file2, s + ".dat");
@@ -178,39 +88,6 @@
                          int i = astring.length;
  
                          for (int j = 0; j < i; ++j) {
-@@ -437,19 +465,19 @@
-             NameReferencingFileConverter.e.warn("**** FAILED TO START THE SERVER AFTER ACCOUNT CONVERSION!");
-             NameReferencingFileConverter.e.warn("** please remove the following files and restart the server:");
-             if (flag) {
--                NameReferencingFileConverter.e.warn("* {}", NameReferencingFileConverter.b.getName());
-+                NameReferencingFileConverter.e.warn("* {}", new Object[] { NameReferencingFileConverter.b.getName()});
-             }
- 
-             if (flag1) {
--                NameReferencingFileConverter.e.warn("* {}", NameReferencingFileConverter.a.getName());
-+                NameReferencingFileConverter.e.warn("* {}", new Object[] { NameReferencingFileConverter.a.getName()});
-             }
- 
-             if (flag2) {
--                NameReferencingFileConverter.e.warn("* {}", NameReferencingFileConverter.c.getName());
-+                NameReferencingFileConverter.e.warn("* {}", new Object[] { NameReferencingFileConverter.c.getName()});
-             }
- 
-             if (flag3) {
--                NameReferencingFileConverter.e.warn("* {}", NameReferencingFileConverter.d.getName());
-+                NameReferencingFileConverter.e.warn("* {}", new Object[] { NameReferencingFileConverter.d.getName()});
-             }
- 
-             return false;
-@@ -462,7 +490,7 @@
-         if (file.exists() && file.isDirectory() && (file.list().length > 0 || !file.delete())) {
-             NameReferencingFileConverter.e.warn("**** DETECTED OLD PLAYER DIRECTORY IN THE WORLD SAVE");
-             NameReferencingFileConverter.e.warn("**** THIS USUALLY HAPPENS WHEN THE AUTOMATIC CONVERSION FAILED IN SOME WAY");
--            NameReferencingFileConverter.e.warn("** please restart the server and if the problem persists, remove the directory \'{}\'", file.getPath());
-+            NameReferencingFileConverter.e.warn("** please restart the server and if the problem persists, remove the directory \'{}\'", new Object[] { file.getPath()});
-             return false;
-         } else {
-             return true;
 @@ -471,7 +499,7 @@
  
      private static File d(PropertyManager propertymanager) {

@@ -20,9 +20,12 @@ import net.minecraft.server.EntityFireball;
 import net.minecraft.server.EntityInsentient;
 import net.minecraft.server.EntityLargeFireball;
 import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityLlama;
+import net.minecraft.server.EntityLlamaSpit;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.EntityPotion;
 import net.minecraft.server.EntityProjectile;
+import net.minecraft.server.EntityShulkerBullet;
 import net.minecraft.server.EntitySmallFireball;
 import net.minecraft.server.EntitySnowball;
 import net.minecraft.server.EntityThrownExpBottle;
@@ -57,8 +60,10 @@ import org.bukkit.entity.Fish;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LingeringPotion;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.LlamaSpit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.ShulkerBullet;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.SpectralArrow;
@@ -95,8 +100,9 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public void setHealth(double health) {
+        health = (float) health;
         if ((health < 0) || (health > getMaxHealth())) {
-            throw new IllegalArgumentException("Health must be between 0 and " + getMaxHealth());
+            throw new IllegalArgumentException("Health must be between 0 and " + getMaxHealth() + "(" + health + ")");
         }
 
         getHandle().setHealth((float) health);
@@ -132,32 +138,6 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return getEyeHeight();
     }
 
-    private List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance, int maxLength) {
-        if (maxDistance > 120) {
-            maxDistance = 120;
-        }
-        ArrayList<Block> blocks = new ArrayList<Block>();
-        Iterator<Block> itr = new BlockIterator(this, maxDistance);
-        while (itr.hasNext()) {
-            Block block = itr.next();
-            blocks.add(block);
-            if (maxLength != 0 && blocks.size() > maxLength) {
-                blocks.remove(0);
-            }
-            int id = block.getTypeId();
-            if (transparent == null) {
-                if (id != 0) {
-                    break;
-                }
-            } else {
-                if (!transparent.contains((byte) id)) {
-                    break;
-                }
-            }
-        }
-        return blocks;
-    }
-
     private List<Block> getLineOfSight(Set<Material> transparent, int maxDistance, int maxLength) {
         if (maxDistance > 120) {
             maxDistance = 120;
@@ -184,26 +164,13 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         return blocks;
     }
 
-    public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
-        return getLineOfSight(transparent, maxDistance, 0);
-    }
-
     public List<Block> getLineOfSight(Set<Material> transparent, int maxDistance) {
         return getLineOfSight(transparent, maxDistance, 0);
-    }
-
-    public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
-        List<Block> blocks = getLineOfSight(transparent, maxDistance, 1);
-        return blocks.get(0);
     }
 
     public Block getTargetBlock(Set<Material> transparent, int maxDistance) {
         List<Block> blocks = getLineOfSight(transparent, maxDistance, 1);
         return blocks.get(0);
-    }
-
-    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
-        return getLineOfSight(transparent, maxDistance, 2);
     }
 
     public List<Block> getLastTwoTargetBlocks(Set<Material> transparent, int maxDistance) {
@@ -420,6 +387,20 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
             ((EntityFireball) launch).projectileSource = this;
             launch.setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        } else if (LlamaSpit.class.isAssignableFrom(projectile)) {
+            Location location = getEyeLocation();
+            Vector direction = location.getDirection();
+
+            launch = new EntityLlamaSpit(world);
+
+            ((EntityLlamaSpit) launch).shooter = getHandle();
+            ((EntityLlamaSpit) launch).shoot(direction.getX(), direction.getY(), direction.getZ(), 1.5F, 10.0F); // EntityLlama
+            launch.setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        } else if (ShulkerBullet.class.isAssignableFrom(projectile)) {
+            Location location = getEyeLocation();
+
+            launch = new EntityShulkerBullet(world, getHandle(), null, null);
+            launch.setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         }
 
         Validate.notNull(launch, "Projectile not supported");
@@ -455,13 +436,11 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public void setCanPickupItems(boolean pickup) {
-        if (getHandle() instanceof EntityInsentient) {
-            ((EntityInsentient) getHandle()).canPickUpLoot = pickup;
-        }
+        getHandle().canPickUpLoot = pickup;
     }
 
     public boolean getCanPickupItems() {
-        return getHandle() instanceof EntityInsentient && ((EntityInsentient) getHandle()).canPickUpLoot;
+        return getHandle().canPickUpLoot;
     }
 
     @Override
@@ -571,13 +550,13 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     @Override
     public void setAI(boolean ai) {
         if (this.getHandle() instanceof EntityInsentient) {
-            ((EntityInsentient) this.getHandle()).setAI(!ai);
+            ((EntityInsentient) this.getHandle()).setNoAI(!ai);
         }
     }
 
     @Override
     public boolean hasAI() {
-        return (this.getHandle() instanceof EntityInsentient) ? !((EntityInsentient) this.getHandle()).hasAI(): false;
+        return (this.getHandle() instanceof EntityInsentient) ? !((EntityInsentient) this.getHandle()).isNoAI(): false;
     }
 
     @Override
@@ -591,11 +570,11 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public int getArrowsStuck() {
-        return getHandle().getArrowsStuck();
+        return getHandle().getArrowCount();
     }
 
     public void setArrowsStuck(int arrows) {
-        getHandle().setArrowsStuck(arrows);
+        getHandle().setArrowCount(arrows);
     }
 
     @Override

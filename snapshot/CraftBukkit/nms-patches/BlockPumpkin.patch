@@ -1,10 +1,7 @@
 --- a/net/minecraft/server/BlockPumpkin.java
 +++ b/net/minecraft/server/BlockPumpkin.java
-@@ -1,9 +1,14 @@
- package net.minecraft.server;
- 
- import com.google.common.base.Predicate;
--import java.util.Iterator;
+@@ -4,6 +4,12 @@
+ import java.util.Iterator;
  import javax.annotation.Nullable;
  
 +// CraftBukkit start
@@ -16,23 +13,8 @@
  public class BlockPumpkin extends BlockFacingHorizontal {
  
      private ShapeDetector snowGolemPart;
-@@ -21,8 +26,8 @@
-     };
- 
-     protected BlockPumpkin() {
--        super(Material.PUMPKIN, MaterialMapColor.r);
--        this.w(this.blockStateList.getBlockData().set(BlockPumpkin.FACING, EnumDirection.NORTH));
-+        super(Material.PUMPKIN, MaterialMapColor.q);
-+        this.y(this.blockStateList.getBlockData().set(BlockPumpkin.FACING, EnumDirection.NORTH));
-         this.a(true);
-         this.a(CreativeModeTab.b);
-     }
-@@ -39,28 +44,27 @@
-     private void c(World world, BlockPosition blockposition) {
-         ShapeDetector.ShapeDetectorCollection shapedetector_shapedetectorcollection = this.getDetectorSnowGolem().a(world, blockposition);
-         int i;
--        Iterator iterator;
--        EntityPlayer entityplayer;
+@@ -43,18 +49,25 @@
+         EntityPlayer entityplayer;
          int j;
  
 +        BlockStateListPopulator blockList = new BlockStateListPopulator(world.getWorld()); // CraftBukkit - Use BlockStateListPopulator
@@ -53,19 +35,13 @@
  
              entitysnowman.setPositionRotation((double) blockposition1.getX() + 0.5D, (double) blockposition1.getY() + 0.05D, (double) blockposition1.getZ() + 0.5D, 0.0F, 0.0F);
 -            world.addEntity(entitysnowman);
--            iterator = world.a(EntityPlayer.class, entitysnowman.getBoundingBox().g(5.0D)).iterator();
--
--            while (iterator.hasNext()) {
--                entityplayer = (EntityPlayer) iterator.next();
--                CriterionTriggers.m.a(entityplayer, (Entity) entitysnowman);
--            }
 +            // CraftBukkit start
 +            if (world.addEntity(entitysnowman, SpawnReason.BUILD_SNOWMAN)) {
 +                blockList.updateList();
+             iterator = world.a(EntityPlayer.class, entitysnowman.getBoundingBox().g(5.0D)).iterator();
  
-             for (j = 0; j < 120; ++j) {
-                 world.addParticle(EnumParticle.SNOW_SHOVEL, (double) blockposition1.getX() + world.random.nextDouble(), (double) blockposition1.getY() + world.random.nextDouble() * 2.5D, (double) blockposition1.getZ() + world.random.nextDouble(), 0.0D, 0.0D, 0.0D, new int[0]);
-@@ -71,12 +75,17 @@
+             while (iterator.hasNext()) {
+@@ -71,12 +84,17 @@
  
                  world.update(shapedetectorblock1.getPosition(), Blocks.AIR, false);
              }
@@ -84,24 +60,18 @@
                      }
                  }
  
-@@ -85,13 +94,9 @@
+@@ -85,7 +103,9 @@
  
                  entityirongolem.setPlayerCreated(true);
                  entityirongolem.setPositionRotation((double) blockposition2.getX() + 0.5D, (double) blockposition2.getY() + 0.05D, (double) blockposition2.getZ() + 0.5D, 0.0F, 0.0F);
 -                world.addEntity(entityirongolem);
--                iterator = world.a(EntityPlayer.class, entityirongolem.getBoundingBox().g(5.0D)).iterator();
--
--                while (iterator.hasNext()) {
--                    entityplayer = (EntityPlayer) iterator.next();
--                    CriterionTriggers.m.a(entityplayer, (Entity) entityirongolem);
--                }
 +            // CraftBukkit start
 +            if (world.addEntity(entityirongolem, SpawnReason.BUILD_IRONGOLEM)) {
 +                blockList.updateList();
+                 iterator = world.a(EntityPlayer.class, entityirongolem.getBoundingBox().g(5.0D)).iterator();
  
-                 for (j = 0; j < 120; ++j) {
-                     world.addParticle(EnumParticle.SNOWBALL, (double) blockposition2.getX() + world.random.nextDouble(), (double) blockposition2.getY() + world.random.nextDouble() * 3.9D, (double) blockposition2.getZ() + world.random.nextDouble(), 0.0D, 0.0D, 0.0D, new int[0]);
-@@ -105,12 +110,13 @@
+                 while (iterator.hasNext()) {
+@@ -105,6 +125,7 @@
                      }
                  }
              }
@@ -109,10 +79,3 @@
          }
  
      }
- 
-     public boolean canPlace(World world, BlockPosition blockposition) {
--        return world.getType(blockposition).getBlock().material.isReplaceable() && world.getType(blockposition.down()).q();
-+        return world.getType(blockposition).getBlock().material.isReplaceable() && world.getType(blockposition.down()).r();
-     }
- 
-     public IBlockData a(IBlockData iblockdata, EnumBlockRotation enumblockrotation) {

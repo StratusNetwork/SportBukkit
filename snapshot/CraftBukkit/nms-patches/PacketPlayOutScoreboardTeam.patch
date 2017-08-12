@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/PacketPlayOutScoreboardTeam.java
 +++ b/net/minecraft/server/PacketPlayOutScoreboardTeam.java
-@@ -18,6 +18,29 @@
+@@ -18,6 +18,30 @@
      private int i;
      private int j;
  
@@ -27,15 +27,7 @@
 +    }
 +    // SportBukkit end
 +
++
      public PacketPlayOutScoreboardTeam() {
          this.e = ScoreboardTeamBase.EnumNameTagVisibility.ALWAYS.e;
          this.f = ScoreboardTeamBase.EnumTeamPush.ALWAYS.e;
-@@ -39,7 +62,7 @@
-             this.j = scoreboardteam.packOptionData();
-             this.e = scoreboardteam.getNameTagVisibility().e;
-             this.f = scoreboardteam.getCollisionRule().e;
--            this.g = scoreboardteam.getColor().b();
-+            this.g = scoreboardteam.m().b();
-         }
- 
-         if (i == 0) {

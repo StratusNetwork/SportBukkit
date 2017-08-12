@@ -9,15 +9,6 @@
  public class BlockMinecartDetector extends BlockMinecartTrackAbstract {
  
      public static final BlockStateEnum<BlockMinecartTrackAbstract.EnumTrackPosition> SHAPE = BlockStateEnum.a("shape", BlockMinecartTrackAbstract.EnumTrackPosition.class, new Predicate() {
-@@ -21,7 +23,7 @@
- 
-     public BlockMinecartDetector() {
-         super(true);
--        this.w(this.blockStateList.getBlockData().set(BlockMinecartDetector.POWERED, Boolean.valueOf(false)).set(BlockMinecartDetector.SHAPE, BlockMinecartTrackAbstract.EnumTrackPosition.NORTH_SOUTH));
-+        this.y(this.blockStateList.getBlockData().set(BlockMinecartDetector.POWERED, Boolean.valueOf(false)).set(BlockMinecartDetector.SHAPE, BlockMinecartTrackAbstract.EnumTrackPosition.NORTH_SOUTH));
-         this.a(true);
-     }
- 
 @@ -66,6 +68,17 @@
              flag1 = true;
          }
