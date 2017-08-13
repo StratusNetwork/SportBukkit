@@ -31,7 +31,7 @@ diff --git a/src/main/java/net/minecraft/server/BlockPiston.java b/src/main/java
              if (this.sticky) {
                  BlockPosition blockposition1 = blockposition.a(enumdirection.getAdjacentX() * 2, enumdirection.getAdjacentY() * 2, enumdirection.getAdjacentZ() * 2);
                  IBlockData iblockdata1 = world.getType(blockposition1);
-@@ -298,6 +309,7 @@ public class BlockPiston extends BlockDirectional {
+@@ -301,6 +312,7 @@ public class BlockPiston extends BlockDirectional {
              int j = list.size() + list1.size();
              IBlockData[] aiblockdata = new IBlockData[j];
              EnumDirection enumdirection1 = flag ? enumdirection : enumdirection.opposite();
@@ -39,7 +39,7 @@ diff --git a/src/main/java/net/minecraft/server/BlockPiston.java b/src/main/java
              // CraftBukkit start
              final org.bukkit.block.Block bblock = world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
  
-@@ -340,6 +352,7 @@ public class BlockPiston extends BlockDirectional {
+@@ -343,6 +355,7 @@ public class BlockPiston extends BlockDirectional {
                  return false;
              }
              // CraftBukkit end
@@ -58,7 +58,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b
  import java.util.ArrayList;
  import java.util.EnumMap;
  import java.util.List;
-@@ -1057,4 +1058,59 @@ public class CraftEventFactory {
+@@ -1071,4 +1072,59 @@ public class CraftEventFactory {
          Bukkit.getPluginManager().callEvent(event);
          return event;
      }

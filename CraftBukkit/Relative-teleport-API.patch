@@ -6,29 +6,28 @@ Subject: [PATCH] Relative teleport API
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -678,6 +678,12 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -711,14 +711,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+ 
+     // CraftBukkit start - Delegate to teleport(Location)
+     public void a(double d0, double d1, double d2, float f, float f1, PlayerTeleportEvent.TeleportCause cause) {
+-        this.a(d0, d1, d2, f, f1, Collections.<PacketPlayOutPosition.EnumPlayerTeleportFlags>emptySet(), cause);
++        this.teleportRelative(d0, d1, d2, f, f1, Collections.<PacketPlayOutPosition.EnumPlayerTeleportFlags>emptySet(), cause);
      }
  
      public void a(double d0, double d1, double d2, float f, float f1, Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> set) {
-+        // SportBukkit start - add cause parameter
+-        this.a(d0, d1, d2, f, f1, set, PlayerTeleportEvent.TeleportCause.UNKNOWN);
 +        this.teleportRelative(d0, d1, d2, f, f1, set, PlayerTeleportEvent.TeleportCause.UNKNOWN);
+     }
+ 
+     public void a(double d0, double d1, double d2, float f, float f1, Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> set, PlayerTeleportEvent.TeleportCause cause) {
++        this.teleportRelative(d0, d1, d2, f, f1, set, cause);
 +    }
 +
 +    public boolean teleportRelative(double d0, double d1, double d2, float f, float f1, Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> set, PlayerTeleportEvent.TeleportCause cause) {
-+        // SportBukkit end
-         // CraftBukkit start - Delegate to teleport(Location)
          Player player = this.getPlayer();
          Location from = player.getLocation();
-@@ -705,7 +711,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
- 
-         Location to = new Location(this.getPlayer().getWorld(), x, y, z, yaw, pitch);
--        PlayerTeleportEvent event = new PlayerTeleportEvent(player, from.clone(), to.clone(), PlayerTeleportEvent.TeleportCause.UNKNOWN);
-+        PlayerTeleportEvent event = new PlayerTeleportEvent(player, from.clone(), to.clone(), cause);
-         this.server.getPluginManager().callEvent(event);
- 
-         if (event.isCancelled() || !to.equals(event.getTo())) {
-@@ -719,6 +725,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -759,6 +763,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          }
  
          this.internalTeleport(d0, d1, d2, f, f1, set);
@@ -36,29 +35,37 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
      }
  
      public void teleport(Location dest) {
-@@ -735,15 +742,15 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -775,15 +780,15 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          }
  
          if(Double.isNaN(d0)) {
 -            d0 = this.o;
-+            d0 = set.contains(PacketPlayOutPosition.EnumPlayerTeleportFlags.X) ? 0 : this.o;
++            d0 = set.contains(PacketPlayOutPosition.EnumPlayerTeleportFlags.X) ? 0 : this.o; // SportBukkit
          }
  
          if(Double.isNaN(d1)) {
 -            d1 = this.p;
-+            d1 = set.contains(PacketPlayOutPosition.EnumPlayerTeleportFlags.Y) ? 0 : this.p;
++            d1 = set.contains(PacketPlayOutPosition.EnumPlayerTeleportFlags.Y) ? 0 : this.p; // SportBukkit
          }
  
          if(Double.isNaN(d2)) {
 -            d2 = this.q;
-+            d2 = set.contains(PacketPlayOutPosition.EnumPlayerTeleportFlags.Z) ? 0 : this.q;
++            d2 = set.contains(PacketPlayOutPosition.EnumPlayerTeleportFlags.Z) ? 0 : this.q; // SportBukkit
          }
  
          this.justTeleported = true;
+@@ -1209,7 +1214,6 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+                 }
+             }
+         }
+-    }
+         // CraftBukkit end
+ 
+         try {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1863,4 +1863,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1883,4 +1883,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      public void hideTitle() {
          getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.CLEAR, (BaseComponent[]) null, 0, 0, 0));
      }
@@ -71,9 +78,9 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
 +    @Override
 +    public boolean teleportRelative(org.bukkit.util.Vector deltaPos, float deltaYaw, float deltaPitch, PlayerTeleportEvent.TeleportCause cause) {
 +        return !(getHandle().playerConnection == null || getHandle().playerConnection.isDisconnected()) &&
-+               getHandle().playerConnection.teleportRelative(deltaPos.getX(), deltaPos.getY(), deltaPos.getZ(),
-+                                                             deltaYaw, deltaPitch,
-+                                                             java.util.EnumSet.allOf(PacketPlayOutPosition.EnumPlayerTeleportFlags.class),
-+                                                             cause);
++                getHandle().playerConnection.teleportRelative(deltaPos.getX(), deltaPos.getY(), deltaPos.getZ(),
++                        deltaYaw, deltaPitch,
++                        java.util.EnumSet.allOf(PacketPlayOutPosition.EnumPlayerTeleportFlags.class),
++                        cause);
 +    }
  }

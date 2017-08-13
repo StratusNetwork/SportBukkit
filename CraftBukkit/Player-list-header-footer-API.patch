@@ -15,7 +15,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerListHeaderFoo
      private IChatBaseComponent a;
      private IChatBaseComponent b;
  
-@@ -19,8 +21,19 @@ public class PacketPlayOutPlayerListHeaderFooter implements Packet<PacketListene
+@@ -15,8 +17,19 @@ public class PacketPlayOutPlayerListHeaderFooter implements Packet<PacketListene
      }
  
      public void b(PacketDataSerializer packetdataserializer) throws IOException {
@@ -40,7 +40,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerListHeaderFoo
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1783,4 +1783,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1802,4 +1802,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          packet.components = components;
          getHandle().playerConnection.sendPacket(packet);
      }

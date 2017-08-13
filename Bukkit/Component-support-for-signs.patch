@@ -49,18 +49,15 @@ diff --git a/src/main/java/org/bukkit/block/Sign.java b/src/main/java/org/bukkit
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1,8 +1,10 @@
- package org.bukkit.entity;
- 
+@@ -3,6 +3,7 @@ package org.bukkit.entity;
  import java.net.InetSocketAddress;
-+import java.util.List;
  import java.util.Set;
  
 +import net.md_5.bungee.api.chat.BaseComponent;
- import org.bukkit.Achievement;
- import org.bukkit.ChatColor;
- import org.bukkit.Effect;
-@@ -509,6 +511,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+ import org.bukkit.*;
+ import org.bukkit.advancement.Advancement;
+ import org.bukkit.advancement.AdvancementProgress;
+@@ -497,6 +498,9 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
       * @throws IllegalArgumentException if location is null
       * @throws IllegalArgumentException if lines is non-null and has a length less than 4
       */
@@ -116,12 +113,12 @@ diff --git a/src/main/java/org/bukkit/event/block/SignChangeEvent.java b/src/mai
       * @param index index of the line to get
 -     * @return the String containing the line of text associated with the
 +     * @return the BaseComponent containing the line of text associated with the
-      *     provided index
+      * provided index
       * @throws IndexOutOfBoundsException thrown when the provided index is {@literal > 3
-      *     or < 0}
+      *                                   or < 0}
       */
 -    public String getLine(int index) throws IndexOutOfBoundsException {
-+    public BaseComponent line(int index) {
++    public BaseComponent line(int index) throws IndexOutOfBoundsException {
          return lines[index];
      }
  
@@ -135,7 +132,7 @@ diff --git a/src/main/java/org/bukkit/event/block/SignChangeEvent.java b/src/mai
       *
 @@ -67,10 +79,15 @@ public class SignChangeEvent extends BlockEvent implements Cancellable, PlayerAc
       * @throws IndexOutOfBoundsException thrown when the provided index is {@literal > 3
-      *     or < 0}
+      *                                   or < 0}
       */
 -    public void setLine(int index, String line) throws IndexOutOfBoundsException {
 +    public void setLine(int index, BaseComponent line) {

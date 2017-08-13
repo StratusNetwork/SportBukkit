@@ -10,7 +10,6 @@ import org.bukkit.TreeSpecies;
 import org.bukkit.block.BlockFace;
 import org.bukkit.material.Crops;
 import org.bukkit.material.Comparator;
-import org.bukkit.material.Crops;
 import org.bukkit.material.Diode;
 import org.bukkit.material.Door;
 import org.bukkit.material.Hopper;
@@ -473,4 +472,5 @@ public class MaterialDataTest {
         MaterialData md = new MaterialData(Material.AIR).immutable();
         assertTrue(md.clone().isMutable());
     }
+
 }

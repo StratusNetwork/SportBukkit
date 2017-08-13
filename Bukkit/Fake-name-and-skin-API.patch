@@ -6,7 +6,7 @@ Subject: [PATCH] Fake name and skin API
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -437,6 +437,27 @@ public final class Bukkit {
+@@ -422,6 +422,27 @@ public final class Bukkit {
      }
  
      /**
@@ -37,11 +37,10 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -363,7 +363,22 @@ public interface Server extends PluginMessageRecipient {
+@@ -350,6 +350,21 @@ public interface Server extends PluginMessageRecipient {
      public Player getPlayer(UUID id);
  
      /**
--     * Gets the plugin manager for interfacing with plugins.
 +     * Fake name aware version of {@link #getPlayer(String)}
 +     */
 +    public Player getPlayer(String name, CommandSender viewer);
@@ -57,13 +56,12 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
 +    public List<Player> matchPlayer(String name, CommandSender viewer);
 +
 +    /**
-+     * Gets the PluginManager for interfacing with plugins
+      * Gets the plugin manager for interfacing with plugins.
       *
       * @return a plugin manager for this Server instance
-      */
 diff --git a/src/main/java/org/bukkit/Skin.java b/src/main/java/org/bukkit/Skin.java
 new file mode 100644
-index 0000000..5dc9cef
+index 00000000..c5d17040
 --- /dev/null
 +++ b/src/main/java/org/bukkit/Skin.java
 @@ -0,0 +1,76 @@
@@ -143,6 +141,7 @@ index 0000000..5dc9cef
 +        return result;
 +    }
 +}
+\ No newline at end of file
 diff --git a/src/main/java/org/bukkit/command/Command.java b/src/main/java/org/bukkit/command/Command.java
 --- a/src/main/java/org/bukkit/command/Command.java
 +++ b/src/main/java/org/bukkit/command/Command.java
@@ -170,50 +169,267 @@ diff --git a/src/main/java/org/bukkit/command/CommandSender.java b/src/main/java
 +    public String getName(CommandSender viewer);
  }
 diff --git a/src/main/java/org/bukkit/command/defaults/ListCommand.java b/src/main/java/org/bukkit/command/defaults/ListCommand.java
---- a/src/main/java/org/bukkit/command/defaults/ListCommand.java
+new file mode 100644
+index 00000000..8442e03f
+--- /dev/null
 +++ b/src/main/java/org/bukkit/command/defaults/ListCommand.java
-@@ -36,7 +36,7 @@ public class ListCommand extends VanillaCommand {
-                 online.append(", ");
-             }
- 
--            online.append(player.getDisplayName());
+@@ -0,0 +1,55 @@
++package org.bukkit.command.defaults;
++
++import java.util.Collection;
++import java.util.List;
++
++import org.apache.commons.lang.Validate;
++import org.bukkit.Bukkit;
++import org.bukkit.command.CommandSender;
++import org.bukkit.entity.Player;
++
++import com.google.common.collect.ImmutableList;
++
++@Deprecated
++public class ListCommand extends VanillaCommand {
++    public ListCommand() {
++        super("list");
++        this.description = "Lists all online players";
++        this.usageMessage = "/list";
++        this.setPermission("bukkit.command.list");
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String currentAlias, String[] args) {
++        if (!testPermission(sender)) return true;
++
++        StringBuilder online = new StringBuilder();
++
++        final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
++
++        for (Player player : players) {
++            // If a player is hidden from the sender don't show them in the list
++            if (sender instanceof Player && !((Player) sender).canSee(player))
++                continue;
++
++            if (online.length() > 0) {
++                online.append(", ");
++            }
++
 +            online.append(player.getDisplayName(sender instanceof Player ? (Player) sender : null));
-         }
- 
-         sender.sendMessage("There are " + players.size() + "/" + Bukkit.getMaxPlayers() + " players online:\n" + online.toString());
++        }
++
++        sender.sendMessage("There are " + players.size() + "/" + Bukkit.getMaxPlayers() + " players online:\n" + online.toString());
++
++        return true;
++    }
++
++    @Override
++    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
++        Validate.notNull(sender, "Sender cannot be null");
++        Validate.notNull(args, "Arguments cannot be null");
++        Validate.notNull(alias, "Alias cannot be null");
++
++        return ImmutableList.of();
++    }
++}
 diff --git a/src/main/java/org/bukkit/command/defaults/TellCommand.java b/src/main/java/org/bukkit/command/defaults/TellCommand.java
---- a/src/main/java/org/bukkit/command/defaults/TellCommand.java
+new file mode 100644
+index 00000000..466691f5
+--- /dev/null
 +++ b/src/main/java/org/bukkit/command/defaults/TellCommand.java
-@@ -25,7 +25,8 @@ public class TellCommand extends VanillaCommand {
-             return false;
-         }
- 
--        Player player = Bukkit.getPlayerExact(args[0]);
+@@ -0,0 +1,50 @@
++package org.bukkit.command.defaults;
++
++import java.util.Arrays;
++
++import org.bukkit.Bukkit;
++import org.bukkit.ChatColor;
++import org.bukkit.command.CommandSender;
++import org.bukkit.entity.Player;
++
++@Deprecated
++public class TellCommand extends VanillaCommand {
++    public TellCommand() {
++        super("tell");
++        this.description = "Sends a private message to the given player";
++        this.usageMessage = "/tell <player> <message>";
++        this.setAliases(Arrays.asList(new String[] { "w", "msg" }));
++        this.setPermission("bukkit.command.tell");
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String currentAlias, String[] args) {
++        if (!testPermission(sender)) return true;
++        if (args.length < 2)  {
++            sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
++            return false;
++        }
++
 +        Player viewer = sender instanceof Player ? (Player) sender : null;
 +        Player player = Bukkit.getPlayerExact(args[0], viewer);
- 
-         // If a player is hidden from the sender pretend they are offline
-         if (player == null || (sender instanceof Player && !((Player) sender).canSee(player))) {
++
++        // If a player is hidden from the sender pretend they are offline
++        if (player == null || (sender instanceof Player && !((Player) sender).canSee(player))) {
++            sender.sendMessage("There's no player by that name online.");
++        } else {
++            StringBuilder message = new StringBuilder();
++
++            for (int i = 1; i < args.length; i++) {
++                if (i > 1) message.append(" ");
++                message.append(args[i]);
++            }
++
++            String result = ChatColor.GRAY + sender.getName() + " whispers " + message;
++
++            sender.sendMessage("[" + sender.getName() + "->" + player.getName() + "] " + message);
++            player.sendMessage(result);
++        }
++
++        return true;
++    }
++}
+diff --git a/src/main/java/org/bukkit/command/defaults/VanillaCommand.java b/src/main/java/org/bukkit/command/defaults/VanillaCommand.java
+new file mode 100644
+index 00000000..9105712b
+--- /dev/null
++++ b/src/main/java/org/bukkit/command/defaults/VanillaCommand.java
+@@ -0,0 +1,111 @@
++package org.bukkit.command.defaults;
++
++import java.util.List;
++
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++
++@Deprecated
++public abstract class VanillaCommand extends Command {
++    static final int MAX_COORD = 30000000;
++    static final int MIN_COORD_MINUS_ONE = -30000001;
++    static final int MIN_COORD = -30000000;
++
++    protected VanillaCommand(String name) {
++        super(name);
++    }
++
++    protected VanillaCommand(String name, String description, String usageMessage, List<String> aliases) {
++        super(name, description, usageMessage, aliases);
++    }
++
++    public boolean matches(String input) {
++        return input.equalsIgnoreCase(this.getName());
++    }
++
++    protected int getInteger(CommandSender sender, String value, int min) {
++        return getInteger(sender, value, min, Integer.MAX_VALUE);
++    }
++
++    int getInteger(CommandSender sender, String value, int min, int max) {
++        return getInteger(sender, value, min, max, false);
++    }
++
++    int getInteger(CommandSender sender, String value, int min, int max, boolean Throws) {
++        int i = min;
++
++        try {
++            i = Integer.valueOf(value);
++        } catch (NumberFormatException ex) {
++            if (Throws) {
++                throw new NumberFormatException(String.format("%s is not a valid number", value));
++            }
++        }
++
++        if (i < min) {
++            i = min;
++        } else if (i > max) {
++            i = max;
++        }
++
++        return i;
++    }
++
++    Integer getInteger(String value) {
++        try {
++            return Integer.valueOf(value);
++        } catch (NumberFormatException ex) {
++            return null;
++        }
++    }
++
++    public static double getRelativeDouble(double original, CommandSender sender, String input) {
++        if (input.startsWith("~")) {
++            double value = getDouble(sender, input.substring(1));
++            if (value == MIN_COORD_MINUS_ONE) {
++                return MIN_COORD_MINUS_ONE;
++            }
++            return original + value;
++        } else {
++            return getDouble(sender, input);
++        }
++    }
++
++    public static double getDouble(CommandSender sender, String input) {
++        try {
++            return Double.parseDouble(input);
++        } catch (NumberFormatException ex) {
++            return MIN_COORD_MINUS_ONE;
++        }
++    }
++
++    public static double getDouble(CommandSender sender, String input, double min, double max) {
++        double result = getDouble(sender, input);
++
++        // TODO: This should throw an exception instead.
++        if (result < min) {
++            result = min;
++        } else if (result > max) {
++            result = max;
++        }
++
++        return result;
++    }
++
++    String createString(String[] args, int start) {
++        return createString(args, start, " ");
++    }
++
++    String createString(String[] args, int start, String glue) {
++        StringBuilder string = new StringBuilder();
++
++        for (int x = start; x < args.length; x++) {
++            string.append(args[x]);
++            if (x != args.length - 1) {
++                string.append(glue);
++            }
++        }
++
++        return string.toString();
++    }
++}
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1,6 +1,7 @@
+@@ -1,21 +1,9 @@
  package org.bukkit.entity;
  
  import java.net.InetSocketAddress;
 +import java.util.Set;
  
- import org.bukkit.Achievement;
- import org.bukkit.ChatColor;
-@@ -12,6 +13,7 @@ import org.bukkit.Material;
- import org.bukkit.Note;
- import org.bukkit.OfflinePlayer;
- import org.bukkit.Particle;
-+import org.bukkit.Skin;
- import org.bukkit.Sound;
- import org.bukkit.SoundCategory;
- import org.bukkit.Statistic;
-@@ -28,6 +30,60 @@ import org.bukkit.scoreboard.Scoreboard;
+-import org.bukkit.Achievement;
+-import org.bukkit.ChatColor;
+-import org.bukkit.Effect;
+-import org.bukkit.GameMode;
+-import org.bukkit.Instrument;
+-import org.bukkit.Location;
+-import org.bukkit.Material;
+-import org.bukkit.Note;
+-import org.bukkit.OfflinePlayer;
+-import org.bukkit.Particle;
+-import org.bukkit.Sound;
+-import org.bukkit.SoundCategory;
+-import org.bukkit.Statistic;
+-import org.bukkit.WeatherType;
++import org.bukkit.*;
+ import org.bukkit.advancement.Advancement;
+ import org.bukkit.advancement.AdvancementProgress;
+ import org.bukkit.command.CommandSender;
+@@ -31,6 +19,60 @@ import org.bukkit.scoreboard.Scoreboard;
  public interface Player extends HumanEntity, Conversable, CommandSender, OfflinePlayer, PluginMessageRecipient {
  
      /**
@@ -274,7 +490,7 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
       * Gets the "friendly" name to display of this player. This may include
       * color.
       * <p>
-@@ -80,6 +136,74 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+@@ -83,6 +125,74 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      public void setPlayerListName(String name);
  
      /**
@@ -351,7 +567,7 @@ diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/buk
       * @param loc Location to point to
 diff --git a/src/main/java/org/bukkit/event/player/PlayerSkinPartsChangeEvent.java b/src/main/java/org/bukkit/event/player/PlayerSkinPartsChangeEvent.java
 new file mode 100644
-index 0000000..a222f21
+index 00000000..a222f21e
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerSkinPartsChangeEvent.java
 @@ -0,0 +1,32 @@

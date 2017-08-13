@@ -6,7 +6,7 @@ Subject: [PATCH] Fix FallingSand creating invisible blocks
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -968,6 +968,18 @@ public abstract class World implements IBlockAccess {
+@@ -972,6 +972,18 @@ public abstract class World implements IBlockAccess {
  
      public boolean addEntity(Entity entity, SpawnReason spawnReason) { // Changed signature, added SpawnReason
          if (entity == null) return false;

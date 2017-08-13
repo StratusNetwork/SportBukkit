@@ -6,7 +6,7 @@ Subject: [PATCH] Mojang task queue access
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -34,6 +34,7 @@ import org.bukkit.inventory.Merchant;
+@@ -35,6 +35,7 @@ import org.bukkit.inventory.Merchant;
  import org.bukkit.inventory.Recipe;
  import org.bukkit.map.MapView;
  import org.bukkit.permissions.Permissible;
@@ -14,7 +14,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
  import org.bukkit.plugin.PluginManager;
  import org.bukkit.plugin.ServicesManager;
  import org.bukkit.plugin.messaging.Messenger;
-@@ -1277,4 +1278,12 @@ public final class Bukkit {
+@@ -1290,4 +1291,12 @@ public final class Bukkit {
      public static PotionEffectRegistry potionEffectRegistry() {
          return runtime().potionEffectRegistry();
      }
@@ -38,7 +38,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
  import org.bukkit.plugin.PluginManager;
  import org.bukkit.plugin.ServicesManager;
  import org.bukkit.plugin.messaging.Messenger;
-@@ -1023,4 +1024,26 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
+@@ -1032,4 +1033,26 @@ public interface Server extends PluginMessageRecipient, BukkitRuntime, tc.oc.min
       * @param components the components to send
       */
      public void broadcast(net.md_5.bungee.api.chat.BaseComponent... components);

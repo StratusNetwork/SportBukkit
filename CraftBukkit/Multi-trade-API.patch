@@ -6,7 +6,7 @@ Subject: [PATCH] Multi-trade API
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
-@@ -455,6 +455,25 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+@@ -464,6 +464,25 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
          return this.getHandle().activeContainer.getBukkitView();
      }
  

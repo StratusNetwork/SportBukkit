@@ -6,12 +6,13 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.google.common.collect.ImmutableMap;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.event.EventBus;
 import org.bukkit.event.SimpleEventBus;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
+
+import com.google.common.collect.ImmutableMap;
 
 public class TestServer implements InvocationHandler {
     private static interface MethodHandler {
@@ -46,7 +47,7 @@ public class TestServer implements InvocationHandler {
                             return server.eventBus;
                         }
                     }
-                );
+            );
             methodMap.put(
                     Server.class.getMethod("getLogger"),
                     new MethodHandler() {

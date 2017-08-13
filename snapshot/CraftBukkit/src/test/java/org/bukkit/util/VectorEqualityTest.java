@@ -3,8 +3,8 @@ package org.bukkit.util;
 import net.minecraft.server.BlockPosition;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static tc.oc.test.Assert.*;
+import static tc.oc.test.Assert.assertMutuallyEqual;
+import static tc.oc.test.Assert.assertMutuallyUnequal;
 
 public class VectorEqualityTest {
 

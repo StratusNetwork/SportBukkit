@@ -17,9 +17,9 @@
      public void z() {
          this.d = true;
      }
-@@ -250,4 +253,13 @@
-         a("command_block", TileEntityCommand.class);
+@@ -251,4 +254,13 @@
          a("shulker_box", TileEntityShulkerBox.class);
+         a("bed", TileEntityBed.class);
      }
 +
 +    // CraftBukkit start - add method

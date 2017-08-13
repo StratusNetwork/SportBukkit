@@ -5,7 +5,7 @@ Subject: [PATCH] Remove BukkitMirrorTest
 
 diff --git a/src/test/java/org/bukkit/BukkitMirrorTest.java b/src/test/java/org/bukkit/BukkitMirrorTest.java
 deleted file mode 100644
-index 219788f..0000000
+index 219788fb..00000000
 --- a/src/test/java/org/bukkit/BukkitMirrorTest.java
 +++ /dev/null
 @@ -1,75 +0,0 @@

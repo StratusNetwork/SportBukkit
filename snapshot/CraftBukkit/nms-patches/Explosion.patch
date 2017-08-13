@@ -49,7 +49,7 @@
                                  hashset.add(blockposition);
                              }
  
-@@ -113,16 +126,35 @@
+@@ -113,16 +126,34 @@
                          double d12 = (double) this.world.a(vec3d, entity.getBoundingBox());
                          double d13 = (1.0D - d7) * d12;
  
@@ -82,11 +82,10 @@
 +                            entity.applyKnockback(source, d8 * d14, d9 * d14, d10 * d14, true);
 +                        }
 +                        // SportBukkit end
-+
                          if (entity instanceof EntityHuman) {
                              EntityHuman entityhuman = (EntityHuman) entity;
  
-@@ -149,6 +181,50 @@
+@@ -149,6 +180,50 @@
          BlockPosition blockposition;
  
          if (this.b) {
@@ -137,7 +136,7 @@
              iterator = this.blocks.iterator();
  
              while (iterator.hasNext()) {
-@@ -180,7 +256,8 @@
+@@ -180,7 +255,8 @@
  
                  if (iblockdata.getMaterial() != Material.AIR) {
                      if (block.a(this)) {
@@ -147,7 +146,7 @@
                      }
  
                      this.world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 3);
-@@ -195,7 +272,11 @@
+@@ -195,7 +271,11 @@
              while (iterator.hasNext()) {
                  blockposition = (BlockPosition) iterator.next();
                  if (this.world.getType(blockposition).getMaterial() == Material.AIR && this.world.getType(blockposition.down()).b() && this.c.nextInt(3) == 0) {
@@ -160,7 +159,7 @@
                  }
              }
          }
-@@ -208,7 +289,9 @@
+@@ -208,7 +288,9 @@
  
      @Nullable
      public EntityLiving getSource() {

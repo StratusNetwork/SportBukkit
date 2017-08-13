@@ -14,7 +14,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java 
  
  @DelegateDeserialization(ItemStack.class)
  public final class CraftItemStack extends ItemStack {
-@@ -171,6 +172,20 @@ public final class CraftItemStack extends ItemStack {
+@@ -175,6 +176,20 @@ public final class CraftItemStack extends ItemStack {
      }
  
      @Override
@@ -38,7 +38,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-@@ -79,7 +79,7 @@ import org.apache.commons.codec.binary.Base64;
+@@ -61,7 +61,7 @@ import org.bukkit.util.ImmutableMaterialSet;
   * <li> SerializableMeta.Deserializers deserializer()
   */
  @DelegateDeserialization(CraftMetaItem.SerializableMeta.class)
@@ -47,7 +47,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
  
      static class ItemMetaKey {
  
-@@ -807,6 +807,20 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -832,6 +832,20 @@ class CraftMetaItem implements ItemMeta, Repairable {
          canPlaceOn = ImmutableMaterialSet.of(materials);
      }
  
@@ -70,7 +70,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
          if (object == null) {
 diff --git a/src/test/java/org/bukkit/craftbukkit/inventory/ImItemStackTest.java b/src/test/java/org/bukkit/craftbukkit/inventory/ImItemStackTest.java
 new file mode 100644
-index 0000000..0dd64b3
+index 00000000..0dd64b3a
 --- /dev/null
 +++ b/src/test/java/org/bukkit/craftbukkit/inventory/ImItemStackTest.java
 @@ -0,0 +1,98 @@

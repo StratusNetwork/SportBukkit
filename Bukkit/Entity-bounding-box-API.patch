@@ -14,24 +14,110 @@ diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/buk
  import org.bukkit.metadata.Metadatable;
  import org.bukkit.util.Vector;
  
-@@ -493,4 +494,6 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
-      * @return true if the tag was successfully removed
+@@ -56,10 +57,10 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+ 
+     /**
+      * Apply an impulse to this entity, i.e. a relative change in velocity.
+-     *
++     * <p>
+      * The given vector is added to the current velocity, and the entity's new
+      * velocity is synced to players in visible range.
+-     *
++     * <p>
+      * If this entity is a player, the impulse is sent directly to them,
+      * and will be applied by their client at the moment they receive it.
+      * This results in more accurate physics, from the player's perspective,
+@@ -67,11 +68,12 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+      * velocity is more difficult to predict from the server.
+      */
+     void applyImpulse(Vector impulse);
++
+     void applyImpulse(Vector impulse, boolean relative);
+ 
+     /**
+      * Set the knockback reduction for this entity.
+-     *
++     * <p>
+      * Set this to 0 for standard knockback mechanics.
+      * Set this to 1 to disable all knockback effects.
+      * Values between 0 and 1 reduce knockback impulses proportionally.
+@@ -87,11 +89,11 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+ 
+     /**
+      * Get the velocity of this entity, preferring an inferred value, if there is one.
+-     *
++     * <p>
+      * For {@link Player}s, this velocity is partly derived from positions reported by
+      * the client. This can be much more accurate than the velocity stored on the
+      * server, which is not affected by player movement at all.
+-     *
++     * <p>
+      * For all other entities, this returns the same value as {@link #getVelocity()}.
+      */
+     Vector getPredictedVelocity();
+@@ -140,7 +142,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+      * vehicle, it will be dismounted prior to teleportation.
+      *
+      * @param location New location to teleport this entity to
+-     * @param cause The cause of this teleportation
++     * @param cause    The cause of this teleportation
+      * @return <code>true</code> if the teleport was successful
+      */
+     public boolean teleport(Location location, TeleportCause cause);
+@@ -159,7 +161,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+      * vehicle, it will be dismounted prior to teleportation.
+      *
+      * @param destination Entity to teleport this entity to
+-     * @param cause The cause of this teleportation
++     * @param cause       The cause of this teleportation
+      * @return <code>true</code> if the teleport was successful
+      */
+     public boolean teleport(Entity destination, TeleportCause cause);
+@@ -302,6 +304,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+     /**
+      * Make the given entities passengers of this vehicle. Any existing
+      * passengers who are not in the list are ejected.
++     *
+      * @return given entities that could NOT become passengers for whatever reason
+      */
+     List<Entity> setPassengers(List<Entity> passengers);
+@@ -337,7 +340,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+      * This event may have been cancelled.
+      *
+      * @return the last known {@link EntityDamageEvent} or null if hitherto
+-     *     unharmed
++     * unharmed
+      */
+     public EntityDamageEvent getLastDamageCause();
+ 
+@@ -392,6 +395,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+ 
+     /**
+      * Enter the given vehicle
++     *
+      * @return true if successful
+      */
+     boolean enterVehicle(Entity vehicle);
+@@ -536,6 +540,8 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
       */
      boolean removeScoreboardTag(String tag);
-+
+ 
 +    Cuboid getBoundingBox();
- }
++
+     /**
+      * Returns the reaction of the entity when moved by a piston.
+      *
 diff --git a/src/main/java/org/bukkit/entity/LivingEntity.java b/src/main/java/org/bukkit/entity/LivingEntity.java
 --- a/src/main/java/org/bukkit/entity/LivingEntity.java
 +++ b/src/main/java/org/bukkit/entity/LivingEntity.java
-@@ -13,6 +13,7 @@ import org.bukkit.inventory.EntityEquipment;
+@@ -9,6 +9,7 @@ import org.bukkit.Location;
+ import org.bukkit.Material;
+ import org.bukkit.attribute.Attributable;
+ import org.bukkit.block.Block;
++import org.bukkit.geometry.Ray;
+ import org.bukkit.inventory.EntityEquipment;
  import org.bukkit.potion.PotionEffect;
  import org.bukkit.potion.PotionEffectType;
- import org.bukkit.projectiles.ProjectileSource;
-+import org.bukkit.geometry.Ray;
- 
- /**
-  * Represents a living entity, such as a monster or player
 @@ -43,6 +44,12 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      public Location getEyeLocation();
  

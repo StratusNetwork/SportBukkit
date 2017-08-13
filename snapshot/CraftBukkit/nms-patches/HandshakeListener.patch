@@ -18,9 +18,9 @@
      private final MinecraftServer a;
      private final NetworkManager b;
  
-@@ -16,16 +26,75 @@
+@@ -16,6 +26,41 @@
              this.b.setProtocol(EnumProtocol.LOGIN);
-             ChatComponentText chatcomponenttext;
+             ChatMessage chatmessage;
  
 +            // CraftBukkit start - Connection throttle
 +            try {
@@ -31,9 +31,9 @@
 +                synchronized (throttleTracker) {
 +                    if (throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - throttleTracker.get(address) < connectionThrottle) {
 +                        throttleTracker.put(address, currentTime);
-+                        chatcomponenttext = new ChatComponentText("Connection throttled! Please wait before reconnecting.");
-+                        this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
-+                        this.b.close(chatcomponenttext);
++                        chatmessage = new ChatMessage("Connection throttled! Please wait before reconnecting.");
++                        this.b.sendPacket(new PacketLoginOutDisconnect(chatmessage));
++                        this.b.close(chatmessage);
 +                        return;
 +                    }
 +
@@ -57,15 +57,12 @@
 +            }
 +            // CraftBukkit end
 +
-             if (packethandshakinginsetprotocol.b() > 316) {
-                 chatcomponenttext = new ChatComponentText("Outdated server! I\'m still on 1.11.1");
-                 this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
-                 this.b.close(chatcomponenttext);
--            } else if (packethandshakinginsetprotocol.b() < 316) {
-+            } else if (packethandshakinginsetprotocol.b() < 107) { // SportBukkit - legacy protocol support
-                 chatcomponenttext = new ChatComponentText("Outdated client! Please use 1.11.1");
-                 this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
-                 this.b.close(chatcomponenttext);
+             if (packethandshakinginsetprotocol.b() > 338) {
+                 chatmessage = new ChatMessage("multiplayer.disconnect.outdated_server", new Object[] { "1.12.1"});
+                 this.b.sendPacket(new PacketLoginOutDisconnect(chatmessage));
+@@ -25,7 +70,31 @@
+                 this.b.sendPacket(new PacketLoginOutDisconnect(chatmessage));
+                 this.b.close(chatmessage);
              } else {
 +                this.b.protocolVersion = packethandshakinginsetprotocol.b(); // SportBukkit
                  this.b.setPacketListener(new LoginListener(this.a, this.b));
@@ -79,7 +76,7 @@
 +                        b.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString( split[2] );
 +                    } else
 +                    {
-+                        chatcomponenttext = new ChatComponentText("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
++                        IChatBaseComponent chatcomponenttext = new ChatComponentText("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
 +                        this.b.sendPacket(new PacketLoginOutDisconnect(chatcomponenttext));
 +                        this.b.close(chatcomponenttext);
 +                        return;

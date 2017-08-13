@@ -9,15 +9,15 @@ public enum BlockReflection {
     NONE(IdentityTransform.INSTANCE),
 
     LEFT_RIGHT(new BlockTransform(
-        1, 0,
-        0, -1,
-        0, 0, 0
+            1, 0,
+            0, -1,
+            0, 0, 0
     )),
 
     FRONT_BACK(new BlockTransform(
-        -1, 0,
-        0, 1,
-        0, 0, 0
+            -1, 0,
+            0, 1,
+            0, 0, 0
     ));
 
     public static final BlockReflection X = FRONT_BACK;

@@ -9,7 +9,7 @@
      private IChatBaseComponent a;
      private IChatBaseComponent b;
  
-@@ -19,8 +21,19 @@
+@@ -15,8 +17,19 @@
      }
  
      public void b(PacketDataSerializer packetdataserializer) throws IOException {

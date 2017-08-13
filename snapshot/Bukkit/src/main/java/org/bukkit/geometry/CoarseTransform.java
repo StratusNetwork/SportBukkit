@@ -39,9 +39,9 @@ public interface CoarseTransform extends Transform {
     static CoarseTransform translation(int x, int y, int z) {
         if(x == 0 && y == 0 && z == 0) return Transform.identity();
         return new BlockTransform(
-            1, 0,
-            0, 1,
-            x, y, z
+                1, 0,
+                0, 1,
+                x, y, z
         );
     }
 

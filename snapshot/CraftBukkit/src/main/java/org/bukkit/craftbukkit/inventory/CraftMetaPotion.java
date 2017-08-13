@@ -14,13 +14,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionBrew;
-import org.bukkit.potion.PotionBrewRegistry;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
+import org.bukkit.potion.*;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
 import org.bukkit.craftbukkit.potion.CraftPotionUtil;
 
@@ -64,7 +60,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
             color = Color.fromRGB(tag.getInt(POTION_COLOR.NBT));
         }
         if (tag.hasKey(POTION_EFFECTS.NBT)) {
-            NBTTagList list = tag.getList(POTION_EFFECTS.NBT, 10);
+            NBTTagList list = tag.getList(POTION_EFFECTS.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND);
             int length = list.size();
             customEffects = new ArrayList<PotionEffect>(length);
 
@@ -299,7 +295,7 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
         final int original;
         int hash = original = super.applyHash();
         if (type.getType() != CraftPotionUtil.DEFAULT.getType()) {
-        	hash = 73 * hash + type.hashCode();
+            hash = 73 * hash + type.hashCode();
         }
         if (hasColor()) {
             hash = 73 * hash + color.hashCode();

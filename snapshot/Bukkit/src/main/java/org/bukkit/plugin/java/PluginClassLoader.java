@@ -4,7 +4,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -35,7 +37,7 @@ final class PluginClassLoader extends URLClassLoader {
     }
 
     PluginClassLoader(final JavaPluginLoader pluginLoader, final ClassLoader parent, final Set<PluginClassLoader> dependencies, final PluginDescriptionFile description, final File dataFolder, final File file) throws MalformedURLException {
-        super(new URL[] {file.toURI().toURL()}, parent);
+        super(new URL[]{file.toURI().toURL()}, parent);
         Validate.notNull(pluginLoader, "Loader cannot be null");
         Validate.notNull(parent, "Parent loader cannot be null");
 
@@ -64,8 +66,8 @@ final class PluginClassLoader extends URLClassLoader {
                 plugin = new ModularPlugin(jarClass.asSubclass(Module.class).newInstance());
             } else {
                 throw new InvalidPluginException("main class `" + jarClass.getName() +
-                                                 "' must extend either " + JavaPlugin.class.getName() +
-                                                 " or " + Module.class.getName());
+                        "' must extend either " + JavaPlugin.class.getName() +
+                        " or " + Module.class.getName());
             }
 
             return plugin;

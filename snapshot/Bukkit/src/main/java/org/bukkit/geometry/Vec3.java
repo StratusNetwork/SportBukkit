@@ -145,16 +145,16 @@ public interface Vec3 {
 
     default boolean fineEquals(Vec3 v) {
         return v != null &&
-               fineX() == v.fineX() &&
-               fineY() == v.fineY() &&
-               fineZ() == v.fineZ();
+                fineX() == v.fineX() &&
+                fineY() == v.fineY() &&
+                fineZ() == v.fineZ();
     }
 
     default boolean coarseEquals(Vec3 v) {
         return v != null &&
-               coarseX() == v.coarseX() &&
-               coarseY() == v.coarseY() &&
-               coarseZ() == v.coarseZ();
+                coarseX() == v.coarseX() &&
+                coarseY() == v.coarseY() &&
+                coarseZ() == v.coarseZ();
     }
 
     /**
@@ -184,17 +184,17 @@ public interface Vec3 {
 
     default int fineHashCode() {
         return combineHashCodes(
-            NumberConversions.hashCode(fineX()),
-            NumberConversions.hashCode(fineY()),
-            NumberConversions.hashCode(fineZ())
+                NumberConversions.hashCode(fineX()),
+                NumberConversions.hashCode(fineY()),
+                NumberConversions.hashCode(fineZ())
         );
     }
 
     default int coarseHashCode() {
         return combineHashCodes(
-            coarseX(),
-            coarseY(),
-            coarseZ()
+                coarseX(),
+                coarseY(),
+                coarseZ()
         );
     }
 
@@ -236,8 +236,8 @@ public interface Vec3 {
      */
     default boolean fineLess(Vec3 v) {
         return fineX() < v.fineX() &&
-               fineY() < v.fineY() &&
-               fineZ() < v.fineZ();
+                fineY() < v.fineY() &&
+                fineZ() < v.fineZ();
     }
 
     /**
@@ -246,8 +246,8 @@ public interface Vec3 {
      */
     default boolean fineLessOrEqual(Vec3 v) {
         return fineX() <= v.fineX() &&
-               fineY() <= v.fineY() &&
-               fineZ() <= v.fineZ();
+                fineY() <= v.fineY() &&
+                fineZ() <= v.fineZ();
     }
 
     /**
@@ -256,8 +256,8 @@ public interface Vec3 {
      */
     default boolean fineGreater(Vec3 v) {
         return fineX() > v.fineX() &&
-               fineY() > v.fineY() &&
-               fineZ() > v.fineZ();
+                fineY() > v.fineY() &&
+                fineZ() > v.fineZ();
     }
 
     /**
@@ -266,8 +266,8 @@ public interface Vec3 {
      */
     default boolean fineGreaterOrEqual(Vec3 v) {
         return fineX() >= v.fineX() &&
-               fineY() >= v.fineY() &&
-               fineZ() >= v.fineZ();
+                fineY() >= v.fineY() &&
+                fineZ() >= v.fineZ();
     }
 
     /**
@@ -276,8 +276,8 @@ public interface Vec3 {
      */
     default boolean coarseLess(Vec3 v) {
         return coarseX() < v.coarseX() &&
-               coarseY() < v.coarseY() &&
-               coarseZ() < v.coarseZ();
+                coarseY() < v.coarseY() &&
+                coarseZ() < v.coarseZ();
     }
 
     /**
@@ -286,8 +286,8 @@ public interface Vec3 {
      */
     default boolean coarseLessOrEqual(Vec3 v) {
         return coarseX() <= v.coarseX() &&
-               coarseY() <= v.coarseY() &&
-               coarseZ() <= v.coarseZ();
+                coarseY() <= v.coarseY() &&
+                coarseZ() <= v.coarseZ();
     }
 
     /**
@@ -296,8 +296,8 @@ public interface Vec3 {
      */
     default boolean coarseGreater(Vec3 v) {
         return coarseX() > v.coarseX() &&
-               coarseY() > v.coarseY() &&
-               coarseZ() > v.coarseZ();
+                coarseY() > v.coarseY() &&
+                coarseZ() > v.coarseZ();
     }
 
     /**
@@ -306,22 +306,22 @@ public interface Vec3 {
      */
     default boolean coarseGreaterOrEqual(Vec3 v) {
         return coarseX() >= v.coarseX() &&
-               coarseY() >= v.coarseY() &&
-               coarseZ() >= v.coarseZ();
+                coarseY() >= v.coarseY() &&
+                coarseZ() >= v.coarseZ();
     }
 
     default boolean isBlockCorner() {
         return isFine() &&
-               fineX() == coarseX() &&
-               fineY() == coarseY() &&
-               fineZ() == coarseZ();
+                fineX() == coarseX() &&
+                fineY() == coarseY() &&
+                fineZ() == coarseZ();
     }
 
     default boolean isBlockCenter() {
         return isFine() &&
-               fineX() == coarseX() + 0.5 &&
-               fineY() == coarseY() + 0.5 &&
-               fineZ() == coarseZ() + 0.5;
+                fineX() == coarseX() + 0.5 &&
+                fineY() == coarseY() + 0.5 &&
+                fineZ() == coarseZ() + 0.5;
     }
 
     /**
@@ -330,32 +330,32 @@ public interface Vec3 {
      */
     default Vec3 blockCenter() {
         return fineOf(coarseX() + 0.5,
-                      coarseY() + 0.5,
-                      coarseZ() + 0.5);
+                coarseY() + 0.5,
+                coarseZ() + 0.5);
     }
 
     default boolean anyMatch(DoublePredicate predicate) {
         return predicate.test(fineX()) ||
-               predicate.test(fineY()) ||
-               predicate.test(fineZ());
+                predicate.test(fineY()) ||
+                predicate.test(fineZ());
     }
 
     default boolean anyMatch(IntPredicate predicate) {
         return predicate.test(coarseX()) ||
-               predicate.test(coarseY()) ||
-               predicate.test(coarseZ());
+                predicate.test(coarseY()) ||
+                predicate.test(coarseZ());
     }
 
     default boolean allMatch(DoublePredicate predicate) {
         return predicate.test(fineX()) &&
-               predicate.test(fineY()) &&
-               predicate.test(fineZ());
+                predicate.test(fineY()) &&
+                predicate.test(fineZ());
     }
 
     default boolean allMatch(IntPredicate predicate) {
         return predicate.test(coarseX()) &&
-               predicate.test(coarseY()) &&
-               predicate.test(coarseZ());
+                predicate.test(coarseY()) &&
+                predicate.test(coarseZ());
     }
 
     boolean anyNaN();
@@ -557,8 +557,8 @@ public interface Vec3 {
      */
     default double dot(Vec3 v) {
         return fineX() * v.fineX() +
-               fineY() * v.fineY() +
-               fineZ() * v.fineZ();
+                fineY() * v.fineY() +
+                fineZ() * v.fineZ();
     }
 
     default double lengthSquared() {
@@ -583,8 +583,8 @@ public interface Vec3 {
     default Vec3 interpolate(Vec3 v, double n) {
         final double u = 1 - n;
         return fineOf(u * fineX() + n * v.fineX(),
-                      u * fineY() + n * v.fineY(),
-                      u * fineZ() + n * v.fineZ());
+                u * fineY() + n * v.fineY(),
+                u * fineZ() + n * v.fineZ());
     }
 
     /**
@@ -592,8 +592,8 @@ public interface Vec3 {
      */
     default Vec3 midway(Vec3 v) {
         return fineOf((fineX() + v.fineX()) / 2D,
-                      (fineY() + v.fineY()) / 2D,
-                      (fineZ() + v.fineZ()) / 2D);
+                (fineY() + v.fineY()) / 2D,
+                (fineZ() + v.fineZ()) / 2D);
     }
 
     default Direction direction() {

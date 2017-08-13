@@ -14,7 +14,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
  import org.bukkit.event.player.PlayerChatEvent;
  import org.bukkit.event.player.PlayerCommandPreprocessEvent;
  import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-@@ -1536,6 +1537,12 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1578,6 +1579,12 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                          return;
                      }
  

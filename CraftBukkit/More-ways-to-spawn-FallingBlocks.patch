@@ -6,7 +6,7 @@ Subject: [PATCH] More ways to spawn FallingBlocks
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -934,25 +934,32 @@ public class CraftWorld implements World {
+@@ -933,25 +933,32 @@ public class CraftWorld implements World {
      }
  
      @Override

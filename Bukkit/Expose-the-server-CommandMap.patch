@@ -14,7 +14,7 @@ diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Buk
  import org.bukkit.command.CommandSender;
  import org.bukkit.command.ConsoleCommandSender;
  import org.bukkit.command.PluginCommand;
-@@ -944,6 +945,13 @@ public final class Bukkit {
+@@ -927,6 +928,13 @@ public final class Bukkit {
      }
  
      /**
@@ -39,7 +39,7 @@ diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Ser
  import org.bukkit.command.CommandSender;
  import org.bukkit.command.ConsoleCommandSender;
  import org.bukkit.command.PluginCommand;
-@@ -714,6 +715,11 @@ public interface Server extends PluginMessageRecipient {
+@@ -699,6 +700,11 @@ public interface Server extends PluginMessageRecipient {
      public HelpMap getHelpMap();
  
      /**

@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityAreaEffectCloud.java
 +++ b/net/minecraft/server/EntityAreaEffectCloud.java
-@@ -8,17 +8,26 @@
+@@ -8,6 +8,10 @@
  import java.util.List;
  import java.util.Map;
  import java.util.UUID;
@@ -11,25 +11,7 @@
  import java.util.Map.Entry;
  import javax.annotation.Nullable;
  
-+// SportBukkit start
-+import com.google.common.collect.Range;
-+import org.bukkit.craftbukkit.protocol.MetadataKey;
-+// SportBukkit end
-+
- public class EntityAreaEffectCloud extends Entity {
- 
-     private static final DataWatcherObject<Float> a = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.c);
-     private static final DataWatcherObject<Integer> b = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.b);
-     private static final DataWatcherObject<Boolean> c = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.h);
-     private static final DataWatcherObject<Integer> d = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.b);
--    private static final DataWatcherObject<Integer> e = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.b);
--    private static final DataWatcherObject<Integer> f = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.b);
-+    private static final DataWatcherObject<Integer> e = MetadataKey.auto(EntityAreaEffectCloud.class, DataWatcherRegistry.b, Range.lessThan(201)); // SportBukkit
-+    private static final DataWatcherObject<Integer> f = MetadataKey.auto(EntityAreaEffectCloud.class, DataWatcherRegistry.b, Range.lessThan(201)); // SportBukkit
-     private PotionRegistry potionRegistry;
-     public List<MobEffect> effects;
-     private final Map<Entity, Integer> at;
-@@ -101,6 +110,22 @@
+@@ -101,6 +105,22 @@
  
      }
  
@@ -52,7 +34,7 @@
      public int getColor() {
          return ((Integer) this.getDataWatcher().get(EntityAreaEffectCloud.b)).intValue();
      }
-@@ -270,6 +295,7 @@
+@@ -270,6 +290,7 @@
                      if (!list.isEmpty()) {
                          Iterator iterator2 = list.iterator();
  
@@ -60,7 +42,7 @@
                          while (iterator2.hasNext()) {
                              EntityLiving entityliving = (EntityLiving) iterator2.next();
  
-@@ -279,6 +305,17 @@
+@@ -279,6 +300,17 @@
                                  double d2 = d0 * d0 + d1 * d1;
  
                                  if (d2 <= (double) (f * f)) {

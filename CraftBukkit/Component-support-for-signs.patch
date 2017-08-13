@@ -6,17 +6,16 @@ Subject: [PATCH] Component support for signs
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -11,6 +11,9 @@ import java.util.ArrayList;
+@@ -12,6 +12,8 @@ import java.util.Arrays;
  import java.util.Collections;
  import java.util.Iterator;
  import java.util.Set;
-+
 +import net.md_5.bungee.api.chat.BaseComponent;
 +import net.md_5.bungee.api.chat.TextComponent;
  import org.apache.commons.lang3.StringUtils;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
-@@ -26,6 +29,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
+@@ -25,6 +27,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
  import org.bukkit.craftbukkit.event.CraftEventFactory;
  import org.bukkit.craftbukkit.inventory.CraftInventoryView;
  import org.bukkit.craftbukkit.inventory.CraftItemStack;
@@ -24,7 +23,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
  import org.bukkit.craftbukkit.util.CraftChatMessage;
  import org.bukkit.craftbukkit.util.LazyPlayerSet;
  import org.bukkit.craftbukkit.util.Waitable;
-@@ -2223,16 +2227,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -2243,16 +2246,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
              int x = packetplayinupdatesign.a().getX();
              int y = packetplayinupdatesign.a().getY();
              int z = packetplayinupdatesign.a().getZ();
@@ -49,20 +48,20 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftSign.java b/src/main/java/org/bukkit/craftbukkit/block/CraftSign.java
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftSign.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftSign.java
-@@ -1,85 +1,80 @@
+@@ -1,5 +1,7 @@
  package org.bukkit.craftbukkit.block;
  
--import net.minecraft.server.ChatComponentText;
--import net.minecraft.server.IChatBaseComponent;
 +import net.md_5.bungee.api.chat.BaseComponent;
 +import net.md_5.bungee.api.chat.TextComponent;
+ import net.minecraft.server.ChatComponentText;
+ import net.minecraft.server.IChatBaseComponent;
  import net.minecraft.server.TileEntitySign;
- import org.bukkit.Material;
+@@ -7,79 +9,75 @@ import org.bukkit.Material;
  import org.bukkit.block.Block;
  import org.bukkit.block.Sign;
  import org.bukkit.craftbukkit.CraftWorld;
--import org.bukkit.craftbukkit.util.CraftChatMessage;
 +import org.bukkit.craftbukkit.util.BungeeChatUtils;
+ import org.bukkit.craftbukkit.util.CraftChatMessage;
  
  public class CraftSign extends CraftBlockState implements Sign {
      private final TileEntitySign sign;
@@ -91,7 +90,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftSign.java b/src/mai
 +    private void importFromNms() {
 +        for(int i = 0; i < lines.length; i++) {
 +            lines[i] = sign.lines.length > i ? BungeeChatUtils.toBungee(sign.lines[i])
-+                                             : new TextComponent();
++                    : new TextComponent();
 +        }
 +    }
 +
@@ -172,7 +171,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftSign.java b/src/mai
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -58,6 +58,7 @@ import org.bukkit.craftbukkit.CraftWorld;
+@@ -60,6 +60,7 @@ import org.bukkit.craftbukkit.advancement.CraftAdvancementProgress;
  import org.bukkit.craftbukkit.map.CraftMapView;
  import org.bukkit.craftbukkit.map.RenderData;
  import org.bukkit.craftbukkit.scoreboard.CraftScoreboard;
@@ -180,7 +179,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
  import org.bukkit.craftbukkit.util.CraftChatMessage;
  import org.bukkit.craftbukkit.util.CraftMagicNumbers;
  import org.bukkit.craftbukkit.util.Skins;
-@@ -701,23 +702,41 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -728,23 +729,39 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
  
      @Override
      public void sendSignChange(Location loc, String[] lines) {
@@ -194,7 +193,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
 +        final IChatBaseComponent[] nms = new IChatBaseComponent[4];
 +        for(int i = 0; i < 4; i++) {
 +            nms[i] = lines != null && lines[i] == null ? new ChatComponentText("")
-+                                                       : CraftChatMessage.fromString(lines[i])[0];
++                    : CraftChatMessage.fromString(lines[i])[0];
 +        }
 +        sendSignChange(loc, nms);
 +    }
@@ -204,14 +203,13 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
 +        final IChatBaseComponent[] nms = new IChatBaseComponent[4];
 +        for(int i = 0; i < 4; i++) {
 +            nms[i] = lines != null && lines[i] == null ? new ChatComponentText("")
-+                                                       : BungeeChatUtils.toNms(lines[i]);
++                    : BungeeChatUtils.toNms(lines[i]);
 +        }
 +        sendSignChange(loc, nms);
 +    }
 +
 +    private void sendSignChange(Location loc, IChatBaseComponent[] lines) {
          Validate.notNull(loc, "Location can not be null");
-+
          if (lines.length < 4) {
              throw new IllegalArgumentException("Must have at least 4 lines");
          }
@@ -220,7 +218,6 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
 +        if (getHandle().playerConnection == null) {
 +            return;
 +        }
-+
          TileEntitySign sign = new TileEntitySign();
          sign.setPosition(new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
 -        System.arraycopy(components, 0, sign.lines, 0, sign.lines.length);

@@ -1,7 +1,7 @@
 package org.bukkit.event.entity;
 
-import org.bukkit.World;
 import org.bukkit.Physical;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -76,6 +76,6 @@ public class PlayerLeashEntityEvent extends Event implements Cancellable, Physic
     }
 
     public void setCancelled(boolean cancel) {
-        this.cancelled  = cancel;
+        this.cancelled = cancel;
     }
 }

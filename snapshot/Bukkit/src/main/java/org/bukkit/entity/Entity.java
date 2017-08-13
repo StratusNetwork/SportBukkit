@@ -11,12 +11,12 @@ import org.bukkit.World;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.geometry.Cuboid;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.geometry.Cuboid;
 import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
@@ -66,10 +66,10 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
 
     /**
      * Apply an impulse to this entity, i.e. a relative change in velocity.
-     *
+     * <p>
      * The given vector is added to the current velocity, and the entity's new
      * velocity is synced to players in visible range.
-     *
+     * <p>
      * If this entity is a player, the impulse is sent directly to them,
      * and will be applied by their client at the moment they receive it.
      * This results in more accurate physics, from the player's perspective,
@@ -77,11 +77,12 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
      * velocity is more difficult to predict from the server.
      */
     void applyImpulse(Vector impulse);
+
     void applyImpulse(Vector impulse, boolean relative);
 
     /**
      * Set the knockback reduction for this entity.
-     *
+     * <p>
      * Set this to 0 for standard knockback mechanics.
      * Set this to 1 to disable all knockback effects.
      * Values between 0 and 1 reduce knockback impulses proportionally.
@@ -97,14 +98,28 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
 
     /**
      * Get the velocity of this entity, preferring an inferred value, if there is one.
-     *
+     * <p>
      * For {@link Player}s, this velocity is partly derived from positions reported by
      * the client. This can be much more accurate than the velocity stored on the
      * server, which is not affected by player movement at all.
-     *
+     * <p>
      * For all other entities, this returns the same value as {@link #getVelocity()}.
      */
     Vector getPredictedVelocity();
+
+    /**
+     * Gets the entity's height
+     *
+     * @return height of entity
+     */
+    public double getHeight();
+
+    /**
+     * Gets the entity's width
+     *
+     * @return width of entity
+     */
+    public double getWidth();
 
     /**
      * Returns true if the entity is supported by a block. This value is a
@@ -136,7 +151,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
      * vehicle, it will be dismounted prior to teleportation.
      *
      * @param location New location to teleport this entity to
-     * @param cause The cause of this teleportation
+     * @param cause    The cause of this teleportation
      * @return <code>true</code> if the teleport was successful
      */
     public boolean teleport(Location location, TeleportCause cause);
@@ -155,7 +170,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
      * vehicle, it will be dismounted prior to teleportation.
      *
      * @param destination Entity to teleport this entity to
-     * @param cause The cause of this teleportation
+     * @param cause       The cause of this teleportation
      * @return <code>true</code> if the teleport was successful
      */
     public boolean teleport(Entity destination, TeleportCause cause);
@@ -233,30 +248,62 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
      * multiple passengers, this will only return the primary passenger.
      *
      * @return an entity
+     * @deprecated entities may have multiple passengers, use
+     * {@link #getPassengers()}
      */
-    public abstract Entity getPassenger();
+    @Deprecated
+    public Entity getPassenger();
 
     /**
      * Set the passenger of a vehicle.
      *
      * @param passenger The new passenger.
      * @return false if it could not be done for whatever reason
+     * @deprecated entities may have multiple passengers, use
+     * {@link #getPassengers()}
      */
-    public abstract boolean setPassenger(Entity passenger);
+    @Deprecated
+    public boolean setPassenger(Entity passenger);
+
+    /**
+     * Gets a list of passengers of this vehicle.
+     * <p>
+     * The returned list will not be directly linked to the entity's current
+     * passengers, and no guarantees are made as to its mutability.
+     *
+     * @return list of entities corresponding to current passengers.
+     */
+    public List<Entity> getPassengers();
+
+    /**
+     * Add a passenger to the vehicle.
+     *
+     * @param passenger The passenger to add
+     * @return false if it could not be done for whatever reason
+     */
+    public boolean addPassenger(Entity passenger);
+
+    /**
+     * Remove a passenger from the vehicle.
+     *
+     * @param passenger The passenger to remove
+     * @return false if it could not be done for whatever reason
+     */
+    public boolean removePassenger(Entity passenger);
 
     /**
      * Check if a vehicle has passengers.
      *
      * @return True if the vehicle has no passengers.
      */
-    public abstract boolean isEmpty();
+    public boolean isEmpty();
 
     /**
      * Eject any passenger.
      *
      * @return True if there was a passenger.
      */
-    public abstract boolean eject();
+    public boolean eject();
 
     /**
      * @return true if the given entity is a passenger of this vehicle
@@ -264,13 +311,9 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
     boolean hasPassenger(Entity passenger);
 
     /**
-     * @return all of the current passengers in this vehicle
-     */
-    List<Entity> getPassengers();
-
-    /**
      * Make the given entities passengers of this vehicle. Any existing
      * passengers who are not in the list are ejected.
+     *
      * @return given entities that could NOT become passengers for whatever reason
      */
     List<Entity> setPassengers(List<Entity> passengers);
@@ -306,7 +349,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
      * This event may have been cancelled.
      *
      * @return the last known {@link EntityDamageEvent} or null if hitherto
-     *     unharmed
+     * unharmed
      */
     public EntityDamageEvent getLastDamageCause();
 
@@ -361,6 +404,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
 
     /**
      * Enter the given vehicle
+     *
      * @return true if successful
      */
     boolean enterVehicle(Entity vehicle);
@@ -506,6 +550,13 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable 
     boolean removeScoreboardTag(String tag);
 
     Cuboid getBoundingBox();
+
+    /**
+     * Returns the reaction of the entity when moved by a piston.
+     *
+     * @return reaction
+     */
+    PistonMoveReaction getPistonMoveReaction();
 
     /**
      * Pause/unpause this entity.

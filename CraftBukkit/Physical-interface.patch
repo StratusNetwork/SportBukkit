@@ -21,7 +21,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/jav
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-@@ -18,6 +18,7 @@ import net.minecraft.server.TileEntityFurnace;
+@@ -19,6 +19,7 @@ import net.minecraft.server.TileEntityShulkerBox;
  
  import org.apache.commons.lang.Validate;
  import org.bukkit.Location;
@@ -29,7 +29,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java 
  import org.bukkit.entity.HumanEntity;
  import org.bukkit.event.inventory.InventoryType;
  import org.bukkit.inventory.Inventory;
-@@ -471,6 +472,11 @@ public class CraftInventory implements Inventory {
+@@ -481,6 +482,11 @@ public class CraftInventory implements Inventory {
          return inventory.getOwner();
      }
  

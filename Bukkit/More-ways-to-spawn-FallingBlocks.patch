@@ -6,7 +6,7 @@ Subject: [PATCH] More ways to spawn FallingBlocks
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -792,7 +792,25 @@ public interface World extends PluginMessageRecipient, Metadatable, Physical {
+@@ -788,7 +788,25 @@ public interface World extends PluginMessageRecipient, Metadatable, Physical {
       * @throws IllegalArgumentException if {@link Location} or {@link
       *     MaterialData} are null or {@link Material} of the {@link MaterialData} is not a block
       */
@@ -33,7 +33,7 @@ diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/Worl
  
      /**
       * Spawn a {@link FallingBlock} entity at the given {@link Location} of
-@@ -811,7 +829,12 @@ public interface World extends PluginMessageRecipient, Metadatable, Physical {
+@@ -807,7 +825,12 @@ public interface World extends PluginMessageRecipient, Metadatable, Physical {
       * @deprecated Magic value
       */
      @Deprecated
@@ -47,7 +47,7 @@ diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/Worl
  
      /**
       * Spawn a {@link FallingBlock} entity at the given {@link Location} of
-@@ -827,7 +850,12 @@ public interface World extends PluginMessageRecipient, Metadatable, Physical {
+@@ -823,7 +846,12 @@ public interface World extends PluginMessageRecipient, Metadatable, Physical {
       * @deprecated Magic value
       */
      @Deprecated
@@ -69,10 +69,10 @@ diff --git a/src/main/java/org/bukkit/block/BlockState.java b/src/main/java/org/
  import org.bukkit.Material;
  import org.bukkit.World;
 +import org.bukkit.entity.FallingBlock;
- import org.bukkit.geometry.BlockRotoflection;
- import org.bukkit.geometry.BlockReflection;
- import org.bukkit.geometry.BlockRotation;
-@@ -262,4 +263,23 @@ public interface BlockState extends Metadatable, Locatable {
+ import org.bukkit.geometry.*;
+ import org.bukkit.material.MaterialData;
+ import org.bukkit.metadata.Metadatable;
+@@ -256,4 +257,23 @@ public interface BlockState extends Metadatable, Locatable {
      boolean isPlaced();
  
      boolean hasPosition();

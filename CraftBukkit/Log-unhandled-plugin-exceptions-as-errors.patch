@@ -6,7 +6,7 @@ Subject: [PATCH] Log unhandled plugin exceptions as errors
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -631,7 +631,7 @@ public final class CraftServer implements Server {
+@@ -624,7 +624,7 @@ public final class CraftServer implements Server {
              this.playerCommandState = true;
              return dispatchCommand(sender, serverCommand.command);
          } catch (Exception ex) {

@@ -1,12 +1,5 @@
 package org.bukkit.craftbukkit.user;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import javax.inject.Inject;
-
 import org.bukkit.craftbukkit.event.CraftServerEventRegistry;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
@@ -15,6 +8,13 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import tc.oc.minecraft.api.user.User;
 import tc.oc.minecraft.api.user.UserFactory;
 import tc.oc.minecraft.api.user.UserSource;
+
+import javax.inject.Inject;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Refreshes all {@link UserSource}s when a player logs in

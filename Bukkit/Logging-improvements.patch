@@ -51,12 +51,12 @@ diff --git a/src/main/java/org/bukkit/plugin/PluginLogger.java b/src/main/java/o
 diff --git a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java b/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
 --- a/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
 +++ b/src/main/java/org/bukkit/plugin/java/JavaPlugin.java
-@@ -290,7 +290,7 @@ public abstract class JavaPlugin extends PluginBase {
+@@ -283,7 +283,7 @@ public abstract class JavaPlugin extends PluginBase {
          this.dataFolder = dataFolder;
          this.classLoader = classLoader;
          this.configFile = new File(dataFolder, "config.yml");
 -        this.logger = new PluginLogger(this);
 +        this.logger = PluginLogger.get(this);
+     }
  
-         if (description.isDatabaseEnabled()) {
-             ServerConfig db = new ServerConfig();
+     /**

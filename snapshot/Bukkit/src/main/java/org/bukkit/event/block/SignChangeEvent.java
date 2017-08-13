@@ -58,11 +58,11 @@ public class SignChangeEvent extends BlockEvent implements Cancellable, PlayerAc
      *
      * @param index index of the line to get
      * @return the BaseComponent containing the line of text associated with the
-     *     provided index
+     * provided index
      * @throws IndexOutOfBoundsException thrown when the provided index is {@literal > 3
-     *     or < 0}
+     *                                   or < 0}
      */
-    public BaseComponent line(int index) {
+    public BaseComponent line(int index) throws IndexOutOfBoundsException {
         return lines[index];
     }
 
@@ -75,9 +75,9 @@ public class SignChangeEvent extends BlockEvent implements Cancellable, PlayerAc
      * Sets a single line for the sign involved in this event
      *
      * @param index index of the line to set
-     * @param line text to set
+     * @param line  text to set
      * @throws IndexOutOfBoundsException thrown when the provided index is {@literal > 3
-     *     or < 0}
+     *                                   or < 0}
      */
     public void setLine(int index, BaseComponent line) {
         lines[index] = line;

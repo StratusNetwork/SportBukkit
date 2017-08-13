@@ -23,6 +23,6 @@
 +    }
 +    // CraftBukkit end
 +
-     public int o() {
+     public int getColor() {
          return ((Integer) this.datawatcher.get(EntityTippedArrow.f)).intValue();
      }

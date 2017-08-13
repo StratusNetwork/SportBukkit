@@ -2,12 +2,12 @@ package org.bukkit;
 
 import com.google.inject.Injector;
 import org.bukkit.block.BlockFactory;
+import org.bukkit.geometry.VectorFactory;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionBrewRegistry;
 import org.bukkit.potion.PotionEffectRegistry;
+import org.bukkit.potion.PotionBrewRegistry;
 import org.bukkit.registry.Key;
-import org.bukkit.geometry.VectorFactory;
 
 public interface BukkitRuntime {
 

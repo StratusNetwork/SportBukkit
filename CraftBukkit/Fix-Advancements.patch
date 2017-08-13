@@ -1,0 +1,35 @@
+From: cswhite2000 <18whitechristop@gmail.com>
+Date: Thu, 3 Aug 2017 15:27:43 -0700
+Subject: [PATCH] Fix Advancements
+
+
+diff --git a/src/main/java/net/minecraft/server/Advancement.java b/src/main/java/net/minecraft/server/Advancement.java
+--- a/src/main/java/net/minecraft/server/Advancement.java
++++ b/src/main/java/net/minecraft/server/Advancement.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.server;
+ 
++import com.google.common.base.Function;
+ import com.google.common.collect.ImmutableMap;
+ import com.google.common.collect.Sets;
+ import com.google.gson.JsonArray;
+@@ -10,7 +11,6 @@ import java.util.Arrays;
+ import java.util.Iterator;
+ import java.util.Map;
+ import java.util.Set;
+-import java.util.function.Function;
+ import javax.annotation.Nullable;
+ import org.apache.commons.lang3.ArrayUtils;
+ 
+diff --git a/src/main/java/net/minecraft/server/Advancements.java b/src/main/java/net/minecraft/server/Advancements.java
+--- a/src/main/java/net/minecraft/server/Advancements.java
++++ b/src/main/java/net/minecraft/server/Advancements.java
+@@ -37,7 +37,7 @@ public class Advancements {
+                 MinecraftKey minecraftkey = (MinecraftKey) entry.getKey();
+                 Advancement.SerializedAdvancement advancement_serializedadvancement = (Advancement.SerializedAdvancement) entry.getValue();
+ 
+-                if (advancement_serializedadvancement.a((java.util.function.Function) function)) {
++                if (advancement_serializedadvancement.a(function)) {
+                     Advancement advancement = advancement_serializedadvancement.a(minecraftkey);
+ 
+                     this.advancements.put(minecraftkey, advancement);

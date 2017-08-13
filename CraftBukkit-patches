@@ -79,7 +79,6 @@ Relative-teleport-API
 Don-t-share-mutable-metadata-across-threads
 Send-absolute-position-the-first-time-an-entity-is-s
 Complete-resource-pack-API
-Fix-jar-being-shaded-multiple-times
 Block-digging-API
 Item-Attribute-Modifier-API
 Add-CanDestroy-and-CanPlaceOn-to-ItemMeta
@@ -97,7 +96,6 @@ Physical-interface
 Fix-self-damage-being-cancelled-by-FF-PvP-rules
 Fix-TNT-damage-being-cancelled-by-friendly-fire-rule
 Localize-inventory-titles
-Set-health-before-death-event
 Skull-skin-API
 Implement-minecraft-api
 Arrow-pickup-rule-API
@@ -108,8 +106,6 @@ Expose-sound-effect-classes
 Absorption-API
 Enhanced-boss-bar-API
 Empty-chunk-API
-Fix-missing-dropper-cases
-Fix-hotbar-text-formatting
 Registration-API
 Modernize-potion-API
 Legacy-potion-support
@@ -124,6 +120,7 @@ Fix-item-pickup-in-off-hand
 Fix-kill-command-overflowing-damage-calculations
 Multi-passenger-API
 Fix-desync-from-cancelled-vehicle-event
+Fix-Advancements
 Natural-regeneration-API
 Fix-cooked-fish-legacy-import
 Run-data-converters-on-passenger-entities
@@ -156,8 +153,6 @@ More-ways-to-spawn-FallingBlocks
 FallingBlock-form-block-flag
 Server-suspend-API
 Add-AsyncClientConnectEvent
-Legacy-protocol-support
-Firework-entity-in-damage-event
 Fix-NPE-riding-non-vehicle-entity
 Do-things-inside-events
 Chest-lid-API

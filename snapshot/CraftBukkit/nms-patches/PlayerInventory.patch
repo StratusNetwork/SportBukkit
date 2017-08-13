@@ -16,18 +16,17 @@
  public class PlayerInventory implements IInventory {
  
      public final NonNullList<ItemStack> items;
-@@ -16,11 +25,55 @@
+@@ -16,6 +25,49 @@
      private ItemStack carried;
-     public boolean f;
+     private int h;
  
 +    // CraftBukkit start - add fields and methods
 +    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 +    private int maxStack = MAX_STACK;
 +
 +    public List<ItemStack> getContents() {
-+
 +        List<ItemStack> combined = new ArrayList<ItemStack>(items.size() + armor.size() + extraSlots.size());
-+        for (List<net.minecraft.server.ItemStack> sub : this.g) {
++        for (List<net.minecraft.server.ItemStack> sub : this.f) {
 +            combined.addAll(sub);
 +        }
 +
@@ -67,13 +66,7 @@
      public PlayerInventory(EntityHuman entityhuman) {
          this.items = NonNullList.a(36, ItemStack.a);
          this.armor = NonNullList.a(4, ItemStack.a);
-         this.extraSlots = NonNullList.a(1, ItemStack.a);
--        this.g = Arrays.asList(new NonNullList[] { this.items, this.armor, this.extraSlots});
-+        this.g = (List) Arrays.asList(new NonNullList[] { this.items, this.armor, this.extraSlots}); // CraftBukkit - decompile error
-         this.carried = ItemStack.a;
-         this.player = entityhuman;
-     }
-@@ -41,6 +94,32 @@
+@@ -41,6 +93,32 @@
          return itemstack.getItem() == itemstack1.getItem() && (!itemstack.usesData() || itemstack.getData() == itemstack1.getData()) && ItemStack.equals(itemstack, itemstack1);
      }
  
@@ -106,7 +99,7 @@
      public int getFirstEmptySlotIndex() {
          for (int i = 0; i < this.items.size(); ++i) {
              if (((ItemStack) this.items.get(i)).isEmpty()) {
-@@ -477,7 +556,7 @@
+@@ -524,7 +602,7 @@
      }
  
      public int getMaxStackSize() {
@@ -115,7 +108,7 @@
      }
  
      public boolean b(IBlockData iblockdata) {
-@@ -533,6 +612,11 @@
+@@ -580,6 +658,11 @@
      }
  
      public ItemStack getCarried() {

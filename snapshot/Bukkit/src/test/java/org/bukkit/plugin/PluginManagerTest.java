@@ -42,14 +42,14 @@ public class PluginManagerTest {
     public void testAsyncUnlocked() throws InterruptedException {
         final Event event = new TestEvent(true);
         Thread secondThread = new Thread(
-            new Runnable() {
-                public void run() {
-                    try {
-                        pm.callEvent(event);
-                    } catch (Throwable ex) {
-                        store.value = ex;
-                    }
-                }});
+                new Runnable() {
+                    public void run() {
+                        try {
+                            pm.callEvent(event);
+                        } catch (Throwable ex) {
+                            store.value = ex;
+                        }
+                    }});
         secondThread.start();
         secondThread.join();
         if (store.value != null) {
@@ -61,15 +61,15 @@ public class PluginManagerTest {
     public void testSyncUnlocked() throws InterruptedException {
         final Event event = new TestEvent(false);
         Thread secondThread = new Thread(
-            new Runnable() {
-                public void run() {
-                    try {
-                        pm.callEvent(event);
-                    } catch (Throwable ex) {
-                        store.value = ex;
+                new Runnable() {
+                    public void run() {
+                        try {
+                            pm.callEvent(event);
+                        } catch (Throwable ex) {
+                            store.value = ex;
+                        }
                     }
                 }
-            }
         );
         secondThread.start();
         secondThread.join();
@@ -82,17 +82,17 @@ public class PluginManagerTest {
     public void testSyncLocked() throws InterruptedException {
         final Event event = new TestEvent(false);
         Thread secondThread = new Thread(
-            new Runnable() {
-                public void run() {
-                    try {
-                        synchronized (pm) {
-                            pm.callEvent(event);
+                new Runnable() {
+                    public void run() {
+                        try {
+                            synchronized (pm) {
+                                pm.callEvent(event);
+                            }
+                        } catch (Throwable ex) {
+                            store.value = ex;
                         }
-                    } catch (Throwable ex) {
-                        store.value = ex;
                     }
                 }
-            }
         );
         secondThread.start();
         secondThread.join();

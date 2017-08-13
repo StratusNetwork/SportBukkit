@@ -50,7 +50,7 @@ public interface BlockRegion extends SetBase<Vec3> {
     @Override
     default boolean containsAll(Collection<?> c) {
         return c instanceof BlockRegion ? containsAll((BlockRegion) c)
-                                        : SetBase.super.containsAll(c);
+                : SetBase.super.containsAll(c);
     }
 
     /**
@@ -109,8 +109,8 @@ public interface BlockRegion extends SetBase<Vec3> {
 
     default boolean standardEquals(Object that) {
         return that instanceof Set &&
-               size() == ((Set) that).size() &&
-               containsAll((Set) that);
+                size() == ((Set) that).size() &&
+                containsAll((Set) that);
     }
 
     /**

@@ -13,6 +13,8 @@ import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.server.ScoreboardTeam;
 import net.minecraft.server.ScoreboardTeamBase;
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.util.CraftChatMessage;
 
 public final class CraftTeam extends CraftScoreboardComponent implements Team {
     private final ScoreboardTeam team;
@@ -50,7 +52,7 @@ public final class CraftTeam extends CraftScoreboardComponent implements Team {
 
     public void setPrefix(String prefix) throws IllegalStateException, IllegalArgumentException {
         Validate.notNull(prefix, "Prefix cannot be null");
-        Validate.isTrue(prefix.length() <= 32, "Prefix '" + prefix + "' is longer than the limit of 32 characters");
+        Validate.isTrue(prefix.length() <= 16, "Prefix '" + prefix + "' is longer than the limit of 16 characters");
         CraftScoreboard scoreboard = checkState();
 
         team.setPrefix(prefix);
@@ -64,10 +66,25 @@ public final class CraftTeam extends CraftScoreboardComponent implements Team {
 
     public void setSuffix(String suffix) throws IllegalStateException, IllegalArgumentException {
         Validate.notNull(suffix, "Suffix cannot be null");
-        Validate.isTrue(suffix.length() <= 32, "Suffix '" + suffix + "' is longer than the limit of 32 characters");
+        Validate.isTrue(suffix.length() <= 16, "Suffix '" + suffix + "' is longer than the limit of 16 characters");
         CraftScoreboard scoreboard = checkState();
 
         team.setSuffix(suffix);
+    }
+
+    @Override
+    public ChatColor getColor() throws IllegalStateException {
+        CraftScoreboard scoreboard = checkState();
+
+        return CraftChatMessage.getColor(team.getColor());
+    }
+
+    @Override
+    public void setColor(ChatColor color) {
+        Validate.notNull(color, "Color cannot be null");
+        CraftScoreboard scoreboard = checkState();
+
+        team.setColor(CraftChatMessage.getColor(color));
     }
 
     public boolean allowFriendlyFire() throws IllegalStateException {

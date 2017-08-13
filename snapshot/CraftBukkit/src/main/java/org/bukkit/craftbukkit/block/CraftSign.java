@@ -2,12 +2,15 @@ package org.bukkit.craftbukkit.block;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.ChatComponentText;
+import net.minecraft.server.IChatBaseComponent;
 import net.minecraft.server.TileEntitySign;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.BungeeChatUtils;
+import org.bukkit.craftbukkit.util.CraftChatMessage;
 
 public class CraftSign extends CraftBlockState implements Sign {
     private final TileEntitySign sign;
@@ -30,7 +33,7 @@ public class CraftSign extends CraftBlockState implements Sign {
     private void importFromNms() {
         for(int i = 0; i < lines.length; i++) {
             lines[i] = sign.lines.length > i ? BungeeChatUtils.toBungee(sign.lines[i])
-                                             : new TextComponent();
+                    : new TextComponent();
         }
     }
 

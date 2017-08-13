@@ -5,10 +5,10 @@
  
      private IChatBaseComponent a;
 +    public net.md_5.bungee.api.chat.BaseComponent[] components; // Spigot
-     private byte b;
+     private ChatMessageType b;
  
      public PacketPlayOutChat() {}
-@@ -24,7 +25,13 @@
+@@ -24,7 +25,16 @@
      }
  
      public void b(PacketDataSerializer packetdataserializer) throws IOException {
@@ -19,7 +19,10 @@
 +        } else {
 +            packetdataserializer.a(this.a);
 +        }
++        if (this.b == null) {
++            this.b = ChatMessageType.CHAT;
++        }
 +        // Spigot end
-         packetdataserializer.writeByte(this.b);
+         packetdataserializer.writeByte(this.b.a());
      }
  

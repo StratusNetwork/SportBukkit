@@ -1,14 +1,14 @@
 --- a/net/minecraft/server/CrashReport.java
 +++ b/net/minecraft/server/CrashReport.java
-@@ -22,6 +22,7 @@
+@@ -24,6 +24,7 @@
      private final String b;
      private final Throwable c;
      private final CrashReportSystemDetails d = new CrashReportSystemDetails(this, "System Details");
-+    public List<CrashReportSystemDetails> extras() { return e; } // SportBukkit - alias
++    public List<CrashReportSystemDetails> extras() { return e; } // SportBukkit - alia
      private final List<CrashReportSystemDetails> e = Lists.newArrayList();
      private File f;
      private boolean g = true;
-@@ -123,12 +124,15 @@
+@@ -125,12 +126,15 @@
                  return this.a();
              }
          });
@@ -24,7 +24,7 @@
      public Throwable b() {
          return this.c;
      }
-@@ -254,6 +258,7 @@
+@@ -256,6 +260,7 @@
          }
      }
  

@@ -6,7 +6,7 @@ Subject: [PATCH] Implement player collision API
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -67,7 +67,7 @@ public abstract class Entity implements ICommandListener {
+@@ -61,7 +61,7 @@ public abstract class Entity implements ICommandListener {
      private static double f = 1.0D;
      public static int entityCount; // SportBukkit - private -> public
      private int id;
@@ -15,7 +15,7 @@ diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/
      public final List<Entity> passengers;
      protected int j;
      private Entity au;
-@@ -1268,6 +1268,7 @@ public abstract class Entity implements ICommandListener {
+@@ -1327,6 +1327,7 @@ public abstract class Entity implements ICommandListener {
      public void d(EntityHuman entityhuman) {}
  
      public void collide(Entity entity) {
@@ -26,7 +26,7 @@ diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
-@@ -401,7 +401,7 @@ public abstract class EntityHuman extends EntityLiving {
+@@ -399,7 +399,7 @@ public abstract class EntityHuman extends EntityLiving {
  
              List list = this.world.getEntities(this, axisalignedbb);
  
@@ -38,8 +38,8 @@ diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -2105,7 +2105,7 @@ public abstract class EntityLiving extends Entity {
-     protected void ct() {
+@@ -2145,7 +2145,7 @@ public abstract class EntityLiving extends Entity {
+     protected void cB() {
          List list = this.world.getEntities(this, this.getBoundingBox(), IEntitySelector.a(this));
  
 -        if (!list.isEmpty()) {
@@ -50,7 +50,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -67,6 +67,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -74,6 +74,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
      public IChatBaseComponent listName;
      public org.bukkit.Location compassTarget;
      public int newExp = 0;
@@ -59,8 +59,8 @@ diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/jav
      public int newLevel = 0;
      public int newTotalExp = 0;
      public boolean keepLevel = false;
-@@ -204,6 +206,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
-         this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.ENTER_COMBAT));
+@@ -241,6 +243,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.END_COMBAT));
      }
  
 +    // CraftBukkit start
@@ -75,13 +75,13 @@ diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/jav
 +    }
 +    // CraftBukkit end
 +
-     public void exitCombat() {
-         super.exitCombat();
-         this.playerConnection.sendPacket(new PacketPlayOutCombatEvent(this.getCombatTracker(), PacketPlayOutCombatEvent.EnumCombatEventType.END_COMBAT));
+     protected void a(IBlockData iblockdata) {
+         CriterionTriggers.d.a(this, iblockdata);
+     }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1541,6 +1541,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1545,6 +1545,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          getHandle().updateAbilities();
      }
  

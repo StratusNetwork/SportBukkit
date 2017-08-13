@@ -6,7 +6,7 @@ Subject: [PATCH] Block physics API
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -392,6 +392,15 @@ public abstract class World implements IBlockAccess {
+@@ -396,6 +396,15 @@ public abstract class World implements IBlockAccess {
      }
      // CraftBukkit end
  
@@ -22,7 +22,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
      public boolean setAir(BlockPosition blockposition) {
          return this.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 3);
      }
-@@ -513,6 +522,7 @@ public abstract class World implements IBlockAccess {
+@@ -517,6 +526,7 @@ public abstract class World implements IBlockAccess {
  
      }
  
@@ -30,7 +30,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
      public void a(BlockPosition blockposition, final Block block, BlockPosition blockposition1) {
          if (!this.isClientSide) {
              IBlockData iblockdata = this.getType(blockposition);
-@@ -2978,7 +2988,14 @@ public abstract class World implements IBlockAccess {
+@@ -2992,7 +3002,14 @@ public abstract class World implements IBlockAccess {
          while (iterator.hasNext()) {
              EnumDirection enumdirection = (EnumDirection) iterator.next();
              BlockPosition blockposition1 = blockposition.shift(enumdirection);
@@ -56,7 +56,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
  import org.bukkit.metadata.MetadataValue;
  import org.bukkit.plugin.Plugin;
  import org.bukkit.util.BlockVector;
-@@ -561,4 +562,38 @@ public class CraftBlock implements Block {
+@@ -563,4 +564,38 @@ public class CraftBlock implements Block {
      public RayBlockIntersection rayTrace(Location start, double distance) {
          return rayTrace(start.toVector(), start.toVector().add(start.getDirection().multiply(distance)));
      }

@@ -6,7 +6,7 @@ Subject: [PATCH] Fix playEffect params
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -867,7 +867,7 @@ public class CraftWorld implements World {
+@@ -869,7 +869,7 @@ public class CraftWorld implements World {
                  particleFullName.append('_').append(data);
              }
  

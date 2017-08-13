@@ -9,11 +9,11 @@ import java.util.PriorityQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
-import javax.inject.Inject;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.IllegalPluginAccessException;
@@ -23,6 +23,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitWorker;
 import tc.oc.minecraft.api.scheduler.Async;
+
+import javax.inject.Inject;
 
 /**
  * The fundamental concepts for this implementation:
@@ -62,10 +64,10 @@ public class CraftScheduler implements BukkitScheduler {
     private final PriorityQueue<CraftTask> pending = new PriorityQueue<CraftTask>(10,
             new Comparator<CraftTask>() {
                 public int compare(final CraftTask o1, final CraftTask o2) {
-                    int value = (int) (o1.getNextRun() - o2.getNextRun());
+                    int value = Long.compare(o1.getNextRun(), o2.getNextRun());
 
                     // If the tasks should run on the same tick they should be run FIFO
-                    return value != 0 ? value : o1.getTaskId() - o2.getTaskId();
+                    return value != 0 ? value : Integer.compare(o1.getTaskId(), o2.getTaskId());
                 }
             });
     /**

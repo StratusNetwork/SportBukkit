@@ -2,7 +2,9 @@ package org.bukkit.craftbukkit;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
+
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.server.*;
@@ -167,6 +169,12 @@ public class CraftChunk implements Chunk {
         return getWorld().unloadChunk(getX(), getZ());
     }
 
+    @Override
+    public boolean isSlimeChunk() {
+        // 987234911L is deterimined in EntitySlime when seeing if a slime can spawn in a chunk
+        return getHandle().a(987234911L).nextInt(10) == 0;
+    }
+
     public boolean unload(boolean save) {
         return getWorld().unloadChunk(getX(), getZ(), save);
     }
@@ -208,10 +216,10 @@ public class CraftChunk implements Chunk {
                 // Copy base IDs
                 for (int j = 0; j < 4096; j++) {
                     blockids[j] = (short) (rawIds[j] & 0xFF);
-                }               
+                }
 
                 sectionBlockIDs[i] = blockids;
-                
+
                 if (cs[i].getSkyLightArray() == null) {
                     sectionSkyLights[i] = emptyData;
                 } else {
@@ -319,6 +327,7 @@ public class CraftChunk implements Chunk {
 
         return new CraftChunkSnapshot(x, z, world.getName(), world.getFullTime(), blockIDs, blockData, skyLight, emitLight, empty, new int[256], biome, biomeTemp, biomeRain);
     }
+
 
     @Override
     public int replaceMaterial(Material original, MaterialData replacement) {

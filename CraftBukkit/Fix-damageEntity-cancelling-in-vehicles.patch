@@ -6,7 +6,7 @@ Subject: [PATCH] Fix damageEntity cancelling in vehicles
 diff --git a/src/main/java/net/minecraft/server/EntityBoat.java b/src/main/java/net/minecraft/server/EntityBoat.java
 --- a/src/main/java/net/minecraft/server/EntityBoat.java
 +++ b/src/main/java/net/minecraft/server/EntityBoat.java
-@@ -121,7 +121,7 @@ public class EntityBoat extends Entity {
+@@ -120,7 +120,7 @@ public class EntityBoat extends Entity {
                  this.world.getServer().getPluginManager().callEvent(event);
  
                  if (event.isCancelled()) {
@@ -18,7 +18,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityBoat.java b/src/main/java/
 diff --git a/src/main/java/net/minecraft/server/EntityMinecartAbstract.java b/src/main/java/net/minecraft/server/EntityMinecartAbstract.java
 --- a/src/main/java/net/minecraft/server/EntityMinecartAbstract.java
 +++ b/src/main/java/net/minecraft/server/EntityMinecartAbstract.java
-@@ -131,7 +131,7 @@ public abstract class EntityMinecartAbstract extends Entity implements INamableT
+@@ -129,7 +129,7 @@ public abstract class EntityMinecartAbstract extends Entity implements INamableT
                  this.world.getServer().getPluginManager().callEvent(event);
  
                  if (event.isCancelled()) {

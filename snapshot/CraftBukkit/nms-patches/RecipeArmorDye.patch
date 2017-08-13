@@ -10,7 +10,7 @@
 -    public RecipeArmorDye() {}
 +    // CraftBukkit start - Delegate to new parent class with bogus info
 +    public RecipeArmorDye() {
-+        super(new ItemStack(Items.LEATHER_HELMET, 0, 0), java.util.Arrays.asList(new ItemStack(Items.DYE, 0, 5)));
++        super("", new ItemStack(Items.LEATHER_HELMET, 0, 0), NonNullList.a(RecipeItemStack.a, RecipeItemStack.a(Items.DYE)));
 +    }
 +    // CraftBukkit end
  

@@ -5,7 +5,7 @@ Subject: [PATCH] Add EntityDespawnInVoidEvent
 
 diff --git a/src/main/java/org/bukkit/event/entity/EntityDespawnInVoidEvent.java b/src/main/java/org/bukkit/event/entity/EntityDespawnInVoidEvent.java
 new file mode 100644
-index 0000000..f413467
+index 00000000..f413467b
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/EntityDespawnInVoidEvent.java
 @@ -0,0 +1,25 @@

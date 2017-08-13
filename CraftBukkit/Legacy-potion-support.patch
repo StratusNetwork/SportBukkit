@@ -16,7 +16,7 @@ diff --git a/src/main/java/net/minecraft/server/ItemStack.java b/src/main/java/n
  // CraftBukkit end
  
  public final class ItemStack {
-@@ -104,6 +107,34 @@ public final class ItemStack {
+@@ -118,6 +121,34 @@ public final class ItemStack {
                  // CraftBukkit end
              }
          }

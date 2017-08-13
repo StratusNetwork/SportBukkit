@@ -64,22 +64,22 @@ diff --git a/src/main/java/org/bukkit/command/SimpleCommandMap.java b/src/main/j
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -21,6 +21,7 @@ import org.apache.commons.lang.Validate;
+@@ -22,6 +22,7 @@ import org.apache.commons.lang.Validate;
  import org.bukkit.Server;
  import org.bukkit.command.Command;
  import org.bukkit.command.PluginCommandYamlParser;
 +import org.bukkit.command.PluginIdentifiableCommand;
  import org.bukkit.command.SimpleCommandMap;
  import org.bukkit.configuration.serialization.ConfigurationSerialization;
- import org.bukkit.event.Event;
-@@ -472,6 +473,13 @@ public final class SimplePluginManager implements PluginManager {
+ import org.bukkit.event.*;
+@@ -466,6 +467,13 @@ public final class SimplePluginManager implements PluginManager {
              } catch (Throwable ex) {
                  server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while unregistering serializables " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
              }
 +
 +            try {
 +                server.getCommandMap().unregisterAll(command -> command instanceof PluginIdentifiableCommand &&
-+                                                                plugin == ((PluginIdentifiableCommand) command).getPlugin());
++                        plugin == ((PluginIdentifiableCommand) command).getPlugin());
 +            } catch (Throwable ex) {
 +                server.getLogger().log(Level.SEVERE, "Error occurred (in the plugin loader) while unregistering commands for " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
 +            }

@@ -1,14 +1,14 @@
 --- a/net/minecraft/server/SoundEffectType.java
 +++ b/net/minecraft/server/SoundEffectType.java
-@@ -11,7 +11,7 @@
-     public static final SoundEffectType g = new SoundEffectType(1.0F, 1.0F, SoundEffects.ai, SoundEffects.am, SoundEffects.al, SoundEffects.ak, SoundEffects.aj);
-     public static final SoundEffectType h = new SoundEffectType(1.0F, 1.0F, SoundEffects.fm, SoundEffects.fq, SoundEffects.fp, SoundEffects.fo, SoundEffects.fn);
-     public static final SoundEffectType i = new SoundEffectType(1.0F, 1.0F, SoundEffects.gt, SoundEffects.gx, SoundEffects.gw, SoundEffects.gv, SoundEffects.gu);
--    public static final SoundEffectType j = new SoundEffectType(1.0F, 1.0F, SoundEffects.dl, SoundEffects.dp, SoundEffects.do, SoundEffects.dn, SoundEffects.dm);
-+    public static final SoundEffectType j = new SoundEffectType(1.0F, 1.0F, SoundEffects.dl, SoundEffects.dp, SoundEffects.BLOCK_LADDER_PLACE, SoundEffects.dn, SoundEffects.dm); // SportBukkit - fix decomp
-     public static final SoundEffectType k = new SoundEffectType(0.3F, 1.0F, SoundEffects.b, SoundEffects.h, SoundEffects.g, SoundEffects.e, SoundEffects.d);
-     public static final SoundEffectType l = new SoundEffectType(1.0F, 1.0F, SoundEffects.fY, SoundEffects.gg, SoundEffects.ge, SoundEffects.gb, SoundEffects.ga);
-     public final float m;
+@@ -2,7 +2,7 @@
+ 
+ public class SoundEffectType {
+ 
+-    public static final SoundEffectType a = new SoundEffectType(1.0F, 1.0F, SoundEffects.iZ, SoundEffects.jh, SoundEffects.je, SoundEffects.jd, SoundEffects.jc);
++    public static final SoundEffectType a = new SoundEffectType(1.0F, 1.0F, SoundEffects.iW, SoundEffects.je, SoundEffects.jb, SoundEffects.ja, SoundEffects.iZ);
+     public static final SoundEffectType b = new SoundEffectType(1.0F, 1.0F, SoundEffects.cr, SoundEffects.cv, SoundEffects.cu, SoundEffects.ct, SoundEffects.cs);
+     public static final SoundEffectType c = new SoundEffectType(1.0F, 1.0F, SoundEffects.cm, SoundEffects.cq, SoundEffects.cp, SoundEffects.co, SoundEffects.cn);
+     public static final SoundEffectType d = new SoundEffectType(1.0F, 1.0F, SoundEffects.hI, SoundEffects.hQ, SoundEffects.hN, SoundEffects.hM, SoundEffects.hL);
 @@ -40,15 +40,23 @@
          return this.n;
      }

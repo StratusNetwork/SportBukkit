@@ -1,9 +1,10 @@
 --- a/net/minecraft/server/PlayerInteractManager.java
 +++ b/net/minecraft/server/PlayerInteractManager.java
-@@ -1,13 +1,21 @@
+@@ -1,13 +1,22 @@
  package net.minecraft.server;
  
 +// CraftBukkit start
++import java.util.ArrayList;
 +import org.bukkit.event.block.BlockBreakEvent;
 +import org.bukkit.craftbukkit.event.CraftEventFactory;
 +import org.bukkit.event.Event;
@@ -24,7 +25,7 @@
      private int currentTick;
      private boolean h;
      private BlockPosition i;
-@@ -26,7 +34,7 @@
+@@ -26,7 +35,7 @@
          this.gamemode = enumgamemode;
          enumgamemode.a(this.player.abilities);
          this.player.updateAbilities();
@@ -33,7 +34,7 @@
          this.world.everyoneSleeping();
      }
  
-@@ -51,7 +59,7 @@
+@@ -51,7 +60,7 @@
      }
  
      public void a() {
@@ -42,7 +43,7 @@
          float f;
          int i;
  
-@@ -98,8 +106,28 @@
+@@ -96,8 +105,28 @@
      }
  
      public void a(BlockPosition blockposition, EnumDirection enumdirection) {
@@ -72,7 +73,7 @@
                  this.breakBlock(blockposition);
              }
  
-@@ -125,15 +153,49 @@
+@@ -123,15 +152,49 @@
                  }
              }
  
@@ -124,7 +125,7 @@
              if (iblockdata.getMaterial() != Material.AIR && f >= 1.0F) {
                  this.breakBlock(blockposition);
              } else {
-@@ -150,6 +212,7 @@
+@@ -148,6 +211,7 @@
  
      public void a(BlockPosition blockposition) {
          if (blockposition.equals(this.f)) {
@@ -132,7 +133,7 @@
              int i = this.currentTick - this.lastDigTick;
              IBlockData iblockdata = this.world.getType(blockposition);
  
-@@ -167,6 +230,10 @@
+@@ -165,6 +229,10 @@
                      this.j = this.lastDigTick;
                  }
              }
@@ -143,7 +144,7 @@
          }
  
      }
-@@ -174,6 +241,7 @@
+@@ -172,6 +240,7 @@
      public void e() {
          this.d = false;
          this.world.c(this.player.getId(), this.f, -1);
@@ -151,7 +152,7 @@
      }
  
      private boolean c(BlockPosition blockposition) {
-@@ -190,13 +258,86 @@
+@@ -188,13 +257,86 @@
      }
  
      public boolean breakBlock(BlockPosition blockposition) {
@@ -223,24 +224,49 @@
              TileEntity tileentity = this.world.getTileEntity(blockposition);
              Block block = iblockdata.getBlock();
  
-+            // CraftBukkit start - Special case skulls, their item data comes from a tile entity
-+            if (iblockdata.getBlock() == Blocks.SKULL && !this.isCreative()) {
++            // CraftBukkit start - Special case skulls, their item data comes from a tile entity (Also check if block should drop items)
++            if (iblockdata.getBlock() == Blocks.SKULL && !this.isCreative() && event.isDropItems()) {
 +                iblockdata.getBlock().dropNaturally(world, blockposition, iblockdata, 1.0F, 0);
 +                return this.c(blockposition);
 +            }
 +
-+            // And shulker boxes too for duplication on cancel reasons
-+            if (iblockdata.getBlock() instanceof BlockShulkerBox) {
++            // And shulker boxes too for duplication on cancel reasons (Also check if block should drop items)
++            if (iblockdata.getBlock() instanceof BlockShulkerBox && event.isDropItems()) {
 +                iblockdata.getBlock().dropNaturally(world, blockposition, iblockdata, 1.0F, 0);
 +                return this.c(blockposition);
 +            }
 +            // CraftBukkit end
 +
-             if ((block instanceof BlockCommand || block instanceof BlockStructure) && !this.player.dk()) {
+             if ((block instanceof BlockCommand || block instanceof BlockStructure) && !this.player.isCreativeAndOp()) {
                  this.world.notify(blockposition, iblockdata, iblockdata, 3);
                  return false;
-@@ -238,6 +379,12 @@
+@@ -218,7 +360,16 @@
+                 }
+ 
+                 this.world.a(this.player, 2001, blockposition, Block.getCombinedId(iblockdata));
++                // CraftBukkit start
++                world.captureDrops = new ArrayList<>();
+                 boolean flag = this.c(blockposition);
++                if (event.isDropItems()) {
++                    for (EntityItem item : world.captureDrops) {
++                        world.addEntity(item);
++                    }
++                }
++                world.captureDrops = null;
++                // CraftBukkit end
+ 
+                 if (this.isCreative()) {
+                     this.player.playerConnection.sendPacket(new PacketPlayOutBlockChange(this.world, blockposition));
+@@ -231,11 +382,19 @@
+                         itemstack1.a(this.world, iblockdata, blockposition, this.player);
                      }
+ 
+-                    if (flag && flag1) {
++                    // CraftBukkit start - Check if block should drop items
++                    if (flag && flag1 && event.isDropItems()) {
+                         iblockdata.getBlock().a(this.world, this.player, blockposition, iblockdata, tileentity, itemstack2);
+                     }
++                    // CraftBukkit end
                  }
  
 +                // CraftBukkit start - Drop event experience
@@ -252,7 +278,7 @@
                  return flag;
              }
          }
-@@ -280,63 +427,86 @@
+@@ -278,63 +437,90 @@
          }
      }
  
@@ -266,19 +292,23 @@
 +        EnumInteractionResult enuminteractionresult = EnumInteractionResult.FAIL;
 +        if (blockdata.getBlock() != Blocks.AIR) {
 +            boolean cancelledBlock = false;
- 
--            if (tileentity instanceof ITileInventory) {
--                Block block = world.getType(blockposition).getBlock();
--                ITileInventory itileinventory = (ITileInventory) tileentity;
++
 +            if (this.gamemode == EnumGamemode.SPECTATOR) {
 +                TileEntity tileentity = world.getTileEntity(blockposition);
 +                cancelledBlock = !(tileentity instanceof ITileInventory || tileentity instanceof IInventory);
 +            }
  
+-            if (tileentity instanceof ITileInventory) {
+-                Block block = world.getType(blockposition).getBlock();
+-                ITileInventory itileinventory = (ITileInventory) tileentity;
++            if (entityhuman.getCooldownTracker().a(itemstack.getItem())) {
++                cancelledBlock = true;
++            }
+ 
 -                if (itileinventory instanceof TileEntityChest && block instanceof BlockChest) {
--                    itileinventory = ((BlockChest) block).c(world, blockposition);
+-                    itileinventory = ((BlockChest) block).getInventory(world, blockposition);
 -                }
-+            if (itemstack.getItem() instanceof ItemBlock && !entityhuman.dk()) { // PAIL: creativeAndOp
++            if (itemstack.getItem() instanceof ItemBlock && !entityhuman.isCreativeAndOp()) {
 +                Block block1 = ((ItemBlock) itemstack.getItem()).getBlock();
  
 -                if (itileinventory != null) {
@@ -312,14 +342,14 @@
 +                enuminteractionresult = (event.useItemInHand() != Event.Result.ALLOW) ? EnumInteractionResult.SUCCESS : EnumInteractionResult.PASS;
 +            } else if (this.gamemode == EnumGamemode.SPECTATOR) {
 +                TileEntity tileentity = world.getTileEntity(blockposition);
-+
+ 
+-                if (iblockdata.getBlock().interact(world, blockposition, iblockdata, entityhuman, enumhand, enumdirection, f, f1, f2)) {
 +                if (tileentity instanceof ITileInventory) {
 +                    Block block = world.getType(blockposition).getBlock();
 +                    ITileInventory itileinventory = (ITileInventory) tileentity;
- 
--                if (iblockdata.getBlock().interact(world, blockposition, iblockdata, entityhuman, enumhand, enumdirection, f, f1, f2)) {
++
 +                    if (itileinventory instanceof TileEntityChest && block instanceof BlockChest) {
-+                        itileinventory = ((BlockChest) block).c(world, blockposition); // PAIL: rename
++                        itileinventory = ((BlockChest) block).getInventory(world, blockposition);
 +                    }
 +
 +                    if (itileinventory != null) {
@@ -334,10 +364,10 @@
  
 -            if (itemstack.isEmpty()) {
 -                return EnumInteractionResult.PASS;
--            } else if (entityhuman.di().a(itemstack.getItem())) {
+-            } else if (entityhuman.getCooldownTracker().a(itemstack.getItem())) {
                  return EnumInteractionResult.PASS;
              } else {
--                if (itemstack.getItem() instanceof ItemBlock && !entityhuman.dk()) {
+-                if (itemstack.getItem() instanceof ItemBlock && !entityhuman.isCreativeAndOp()) {
 -                    Block block1 = ((ItemBlock) itemstack.getItem()).getBlock();
 +                if (!entityhuman.isSneaking() || entityhuman.getItemInMainHand().isEmpty() && entityhuman.getItemInOffHand().isEmpty()) {
 +                    IBlockData iblockdata = world.getType(blockposition);
@@ -356,9 +386,9 @@
 +            if (!itemstack.isEmpty() && enuminteractionresult != EnumInteractionResult.SUCCESS && !interactResult) { // add !interactResult SPIGOT-764
 +                int i = itemstack.getData();
 +                int j = itemstack.getCount();
- 
-+                enuminteractionresult = itemstack.placeItem(entityhuman, world, blockposition, enumhand, enumdirection, f, f1, f2);
 +
++                enuminteractionresult = itemstack.placeItem(entityhuman, world, blockposition, enumhand, enumdirection, f, f1, f2);
+ 
 +                // The item count should not decrement in Creative mode.
 +                if (this.isCreative()) {
                      itemstack.setData(i);

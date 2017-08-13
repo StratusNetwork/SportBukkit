@@ -6,16 +6,13 @@ Subject: [PATCH] Allow empty ItemStack
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java
-@@ -150,11 +150,7 @@ public final class CraftItemStack extends ItemStack {
-         if (handle == null) {
-             return;
+@@ -155,9 +155,6 @@ public final class CraftItemStack extends ItemStack {
          }
+ 
+         handle.setCount(amount);
 -        if (amount == 0) {
 -            handle = null;
--        } else {
--            handle.setCount(amount);
 -        }
-+        handle.setCount(amount);
      }
  
      @Override

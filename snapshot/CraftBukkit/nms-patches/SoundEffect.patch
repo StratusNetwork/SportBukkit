@@ -1,1 +1,12 @@
-
+--- a/net/minecraft/server/SoundEffect.java
++++ b/net/minecraft/server/SoundEffect.java
+@@ -555,9 +555,6 @@
+         a("record.wait");
+         a("record.ward");
+         a("ui.button.click");
+-        a("ui.toast.in");
+-        a("ui.toast.out");
+-        a("ui.toast.challenge_complete");
+         a("weather.rain");
+         a("weather.rain.above");
+     }

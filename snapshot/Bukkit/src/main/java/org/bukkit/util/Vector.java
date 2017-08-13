@@ -248,8 +248,8 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      */
     public Vector midpoint(Vector other) {
         return set((fineX() + other.fineX()) / 2,
-                   (fineY() + other.fineY()) / 2,
-                   (fineZ() + other.fineZ()) / 2);
+                (fineY() + other.fineY()) / 2,
+                (fineZ() + other.fineZ()) / 2);
     }
 
     /**
@@ -327,8 +327,8 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      */
     public Vector crossProduct(Vector o) {
         return set(fineY() * o.fineZ() - o.fineY() * fineZ(),
-                   fineZ() * o.fineX() - o.fineZ() * fineX(),
-                   fineX() * o.fineY() - o.fineX() * fineY());
+                fineZ() * o.fineX() - o.fineZ() * fineX(),
+                fineX() * o.fineY() - o.fineX() * fineY());
     }
 
     /**
@@ -456,7 +456,6 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * @param x The new X component.
      * @return This vector.
      */
-    @Override
     public Vector setX(int x) {
         setX((double) x);
         return this;
@@ -468,9 +467,8 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * @param x The new X component.
      * @return This vector.
      */
-    @Override
     public Vector setX(double x) {
-        super.setX(x);
+        setX(x);
         return this;
     }
 
@@ -491,7 +489,6 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * @param y The new Y component.
      * @return This vector.
      */
-    @Override
     public Vector setY(int y) {
         setY((double) y);
         return this;
@@ -503,7 +500,6 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * @param y The new Y component.
      * @return This vector.
      */
-    @Override
     public Vector setY(double y) {
         super.setY(y);
         return this;
@@ -526,7 +522,6 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * @param z The new Z component.
      * @return This vector.
      */
-    @Override
     public Vector setZ(int z) {
         setZ((double) z);
         return this;
@@ -538,9 +533,8 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * @param z The new Z component.
      * @return This vector.
      */
-    @Override
     public Vector setZ(double z) {
-        super.setZ(z);
+        setZ(z);
         return this;
     }
 
@@ -606,7 +600,7 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * Gets a Location version of this vector.
      *
      * @param world The world to link the location to.
-     * @param yaw The desired yaw.
+     * @param yaw   The desired yaw.
      * @param pitch The desired pitch.
      * @return the location
      */
@@ -621,6 +615,17 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      */
     public BlockVector toBlockVector() {
         return new BlockVector(fineX(), fineY(), fineZ());
+    }
+
+    /**
+     * Check if each component of this Vector is finite.
+     *
+     * @throws IllegalArgumentException if any component is not finite
+     */
+    public void checkFinite() throws IllegalArgumentException {
+        NumberConversions.checkFinite(getX(), "x not finite");
+        NumberConversions.checkFinite(getY(), "y not finite");
+        NumberConversions.checkFinite(getZ(), "z not finite");
     }
 
     /**
@@ -656,14 +661,15 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
 
     public static Vector minimum(Vec3 a, Vec3 b) {
         return new Vector(Math.min(a.fineX(), b.fineX()),
-                          Math.min(a.fineY(), b.fineY()),
-                          Math.min(a.fineZ(), b.fineZ()));
+                Math.min(a.fineY(), b.fineY()),
+                Math.min(a.fineZ(), b.fineZ()));
     }
 
     public static Vector maximum(Vec3 a, Vec3 b) {
         return new Vector(Math.max(a.fineX(), b.fineX()),
-                          Math.max(a.fineY(), b.fineY()),
-                          Math.max(a.fineZ(), b.fineZ()));
+                Math.max(a.fineY(), b.fineY()),
+                Math.max(a.fineZ(), b.fineZ()));
+
     }
 
     /**

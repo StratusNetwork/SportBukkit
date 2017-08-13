@@ -1,13 +1,13 @@
 package org.bukkit.block;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.geometry.MutableVec3;
 import org.bukkit.geometry.Vec3;
 import org.bukkit.geometry.Vec3Coarse;
 import org.bukkit.util.ImVector;
 import org.bukkit.util.NumberConversions;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents the face of a block
@@ -105,62 +105,62 @@ public enum BlockFace implements Vec3Coarse<Vec3> {
 
     public BlockFace getOppositeFace() {
         switch (this) {
-        case NORTH:
-            return BlockFace.SOUTH;
+            case NORTH:
+                return BlockFace.SOUTH;
 
-        case SOUTH:
-            return BlockFace.NORTH;
+            case SOUTH:
+                return BlockFace.NORTH;
 
-        case EAST:
-            return BlockFace.WEST;
+            case EAST:
+                return BlockFace.WEST;
 
-        case WEST:
-            return BlockFace.EAST;
+            case WEST:
+                return BlockFace.EAST;
 
-        case UP:
-            return BlockFace.DOWN;
+            case UP:
+                return BlockFace.DOWN;
 
-        case DOWN:
-            return BlockFace.UP;
+            case DOWN:
+                return BlockFace.UP;
 
-        case NORTH_EAST:
-            return BlockFace.SOUTH_WEST;
+            case NORTH_EAST:
+                return BlockFace.SOUTH_WEST;
 
-        case NORTH_WEST:
-            return BlockFace.SOUTH_EAST;
+            case NORTH_WEST:
+                return BlockFace.SOUTH_EAST;
 
-        case SOUTH_EAST:
-            return BlockFace.NORTH_WEST;
+            case SOUTH_EAST:
+                return BlockFace.NORTH_WEST;
 
-        case SOUTH_WEST:
-            return BlockFace.NORTH_EAST;
+            case SOUTH_WEST:
+                return BlockFace.NORTH_EAST;
 
-        case WEST_NORTH_WEST:
-            return BlockFace.EAST_SOUTH_EAST;
+            case WEST_NORTH_WEST:
+                return BlockFace.EAST_SOUTH_EAST;
 
-        case NORTH_NORTH_WEST:
-            return BlockFace.SOUTH_SOUTH_EAST;
+            case NORTH_NORTH_WEST:
+                return BlockFace.SOUTH_SOUTH_EAST;
 
-        case NORTH_NORTH_EAST:
-            return BlockFace.SOUTH_SOUTH_WEST;
+            case NORTH_NORTH_EAST:
+                return BlockFace.SOUTH_SOUTH_WEST;
 
-        case EAST_NORTH_EAST:
-            return BlockFace.WEST_SOUTH_WEST;
+            case EAST_NORTH_EAST:
+                return BlockFace.WEST_SOUTH_WEST;
 
-        case EAST_SOUTH_EAST:
-            return BlockFace.WEST_NORTH_WEST;
+            case EAST_SOUTH_EAST:
+                return BlockFace.WEST_NORTH_WEST;
 
-        case SOUTH_SOUTH_EAST:
-            return BlockFace.NORTH_NORTH_WEST;
+            case SOUTH_SOUTH_EAST:
+                return BlockFace.NORTH_NORTH_WEST;
 
-        case SOUTH_SOUTH_WEST:
-            return BlockFace.NORTH_NORTH_EAST;
+            case SOUTH_SOUTH_WEST:
+                return BlockFace.NORTH_NORTH_EAST;
 
-        case WEST_SOUTH_WEST:
-            return BlockFace.EAST_NORTH_EAST;
+            case WEST_SOUTH_WEST:
+                return BlockFace.EAST_NORTH_EAST;
 
-        case SELF:
-            return BlockFace.SELF;
+            case SELF:
+                return BlockFace.SELF;
         }
 
         return BlockFace.SELF;
@@ -179,24 +179,24 @@ public enum BlockFace implements Vec3Coarse<Vec3> {
     }
 
     private static final BlockFace[] DIAGONAL = new BlockFace[] {
-        SOUTH_EAST,
-        SOUTH_WEST,
-        NORTH_EAST,
-        NORTH_WEST,
+            SOUTH_EAST,
+            SOUTH_WEST,
+            NORTH_EAST,
+            NORTH_WEST,
     };
 
     private static final BlockFace[] DIAGONAL_Z = new BlockFace[] {
-        SOUTH_SOUTH_EAST,
-        SOUTH_SOUTH_WEST,
-        NORTH_NORTH_EAST,
-        NORTH_NORTH_WEST,
+            SOUTH_SOUTH_EAST,
+            SOUTH_SOUTH_WEST,
+            NORTH_NORTH_EAST,
+            NORTH_NORTH_WEST,
     };
 
     private static final BlockFace[] DIAGONAL_X = new BlockFace[] {
-        EAST_SOUTH_EAST,
-        WEST_SOUTH_WEST,
-        EAST_NORTH_EAST,
-        WEST_NORTH_WEST,
+            EAST_SOUTH_EAST,
+            WEST_SOUTH_WEST,
+            EAST_NORTH_EAST,
+            WEST_NORTH_WEST,
     };
 
     /**
@@ -226,8 +226,8 @@ public enum BlockFace implements Vec3Coarse<Vec3> {
     public static BlockFace byDirection(Vec3 direction) {
         if(direction instanceof BlockFace) return (BlockFace) direction;
         return byDirection(direction.fineX(),
-                           direction.fineY(),
-                           direction.fineZ());
+                direction.fineY(),
+                direction.fineZ());
     }
 
     public static BlockFace byDirection(double x, double y, double z) {
@@ -235,7 +235,7 @@ public enum BlockFace implements Vec3Coarse<Vec3> {
             // vertical
             if(x != 0 || z != 0) {
                 throw new IllegalArgumentException("No " + BlockFace.class.getSimpleName() +
-                                                   " for direction " + x + ", " + y + ", " + z);
+                        " for direction " + x + ", " + y + ", " + z);
             }
             return y > 0 ? UP : DOWN;
         } else if(z == 0) {

@@ -5,7 +5,7 @@ Subject: [PATCH] Add ExplosionPrimeByEntityEvent
 
 diff --git a/src/main/java/org/bukkit/event/entity/ExplosionPrimeByEntityEvent.java b/src/main/java/org/bukkit/event/entity/ExplosionPrimeByEntityEvent.java
 new file mode 100644
-index 0000000..6b7d13f
+index 00000000..6b7d13f6
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/ExplosionPrimeByEntityEvent.java
 @@ -0,0 +1,34 @@

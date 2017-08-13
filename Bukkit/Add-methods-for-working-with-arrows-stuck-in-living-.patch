@@ -6,7 +6,7 @@ Subject: [PATCH] Add methods for working with arrows stuck in living entities
 diff --git a/src/main/java/org/bukkit/entity/LivingEntity.java b/src/main/java/org/bukkit/entity/LivingEntity.java
 --- a/src/main/java/org/bukkit/entity/LivingEntity.java
 +++ b/src/main/java/org/bukkit/entity/LivingEntity.java
-@@ -428,4 +428,18 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
+@@ -360,4 +360,18 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
       * @return collision status
       */
      boolean isCollidable();

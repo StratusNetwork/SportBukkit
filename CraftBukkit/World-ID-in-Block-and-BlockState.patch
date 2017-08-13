@@ -6,30 +6,23 @@ Subject: [PATCH] World ID in Block and BlockState
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-@@ -5,19 +5,20 @@ import java.util.Collection;
- import java.util.Collections;
- import java.util.List;
- import java.util.Objects;
-+import java.util.UUID;
+@@ -4,6 +4,7 @@ import java.util.*;
  
  import net.minecraft.server.*;
--
+ 
 +import org.bukkit.Bukkit;
  import org.bukkit.Chunk;
  import org.bukkit.Location;
  import org.bukkit.Material;
--import org.bukkit.World;
- import org.bukkit.block.Biome;
- import org.bukkit.block.Block;
- import org.bukkit.block.BlockFace;
+@@ -14,6 +15,7 @@ import org.bukkit.block.BlockFace;
  import org.bukkit.block.BlockState;
  import org.bukkit.block.PistonMoveReaction;
  import org.bukkit.craftbukkit.CraftChunk;
 +import org.bukkit.craftbukkit.CraftWorld;
  import org.bukkit.craftbukkit.inventory.CraftItemStack;
  import org.bukkit.craftbukkit.util.CraftMagicNumbers;
- import org.bukkit.inventory.ItemStack;
-@@ -30,7 +31,7 @@ import org.bukkit.geometry.Vec3;
+ import org.bukkit.geometry.Vec3;
+@@ -26,7 +28,7 @@ import org.bukkit.util.RayBlockIntersection;
  import org.bukkit.util.Vector;
  
  public class CraftBlock implements Block {
@@ -38,7 +31,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      private final BlockPosition position;
  
      public CraftBlock(CraftChunk chunk, int x, int y, int z) {
-@@ -38,8 +39,8 @@ public class CraftBlock implements Block {
+@@ -34,8 +36,8 @@ public class CraftBlock implements Block {
      }
  
      public CraftBlock(CraftChunk chunk, Vec3 position) {
@@ -48,7 +41,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      }
  
      private net.minecraft.server.Block getNMSBlock() {
-@@ -50,8 +51,14 @@ public class CraftBlock implements Block {
+@@ -46,8 +48,14 @@ public class CraftBlock implements Block {
          return CraftMagicNumbers.getBlock(type);
      }
  
@@ -65,7 +58,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      }
  
      @Override
-@@ -60,12 +67,12 @@ public class CraftBlock implements Block {
+@@ -56,12 +64,12 @@ public class CraftBlock implements Block {
      }
  
      public Location getLocation() {
@@ -80,7 +73,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
              loc.setPosition(position);
              loc.setYaw(0);
              loc.setPitch(0);
-@@ -91,7 +98,7 @@ public class CraftBlock implements Block {
+@@ -87,7 +95,7 @@ public class CraftBlock implements Block {
      }
  
      public Chunk getChunk() {
@@ -89,7 +82,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      }
  
      public void setData(final byte data) {
-@@ -107,17 +114,17 @@ public class CraftBlock implements Block {
+@@ -103,17 +111,17 @@ public class CraftBlock implements Block {
      }
  
      private void setData(final byte data, int flag) {
@@ -110,7 +103,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
          return (byte) blockData.getBlock().toLegacyData(blockData);
      }
  
-@@ -144,16 +151,16 @@ public class CraftBlock implements Block {
+@@ -140,16 +148,16 @@ public class CraftBlock implements Block {
  
          // SPIGOT-611: need to do this to prevent glitchiness. Easier to handle this here (like /setblock) than to fix weirdness in tile entity cleanup
          if (type != 0 && blockData.getBlock() instanceof BlockTileEntity && type != getTypeId()) {
@@ -132,7 +125,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
                          position,
                          old,
                          blockData,
-@@ -171,19 +178,19 @@ public class CraftBlock implements Block {
+@@ -167,19 +175,19 @@ public class CraftBlock implements Block {
      @Deprecated
      @Override
      public int getTypeId() {
@@ -156,7 +149,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      }
  
  
-@@ -224,7 +231,7 @@ public class CraftBlock implements Block {
+@@ -220,7 +228,7 @@ public class CraftBlock implements Block {
  
      @Override
      public String toString() {
@@ -165,7 +158,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      }
  
      public static BlockFace notchToBlockFace(EnumDirection notch) {
-@@ -377,11 +384,11 @@ public class CraftBlock implements Block {
+@@ -375,11 +383,11 @@ public class CraftBlock implements Block {
      }
  
      public boolean isBlockPowered() {
@@ -179,7 +172,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      }
  
      @Override
-@@ -399,11 +406,11 @@ public class CraftBlock implements Block {
+@@ -397,11 +405,11 @@ public class CraftBlock implements Block {
      }
  
      public boolean isBlockFacePowered(BlockFace face) {
@@ -193,7 +186,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
  
          Block relative = getRelative(face);
          if (relative.getType() == Material.REDSTONE_WIRE) {
-@@ -416,7 +423,7 @@ public class CraftBlock implements Block {
+@@ -414,7 +422,7 @@ public class CraftBlock implements Block {
      public int getBlockPower(BlockFace face) {
          int power = 0;
          BlockRedstoneWire wire = Blocks.REDSTONE_WIRE;
@@ -202,7 +195,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
          if ((face == BlockFace.DOWN || face == BlockFace.SELF) && world.isBlockFacePowered(position.down(), EnumDirection.DOWN)) power = wire.getPower(world, position.down(), power);
          if ((face == BlockFace.UP || face == BlockFace.SELF) && world.isBlockFacePowered(position.up(), EnumDirection.UP)) power = wire.getPower(world, position.up(), power);
          if ((face == BlockFace.EAST || face == BlockFace.SELF) && world.isBlockFacePowered(position.east(), EnumDirection.EAST)) power = wire.getPower(world, position.east(), power);
-@@ -455,7 +462,7 @@ public class CraftBlock implements Block {
+@@ -453,7 +461,7 @@ public class CraftBlock implements Block {
          boolean result = false;
  
          if (block != null && block != Blocks.AIR) {
@@ -211,7 +204,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
              result = true;
          }
  
-@@ -478,14 +485,14 @@ public class CraftBlock implements Block {
+@@ -476,14 +484,14 @@ public class CraftBlock implements Block {
          if (block != Blocks.AIR) {
              IBlockData data = getData0();
              // based on nms.Block.dropNaturally
@@ -229,7 +222,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
  
                          if (tileentityskull.getSkullType() == 3 && tileentityskull.getGameProfile() != null) {
                              nmsStack.setTag(new NBTTagCompound());
-@@ -521,24 +528,24 @@ public class CraftBlock implements Block {
+@@ -519,24 +527,24 @@ public class CraftBlock implements Block {
      }
  
      public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
@@ -259,7 +252,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
      }
  
      @Override
-@@ -547,7 +554,7 @@ public class CraftBlock implements Block {
+@@ -545,7 +553,7 @@ public class CraftBlock implements Block {
          if(nms == null) return null;
  
          MovingObjectPosition hit = nms.a(getData0(),
@@ -268,7 +261,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
                                           position,
                                           new Vec3D(start.getX(), start.getY(), start.getZ()),
                                           new Vec3D(end.getX(), end.getY(), end.getZ()));
-@@ -567,11 +574,11 @@ public class CraftBlock implements Block {
+@@ -565,11 +573,11 @@ public class CraftBlock implements Block {
      }
  
      public net.minecraft.server.Chunk nmsChunk() {
@@ -286,35 +279,18 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/ma
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
-@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.block;
+@@ -16,24 +16,25 @@ import org.bukkit.plugin.Plugin;
  
  import java.util.List;
  import java.util.Objects;
 +import java.util.UUID;
-+import javax.annotation.Nullable;
  
- import net.minecraft.server.BlockPosition;
+ import net.minecraft.server.EnumDirection;
  import net.minecraft.server.IBlockData;
-@@ -10,15 +12,13 @@ import org.bukkit.Bukkit;
- import org.bukkit.Chunk;
- import org.bukkit.Location;
- import org.bukkit.Material;
--import org.bukkit.World;
- import org.bukkit.block.Block;
-+import org.bukkit.craftbukkit.CraftWorld;
- import org.bukkit.geometry.BlockRotoflection;
- import org.bukkit.geometry.BlockReflection;
- import org.bukkit.geometry.BlockRotation;
- import org.bukkit.block.BlockState;
- import org.bukkit.geometry.CoarseTransform;
--import org.bukkit.craftbukkit.CraftChunk;
--import org.bukkit.craftbukkit.CraftWorld;
- import org.bukkit.craftbukkit.util.CraftMagicNumbers;
- import org.bukkit.material.Attachable;
- import org.bukkit.material.MaterialData;
-@@ -27,18 +27,16 @@ import org.bukkit.plugin.Plugin;
- import org.bukkit.geometry.Vec3;
+ import net.minecraft.server.TileEntity;
  
++import javax.annotation.Nullable;
++
  public class CraftBlockState implements BlockState {
 -    private final CraftWorld world;
 +    private final @Nullable UUID worldId;
@@ -333,7 +309,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
          this.flag = 3;
  
          createData(block.getData());
-@@ -50,10 +48,9 @@ public class CraftBlockState implements BlockState {
+@@ -45,10 +46,9 @@ public class CraftBlockState implements BlockState {
      }
  
      public CraftBlockState(Material material) {
@@ -345,7 +321,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
      }
  
      public static CraftBlockState getBlockState(net.minecraft.server.World world, int x, int y, int z) {
-@@ -64,14 +61,20 @@ public class CraftBlockState implements BlockState {
+@@ -59,14 +59,19 @@ public class CraftBlockState implements BlockState {
          return new CraftBlockState(world.getWorld().getBlockAt(x, y, z), flag);
      }
  
@@ -355,22 +331,21 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
          requirePlaced();
 -        return world;
 +        return worldId;
-+    }
-+
-+    @Override
-+    public @Nullable UUID tryWorldId() {
-+        return worldId;
      }
  
      @Override
 -    public World tryWorld() {
 -        return world;
++    public @Nullable UUID tryWorldId() {
++        return worldId;
++    }
++
 +    public CraftWorld getWorld() {
 +        return (CraftWorld) Bukkit.world(getWorldId());
      }
  
      @Override
-@@ -101,7 +104,7 @@ public class CraftBlockState implements BlockState {
+@@ -96,7 +101,7 @@ public class CraftBlockState implements BlockState {
  
      public Chunk getChunk() {
          requirePlaced();
@@ -379,7 +354,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
      }
  
      @Override
-@@ -194,7 +197,7 @@ public class CraftBlockState implements BlockState {
+@@ -191,7 +196,7 @@ public class CraftBlockState implements BlockState {
          BlockPosition pos = getPosition();
          IBlockData newBlock = CraftMagicNumbers.getBlock(getType()).fromLegacyData(getRawData());
          block.setTypeIdAndData(getTypeId(), getRawData(), applyPhysics);
@@ -388,7 +363,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
                  pos,
                  CraftMagicNumbers.getBlock(block).fromLegacyData(block.getData()),
                  newBlock,
-@@ -203,7 +206,7 @@ public class CraftBlockState implements BlockState {
+@@ -200,7 +205,7 @@ public class CraftBlockState implements BlockState {
  
          // Update levers etc
          if (applyPhysics && getData() instanceof Attachable) {
@@ -397,16 +372,16 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
          }
  
          return true;
-@@ -246,7 +249,7 @@ public class CraftBlockState implements BlockState {
-         if(this == obj) return true;
-         if(!(obj instanceof BlockState)) return false;
+@@ -243,7 +248,7 @@ public class CraftBlockState implements BlockState {
+         if (this == obj) return true;
+         if (!(obj instanceof BlockState)) return false;
          final BlockState that = (BlockState) obj;
 -        return Objects.equals(this.world, that.tryWorld()) &&
 +        return Objects.equals(this.tryWorldId(), that.tryWorldId()) &&
-                Objects.equals(this.position, that.tryPosition()) &&
-                this.type == that.getTypeId() &&
-                Objects.equals(this.data, that.getMaterialData());
-@@ -255,7 +258,7 @@ public class CraftBlockState implements BlockState {
+                 Objects.equals(this.position, that.tryPosition()) &&
+                 this.type == that.getTypeId() &&
+                 Objects.equals(this.data, that.getMaterialData());
+@@ -252,7 +257,7 @@ public class CraftBlockState implements BlockState {
      @Override
      public int hashCode() {
          int hash = 7;
@@ -415,7 +390,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
          hash = 73 * hash + (this.position != null ? this.position.hashCode() : 0);
          hash = 73 * hash + this.type;
          hash = 73 * hash + (this.data != null ? this.data.hashCode() : 0);
-@@ -268,28 +271,28 @@ public class CraftBlockState implements BlockState {
+@@ -265,28 +270,28 @@ public class CraftBlockState implements BlockState {
  
      public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
          requirePlaced();
@@ -449,7 +424,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/s
      }
  
      @Override
-@@ -299,7 +302,7 @@ public class CraftBlockState implements BlockState {
+@@ -296,7 +301,7 @@ public class CraftBlockState implements BlockState {
  
      @Override
      public boolean isPlaced() {

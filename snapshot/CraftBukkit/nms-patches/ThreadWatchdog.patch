@@ -1,7 +1,7 @@
 --- a/net/minecraft/server/ThreadWatchdog.java
 +++ b/net/minecraft/server/ThreadWatchdog.java
 @@ -22,8 +22,17 @@
-         this.c = dedicatedserver.aQ();
+         this.c = dedicatedserver.aT();
      }
  
 +    // SportBukkit start

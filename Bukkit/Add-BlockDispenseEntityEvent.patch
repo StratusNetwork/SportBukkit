@@ -5,7 +5,7 @@ Subject: [PATCH] Add BlockDispenseEntityEvent
 
 diff --git a/src/main/java/org/bukkit/event/block/BlockDispenseEntityEvent.java b/src/main/java/org/bukkit/event/block/BlockDispenseEntityEvent.java
 new file mode 100644
-index 0000000..9d2227e
+index 00000000..9d2227e9
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/block/BlockDispenseEntityEvent.java
 @@ -0,0 +1,49 @@

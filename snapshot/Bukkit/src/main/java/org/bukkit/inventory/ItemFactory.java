@@ -1,9 +1,5 @@
 package org.bukkit.inventory;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -13,6 +9,10 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An instance of the ItemFactory can be obtained with {@link

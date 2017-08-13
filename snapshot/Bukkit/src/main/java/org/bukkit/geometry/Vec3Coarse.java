@@ -50,8 +50,8 @@ public interface Vec3Coarse<V extends Vec3> extends Vec3 {
 
     default V coarseOf(double x, double y, double z) {
         return coarseOf(NumberConversions.floor(x),
-                        NumberConversions.floor(y),
-                        NumberConversions.floor(z));
+                NumberConversions.floor(y),
+                NumberConversions.floor(z));
     }
 
     @Override
@@ -77,25 +77,25 @@ public interface Vec3Coarse<V extends Vec3> extends Vec3 {
     @Override
     default boolean fineLess(Vec3 v) {
         return v.isCoarse() ? coarseLess(v)
-                            : Vec3.super.fineLess(v);
+                : Vec3.super.fineLess(v);
     }
 
     @Override
     default boolean fineLessOrEqual(Vec3 v) {
         return v.isCoarse() ? coarseLessOrEqual(v)
-                            : Vec3.super.fineLessOrEqual(v);
+                : Vec3.super.fineLessOrEqual(v);
     }
 
     @Override
     default boolean fineGreater(Vec3 v) {
         return v.isCoarse() ? coarseGreater(v)
-                            : Vec3.super.fineGreater(v);
+                : Vec3.super.fineGreater(v);
     }
 
     @Override
     default boolean fineGreaterOrEqual(Vec3 v) {
         return v.isCoarse() ? coarseGreaterOrEqual(v)
-                            : Vec3.super.fineGreaterOrEqual(v);
+                : Vec3.super.fineGreaterOrEqual(v);
     }
 
     @Override
@@ -131,29 +131,29 @@ public interface Vec3Coarse<V extends Vec3> extends Vec3 {
     @Override
     default V map(IntUnaryOperator op) {
         return coarseOf(op.applyAsInt(coarseX()),
-                        op.applyAsInt(coarseY()),
-                        op.applyAsInt(coarseZ()));
+                op.applyAsInt(coarseY()),
+                op.applyAsInt(coarseZ()));
     }
 
     @Override
     default V map(DoubleUnaryOperator op) {
         return coarseOf(op.applyAsDouble(fineX()),
-                        op.applyAsDouble(fineY()),
-                        op.applyAsDouble(fineZ()));
+                op.applyAsDouble(fineY()),
+                op.applyAsDouble(fineZ()));
     }
 
     @Override
     default V map(Vec3 v, IntBinaryOperator op) {
         return coarseOf(op.applyAsInt(coarseX(), v.coarseX()),
-                        op.applyAsInt(coarseY(), v.coarseY()),
-                        op.applyAsInt(coarseZ(), v.coarseZ()));
+                op.applyAsInt(coarseY(), v.coarseY()),
+                op.applyAsInt(coarseZ(), v.coarseZ()));
     }
 
     @Override
     default V map(Vec3 v, DoubleBinaryOperator op) {
         return coarseOf(op.applyAsDouble(fineX(), v.fineX()),
-                        op.applyAsDouble(fineY(), v.fineY()),
-                        op.applyAsDouble(fineZ(), v.fineZ()));
+                op.applyAsDouble(fineY(), v.fineY()),
+                op.applyAsDouble(fineZ(), v.fineZ()));
     }
 
     @Override
@@ -170,8 +170,8 @@ public interface Vec3Coarse<V extends Vec3> extends Vec3 {
     default V clamped(Vec3 min, Vec3 max) {
         Preconditions.checkArgument(min.coarseLessOrEqual(max));
         return coarseOf(NumberConversions.clamp(coarseX(), min.coarseX(), max.coarseX()),
-                        NumberConversions.clamp(coarseY(), min.coarseY(), max.coarseY()),
-                        NumberConversions.clamp(coarseZ(), min.coarseZ(), max.coarseZ()));
+                NumberConversions.clamp(coarseY(), min.coarseY(), max.coarseY()),
+                NumberConversions.clamp(coarseZ(), min.coarseZ(), max.coarseZ()));
     }
 
     @Override
@@ -182,15 +182,15 @@ public interface Vec3Coarse<V extends Vec3> extends Vec3 {
     @Override
     default V plus(int x, int y, int z) {
         return x == 0 && y == 0 && z == 0
-               ? copy()
-               : coarseOf(coarseX() + x, coarseY() + y, coarseZ() + z);
+                ? copy()
+                : coarseOf(coarseX() + x, coarseY() + y, coarseZ() + z);
     }
 
     @Override
     default V plus(double x, double y, double z) {
         return x == 0D && y == 0D && z == 0D
-               ? copy()
-               : coarseOf(coarseX() + x, coarseY() + y, coarseZ() + z);
+                ? copy()
+                : coarseOf(coarseX() + x, coarseY() + y, coarseZ() + z);
     }
 
     @Override
@@ -243,7 +243,7 @@ public interface Vec3Coarse<V extends Vec3> extends Vec3 {
     default V times(Vec3 v) {
         if(v.isZero() || isCoarseZero()) return coarseZero();
         return v.isFine() ? coarseOf(coarseX() * v.fineX(), coarseY() * v.fineY(), coarseZ() * v.fineZ())
-                          : coarseOf(coarseX() * v.coarseX(), coarseY() * v.coarseY(), coarseZ() * v.coarseZ());
+                : coarseOf(coarseX() * v.coarseX(), coarseY() * v.coarseY(), coarseZ() * v.coarseZ());
     }
 
     @Override
@@ -262,6 +262,6 @@ public interface Vec3Coarse<V extends Vec3> extends Vec3 {
     @Override
     default V over(Vec3 v) {
         return v.isFine() ? coarseOf(coarseX() / v.fineX(), coarseY() / v.fineY(), coarseZ() / v.fineZ())
-                          : coarseOf(coarseX() / v.coarseX(), coarseY() / v.coarseY(), coarseZ() / v.coarseZ());
+                : coarseOf(coarseX() / v.coarseX(), coarseY() / v.coarseY(), coarseZ() / v.coarseZ());
     }
 }

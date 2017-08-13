@@ -26,8 +26,12 @@
  
      public EntityTrackerEntry(Entity entity, int i, int j, int k, boolean flag) {
          this.tracker = entity;
-@@ -79,13 +89,14 @@
-             this.broadcast(new PacketPlayOutMount(this.tracker));
+@@ -76,16 +86,17 @@
+ 
+         if (!list1.equals(this.w)) {
+             this.w = list1;
+-            this.broadcast(new PacketPlayOutMount(this.tracker));
++            this.broadcastIncludingSelf(new PacketPlayOutMount(this.tracker)); // CraftBukkit
          }
  
 -        if (this.tracker instanceof EntityItemFrame && this.a % 10 == 0) {

@@ -1,22 +1,124 @@
 --- a/net/minecraft/server/EntityHorseChestedAbstract.java
 +++ b/net/minecraft/server/EntityHorseChestedAbstract.java
-@@ -1,8 +1,18 @@
- package net.minecraft.server;
+@@ -16,7 +16,11 @@
  
-+// SportBukkit start
-+import com.google.common.collect.Range;
-+import org.bukkit.craftbukkit.protocol.MetadataKey;
-+// SportBukkit end
+     protected void initAttributes() {
+         super.initAttributes();
++<<<<<<< HEAD
+         this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dM());
++=======
++        this.getAttributeInstance(GenericAttributes.maxHealth).setValue((double) this.dK());
++>>>>>>> Import necessary NMS classes
+         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.17499999701976776D);
+         this.getAttributeInstance(EntityHorseChestedAbstract.attributeJumpStrength).setValue(0.5D);
+     }
+@@ -29,6 +33,7 @@
+         this.datawatcher.set(EntityHorseChestedAbstract.bH, Boolean.valueOf(flag));
+     }
+ 
++<<<<<<< HEAD
+     protected int dn() {
+         return this.isCarryingChest() ? 17 : super.dn();
+     }
+@@ -39,11 +44,27 @@
+ 
+     protected SoundEffect do_() {
+         super.do_();
++=======
++    protected int dl() {
++        return this.isCarryingChest() ? 17 : super.dl();
++    }
 +
- public abstract class EntityHorseChestedAbstract extends EntityHorseAbstract {
++    public double aE() {
++        return super.aE() - 0.25D;
++    }
++
++    protected SoundEffect dm() {
++        super.dm();
++>>>>>>> Import necessary NMS classes
+         return SoundEffects.aD;
+     }
  
--    private static final DataWatcherObject<Boolean> bG = DataWatcher.a(EntityHorseChestedAbstract.class, DataWatcherRegistry.h);
-+    // SportBukkit start
-+    private static final DataWatcherObject<Boolean> bG = MetadataKey
-+        .builder(EntityHorseChestedAbstract.class, DataWatcherRegistry.h)
-+        .id(Range.atLeast(301), 15)
-+        .build();
-+    // SportBukkit end
+     public void die(DamageSource damagesource) {
++<<<<<<< HEAD
++        // super.die(damagesource); // CraftBukkit - moved down
++=======
+         super.die(damagesource);
++>>>>>>> Import necessary NMS classes
+         if (this.isCarryingChest()) {
+             if (!this.world.isClientSide) {
+                 this.a(Item.getItemOf(Blocks.CHEST), 1);
+@@ -51,6 +72,10 @@
  
-     public EntityHorseChestedAbstract(World world) {
-         super(world);
+             this.setCarryingChest(false);
+         }
++<<<<<<< HEAD
++        super.die(damagesource); // CraftBukkit
++=======
++>>>>>>> Import necessary NMS classes
+ 
+     }
+ 
+@@ -100,7 +125,11 @@
+             }
+         }
+ 
++<<<<<<< HEAD
+         this.dD();
++=======
++        this.dB();
++>>>>>>> Import necessary NMS classes
+     }
+ 
+     public boolean c(int i, ItemStack itemstack) {
+@@ -146,18 +175,30 @@
+                         return true;
+                     }
+ 
++<<<<<<< HEAD
+                     this.dK();
++=======
++                    this.dI();
++>>>>>>> Import necessary NMS classes
+                     return true;
+                 }
+ 
+                 if (!flag && !this.isCarryingChest() && itemstack.getItem() == Item.getItemOf(Blocks.CHEST)) {
+                     this.setCarryingChest(true);
++<<<<<<< HEAD
+                     this.dp();
++=======
++                    this.dn();
++>>>>>>> Import necessary NMS classes
+                     flag = true;
+                     this.loadChest();
+                 }
+ 
++<<<<<<< HEAD
+                 if (!flag && !this.isBaby() && !this.dG() && itemstack.getItem() == Items.SADDLE) {
++=======
++                if (!flag && !this.isBaby() && !this.dE() && itemstack.getItem() == Items.SADDLE) {
++>>>>>>> Import necessary NMS classes
+                     this.c(entityhuman);
+                     return true;
+                 }
+@@ -182,11 +223,19 @@
+         }
+     }
+ 
++<<<<<<< HEAD
+     protected void dp() {
+         this.a(SoundEffects.aE, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+     }
+ 
+     public int dt() {
++=======
++    protected void dn() {
++        this.a(SoundEffects.aE, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
++    }
++
++    public int dr() {
++>>>>>>> Import necessary NMS classes
+         return 5;
+     }
+ }

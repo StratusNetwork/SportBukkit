@@ -6,7 +6,7 @@ Subject: [PATCH] Add API to disable potion particles
 diff --git a/src/main/java/org/bukkit/entity/LivingEntity.java b/src/main/java/org/bukkit/entity/LivingEntity.java
 --- a/src/main/java/org/bukkit/entity/LivingEntity.java
 +++ b/src/main/java/org/bukkit/entity/LivingEntity.java
-@@ -302,6 +302,13 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
+@@ -236,6 +236,13 @@ public interface LivingEntity extends Attributable, Entity, Damageable, Projecti
      public Collection<PotionEffect> getActivePotionEffects();
  
      /**

@@ -18,7 +18,7 @@ public class CraftKey implements Key {
 
     @Override
     public String id() {
-        return handle.a();
+        return handle.getKey();
     }
 
     @Override

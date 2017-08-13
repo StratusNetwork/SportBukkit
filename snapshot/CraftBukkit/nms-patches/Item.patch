@@ -1,43 +1,115 @@
 --- a/net/minecraft/server/Item.java
 +++ b/net/minecraft/server/Item.java
-@@ -32,8 +32,17 @@
-     private Item craftingResult;
+@@ -33,7 +33,7 @@
      private String name;
  
-+    // SportBukkit start - minimum protocol version
-+    private int proto;
-+    public int proto() { return proto; }
-+    public Item proto(int p) {
-+        this.proto = p;
-+        return this;
-+    }
-+    // SportBukkit end
-+
      public static int getId(Item item) {
 -        return item == null ? 0 : Item.REGISTRY.a((Object) item);
 +        return item == null ? 0 : Item.REGISTRY.a(item); // SportBukkit - fix decomp error
      }
  
      public static Item getById(int i) {
-@@ -508,7 +517,7 @@
-         a(Blocks.dy, (Item) (new ItemShulkerBox(Blocks.dy)));
-         a(Blocks.dz, (Item) (new ItemShulkerBox(Blocks.dz)));
-         a(Blocks.dA, (Item) (new ItemShulkerBox(Blocks.dA)));
--        b(Blocks.STRUCTURE_BLOCK);
-+        /* b(Blocks.STRUCTURE_BLOCK); */ a(Blocks.STRUCTURE_BLOCK, new ItemBlock(Blocks.STRUCTURE_BLOCK).proto(201)); // SportBukkit - proto (block was in 1.9, but not an item until 1.10)
-         a(256, "iron_shovel", (new ItemSpade(Item.EnumToolMaterial.IRON)).c("shovelIron"));
-         a(257, "iron_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.IRON)).c("pickaxeIron"));
-         a(258, "iron_axe", (new ItemAxe(Item.EnumToolMaterial.IRON)).c("hatchetIron"));
-@@ -706,9 +715,9 @@
-         a(446, "jungle_boat", new ItemBoat(EntityBoat.EnumBoatType.JUNGLE));
-         a(447, "acacia_boat", new ItemBoat(EntityBoat.EnumBoatType.ACACIA));
-         a(448, "dark_oak_boat", new ItemBoat(EntityBoat.EnumBoatType.DARK_OAK));
--        a(449, "totem_of_undying", (new Item()).c("totem").d(1).a(CreativeModeTab.j));
--        a(450, "shulker_shell", (new Item()).c("shulkerShell").a(CreativeModeTab.l));
--        a(452, "iron_nugget", (new Item()).c("ironNugget").a(CreativeModeTab.l));
-+        a(449, "totem_of_undying", (new Item()).c("totem").d(1).a(CreativeModeTab.j).proto(307)); // SportBukkit - proto
-+        a(450, "shulker_shell", (new Item()).c("shulkerShell").a(CreativeModeTab.l).proto(307)); // SportBukkit - proto
-+        a(452, "iron_nugget", (new Item()).c("ironNugget").a(CreativeModeTab.l).proto(316)); // SportBukkit - proto
-         a(2256, "record_13", (new ItemRecord("13", SoundEffects.fa)).c("record"));
-         a(2257, "record_cat", (new ItemRecord("cat", SoundEffects.fc)).c("record"));
-         a(2258, "record_blocks", (new ItemRecord("blocks", SoundEffects.fb)).c("record"));
+@@ -239,24 +239,6 @@
+         return 0;
+     }
+ 
+-    public void a(CreativeModeTab creativemodetab, NonNullList<ItemStack> nonnulllist) {
+-        if (this.a(creativemodetab)) {
+-            nonnulllist.add(new ItemStack(this));
+-        }
+-
+-    }
+-
+-    protected boolean a(CreativeModeTab creativemodetab) {
+-        CreativeModeTab creativemodetab1 = this.b();
+-
+-        return creativemodetab1 != null && (creativemodetab == CreativeModeTab.g || creativemodetab == creativemodetab1);
+-    }
+-
+-    @Nullable
+-    public CreativeModeTab b() {
+-        return this.n;
+-    }
+-
+     public Item b(CreativeModeTab creativemodetab) {
+         this.n = creativemodetab;
+         return this;
+@@ -545,9 +527,9 @@
+         a(Blocks.dR, (new ItemCloth(Blocks.dR)).c("concrete"));
+         a(Blocks.dS, (new ItemCloth(Blocks.dS)).c("concrete_powder"));
+         b(Blocks.STRUCTURE_BLOCK);
+-        a(256, "iron_shovel", (new ItemSpade(Item.EnumToolMaterial.IRON)).c("shovelIron"));
+-        a(257, "iron_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.IRON)).c("pickaxeIron"));
+-        a(258, "iron_axe", (new ItemAxe(Item.EnumToolMaterial.IRON)).c("hatchetIron"));
++        a(256, "iron_shovel", (new ItemSpade(EnumToolMaterial.IRON)).c("shovelIron"));
++        a(257, "iron_pickaxe", (new ItemPickaxe(EnumToolMaterial.IRON)).c("pickaxeIron"));
++        a(258, "iron_axe", (new ItemAxe(EnumToolMaterial.IRON)).c("hatchetIron"));
+         a(259, "flint_and_steel", (new ItemFlintAndSteel()).c("flintAndSteel"));
+         a(260, "apple", (new ItemFood(4, 0.3F, false)).c("apple"));
+         a(261, "bow", (new ItemBow()).c("bow"));
+@@ -556,34 +538,34 @@
+         a(264, "diamond", (new Item()).c("diamond").b(CreativeModeTab.l));
+         a(265, "iron_ingot", (new Item()).c("ingotIron").b(CreativeModeTab.l));
+         a(266, "gold_ingot", (new Item()).c("ingotGold").b(CreativeModeTab.l));
+-        a(267, "iron_sword", (new ItemSword(Item.EnumToolMaterial.IRON)).c("swordIron"));
+-        a(268, "wooden_sword", (new ItemSword(Item.EnumToolMaterial.WOOD)).c("swordWood"));
+-        a(269, "wooden_shovel", (new ItemSpade(Item.EnumToolMaterial.WOOD)).c("shovelWood"));
+-        a(270, "wooden_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.WOOD)).c("pickaxeWood"));
+-        a(271, "wooden_axe", (new ItemAxe(Item.EnumToolMaterial.WOOD)).c("hatchetWood"));
+-        a(272, "stone_sword", (new ItemSword(Item.EnumToolMaterial.STONE)).c("swordStone"));
+-        a(273, "stone_shovel", (new ItemSpade(Item.EnumToolMaterial.STONE)).c("shovelStone"));
+-        a(274, "stone_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.STONE)).c("pickaxeStone"));
+-        a(275, "stone_axe", (new ItemAxe(Item.EnumToolMaterial.STONE)).c("hatchetStone"));
+-        a(276, "diamond_sword", (new ItemSword(Item.EnumToolMaterial.DIAMOND)).c("swordDiamond"));
+-        a(277, "diamond_shovel", (new ItemSpade(Item.EnumToolMaterial.DIAMOND)).c("shovelDiamond"));
+-        a(278, "diamond_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.DIAMOND)).c("pickaxeDiamond"));
+-        a(279, "diamond_axe", (new ItemAxe(Item.EnumToolMaterial.DIAMOND)).c("hatchetDiamond"));
++        a(267, "iron_sword", (new ItemSword(EnumToolMaterial.IRON)).c("swordIron"));
++        a(268, "wooden_sword", (new ItemSword(EnumToolMaterial.WOOD)).c("swordWood"));
++        a(269, "wooden_shovel", (new ItemSpade(EnumToolMaterial.WOOD)).c("shovelWood"));
++        a(270, "wooden_pickaxe", (new ItemPickaxe(EnumToolMaterial.WOOD)).c("pickaxeWood"));
++        a(271, "wooden_axe", (new ItemAxe(EnumToolMaterial.WOOD)).c("hatchetWood"));
++        a(272, "stone_sword", (new ItemSword(EnumToolMaterial.STONE)).c("swordStone"));
++        a(273, "stone_shovel", (new ItemSpade(EnumToolMaterial.STONE)).c("shovelStone"));
++        a(274, "stone_pickaxe", (new ItemPickaxe(EnumToolMaterial.STONE)).c("pickaxeStone"));
++        a(275, "stone_axe", (new ItemAxe(EnumToolMaterial.STONE)).c("hatchetStone"));
++        a(276, "diamond_sword", (new ItemSword(EnumToolMaterial.DIAMOND)).c("swordDiamond"));
++        a(277, "diamond_shovel", (new ItemSpade(EnumToolMaterial.DIAMOND)).c("shovelDiamond"));
++        a(278, "diamond_pickaxe", (new ItemPickaxe(EnumToolMaterial.DIAMOND)).c("pickaxeDiamond"));
++        a(279, "diamond_axe", (new ItemAxe(EnumToolMaterial.DIAMOND)).c("hatchetDiamond"));
+         a(280, "stick", (new Item()).n().c("stick").b(CreativeModeTab.l));
+         a(281, "bowl", (new Item()).c("bowl").b(CreativeModeTab.l));
+         a(282, "mushroom_stew", (new ItemSoup(6)).c("mushroomStew"));
+-        a(283, "golden_sword", (new ItemSword(Item.EnumToolMaterial.GOLD)).c("swordGold"));
+-        a(284, "golden_shovel", (new ItemSpade(Item.EnumToolMaterial.GOLD)).c("shovelGold"));
+-        a(285, "golden_pickaxe", (new ItemPickaxe(Item.EnumToolMaterial.GOLD)).c("pickaxeGold"));
+-        a(286, "golden_axe", (new ItemAxe(Item.EnumToolMaterial.GOLD)).c("hatchetGold"));
++        a(283, "golden_sword", (new ItemSword(EnumToolMaterial.GOLD)).c("swordGold"));
++        a(284, "golden_shovel", (new ItemSpade(EnumToolMaterial.GOLD)).c("shovelGold"));
++        a(285, "golden_pickaxe", (new ItemPickaxe(EnumToolMaterial.GOLD)).c("pickaxeGold"));
++        a(286, "golden_axe", (new ItemAxe(EnumToolMaterial.GOLD)).c("hatchetGold"));
+         a(287, "string", (new ItemReed(Blocks.TRIPWIRE)).c("string").b(CreativeModeTab.l));
+         a(288, "feather", (new Item()).c("feather").b(CreativeModeTab.l));
+         a(289, "gunpowder", (new Item()).c("sulphur").b(CreativeModeTab.l));
+-        a(290, "wooden_hoe", (new ItemHoe(Item.EnumToolMaterial.WOOD)).c("hoeWood"));
+-        a(291, "stone_hoe", (new ItemHoe(Item.EnumToolMaterial.STONE)).c("hoeStone"));
+-        a(292, "iron_hoe", (new ItemHoe(Item.EnumToolMaterial.IRON)).c("hoeIron"));
+-        a(293, "diamond_hoe", (new ItemHoe(Item.EnumToolMaterial.DIAMOND)).c("hoeDiamond"));
+-        a(294, "golden_hoe", (new ItemHoe(Item.EnumToolMaterial.GOLD)).c("hoeGold"));
++        a(290, "wooden_hoe", (new ItemHoe(EnumToolMaterial.WOOD)).c("hoeWood"));
++        a(291, "stone_hoe", (new ItemHoe(EnumToolMaterial.STONE)).c("hoeStone"));
++        a(292, "iron_hoe", (new ItemHoe(EnumToolMaterial.IRON)).c("hoeIron"));
++        a(293, "diamond_hoe", (new ItemHoe(EnumToolMaterial.DIAMOND)).c("hoeDiamond"));
++        a(294, "golden_hoe", (new ItemHoe(EnumToolMaterial.GOLD)).c("hoeGold"));
+         a(295, "wheat_seeds", (new ItemSeeds(Blocks.WHEAT, Blocks.FARMLAND)).c("seeds"));
+         a(296, "wheat", (new Item()).c("wheat").b(CreativeModeTab.l));
+         a(297, "bread", (new ItemFood(5, 0.6F, false)).c("bread"));
+@@ -816,7 +798,7 @@
+         }
+ 
+         public Item f() {
+-            return this == Item.EnumToolMaterial.WOOD ? Item.getItemOf(Blocks.PLANKS) : (this == Item.EnumToolMaterial.STONE ? Item.getItemOf(Blocks.COBBLESTONE) : (this == Item.EnumToolMaterial.GOLD ? Items.GOLD_INGOT : (this == Item.EnumToolMaterial.IRON ? Items.IRON_INGOT : (this == Item.EnumToolMaterial.DIAMOND ? Items.DIAMOND : null))));
++            return this == EnumToolMaterial.WOOD ? Item.getItemOf(Blocks.PLANKS) : (this == EnumToolMaterial.STONE ? Item.getItemOf(Blocks.COBBLESTONE) : (this == EnumToolMaterial.GOLD ? Items.GOLD_INGOT : (this == EnumToolMaterial.IRON ? Items.IRON_INGOT : (this == EnumToolMaterial.DIAMOND ? Items.DIAMOND : null))));
+         }
+     }
+ }

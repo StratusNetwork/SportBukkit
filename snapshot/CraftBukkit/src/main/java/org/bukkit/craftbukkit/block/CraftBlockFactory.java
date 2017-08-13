@@ -5,9 +5,9 @@ import net.minecraft.server.EnumBlockRotation;
 import net.minecraft.server.IBlockData;
 import org.bukkit.block.BlockFactory;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
-import org.bukkit.geometry.BlockRotoflection;
 import org.bukkit.geometry.BlockReflection;
 import org.bukkit.geometry.BlockRotation;
+import org.bukkit.geometry.BlockRotoflection;
 import org.bukkit.geometry.CoarseTransform;
 import org.bukkit.material.MaterialData;
 

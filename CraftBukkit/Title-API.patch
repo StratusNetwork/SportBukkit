@@ -24,11 +24,11 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutTitle.java b/src/ma
 +
      public PacketPlayOutTitle() {}
  
-     public PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction packetplayouttitle_enumtitleaction, IChatBaseComponent ichatbasecomponent) {
+     public PacketPlayOutTitle(EnumTitleAction packetplayouttitle_enumtitleaction, IChatBaseComponent ichatbasecomponent) {
 @@ -47,7 +59,13 @@ public class PacketPlayOutTitle implements Packet<PacketListenerPlayOut> {
      public void b(PacketDataSerializer packetdataserializer) throws IOException {
          packetdataserializer.a((Enum) this.a);
-         if (this.a == PacketPlayOutTitle.EnumTitleAction.TITLE || this.a == PacketPlayOutTitle.EnumTitleAction.SUBTITLE || this.a == PacketPlayOutTitle.EnumTitleAction.ACTIONBAR) {
+         if (this.a == EnumTitleAction.TITLE || this.a == EnumTitleAction.SUBTITLE || this.a == EnumTitleAction.ACTIONBAR) {
 -            packetdataserializer.a(this.b);
 +            // SportBukkit start
 +            if(this.components != null) {
@@ -39,11 +39,11 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutTitle.java b/src/ma
 +            // SportBukkit end
          }
  
-         if (this.a == PacketPlayOutTitle.EnumTitleAction.TIMES) {
+         if (this.a == EnumTitleAction.TIMES) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1819,4 +1819,48 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1839,4 +1839,48 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          this.setPlayerListHeaderFooter(header == null ? null : new BaseComponent[]{ header },
                                         footer == null ? null : new BaseComponent[]{ footer });
      }

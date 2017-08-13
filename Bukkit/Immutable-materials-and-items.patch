@@ -5,7 +5,7 @@ Subject: [PATCH] Immutable materials and items
 
 diff --git a/src/main/java/org/bukkit/inventory/ImItemStack.java b/src/main/java/org/bukkit/inventory/ImItemStack.java
 new file mode 100644
-index 0000000..17feb00
+index 00000000..17feb009
 --- /dev/null
 +++ b/src/main/java/org/bukkit/inventory/ImItemStack.java
 @@ -0,0 +1,94 @@
@@ -121,10 +121,10 @@ diff --git a/src/main/java/org/bukkit/inventory/ItemStack.java b/src/main/java/o
          this.amount = amount;
 -        this.durability = damage;
 -        if (data != null) {
-+        if(data == null) {
++        if (data == null) {
 +            this.durability = damage;
 +        } else {
-+            if(damage != 0 && damage != data) {
++            if (damage != 0 && damage != data) {
 +                throw new IllegalArgumentException("Item cannot have both damage and data value");
 +            }
              createData(data);
@@ -185,7 +185,7 @@ diff --git a/src/main/java/org/bukkit/inventory/ItemStack.java b/src/main/java/o
       */
      public void setDurability(final short durability) {
          this.durability = durability;
-+        if(data != null && data.getItemType().getMaxDurability() == 0) {
++        if (data != null && data.getItemType().getMaxDurability() == 0) {
 +            data.setData((byte) durability);
 +        }
      }
@@ -303,12 +303,12 @@ diff --git a/src/main/java/org/bukkit/inventory/ItemStack.java b/src/main/java/o
 +
 +        public ImItemStack immutable() {
 +            return data != null ? ImItemStack.of(data, amount, meta)
-+                                : ImItemStack.of(material, damage, amount, meta);
++                    : ImItemStack.of(material, damage, amount, meta);
 +        }
 +
 +        public ItemStack mutable() {
 +            final ItemStack stack = data != null ? new ItemStack(data, amount)
-+                                                 : new ItemStack(material, amount, damage);
++                    : new ItemStack(material, amount, damage);
 +            if(meta != null) {
 +                stack.setItemMeta(meta);
 +            }
@@ -335,16 +335,16 @@ diff --git a/src/main/java/org/bukkit/material/MaterialData.java b/src/main/java
          this.data = data;
      }
  
-@@ -92,7 +94,7 @@ public class MaterialData implements Cloneable {
-      * @return New ItemStack containing a copy of this MaterialData
+@@ -95,7 +97,7 @@ public class MaterialData implements Cloneable {
       */
+     @Deprecated
      public ItemStack toItemStack() {
 -        return new ItemStack(type, 0, data);
 +        return toItemStack(1);
      }
  
      /**
-@@ -102,7 +104,11 @@ public class MaterialData implements Cloneable {
+@@ -105,7 +107,12 @@ public class MaterialData implements Cloneable {
       * @return New ItemStack containing a copy of this MaterialData
       */
      public ItemStack toItemStack(int amount) {
@@ -354,10 +354,11 @@ diff --git a/src/main/java/org/bukkit/material/MaterialData.java b/src/main/java
 +
 +    public ItemStack.Builder buildItemStack() {
 +        return ItemStack.builder(this);
++
      }
  
      @Override
-@@ -129,9 +135,39 @@ public class MaterialData implements Cloneable {
+@@ -132,9 +139,39 @@ public class MaterialData implements Cloneable {
      @Override
      public MaterialData clone() {
          try {
@@ -401,12 +402,7 @@ diff --git a/src/main/java/org/bukkit/material/MaterialData.java b/src/main/java
 diff --git a/src/test/java/org/bukkit/materials/MaterialDataTest.java b/src/test/java/org/bukkit/materials/MaterialDataTest.java
 --- a/src/test/java/org/bukkit/materials/MaterialDataTest.java
 +++ b/src/test/java/org/bukkit/materials/MaterialDataTest.java
-@@ -10,10 +10,12 @@ import org.bukkit.TreeSpecies;
- import org.bukkit.block.BlockFace;
- import org.bukkit.material.Crops;
- import org.bukkit.material.Comparator;
-+import org.bukkit.material.Crops;
- import org.bukkit.material.Diode;
+@@ -14,6 +14,7 @@ import org.bukkit.material.Diode;
  import org.bukkit.material.Door;
  import org.bukkit.material.Hopper;
  import org.bukkit.material.Leaves;
@@ -414,7 +410,7 @@ diff --git a/src/test/java/org/bukkit/materials/MaterialDataTest.java b/src/test
  import org.bukkit.material.Mushroom;
  import org.bukkit.material.NetherWarts;
  import org.bukkit.material.Sapling;
-@@ -23,6 +25,9 @@ import org.bukkit.material.WoodenStep;
+@@ -23,6 +24,9 @@ import org.bukkit.material.WoodenStep;
  import org.bukkit.material.types.MushroomBlockTexture;
  import org.junit.Test;
  
@@ -424,7 +420,7 @@ diff --git a/src/test/java/org/bukkit/materials/MaterialDataTest.java b/src/test
  public class MaterialDataTest {
  
      @Test
-@@ -430,4 +435,42 @@ public class MaterialDataTest {
+@@ -430,4 +434,43 @@ public class MaterialDataTest {
              }
          }
      }
@@ -466,4 +462,5 @@ diff --git a/src/test/java/org/bukkit/materials/MaterialDataTest.java b/src/test
 +        MaterialData md = new MaterialData(Material.AIR).immutable();
 +        assertTrue(md.clone().isMutable());
 +    }
++
  }

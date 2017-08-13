@@ -6,7 +6,7 @@ Subject: [PATCH] Fix custom scoreboard not being used for various things
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1511,4 +1511,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1674,4 +1674,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end

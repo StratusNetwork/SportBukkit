@@ -68,51 +68,51 @@ public interface MutableVec3Fine<V extends Vec3, M extends MutableVec3Fine<V, M>
     @Override
     default M modify(IntUnaryOperator op) {
         return set(op.applyAsInt(coarseX()),
-                   op.applyAsInt(coarseY()),
-                   op.applyAsInt(coarseZ()));
+                op.applyAsInt(coarseY()),
+                op.applyAsInt(coarseZ()));
     }
 
     @Override
     default M modify(DoubleUnaryOperator op) {
         return set(op.applyAsDouble(fineX()),
-                   op.applyAsDouble(fineY()),
-                   op.applyAsDouble(fineZ()));
+                op.applyAsDouble(fineY()),
+                op.applyAsDouble(fineZ()));
     }
 
     @Override
     default M modify(Vec3 v, IntBinaryOperator op) {
         return set(op.applyAsInt(coarseX(), v.coarseX()),
-                   op.applyAsInt(coarseY(), v.coarseY()),
-                   op.applyAsInt(coarseZ(), v.coarseZ()));
+                op.applyAsInt(coarseY(), v.coarseY()),
+                op.applyAsInt(coarseZ(), v.coarseZ()));
     }
 
     @Override
     default M modify(Vec3 v, DoubleBinaryOperator op) {
         return set(op.applyAsDouble(fineX(), v.fineX()),
-                   op.applyAsDouble(fineY(), v.fineY()),
-                   op.applyAsDouble(fineZ(), v.fineZ()));
+                op.applyAsDouble(fineY(), v.fineY()),
+                op.applyAsDouble(fineZ(), v.fineZ()));
     }
 
     @Override
     default M minimize(Vec3 v) {
         return set(Math.min(fineX(), v.fineX()),
-                   Math.min(fineY(), v.fineY()),
-                   Math.min(fineZ(), v.fineZ()));
+                Math.min(fineY(), v.fineY()),
+                Math.min(fineZ(), v.fineZ()));
     }
 
     @Override
     default M maximize(Vec3 v) {
         return set(Math.max(fineX(), v.fineX()),
-                   Math.max(fineY(), v.fineY()),
-                   Math.max(fineZ(), v.fineZ()));
+                Math.max(fineY(), v.fineY()),
+                Math.max(fineZ(), v.fineZ()));
     }
 
     @Override
     default M clamp(Vec3 min, Vec3 max) {
         Preconditions.checkArgument(min.fineLessOrEqual(max));
         return set(NumberConversions.clamp(fineX(), min.fineX(), max.fineX()),
-                   NumberConversions.clamp(fineY(), min.fineY(), max.fineY()),
-                   NumberConversions.clamp(fineZ(), min.fineZ(), max.fineZ()));
+                NumberConversions.clamp(fineY(), min.fineY(), max.fineY()),
+                NumberConversions.clamp(fineZ(), min.fineZ(), max.fineZ()));
     }
 
     @Override

@@ -6,18 +6,23 @@ Subject: [PATCH] Allow plugins to access player locale
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -28,7 +28,7 @@ import org.bukkit.inventory.MainHand;
+@@ -31,7 +31,7 @@ import org.bukkit.inventory.MainHand;
  public class EntityPlayer extends EntityHuman implements ICrafting {
  
-     private static final Logger bR = LogManager.getLogger();
--    private String locale = "en_US";
+     private static final Logger bV = LogManager.getLogger();
+-    public String locale = "en_us"; // CraftBukkit - lowercase
 +    public String locale = null; // SportBukkit - make public and default to null
      public PlayerConnection playerConnection;
      public final MinecraftServer server;
      public final PlayerInteractManager playerInteractManager;
-@@ -1062,7 +1062,15 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1214,12 +1214,16 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+             PlayerChangedMainHandEvent event = new PlayerChangedMainHandEvent(getBukkitEntity(), getMainHand() == EnumMainHand.LEFT ? MainHand.LEFT : MainHand.RIGHT);
              this.server.server.getPluginManager().callEvent(event);
          }
+-        if (!this.locale.equals(packetplayinsettings.a())) {
+-            PlayerLocaleChangeEvent event = new PlayerLocaleChangeEvent(getBukkitEntity(), packetplayinsettings.a());
+-            this.server.server.getPluginManager().callEvent(event);
+-        }
          // CraftBukkit end
 +        String oldLocale = this.locale; // SportBukkit
          this.locale = packetplayinsettings.a();
@@ -28,32 +33,38 @@ diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/jav
 +        }
 +        // SportBukkit end
 +
-         this.cg = packetplayinsettings.c();
-         this.ch = packetplayinsettings.d();
-         this.getDataWatcher().set(EntityPlayer.bq, Byte.valueOf((byte) packetplayinsettings.e()));
+         this.cl = packetplayinsettings.c();
+         this.cm = packetplayinsettings.d();
+         this.getDataWatcher().set(EntityPlayer.br, Byte.valueOf((byte) packetplayinsettings.e()));
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1492,4 +1492,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
-     public String getHostname() {
-         return getHandle().hostname;
+@@ -1511,12 +1511,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      }
+ 
+     @Override
++    public String getHostname() {
++        return getHandle().hostname;
++    }
 +
 +    @Override
-+    public String getLocale() {
+     public String getLocale() {
+-        return getHandle().locale;
 +        final String locale = getHandle().locale;
 +        return locale != null ? locale : "en_US";
-+    }
-+
-+    @Override
+     }
+ 
+     @Override
+-    public String getHostname() {
+-        return getHandle().hostname;
 +    public void setLocale(String locale) {
 +        getHandle().locale = locale;
-+    }
+     }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 --- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
-@@ -655,7 +655,7 @@ public class CraftEventFactory {
+@@ -659,7 +659,7 @@ public class CraftEventFactory {
          if (!event.isCancelled()) {
              state.update(true);
          }
@@ -62,7 +73,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b
          return !event.isCancelled();
      }
  
-@@ -1050,4 +1050,11 @@ public class CraftEventFactory {
+@@ -1064,4 +1064,11 @@ public class CraftEventFactory {
  
          return !event.isCancelled();
      }

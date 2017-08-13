@@ -107,29 +107,29 @@ public interface Vec3Fine<V extends Vec3> extends Vec3 {
     @Override
     default V map(IntUnaryOperator op) {
         return fineOf(op.applyAsInt(coarseX()),
-                      op.applyAsInt(coarseY()),
-                      op.applyAsInt(coarseZ()));
+                op.applyAsInt(coarseY()),
+                op.applyAsInt(coarseZ()));
     }
 
     @Override
     default V map(DoubleUnaryOperator op) {
         return fineOf(op.applyAsDouble(fineX()),
-                      op.applyAsDouble(fineY()),
-                      op.applyAsDouble(fineZ()));
+                op.applyAsDouble(fineY()),
+                op.applyAsDouble(fineZ()));
     }
 
     @Override
     default V map(Vec3 v, IntBinaryOperator op) {
         return fineOf(op.applyAsInt(coarseX(), v.coarseX()),
-                      op.applyAsInt(coarseY(), v.coarseY()),
-                      op.applyAsInt(coarseZ(), v.coarseZ()));
+                op.applyAsInt(coarseY(), v.coarseY()),
+                op.applyAsInt(coarseZ(), v.coarseZ()));
     }
 
     @Override
     default V map(Vec3 v, DoubleBinaryOperator op) {
         return fineOf(op.applyAsDouble(fineX(), v.fineX()),
-                      op.applyAsDouble(fineY(), v.fineY()),
-                      op.applyAsDouble(fineZ(), v.fineZ()));
+                op.applyAsDouble(fineY(), v.fineY()),
+                op.applyAsDouble(fineZ(), v.fineZ()));
     }
 
     @Override
@@ -146,8 +146,8 @@ public interface Vec3Fine<V extends Vec3> extends Vec3 {
     default V clamped(Vec3 min, Vec3 max) {
         Preconditions.checkArgument(min.fineLessOrEqual(max));
         return fineOf(NumberConversions.clamp(fineX(), min.fineX(), max.fineX()),
-                      NumberConversions.clamp(fineY(), min.fineY(), max.fineY()),
-                      NumberConversions.clamp(fineZ(), min.fineZ(), max.fineZ()));
+                NumberConversions.clamp(fineY(), min.fineY(), max.fineY()),
+                NumberConversions.clamp(fineZ(), min.fineZ(), max.fineZ()));
     }
 
     @Override

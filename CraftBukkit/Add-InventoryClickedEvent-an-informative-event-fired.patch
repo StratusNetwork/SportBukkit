@@ -7,7 +7,7 @@ Subject: [PATCH] Add InventoryClickedEvent, an informative event fired after
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1830,9 +1830,11 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1864,9 +1864,11 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                                  case NOTHING:
                                      break;
                              }

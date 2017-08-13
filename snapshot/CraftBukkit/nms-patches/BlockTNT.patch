@@ -78,17 +78,18 @@
 +                // SportBukkit end
 +
                  world.addEntity(entitytntprimed);
-                 world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.gV, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                 world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.hW, SoundCategory.BLOCKS, 1.0F, 1.0F);
              }
 @@ -56,8 +93,14 @@
          ItemStack itemstack = entityhuman.b(enumhand);
  
          if (!itemstack.isEmpty() && (itemstack.getItem() == Items.FLINT_AND_STEEL || itemstack.getItem() == Items.FIRE_CHARGE)) {
-+            try { primer = entityhuman; // SportBukkit
-             this.a(world, blockposition, iblockdata.set(BlockTNT.EXPLODE, Boolean.valueOf(true)), (EntityLiving) entityhuman);
+-            this.a(world, blockposition, iblockdata.set(BlockTNT.EXPLODE, Boolean.valueOf(true)), (EntityLiving) entityhuman);
 -            world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 11);
++            try { primer = entityhuman; // SportBukkit
++                this.a(world, blockposition, iblockdata.set(BlockTNT.EXPLODE, Boolean.valueOf(true)), (EntityLiving) entityhuman);
++                // SportBukkit start - don't remove block if TNT priming is cancelled
 +            } finally { primer = null; } // SportBukkit
-+            // SportBukkit start - don't remove block if TNT priming is cancelled
 +            if (isPrimed) {
 +                world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 11);
 +            }
@@ -96,7 +97,7 @@
              if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
                  itemstack.damage(1, entityhuman);
              } else if (!entityhuman.abilities.canInstantlyBuild) {
-@@ -75,8 +118,19 @@
+@@ -75,8 +118,17 @@
              EntityArrow entityarrow = (EntityArrow) entity;
  
              if (entityarrow.isBurning()) {
@@ -105,10 +106,8 @@
 +                    return;
 +                }
 +                // CraftBukkit end
-+                try { primer = entityarrow; // SportBukkit
                  this.a(world, blockposition, world.getType(blockposition).set(BlockTNT.EXPLODE, Boolean.valueOf(true)), entityarrow.shooter instanceof EntityLiving ? (EntityLiving) entityarrow.shooter : null);
 -                world.setAir(blockposition);
-+                } finally { primer = null; } // SportBukkit
 +                // SportBukkit start - don't remove block if TNT priming is cancelled
 +                if (isPrimed) {
 +                    world.setAir(blockposition);

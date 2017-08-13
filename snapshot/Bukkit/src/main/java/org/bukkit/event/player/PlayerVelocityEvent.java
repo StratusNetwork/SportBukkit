@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.util.Vector;
 
 /**
- * Called when an impulse is applied to a player.
+ * Called when the velocity of a player changes.
  */
 public class PlayerVelocityEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
@@ -14,7 +14,7 @@ public class PlayerVelocityEvent extends PlayerEvent implements Cancellable {
     private final Vector velocity;
     private final boolean impulse;
 
-    public PlayerVelocityEvent(final Player player, Vector velocity, boolean impulse) {
+    public PlayerVelocityEvent(final Player player, final Vector velocity, boolean impulse) {
         super(player);
         this.velocity = velocity;
         this.impulse = impulse;

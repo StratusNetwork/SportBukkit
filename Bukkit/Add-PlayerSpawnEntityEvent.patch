@@ -5,7 +5,7 @@ Subject: [PATCH] Add PlayerSpawnEntityEvent
 
 diff --git a/src/main/java/org/bukkit/event/player/PlayerSpawnEntityEvent.java b/src/main/java/org/bukkit/event/player/PlayerSpawnEntityEvent.java
 new file mode 100644
-index 0000000..1fdc6ca
+index 00000000..1fdc6cad
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerSpawnEntityEvent.java
 @@ -0,0 +1,78 @@

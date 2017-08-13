@@ -1,13 +1,17 @@
 --- a/net/minecraft/server/Container.java
 +++ b/net/minecraft/server/Container.java
-@@ -7,10 +7,29 @@
- import java.util.Set;
+@@ -2,15 +2,30 @@
+ 
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Sets;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Set;
++
++import java.util.*;
  import javax.annotation.Nullable;
  
 +// CraftBukkit start
-+import java.util.ArrayList;
-+import java.util.HashMap;
-+import java.util.Map;
 +import org.bukkit.craftbukkit.inventory.CraftInventory;
 +import org.bukkit.craftbukkit.inventory.CraftItemStack;
 +import org.bukkit.event.Event.Result;
@@ -31,7 +35,7 @@
      public int windowId;
      private int dragType = -1;
      private int g;
-@@ -18,6 +37,18 @@
+@@ -18,6 +33,18 @@
      protected List<ICrafting> listeners = Lists.newArrayList();
      private final Set<EntityHuman> i = Sets.newHashSet();
  
@@ -50,7 +54,7 @@
      public Container() {}
  
      protected Slot a(Slot slot) {
-@@ -128,6 +159,7 @@
+@@ -128,6 +155,7 @@
                      l = playerinventory.getCarried().getCount();
                      Iterator iterator = this.h.iterator();
  
@@ -58,7 +62,7 @@
                      while (iterator.hasNext()) {
                          Slot slot1 = (Slot) iterator.next();
                          ItemStack itemstack3 = playerinventory.getCarried();
-@@ -143,12 +175,48 @@
+@@ -143,12 +171,48 @@
                              }
  
                              l -= itemstack4.getCount() - j1;
@@ -110,7 +114,7 @@
                  }
  
                  this.d();
-@@ -165,8 +233,11 @@
+@@ -165,8 +229,11 @@
                  if (i == -999) {
                      if (!playerinventory.getCarried().isEmpty()) {
                          if (j == 0) {
@@ -123,7 +127,7 @@
                          }
  
                          if (j == 1) {
-@@ -258,6 +329,15 @@
+@@ -254,6 +321,15 @@
                          }
  
                          slot2.f();
@@ -139,3 +143,11 @@
                      }
                  }
              } else if (inventoryclicktype == InventoryClickType.SWAP && j >= 0 && j < 9) {
+@@ -564,6 +640,7 @@
+                 inventorycraftresult.a(irecipe);
+                 itemstack = irecipe.craftItem(inventorycrafting);
+             }
++            itemstack = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(inventorycrafting, itemstack, getBukkitView(), false); // CraftBukkit
+ 
+             inventorycraftresult.setItem(0, itemstack);
+             entityplayer.playerConnection.sendPacket(new PacketPlayOutSetSlot(this.windowId, 0, itemstack));

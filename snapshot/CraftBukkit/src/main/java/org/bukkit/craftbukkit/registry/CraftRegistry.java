@@ -1,10 +1,5 @@
 package org.bukkit.craftbukkit.registry;
 
-import java.util.AbstractSet;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
-
 import com.google.common.base.Function;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -15,6 +10,11 @@ import net.minecraft.server.RegistryMaterials;
 import org.bukkit.registry.Key;
 import org.bukkit.registry.Registerable;
 import org.bukkit.registry.Registry;
+
+import java.util.AbstractSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 public abstract class CraftRegistry<V extends Registerable, M> implements Registry<V> {
 

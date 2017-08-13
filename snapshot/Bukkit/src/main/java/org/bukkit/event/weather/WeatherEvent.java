@@ -1,7 +1,7 @@
 package org.bukkit.event.weather;
 
-import org.bukkit.World;
 import org.bukkit.Physical;
+import org.bukkit.World;
 import org.bukkit.event.Event;
 
 /**

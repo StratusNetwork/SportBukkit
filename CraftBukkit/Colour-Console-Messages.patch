@@ -6,7 +6,7 @@ Subject: [PATCH] Colour Console Messages
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1048,7 +1048,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -1053,7 +1053,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
      }
  
      public void sendMessage(IChatBaseComponent ichatbasecomponent) {

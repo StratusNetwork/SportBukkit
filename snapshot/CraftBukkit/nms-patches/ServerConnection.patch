@@ -28,7 +28,7 @@
 +        } else {
 +            // If not connected yet, return configured address and port (which may be 0)
 +            return java.net.InetSocketAddress.createUnresolved(this.f.getServerIp(),
-+                                                               this.f.getConfiguredPort());
++                    this.f.getConfiguredPort());
 +        }
 +    }
 +    // SportBukkit end
@@ -80,7 +80,7 @@
  
      public void c() {
 @@ -151,7 +182,7 @@
-                             ServerConnection.e.warn("Failed to handle packet for {}", new Object[] { networkmanager.getSocketAddress(), exception});
+                             ServerConnection.e.warn("Failed to handle packet for {}", networkmanager.getSocketAddress(), exception);
                              final ChatComponentText chatcomponenttext = new ChatComponentText("Internal server error");
  
 -                            networkmanager.sendPacket(new PacketPlayOutKickDisconnect(chatcomponenttext), new GenericFutureListener() {

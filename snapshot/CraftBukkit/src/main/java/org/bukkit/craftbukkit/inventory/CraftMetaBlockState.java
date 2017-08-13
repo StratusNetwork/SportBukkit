@@ -55,6 +55,7 @@ import org.bukkit.craftbukkit.block.CraftShulkerBox;
 import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.craftbukkit.block.CraftSkull;
 import org.bukkit.craftbukkit.block.CraftStructureBlock;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.BlockStateMeta;
 
 @DelegateDeserialization(CraftMetaItem.SerializableMeta.class)
@@ -84,7 +85,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
         super(tag);
         this.material = material;
 
-        if (tag.hasKeyOfType(BLOCK_ENTITY_TAG.NBT, 10)) {
+        if (tag.hasKeyOfType(BLOCK_ENTITY_TAG.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
             blockEntityTag = tag.getCompound(BLOCK_ENTITY_TAG.NBT);
         } else {
             blockEntityTag = null;
@@ -113,7 +114,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
 
     @Override
     void deserializeInternal(NBTTagCompound tag) {
-        if (tag.hasKeyOfType(BLOCK_ENTITY_TAG.NBT, 10)) {
+        if (tag.hasKeyOfType(BLOCK_ENTITY_TAG.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
             blockEntityTag = tag.getCompound(BLOCK_ENTITY_TAG.NBT);
         }
     }
@@ -177,7 +178,6 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
             case SIGN:
             case MOB_SPAWNER:
             case NOTE_BLOCK:
-            case PISTON_BASE:
             case BREWING_STAND_ITEM:
             case ENCHANTMENT_TABLE:
             case COMMAND:
@@ -245,7 +245,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
                     break;
             }
         }
-        TileEntity te = (blockEntityTag == null) ? null : TileEntity.a(null, blockEntityTag);
+        TileEntity te = (blockEntityTag == null) ? null : TileEntity.create(null, blockEntityTag);
 
         switch (material) {
         case SIGN:
@@ -383,6 +383,8 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
                 te = new TileEntityComparator();
             }
             return new CraftComparator(material, (TileEntityComparator) te);
+        case PISTON_BASE:
+            
         default:
             throw new IllegalStateException("Missing blockState for " + material);
         }

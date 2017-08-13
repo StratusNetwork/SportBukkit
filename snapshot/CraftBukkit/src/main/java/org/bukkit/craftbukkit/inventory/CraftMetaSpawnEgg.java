@@ -3,7 +3,9 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap.Builder;
 import java.util.Map;
+import net.minecraft.server.DataConverterTypes;
 import net.minecraft.server.MinecraftKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
@@ -38,7 +40,7 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
             entityTag = tag.getCompound(ENTITY_TAG.NBT);
 
             if (entityTag.hasKey(ENTITY_ID.NBT)) {
-                this.spawnedType = EntityType.fromName(new MinecraftKey(entityTag.getString(ENTITY_ID.NBT)).a()); // PAIL: rename
+                this.spawnedType = EntityType.fromName(new MinecraftKey(entityTag.getString(ENTITY_ID.NBT)).getKey());
             }
         }
     }
@@ -51,10 +53,24 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
     }
 
     @Override
+    void deserializeInternal(NBTTagCompound tag) {
+        super.deserializeInternal(tag);
+
+        if (tag.hasKey(ENTITY_TAG.NBT)) {
+            entityTag = tag.getCompound(ENTITY_TAG.NBT);
+            MinecraftServer.getServer().dataConverterManager.a(DataConverterTypes.ENTITY, entityTag); // PAIL: convert
+
+            if (entityTag.hasKey(ENTITY_ID.NBT)) {
+                this.spawnedType = EntityType.fromName(new MinecraftKey(entityTag.getString(ENTITY_ID.NBT)).getKey());
+            }
+        }
+    }
+
+    @Override
     void applyToItem(NBTTagCompound tag) {
         super.applyToItem(tag);
 
-        if (entityTag == null) {
+        if (!isSpawnEggEmpty() && entityTag == null) {
             entityTag = new NBTTagCompound();
         }
 
@@ -62,7 +78,9 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
             entityTag.setString(ENTITY_ID.NBT, new MinecraftKey(spawnedType.getName()).toString());
         }
 
-        tag.set(ENTITY_TAG.NBT, entityTag);
+        if (entityTag != null) {
+            tag.set(ENTITY_TAG.NBT, entityTag);
+        }
     }
 
     @Override

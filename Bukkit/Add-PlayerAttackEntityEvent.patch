@@ -5,7 +5,7 @@ Subject: [PATCH] Add PlayerAttackEntityEvent
 
 diff --git a/src/main/java/org/bukkit/event/player/PlayerAttackEntityEvent.java b/src/main/java/org/bukkit/event/player/PlayerAttackEntityEvent.java
 new file mode 100644
-index 0000000..b05b231
+index 00000000..b05b2314
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerAttackEntityEvent.java
 @@ -0,0 +1,47 @@

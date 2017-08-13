@@ -1,30 +1,28 @@
 package org.bukkit.craftbukkit.block;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import javax.annotation.Nullable;
-
 import net.minecraft.server.BlockPosition;
-import net.minecraft.server.IBlockData;
-import net.minecraft.server.TileEntity;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.geometry.BlockRotoflection;
-import org.bukkit.geometry.BlockReflection;
-import org.bukkit.geometry.BlockRotation;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.geometry.CoarseTransform;
+import org.bukkit.craftbukkit.CraftChunk;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.geometry.*;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.geometry.Vec3;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+import net.minecraft.server.EnumDirection;
+import net.minecraft.server.IBlockData;
+import net.minecraft.server.TileEntity;
+
+import javax.annotation.Nullable;
 
 public class CraftBlockState implements BlockState {
     private final @Nullable UUID worldId;
@@ -72,7 +70,6 @@ public class CraftBlockState implements BlockState {
         return worldId;
     }
 
-    @Override
     public CraftWorld getWorld() {
         return (CraftWorld) Bukkit.world(getWorldId());
     }
@@ -185,7 +182,9 @@ public class CraftBlockState implements BlockState {
     }
 
     public boolean update(boolean force, boolean applyPhysics) {
-        requirePlaced();
+        if (!isPlaced()) {
+            return true;
+        }
         Block block = getBlock();
 
         if (block.getType() != getType()) {
@@ -246,13 +245,13 @@ public class CraftBlockState implements BlockState {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(!(obj instanceof BlockState)) return false;
+        if (this == obj) return true;
+        if (!(obj instanceof BlockState)) return false;
         final BlockState that = (BlockState) obj;
         return Objects.equals(this.tryWorldId(), that.tryWorldId()) &&
-               Objects.equals(this.position, that.tryPosition()) &&
-               this.type == that.getTypeId() &&
-               Objects.equals(this.data, that.getMaterialData());
+                Objects.equals(this.position, that.tryPosition()) &&
+                this.type == that.getTypeId() &&
+                Objects.equals(this.data, that.getMaterialData());
     }
 
     @Override

@@ -1,13 +1,5 @@
 package org.bukkit.craftbukkit.user;
 
-import java.time.Instant;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Supplier;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.mojang.authlib.Agent;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.GameProfileRepository;
@@ -18,6 +10,14 @@ import org.bukkit.craftbukkit.CraftOfflinePlayerFactory;
 import tc.oc.minecraft.api.user.User;
 import tc.oc.minecraft.api.user.UserSearch;
 import tc.oc.minecraft.api.user.UserSource;
+
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 @Singleton
 public class MojangUserSource implements UserSource {
@@ -40,8 +40,8 @@ public class MojangUserSource implements UserSource {
         final CraftOfflinePlayer op;
         if(search.query() instanceof UUID) {
             op = userFactory.createUser(
-                sessions.fillProfileProperties(new GameProfile((UUID) search.query(), null), true),
-                Optional.of(Instant.now())
+                    sessions.fillProfileProperties(new GameProfile((UUID) search.query(), null), true),
+                    Optional.of(Instant.now())
             );
         } else {
             // Despite the weird callback, this does appear to be entirely synchronous
@@ -55,7 +55,8 @@ public class MojangUserSource implements UserSource {
 
     private class NameCallback implements ProfileLookupCallback {
 
-        @Nullable CraftOfflinePlayer user;
+        @Nullable
+        CraftOfflinePlayer user;
 
         @Override
         public void onProfileLookupSucceeded(GameProfile profile) {

@@ -14,8 +14,8 @@
      public int a;
 @@ -34,6 +40,7 @@
  
-     public void A_() {
-         super.A_();
+     public void B_() {
+         super.B_();
 +        EntityHuman prevTarget = this.targetPlayer;// CraftBukkit - store old target
          if (this.c > 0) {
              --this.c;
@@ -48,8 +48,8 @@
          this.move(EnumMoveType.SELF, this.motX, this.motY, this.motZ);
 @@ -142,6 +161,7 @@
          if (!this.world.isClientSide) {
-             if (this.c == 0 && entityhuman.bz == 0) {
-                 entityhuman.bz = 2;
+             if (this.c == 0 && entityhuman.bD == 0) {
+                 entityhuman.bD = 2;
 +                if(org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerPickupExperienceEvent((EntityPlayer) entityhuman, this).isCancelled()) return; // SportBukkit - fire event
                  entityhuman.receive(this, 1);
                  ItemStack itemstack = EnchantmentManager.b(Enchantments.C, (EntityLiving) entityhuman);

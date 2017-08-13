@@ -22,14 +22,14 @@
 +
 +    public static BlockPosition of(Vec3 that) {
 +        return that instanceof BlockPosition
-+               ? (BlockPosition) that
-+               : new BlockPosition(that.coarseX(), that.coarseY(), that.coarseZ());
++                ? (BlockPosition) that
++                : new BlockPosition(that.coarseX(), that.coarseY(), that.coarseZ());
 +    }
 +
 +    public static BlockPosition copyOf(Vec3 that) {
 +        return that instanceof BlockPosition && !that.isMutable()
-+               ? (BlockPosition) that
-+               : new BlockPosition(that.coarseX(), that.coarseY(), that.coarseZ());
++                ? (BlockPosition) that
++                : new BlockPosition(that.coarseX(), that.coarseY(), that.coarseZ());
 +    }
 +
 +    @Override
@@ -133,7 +133,157 @@
      public BlockPosition c(BaseBlockPosition baseblockposition) {
          return new BlockPosition(this.getY() * baseblockposition.getZ() - this.getZ() * baseblockposition.getY(), this.getZ() * baseblockposition.getX() - this.getX() * baseblockposition.getZ(), this.getX() * baseblockposition.getY() - this.getY() * baseblockposition.getX());
      }
-@@ -334,7 +402,55 @@
+@@ -197,22 +265,22 @@
+         return this;
+     }
+ 
+-    public static Iterable<BlockPosition.MutableBlockPosition> b(BlockPosition blockposition, BlockPosition blockposition1) {
++    public static Iterable<MutableBlockPosition> b(BlockPosition blockposition, BlockPosition blockposition1) {
+         return b(Math.min(blockposition.getX(), blockposition1.getX()), Math.min(blockposition.getY(), blockposition1.getY()), Math.min(blockposition.getZ(), blockposition1.getZ()), Math.max(blockposition.getX(), blockposition1.getX()), Math.max(blockposition.getY(), blockposition1.getY()), Math.max(blockposition.getZ(), blockposition1.getZ()));
+     }
+ 
+-    public static Iterable<BlockPosition.MutableBlockPosition> b(final int i, final int j, final int k, final int l, final int i1, final int j1) {
++    public static Iterable<MutableBlockPosition> b(final int i, final int j, final int k, final int l, final int i1, final int j1) {
+         return new Iterable() {
+-            public Iterator<BlockPosition.MutableBlockPosition> iterator() {
++            public Iterator<MutableBlockPosition> iterator() {
+                 return new AbstractIterator() {
+-                    private BlockPosition.MutableBlockPosition b;
++                    private MutableBlockPosition b;
+ 
+-                    protected BlockPosition.MutableBlockPosition a() {
++                    protected MutableBlockPosition a() {
+                         if (this.b == null) {
+-                            this.b = new BlockPosition.MutableBlockPosition(i, j, k);
++                            this.b = new MutableBlockPosition(i, j, k);
+                             return this.b;
+                         } else if (this.b.b == l && this.b.c == i1 && this.b.d == j1) {
+-                            return (BlockPosition.MutableBlockPosition) this.endOfData();
++                            return (MutableBlockPosition) this.endOfData();
+                         } else {
+                             if (this.b.b < l) {
+                                 ++this.b.b;
+@@ -241,29 +309,29 @@
+         return this.c(baseblockposition);
+     }
+ 
+-    public static final class PooledBlockPosition extends BlockPosition.MutableBlockPosition {
++    public static final class PooledBlockPosition extends MutableBlockPosition {
+ 
+         private boolean f;
+-        private static final List<BlockPosition.PooledBlockPosition> g = Lists.newArrayList();
++        private static final List<PooledBlockPosition> g = Lists.newArrayList();
+ 
+         private PooledBlockPosition(int i, int j, int k) {
+             super(i, j, k);
+         }
+ 
+-        public static BlockPosition.PooledBlockPosition s() {
++        public static PooledBlockPosition s() {
+             return e(0, 0, 0);
+         }
+ 
+-        public static BlockPosition.PooledBlockPosition d(double d0, double d1, double d2) {
++        public static PooledBlockPosition d(double d0, double d1, double d2) {
+             return e(MathHelper.floor(d0), MathHelper.floor(d1), MathHelper.floor(d2));
+         }
+ 
+-        public static BlockPosition.PooledBlockPosition e(int i, int j, int k) {
+-            List list = BlockPosition.PooledBlockPosition.g;
++        public static PooledBlockPosition e(int i, int j, int k) {
++            List list = PooledBlockPosition.g;
+ 
+-            synchronized (BlockPosition.PooledBlockPosition.g) {
+-                if (!BlockPosition.PooledBlockPosition.g.isEmpty()) {
+-                    BlockPosition.PooledBlockPosition blockposition_pooledblockposition = (BlockPosition.PooledBlockPosition) BlockPosition.PooledBlockPosition.g.remove(BlockPosition.PooledBlockPosition.g.size() - 1);
++            synchronized (PooledBlockPosition.g) {
++                if (!PooledBlockPosition.g.isEmpty()) {
++                    PooledBlockPosition blockposition_pooledblockposition = (PooledBlockPosition) PooledBlockPosition.g.remove(PooledBlockPosition.g.size() - 1);
+ 
+                     if (blockposition_pooledblockposition != null && blockposition_pooledblockposition.f) {
+                         blockposition_pooledblockposition.f = false;
+@@ -273,68 +341,116 @@
+                 }
+             }
+ 
+-            return new BlockPosition.PooledBlockPosition(i, j, k);
++            return new PooledBlockPosition(i, j, k);
+         }
+ 
+         public void t() {
+-            List list = BlockPosition.PooledBlockPosition.g;
++            List list = PooledBlockPosition.g;
+ 
+-            synchronized (BlockPosition.PooledBlockPosition.g) {
+-                if (BlockPosition.PooledBlockPosition.g.size() < 100) {
+-                    BlockPosition.PooledBlockPosition.g.add(this);
++            synchronized (PooledBlockPosition.g) {
++                if (PooledBlockPosition.g.size() < 100) {
++                    PooledBlockPosition.g.add(this);
+                 }
+ 
+                 this.f = true;
+             }
+         }
+ 
+-        public BlockPosition.PooledBlockPosition f(int i, int j, int k) {
++        public PooledBlockPosition f(int i, int j, int k) {
+             if (this.f) {
+                 BlockPosition.b.error("PooledMutableBlockPosition modified after it was released.", new Throwable());
+                 this.f = false;
+             }
+ 
+-            return (BlockPosition.PooledBlockPosition) super.c(i, j, k);
++            return (PooledBlockPosition) super.c(i, j, k);
+         }
+ 
+-        public BlockPosition.PooledBlockPosition e(double d0, double d1, double d2) {
+-            return (BlockPosition.PooledBlockPosition) super.c(d0, d1, d2);
++        public PooledBlockPosition e(double d0, double d1, double d2) {
++            return (PooledBlockPosition) super.c(d0, d1, d2);
+         }
+ 
+-        public BlockPosition.PooledBlockPosition j(BaseBlockPosition baseblockposition) {
+-            return (BlockPosition.PooledBlockPosition) super.g(baseblockposition);
++        public PooledBlockPosition j(BaseBlockPosition baseblockposition) {
++            return (PooledBlockPosition) super.g(baseblockposition);
+         }
+ 
+-        public BlockPosition.PooledBlockPosition d(EnumDirection enumdirection) {
+-            return (BlockPosition.PooledBlockPosition) super.c(enumdirection);
++        public PooledBlockPosition d(EnumDirection enumdirection) {
++            return (PooledBlockPosition) super.c(enumdirection);
+         }
+ 
+-        public BlockPosition.PooledBlockPosition d(EnumDirection enumdirection, int i) {
+-            return (BlockPosition.PooledBlockPosition) super.c(enumdirection, i);
++        public PooledBlockPosition d(EnumDirection enumdirection, int i) {
++            return (PooledBlockPosition) super.c(enumdirection, i);
+         }
+ 
+-        public BlockPosition.MutableBlockPosition c(EnumDirection enumdirection, int i) {
++        public MutableBlockPosition c(EnumDirection enumdirection, int i) {
+             return this.d(enumdirection, i);
+         }
+ 
+-        public BlockPosition.MutableBlockPosition c(EnumDirection enumdirection) {
++        public MutableBlockPosition c(EnumDirection enumdirection) {
+             return this.d(enumdirection);
+         }
+ 
+-        public BlockPosition.MutableBlockPosition g(BaseBlockPosition baseblockposition) {
++        public MutableBlockPosition g(BaseBlockPosition baseblockposition) {
+             return this.j(baseblockposition);
+         }
+ 
+-        public BlockPosition.MutableBlockPosition c(double d0, double d1, double d2) {
++        public MutableBlockPosition c(double d0, double d1, double d2) {
+             return this.e(d0, d1, d2);
+         }
+ 
+-        public BlockPosition.MutableBlockPosition c(int i, int j, int k) {
++        public MutableBlockPosition c(int i, int j, int k) {
+             return this.f(i, j, k);
          }
      }
  
@@ -213,3 +363,35 @@
          public int getX() {
              return this.b;
          }
+@@ -383,26 +483,26 @@
+             return this.d;
+         }
+ 
+-        public BlockPosition.MutableBlockPosition c(int i, int j, int k) {
++        public MutableBlockPosition c(int i, int j, int k) {
+             this.b = i;
+             this.c = j;
+             this.d = k;
+             return this;
+         }
+ 
+-        public BlockPosition.MutableBlockPosition c(double d0, double d1, double d2) {
++        public MutableBlockPosition c(double d0, double d1, double d2) {
+             return this.c(MathHelper.floor(d0), MathHelper.floor(d1), MathHelper.floor(d2));
+         }
+ 
+-        public BlockPosition.MutableBlockPosition g(BaseBlockPosition baseblockposition) {
++        public MutableBlockPosition g(BaseBlockPosition baseblockposition) {
+             return this.c(baseblockposition.getX(), baseblockposition.getY(), baseblockposition.getZ());
+         }
+ 
+-        public BlockPosition.MutableBlockPosition c(EnumDirection enumdirection) {
++        public MutableBlockPosition c(EnumDirection enumdirection) {
+             return this.c(enumdirection, 1);
+         }
+ 
+-        public BlockPosition.MutableBlockPosition c(EnumDirection enumdirection, int i) {
++        public MutableBlockPosition c(EnumDirection enumdirection, int i) {
+             return this.c(this.b + enumdirection.getAdjacentX() * i, this.c + enumdirection.getAdjacentY() * i, this.d + enumdirection.getAdjacentZ() * i);
+         }
+ 

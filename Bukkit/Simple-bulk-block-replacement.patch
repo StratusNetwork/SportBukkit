@@ -14,10 +14,10 @@ diff --git a/src/main/java/org/bukkit/Chunk.java b/src/main/java/org/bukkit/Chun
  
  /**
   * Represents a chunk of blocks
-@@ -123,4 +124,12 @@ public interface Chunk {
-      * @return true if the chunk has unloaded successfully, otherwise false
+@@ -130,4 +131,12 @@ public interface Chunk {
+      * @return true if slimes are able to spawn in this chunk
       */
-     boolean unload();
+     boolean isSlimeChunk();
 +
 +    /**
 +     * Replace all blocks of one material with another

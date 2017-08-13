@@ -1,6 +1,7 @@
 package org.bukkit.event;
 
-import org.bukkit.plugin.*;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredListener;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -63,7 +64,7 @@ public class HandlerList<T extends Event> {
      */
     public static void unregisterAll(Plugin plugin) {
         unregisterAll(handler -> handler instanceof RegisteredListener &&
-                                 plugin == ((RegisteredListener) handler).getPlugin());
+                plugin == ((RegisteredListener) handler).getPlugin());
     }
 
     /**
@@ -73,7 +74,7 @@ public class HandlerList<T extends Event> {
      */
     public static void unregisterAll(Listener listener) {
         unregisterAll(handler -> handler instanceof BoundEventHandler &&
-                                 listener == ((BoundEventHandler) handler).listener());
+                listener == ((BoundEventHandler) handler).listener());
     }
 
     public static void unregisterAll(Predicate<RegisteredHandler<?>> filter) {
@@ -108,12 +109,11 @@ public class HandlerList<T extends Event> {
         final EventPriority priority = handler.meta().priority();
         if(handlerslots.get(priority).contains(handler)) {
             throw new IllegalStateException("Event handler " + handler +
-                                            " is already registered at priority " + priority);
+                    " is already registered at priority " + priority);
         }
         handlers = null;
         handlerslots.get(priority).add(handler);
     }
-
     // For legacy binary compatibility
     public synchronized void register(RegisteredListener listener) {
         register((RegisteredHandler) listener);
@@ -170,7 +170,7 @@ public class HandlerList<T extends Event> {
      */
     public synchronized void unregister(Listener listener) {
         unregister(handler -> handler instanceof BoundEventHandler &&
-                              listener == ((BoundEventHandler) handler).listener());
+                listener == ((BoundEventHandler) handler).listener());
     }
 
     /**

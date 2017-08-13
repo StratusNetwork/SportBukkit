@@ -67,7 +67,7 @@ public abstract class Cuboid implements Region {
      */
     public static Cuboid fromMinAndSize(Vec3 min, Vec3 size) {
         if(min.anyNaN() || size.anyNaN() ||
-           size.fineX() < 0 || size.fineY() < 0 || size.fineZ() < 0) return empty();
+                size.fineX() < 0 || size.fineY() < 0 || size.fineZ() < 0) return empty();
         return new NonEmptyCuboid(min, min.plus(size));
     }
 
@@ -113,7 +113,7 @@ public abstract class Cuboid implements Region {
             return a;
         } else {
             return between(a.min.maximum(b.min),
-                           a.max.minimum(b.max));
+                    a.max.minimum(b.max));
         }
     }
 
@@ -127,7 +127,7 @@ public abstract class Cuboid implements Region {
             return b;
         } else {
             return between(a.min.minimum(b.min),
-                           a.max.maximum(b.max));
+                    a.max.maximum(b.max));
         }
     }
 
@@ -143,11 +143,11 @@ public abstract class Cuboid implements Region {
         boolean cy = subtracted.min.fineY() < original.min.fineY() && subtracted.max.fineY() > original.max.fineY();
         boolean cz = subtracted.min.fineZ() < original.min.fineZ() && subtracted.max.fineZ() > original.max.fineZ();
         return between(ImVector.of(cy && cz ? Math.max(original.min.fineX(), subtracted.min.fineX()) : original.min.fineX(),
-                                   cz && cx ? Math.max(original.min.fineY(), subtracted.min.fineY()) : original.min.fineY(),
-                                   cx && cy ? Math.max(original.min.fineZ(), subtracted.min.fineZ()) : original.min.fineZ()),
-                       ImVector.of(cy && cz ? Math.min(original.max.fineX(), subtracted.max.fineX()) : original.max.fineX(),
-                                   cz && cx ? Math.min(original.max.fineY(), subtracted.max.fineY()) : original.max.fineY(),
-                                   cx && cy ? Math.min(original.max.fineZ(), subtracted.max.fineZ()) : original.max.fineZ()));
+                cz && cx ? Math.max(original.min.fineY(), subtracted.min.fineY()) : original.min.fineY(),
+                cx && cy ? Math.max(original.min.fineZ(), subtracted.min.fineZ()) : original.min.fineZ()),
+                ImVector.of(cy && cz ? Math.min(original.max.fineX(), subtracted.max.fineX()) : original.max.fineX(),
+                        cz && cx ? Math.min(original.max.fineY(), subtracted.max.fineY()) : original.max.fineY(),
+                        cx && cy ? Math.min(original.max.fineZ(), subtracted.max.fineZ()) : original.max.fineZ()));
     }
 
     @Override
@@ -225,14 +225,14 @@ public abstract class Cuboid implements Region {
      */
     public ImVector[] vertices() {
         return new ImVector[] {
-            min,
-            ImVector.of(min.fineX(), min.fineY(), max.fineZ()),
-            ImVector.of(min.fineX(), max.fineY(), min.fineZ()),
-            ImVector.of(min.fineX(), max.fineY(), max.fineZ()),
-            ImVector.of(max.fineX(), min.fineY(), min.fineZ()),
-            ImVector.of(max.fineX(), min.fineY(), max.fineZ()),
-            ImVector.of(max.fineX(), max.fineY(), min.fineZ()),
-            max
+                min,
+                ImVector.of(min.fineX(), min.fineY(), max.fineZ()),
+                ImVector.of(min.fineX(), max.fineY(), min.fineZ()),
+                ImVector.of(min.fineX(), max.fineY(), max.fineZ()),
+                ImVector.of(max.fineX(), min.fineY(), min.fineZ()),
+                ImVector.of(max.fineX(), min.fineY(), max.fineZ()),
+                ImVector.of(max.fineX(), max.fineY(), min.fineZ()),
+                max
         };
     }
 
@@ -275,7 +275,7 @@ public abstract class Cuboid implements Region {
 class NonEmptyCuboid extends Cuboid {
 
     static final Cuboid UNBOUNDED = new NonEmptyCuboid(ImVector.of(Double.NEGATIVE_INFINITY),
-                                                       ImVector.of(Double.POSITIVE_INFINITY));
+            ImVector.of(Double.POSITIVE_INFINITY));
 
     public NonEmptyCuboid(Vec3 min, Vec3 max) {
         super(min, max);
@@ -356,13 +356,13 @@ class NonEmptyCuboid extends Cuboid {
 
     public boolean isFinite() {
         return !(Double.isInfinite(min.fineX()) || Double.isInfinite(max.fineX()) ||
-                 Double.isInfinite(min.fineY()) || Double.isInfinite(max.fineY()) ||
-                 Double.isInfinite(min.fineZ()) || Double.isInfinite(max.fineZ()));
+                Double.isInfinite(min.fineY()) || Double.isInfinite(max.fineY()) ||
+                Double.isInfinite(min.fineZ()) || Double.isInfinite(max.fineZ()));
     }
 
     public boolean isBlockFinite() {
         return !(Double.isInfinite(min.fineX()) || Double.isInfinite(max.fineX()) ||
-                 Double.isInfinite(min.fineZ()) || Double.isInfinite(max.fineZ()));
+                Double.isInfinite(min.fineZ()) || Double.isInfinite(max.fineZ()));
     }
 
     public boolean isEmpty() {
@@ -394,8 +394,8 @@ class NonEmptyCuboid extends Cuboid {
         assertFinite();
         final ImVector size = size();
         return min.plus(size.fineX() * random.nextDouble(),
-                        size.fineY() * random.nextDouble(),
-                        size.fineZ() * random.nextDouble());
+                size.fineY() * random.nextDouble(),
+                size.fineZ() * random.nextDouble());
     }
 
     /**
@@ -404,8 +404,8 @@ class NonEmptyCuboid extends Cuboid {
     public Vec3 minimumBlockInside() {
         assertBlockFinite();
         return Bukkit.vectors().coarse(min.fineX() + 0.5d,
-                                       NumberConversions.clamp(min.fineY(), 0, 256) + 0.5d,
-                                       min.fineZ() + 0.5d);
+                NumberConversions.clamp(min.fineY(), 0, 256) + 0.5d,
+                min.fineZ() + 0.5d);
     }
 
     /**
@@ -414,8 +414,8 @@ class NonEmptyCuboid extends Cuboid {
     public Vec3 maximumBlockInside() {
         assertBlockFinite();
         return Bukkit.vectors().coarse(max.fineX() - 0.5d,
-                                       NumberConversions.clamp(max.fineY(), 0, 256) - 0.5d,
-                                       max.fineZ() - 0.5d);
+                NumberConversions.clamp(max.fineY(), 0, 256) - 0.5d,
+                max.fineZ() - 0.5d);
     }
 
     /**
@@ -427,13 +427,13 @@ class NonEmptyCuboid extends Cuboid {
     public Vec3 minimumBlockOutside() {
         assertBlockFinite();
         return Bukkit.vectors().coarse(max.fineX() + 0.5d,
-                                       NumberConversions.clamp(max.fineY(), 0, 256) + 0.5d,
-                                       max.fineZ() + 0.5d);
+                NumberConversions.clamp(max.fineY(), 0, 256) + 0.5d,
+                max.fineZ() + 0.5d);
     }
 
     public boolean containsBlock(Vec3 v) {
         return v.coarseGreaterOrEqual(minimumBlockInside()) &&
-               v.coarseLess(minimumBlockOutside());
+                v.coarseLess(minimumBlockOutside());
     }
 
     /**
@@ -460,8 +460,8 @@ class NonEmptyCuboid extends Cuboid {
         }
 
         return minimumBlockInside().plus(random.nextInt(size.coarseX()),
-                                         random.nextInt(size.coarseY()),
-                                         random.nextInt(size.coarseZ()));
+                random.nextInt(size.coarseY()),
+                random.nextInt(size.coarseZ()));
     }
 
     public BlockRegion blockRegion() {

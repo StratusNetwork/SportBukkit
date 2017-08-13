@@ -4,7 +4,7 @@ import org.bukkit.geometry.BlockReflection;
 import org.bukkit.support.BukkitRuntimeTest;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BlockReflectionTest extends BukkitRuntimeTest {
 

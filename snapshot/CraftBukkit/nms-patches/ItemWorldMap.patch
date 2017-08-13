@@ -77,7 +77,7 @@
              int i = 1 << worldmap.scale;
              int j = worldmap.centerX;
              int k = worldmap.centerZ;
-@@ -318,6 +345,10 @@
+@@ -319,6 +346,10 @@
              worldmap1.map = worldmap.map;
              worldmap1.c();
              world.a("map_" + itemstack.getData(), (PersistentBase) worldmap1);
@@ -88,7 +88,7 @@
          }
  
      }
-@@ -325,6 +356,7 @@
+@@ -326,6 +357,7 @@
      protected static void b(ItemStack itemstack, World world) {
          WorldMap worldmap = Items.FILLED_MAP.getSavedMap(itemstack, world);
  
@@ -96,7 +96,7 @@
          itemstack.setData(world.b("map"));
          WorldMap worldmap1 = new WorldMap("map_" + itemstack.getData());
  
-@@ -336,6 +368,10 @@
+@@ -337,6 +369,10 @@
              worldmap1.map = worldmap.map;
              worldmap1.c();
              world.a("map_" + itemstack.getData(), (PersistentBase) worldmap1);

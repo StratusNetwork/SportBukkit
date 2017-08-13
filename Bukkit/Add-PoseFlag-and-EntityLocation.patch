@@ -5,7 +5,7 @@ Subject: [PATCH] Add PoseFlag and EntityLocation
 
 diff --git a/src/main/java/org/bukkit/EntityLocation.java b/src/main/java/org/bukkit/EntityLocation.java
 new file mode 100644
-index 0000000..d9fbf35
+index 00000000..13a98ee3
 --- /dev/null
 +++ b/src/main/java/org/bukkit/EntityLocation.java
 @@ -0,0 +1,104 @@
@@ -96,15 +96,15 @@ index 0000000..d9fbf35
 +    @Override
 +    public String toString() {
 +        return getClass().getSimpleName() +
-+               "{world=" + getWorld() +
-+               " x=" + getX() +
-+               " y=" + getY() +
-+               " z=" + getZ() +
-+               " pitch=" + getPitch() +
-+               " yaw=" + getYaw() +
-+               " velocity=" + velocity() +
-+               " poseFlags=" + poseFlags() +
-+               '}';
++                "{world=" + getWorld() +
++                " x=" + getX() +
++                " y=" + getY() +
++                " z=" + getZ() +
++                " pitch=" + getPitch() +
++                " yaw=" + getYaw() +
++                " velocity=" + velocity() +
++                " poseFlags=" + poseFlags() +
++                '}';
 +    }
 +
 +    @Override
@@ -115,7 +115,7 @@ index 0000000..d9fbf35
 +}
 diff --git a/src/main/java/org/bukkit/PoseFlag.java b/src/main/java/org/bukkit/PoseFlag.java
 new file mode 100644
-index 0000000..4d8fbee
+index 00000000..4d8fbeed
 --- /dev/null
 +++ b/src/main/java/org/bukkit/PoseFlag.java
 @@ -0,0 +1,41 @@
@@ -175,7 +175,7 @@ diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/buk
  import org.bukkit.Server;
  import org.bukkit.World;
  import org.bukkit.event.entity.EntityDamageEvent;
-@@ -29,6 +31,8 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+@@ -30,6 +32,8 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
       */
      public Location getLocation();
  
@@ -184,7 +184,7 @@ diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/buk
      /**
       * Stores the entity's current position in the provided Location object.
       * <p>
-@@ -41,6 +45,11 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+@@ -42,6 +46,11 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
      public Location getLocation(Location loc);
  
      /**
@@ -233,15 +233,15 @@ diff --git a/src/main/java/org/bukkit/event/player/PlayerMoveEvent.java b/src/ma
 +
 +    public PlayerMoveEvent(final Player player, final Location from, final Location to) {
 +        this(
-+            player,
-+            EntityLocation.coerce(from, player.getEntityLocation()),
-+            EntityLocation.coerce(to, player.getEntityLocation())
++                player,
++                EntityLocation.coerce(from, player.getEntityLocation()),
++                EntityLocation.coerce(to, player.getEntityLocation())
 +        );
      }
  
      /**
-@@ -58,6 +69,10 @@ public class PlayerMoveEvent extends PlayerActionBase implements Cancellable {
-         return from;
+@@ -49,6 +60,10 @@ public class PlayerMoveEvent extends PlayerActionBase implements Cancellable {
+         this.cancel = cancel;
      }
  
 +    public EntityLocation getEntityFrom() {
@@ -249,7 +249,7 @@ diff --git a/src/main/java/org/bukkit/event/player/PlayerMoveEvent.java b/src/ma
 +    }
 +
      /**
-      * Sets the location to mark as where the player moved from
+      * Gets the location this player moved from
       *
 @@ -65,7 +80,7 @@ public class PlayerMoveEvent extends PlayerActionBase implements Cancellable {
       */
@@ -326,18 +326,17 @@ diff --git a/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java b/src/
 diff --git a/src/test/java/org/bukkit/plugin/TimedRegisteredListenerTest.java b/src/test/java/org/bukkit/plugin/TimedRegisteredListenerTest.java
 --- a/src/test/java/org/bukkit/plugin/TimedRegisteredListenerTest.java
 +++ b/src/test/java/org/bukkit/plugin/TimedRegisteredListenerTest.java
-@@ -9,9 +9,8 @@ import org.bukkit.event.EventPriority;
+@@ -9,8 +9,8 @@ import org.bukkit.event.EventPriority;
  import org.bukkit.event.Listener;
  import org.bukkit.event.block.BlockBreakEvent;
  import org.bukkit.event.player.PlayerActionBase;
--import org.bukkit.event.player.PlayerEvent;
 +import org.bukkit.event.player.PlayerAnimationEvent;
  import org.bukkit.event.player.PlayerInteractEvent;
 -import org.bukkit.event.player.PlayerMoveEvent;
  import org.junit.Test;
  
  public class TimedRegisteredListenerTest {
-@@ -25,7 +24,7 @@ public class TimedRegisteredListenerTest {
+@@ -24,7 +24,7 @@ public class TimedRegisteredListenerTest {
          TestPlugin plugin = new TestPlugin("Test");
  
          PlayerInteractEvent interactEvent = new PlayerInteractEvent(null, null, null, null, null);
@@ -346,7 +345,7 @@ diff --git a/src/test/java/org/bukkit/plugin/TimedRegisteredListenerTest.java b/
          BlockBreakEvent breakEvent = new BlockBreakEvent(null, null);
  
          TimedRegisteredListener trl = new TimedRegisteredListener(listener, executor, EventPriority.NORMAL, plugin, false);
-@@ -37,7 +36,7 @@ public class TimedRegisteredListenerTest {
+@@ -36,7 +36,7 @@ public class TimedRegisteredListenerTest {
          trl.callEvent(interactEvent);
          assertThat(trl.getEventClass(), is((Object) PlayerInteractEvent.class));
          // Ensure that the closest superclass of the two events is chosen
@@ -355,7 +354,7 @@ diff --git a/src/test/java/org/bukkit/plugin/TimedRegisteredListenerTest.java b/
          assertThat(trl.getEventClass(), is((Object) PlayerActionBase.class));
          // As above, so below
          trl.callEvent(breakEvent);
-@@ -51,7 +50,7 @@ public class TimedRegisteredListenerTest {
+@@ -50,7 +50,7 @@ public class TimedRegisteredListenerTest {
          trl.callEvent(breakEvent);
          assertThat(trl.getEventClass(), is((Object) BlockBreakEvent.class));
          // Test moving up the class hierarchy by more than one class at a time

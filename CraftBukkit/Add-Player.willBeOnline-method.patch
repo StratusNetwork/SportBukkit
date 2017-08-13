@@ -6,7 +6,7 @@ Subject: [PATCH] Add Player.willBeOnline method
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -378,6 +378,8 @@ public abstract class PlayerList {
+@@ -398,6 +398,8 @@ public abstract class PlayerList {
  
          entityplayer.b(StatisticList.f);
  
@@ -34,7 +34,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java b/src/
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -94,6 +94,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -92,6 +92,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      private Skin realSkin;
      private boolean showInvisibles;
      private PlayerResourcePackStatusEvent.Status resourcePackStatus;
@@ -42,7 +42,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
  
      private final Map<CommandSender, String> fakeNames = new WeakHashMap<CommandSender, String>();
      private final Map<CommandSender, String> fakeDisplayNames = new WeakHashMap<CommandSender, String>();
-@@ -132,6 +133,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -130,6 +131,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          return server.getPlayer(getUniqueId()) != null;
      }
  

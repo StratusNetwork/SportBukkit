@@ -35,13 +35,13 @@ public interface Transform extends UnaryOperator<Vec3> {
     @Override
     default <V> Function<V, Vec3> compose(Function<? super V, ? extends Vec3> before) {
         return before instanceof Transform ? (Function<V, Vec3>) compose((Transform) before)
-                                           : UnaryOperator.super.compose(before);
+                : UnaryOperator.super.compose(before);
     }
 
     @Override
     default <V> Function<Vec3, V> andThen(Function<? super Vec3, ? extends V> after) {
         return after instanceof Transform ? (Function<Vec3, V>) andThen((Transform) after)
-                                          : UnaryOperator.super.andThen(after);
+                : UnaryOperator.super.andThen(after);
     }
 
     default Transform translate(int x, int y, int z) {

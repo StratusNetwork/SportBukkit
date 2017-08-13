@@ -5,7 +5,7 @@ Subject: [PATCH] Fix several block rotation data values
 
 diff --git a/src/main/java/org/bukkit/material/Alignable.java b/src/main/java/org/bukkit/material/Alignable.java
 new file mode 100644
-index 0000000..c9ad81e
+index 00000000..c9ad81e1
 --- /dev/null
 +++ b/src/main/java/org/bukkit/material/Alignable.java
 @@ -0,0 +1,8 @@

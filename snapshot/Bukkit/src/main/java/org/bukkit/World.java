@@ -3,26 +3,22 @@ package org.bukkit;
 import java.io.File;
 
 import org.bukkit.block.BlockImage;
-import org.bukkit.geometry.CoarseTransform;
-import org.bukkit.material.MaterialData;
-import org.bukkit.geometry.Vec3;
-import org.bukkit.region.BlockRegion;
 import org.bukkit.generator.ChunkGenerator;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+
+import java.util.*;
 import java.util.function.Predicate;
 
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.generator.BlockPopulator;
+import org.bukkit.geometry.CoarseTransform;
+import org.bukkit.geometry.Vec3;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
+import org.bukkit.region.BlockRegion;
 import org.bukkit.util.Consumer;
 import org.bukkit.util.RayBlockIntersection;
 import org.bukkit.util.Vector;

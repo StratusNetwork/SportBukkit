@@ -15,16 +15,16 @@
 @@ -14,6 +19,7 @@
      private int maxFuseTicks = 30;
      private int explosionRadius = 3;
-     private int bA;
+     private int bB;
 +    private Entity primer; // SportBukkit
  
      public EntityCreeper(World world) {
          super(world);
-@@ -99,7 +105,22 @@
-             int i = this.di();
+@@ -99,7 +105,23 @@
+             int i = this.dm();
  
              if (i > 0 && this.fuseTicks == 0) {
--                this.a(SoundEffects.av, 1.0F, 0.5F);
+-                this.a(SoundEffects.ay, 1.0F, 0.5F);
 +                // SportBukkit start - fire ExplosionPrimeEvent
 +                final float radius = this.explosionRadius * (this.isPowered() ? 2.0F : 1.0F);
 +                final ExplosionPrimeEvent event;
@@ -33,18 +33,19 @@
 +                } else {
 +                    event = new ExplosionPrimeEvent(this.getBukkitEntity(), radius, false);
 +                }
++
 +                this.world.getServer().getPluginManager().callEvent(event);
 +
 +                if (event.isCancelled()) {
 +                    i = 0;
 +                } else {
-+                    this.a(SoundEffects.av, 1.0F, 0.5F);
++                    this.a(SoundEffects.ay, 1.0F, 0.5F);
 +                }
 +                // SportBukkit end
              }
  
              this.fuseTicks += i;
-@@ -125,7 +146,7 @@
+@@ -125,7 +147,7 @@
      }
  
      public void die(DamageSource damagesource) {
@@ -53,7 +54,7 @@
          if (this.world.getGameRules().getBoolean("doMobLoot")) {
              if (damagesource.getEntity() instanceof EntitySkeleton) {
                  int i = Item.getId(Items.RECORD_13);
-@@ -138,6 +159,7 @@
+@@ -138,6 +160,7 @@
                  this.a(new ItemStack(Items.SKULL, 1, 4), 0.0F);
              }
          }
@@ -61,7 +62,7 @@
  
      }
  
-@@ -164,8 +186,18 @@
+@@ -164,8 +187,18 @@
  
      public void onLightningStrike(EntityLightning entitylightning) {
          super.onLightningStrike(entitylightning);
@@ -81,22 +82,22 @@
  
      protected boolean a(EntityHuman entityhuman, EnumHand enumhand) {
          ItemStack itemstack = entityhuman.b(enumhand);
-@@ -174,6 +206,7 @@
-             this.world.a(entityhuman, this.locX, this.locY, this.locZ, SoundEffects.bI, this.bC(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+@@ -174,6 +207,7 @@
+             this.world.a(entityhuman, this.locX, this.locY, this.locZ, SoundEffects.bO, this.bK(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
              entityhuman.a(enumhand);
              if (!this.world.isClientSide) {
 +                this.primer = entityhuman; // SportBukkit
-                 this.dk();
+                 this.do_();
                  itemstack.damage(1, entityhuman);
                  return true;
-@@ -188,10 +221,23 @@
+@@ -188,10 +222,23 @@
              boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
              float f = this.isPowered() ? 2.0F : 1.0F;
  
 -            this.aU = true;
 -            this.world.explode(this, this.locX, this.locY, this.locZ, (float) this.explosionRadius * f, flag);
 -            this.die();
--            this.do_();
+-            this.ds();
 +            // CraftBukkit start
 +            final ExplosionPrimeEvent event;
 +            if(primer != null) {
@@ -109,7 +110,7 @@
 +                this.aU = true;
 +                this.world.createExplosion(this, this.locX, this.locY, this.locZ, event.getRadius(), event.getFire(), flag);
 +                this.die();
-+                this.do_();
++                this.ds();
 +            } else {
 +                fuseTicks = 0;
 +            }
@@ -117,3 +118,11 @@
          }
  
      }
+@@ -202,6 +249,7 @@
+         if (!collection.isEmpty()) {
+             EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.world, this.locX, this.locY, this.locZ);
+ 
++            entityareaeffectcloud.setSource(this); // CraftBukkit
+             entityareaeffectcloud.setRadius(2.5F);
+             entityareaeffectcloud.setRadiusOnUse(-0.5F);
+             entityareaeffectcloud.setWaitTime(10);

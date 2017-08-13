@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +20,6 @@ import net.minecraft.server.MinecraftServer;
 import org.fusesource.jansi.AnsiConsole;
 
 public class Main {
-
     public static OptionSpec<Stage> GUICE_STAGE_OPTION;
 
     public static boolean useJline = true;
@@ -178,11 +179,11 @@ public class Main {
                     useConsole = false;
                 }
 
-                if (Main.class.getPackage().getImplementationVendor() != null && System.getProperty("IReallyKnowWhatIAmDoingISwear") == null) {
+                if (false && Main.class.getPackage().getImplementationVendor() != null && System.getProperty("IReallyKnowWhatIAmDoingISwear") == null) {
                     Date buildDate = new SimpleDateFormat("yyyyMMdd-HHmm").parse(Main.class.getPackage().getImplementationVendor());
 
                     Calendar deadline = Calendar.getInstance();
-                    deadline.add(Calendar.DAY_OF_YEAR, -3);
+                    deadline.add(Calendar.DAY_OF_YEAR, -14);
                     if (buildDate.before(deadline.getTime())) {
                         System.err.println("*** Error, this build is outdated ***");
                         System.err.println("*** Please download a new build as per instructions from https://www.spigotmc.org/ ***");

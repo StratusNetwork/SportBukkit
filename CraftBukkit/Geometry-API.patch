@@ -28,14 +28,14 @@ diff --git a/src/main/java/net/minecraft/server/BlockPosition.java b/src/main/ja
 +
 +    public static BlockPosition of(Vec3 that) {
 +        return that instanceof BlockPosition
-+               ? (BlockPosition) that
-+               : new BlockPosition(that.coarseX(), that.coarseY(), that.coarseZ());
++                ? (BlockPosition) that
++                : new BlockPosition(that.coarseX(), that.coarseY(), that.coarseZ());
 +    }
 +
 +    public static BlockPosition copyOf(Vec3 that) {
 +        return that instanceof BlockPosition && !that.isMutable()
-+               ? (BlockPosition) that
-+               : new BlockPosition(that.coarseX(), that.coarseY(), that.coarseZ());
++                ? (BlockPosition) that
++                : new BlockPosition(that.coarseX(), that.coarseY(), that.coarseZ());
 +    }
 +
 +    @Override
@@ -224,29 +224,25 @@ diff --git a/src/main/java/net/minecraft/server/BlockPosition.java b/src/main/ja
          }
  
 -        public BlockPosition.MutableBlockPosition set(int x, int y, int z) { return c(x, y, z); } // SportBukkit - alias
-         public BlockPosition.MutableBlockPosition c(int i, int j, int k) {
+         public MutableBlockPosition c(int i, int j, int k) {
              this.b = i;
              this.c = j;
 diff --git a/src/main/java/org/bukkit/CraftBukkitRuntime.java b/src/main/java/org/bukkit/CraftBukkitRuntime.java
 --- a/src/main/java/org/bukkit/CraftBukkitRuntime.java
 +++ b/src/main/java/org/bukkit/CraftBukkitRuntime.java
-@@ -2,12 +2,14 @@ package org.bukkit;
+@@ -1,10 +1,12 @@
+ package org.bukkit;
  
  import net.minecraft.server.DispenserRegistry;
++import org.bukkit.craftbukkit.CraftVectorFactory;
  import org.bukkit.craftbukkit.inventory.CraftItemFactory;
--import org.bukkit.craftbukkit.potion.CraftPotionEffectRegistry;
  import org.bukkit.craftbukkit.potion.CraftPotionBrewRegistry;
-+import org.bukkit.craftbukkit.potion.CraftPotionEffectRegistry;
+ import org.bukkit.craftbukkit.potion.CraftPotionEffectRegistry;
  import org.bukkit.craftbukkit.registry.CraftKey;
--import org.bukkit.potion.PotionEffectRegistry;
-+import org.bukkit.craftbukkit.util.CraftVectorFactory;
- import org.bukkit.potion.PotionBrewRegistry;
-+import org.bukkit.potion.PotionEffectRegistry;
- import org.bukkit.registry.Key;
 +import org.bukkit.geometry.VectorFactory;
- 
- public class CraftBukkitRuntime implements BukkitRuntime {
- 
+ import org.bukkit.potion.PotionBrewRegistry;
+ import org.bukkit.potion.PotionEffectRegistry;
+ import org.bukkit.registry.Key;
 @@ -24,6 +26,8 @@ public class CraftBukkitRuntime implements BukkitRuntime {
          }
      }
@@ -271,7 +267,7 @@ diff --git a/src/main/java/org/bukkit/CraftBukkitRuntime.java b/src/main/java/or
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1090,12 +1090,16 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+@@ -1077,12 +1077,16 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
  
      @Override
      public World getWorld(UUID uid) {
@@ -279,7 +275,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
 -            if (world.getUID().equals(uid)) {
 -                return world;
 -            }
-+        return worldsById.get(uid);
++        return worldsById().get(uid);
 +    }
 +
 +    @Override
@@ -293,21 +289,21 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
      }
  
      public void addWorld(World world) {
-diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftVectorFactory.java b/src/main/java/org/bukkit/craftbukkit/util/CraftVectorFactory.java
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftVectorFactory.java b/src/main/java/org/bukkit/craftbukkit/CraftVectorFactory.java
 new file mode 100644
-index 0000000..287c095
+index 00000000..cd9984d0
 --- /dev/null
-+++ b/src/main/java/org/bukkit/craftbukkit/util/CraftVectorFactory.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftVectorFactory.java
 @@ -0,0 +1,49 @@
-+package org.bukkit.craftbukkit.util;
++package org.bukkit.craftbukkit;
 +
 +import net.minecraft.server.BlockPosition;
-+import org.bukkit.util.ImVector;
 +import org.bukkit.geometry.MutableVec3;
-+import org.bukkit.util.NumberConversions;
 +import org.bukkit.geometry.Vec3;
-+import org.bukkit.util.Vector;
 +import org.bukkit.geometry.VectorFactory;
++import org.bukkit.util.ImVector;
++import org.bukkit.util.NumberConversions;
++import org.bukkit.util.Vector;
 +
 +public class CraftVectorFactory implements VectorFactory {
 +
@@ -350,16 +346,17 @@ index 0000000..287c095
 +}
 diff --git a/src/test/java/org/bukkit/block/BlockFaceTest.java b/src/test/java/org/bukkit/block/BlockFaceTest.java
 new file mode 100644
-index 0000000..023f7db
+index 00000000..acd78b62
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/BlockFaceTest.java
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,60 @@
 +package org.bukkit.block;
 +
 +import org.bukkit.support.BukkitRuntimeTest;
 +import org.junit.Test;
 +
-+import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertTrue;
 +
 +public class BlockFaceTest extends BukkitRuntimeTest {
 +
@@ -415,7 +412,7 @@ index 0000000..023f7db
 +}
 diff --git a/src/test/java/org/bukkit/block/BlockReflectionTest.java b/src/test/java/org/bukkit/block/BlockReflectionTest.java
 new file mode 100644
-index 0000000..12ccd1a
+index 00000000..2aef44a9
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/BlockReflectionTest.java
 @@ -0,0 +1,30 @@
@@ -425,7 +422,7 @@ index 0000000..12ccd1a
 +import org.bukkit.support.BukkitRuntimeTest;
 +import org.junit.Test;
 +
-+import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
 +
 +public class BlockReflectionTest extends BukkitRuntimeTest {
 +
@@ -451,7 +448,7 @@ index 0000000..12ccd1a
 +}
 diff --git a/src/test/java/org/bukkit/block/BlockRotationTest.java b/src/test/java/org/bukkit/block/BlockRotationTest.java
 new file mode 100644
-index 0000000..663fca4
+index 00000000..c09e27e1
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/BlockRotationTest.java
 @@ -0,0 +1,52 @@
@@ -464,7 +461,7 @@ index 0000000..663fca4
 +import org.bukkit.support.BukkitRuntimeTest;
 +import org.junit.Test;
 +
-+import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
 +
 +public class BlockRotationTest extends BukkitRuntimeTest {
 +    @Test
@@ -509,26 +506,20 @@ index 0000000..663fca4
 +}
 diff --git a/src/test/java/org/bukkit/block/TransformTest.java b/src/test/java/org/bukkit/block/TransformTest.java
 new file mode 100644
-index 0000000..2ab7fa7
+index 00000000..488f1b9e
 --- /dev/null
 +++ b/src/test/java/org/bukkit/block/TransformTest.java
-@@ -0,0 +1,217 @@
+@@ -0,0 +1,211 @@
 +package org.bukkit.block;
 +
-+import java.util.Random;
-+
 +import net.minecraft.server.BlockPosition;
-+import org.bukkit.geometry.Axis;
-+import org.bukkit.geometry.BlockRotoflection;
-+import org.bukkit.geometry.BlockReflection;
-+import org.bukkit.geometry.BlockRotation;
-+import org.bukkit.geometry.CoarseTransform;
-+import org.bukkit.geometry.Transform;
-+import org.bukkit.geometry.Vec3;
++import org.bukkit.geometry.*;
 +import org.bukkit.support.BukkitRuntimeTest;
 +import org.junit.Test;
 +
-+import static org.junit.Assert.*;
++import java.util.Random;
++
++import static org.junit.Assert.assertEquals;
 +
 +public class TransformTest extends BukkitRuntimeTest {
 +
@@ -732,7 +723,7 @@ index 0000000..2ab7fa7
 +}
 diff --git a/src/test/java/org/bukkit/support/BukkitRuntimeTest.java b/src/test/java/org/bukkit/support/BukkitRuntimeTest.java
 new file mode 100644
-index 0000000..30e5c74
+index 00000000..30e5c747
 --- /dev/null
 +++ b/src/test/java/org/bukkit/support/BukkitRuntimeTest.java
 @@ -0,0 +1,26 @@
@@ -764,7 +755,7 @@ index 0000000..30e5c74
 +}
 diff --git a/src/test/java/org/bukkit/util/VectorEqualityTest.java b/src/test/java/org/bukkit/util/VectorEqualityTest.java
 new file mode 100644
-index 0000000..f404478
+index 00000000..8cacf3d2
 --- /dev/null
 +++ b/src/test/java/org/bukkit/util/VectorEqualityTest.java
 @@ -0,0 +1,26 @@
@@ -773,8 +764,8 @@ index 0000000..f404478
 +import net.minecraft.server.BlockPosition;
 +import org.junit.Test;
 +
-+import static org.junit.Assert.*;
-+import static tc.oc.test.Assert.*;
++import static tc.oc.test.Assert.assertMutuallyEqual;
++import static tc.oc.test.Assert.assertMutuallyUnequal;
 +
 +public class VectorEqualityTest {
 +
@@ -796,7 +787,7 @@ index 0000000..f404478
 +}
 diff --git a/src/test/java/org/bukkit/util/VectorFactoryTest.java b/src/test/java/org/bukkit/util/VectorFactoryTest.java
 new file mode 100644
-index 0000000..c130ede
+index 00000000..c130edeb
 --- /dev/null
 +++ b/src/test/java/org/bukkit/util/VectorFactoryTest.java
 @@ -0,0 +1,59 @@
@@ -861,7 +852,7 @@ index 0000000..c130ede
 +}
 diff --git a/src/test/java/org/bukkit/util/VectorMixedResolutionArithmeticTest.java b/src/test/java/org/bukkit/util/VectorMixedResolutionArithmeticTest.java
 new file mode 100644
-index 0000000..9da3b8e
+index 00000000..29e9680e
 --- /dev/null
 +++ b/src/test/java/org/bukkit/util/VectorMixedResolutionArithmeticTest.java
 @@ -0,0 +1,55 @@
@@ -874,7 +865,7 @@ index 0000000..9da3b8e
 +import org.junit.Before;
 +import org.junit.Test;
 +
-+import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
 +
 +public class VectorMixedResolutionArithmeticTest extends BukkitRuntimeTest {
 +

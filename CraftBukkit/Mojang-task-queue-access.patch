@@ -6,16 +6,16 @@ Subject: [PATCH] Mojang task queue access
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -358,7 +358,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -369,7 +369,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
  
      public void D() { // CraftBukkit - fix decompile error
          super.D();
--        this.aM();
-+        // this.aM(); // SportBukkit - moved to processTasks()
+-        this.aP();
++        // this.aP(); // SportBukkit - moved to processTasks()
      }
  
      public boolean getAllowNether() {
-@@ -383,6 +383,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -394,6 +394,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
          this.serverCommandQueue.add(new ServerCommand(s, icommandlistener));
      }
  
@@ -27,11 +27,11 @@ diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/
 +    }
 +    // SportBukkit end
 +
-+    public void processCommands() { aM(); } // SportBukkit - alias
-     public void aM() {
++    public void processCommands() { aP(); } // SportBukkit - alias
+     public void aP() {
          while (!this.serverCommandQueue.isEmpty()) {
              ServerCommand servercommand = (ServerCommand) this.serverCommandQueue.remove(0);
-@@ -646,7 +655,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -653,7 +662,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
                  return remoteControlCommandListener.getMessages();
              }
          };
@@ -43,7 +43,7 @@ diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/
 diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/java/net/minecraft/server/LoginListener.java
 --- a/src/main/java/net/minecraft/server/LoginListener.java
 +++ b/src/main/java/net/minecraft/server/LoginListener.java
-@@ -243,7 +243,7 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+@@ -256,7 +256,7 @@ public class LoginListener implements PacketLoginInListener, ITickable {
                      return event.getResult();
                  }};
  
@@ -52,7 +52,7 @@ diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/ja
              try {
                  if (waitable.get() != PlayerPreLoginEvent.Result.ALLOWED) {
                      disconnect(event.getKickMessage());
-@@ -261,6 +261,7 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+@@ -274,6 +274,7 @@ public class LoginListener implements PacketLoginInListener, ITickable {
              }
          }
  
@@ -63,7 +63,7 @@ diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/ja
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -48,6 +48,11 @@ import org.bukkit.craftbukkit.CraftServer;
+@@ -49,6 +49,11 @@ import org.bukkit.craftbukkit.CraftServer;
  import org.bukkit.craftbukkit.Main;
  // CraftBukkit end
  
@@ -72,18 +72,18 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
 +import java.util.Deque;
 +// SportBukkit end
 +
- public abstract class MinecraftServer implements Runnable, ICommandListener, IAsyncTaskHandler, IMojangStatistics {
+ public abstract class MinecraftServer implements ICommandListener, Runnable, IAsyncTaskHandler, IMojangStatistics {
  
      public static final Logger LOGGER = LogManager.getLogger();
-@@ -101,6 +106,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -102,6 +107,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
      private final UserCache Y;
      private long Z;
      protected final Queue<FutureTask<?>> j = Queues.newArrayDeque();
-+    protected final Deque<FutureTask<?>> taskQueue = (Deque<FutureTask<?>>) j; // SportBukkit - alias and downcast
++    public final Deque<FutureTask<?>> taskQueue = (Deque<FutureTask<?>>) j; // SportBukkit - alias and downcast
      private Thread serverThread;
      void setLastTickStart(long millis) { ab = millis; } // SportBukkit - alias
      private long ab = aw();
-@@ -114,7 +120,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -115,7 +121,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
      public ConsoleReader reader;
      public static int currentTick = (int) (System.currentTimeMillis() / 50);
      public final Thread primaryThread;
@@ -92,7 +92,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
      public int autosavePeriod;
      // CraftBukkit end
      // SportBukkit start
-@@ -710,19 +716,25 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -712,19 +718,25 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
          this.methodProfiler.a("jobs");
          Queue queue = this.j;
  
@@ -121,7 +121,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
  
          org.bukkit.craftbukkit.chunkio.ChunkIOExecutor.tick();
  
-@@ -1473,6 +1485,47 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+@@ -1457,6 +1469,47 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
          return Thread.currentThread() == this.serverThread;
      }
  
@@ -172,7 +172,7 @@ diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1332,7 +1332,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1351,7 +1351,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                              }
                          };
  
@@ -181,7 +181,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
  
                          try {
                              waitable.get();
-@@ -1387,7 +1387,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1406,7 +1406,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                          }
                      };
  
@@ -190,12 +190,12 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
  
                      try {
                          waitable.get();
-@@ -1447,7 +1447,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1466,7 +1466,7 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                          return null;
                      }};
                  if (async) {
 -                    minecraftServer.processQueue.add(waitable);
-+                    minecraftServer.addMainThreadTask(waitable); // SportBukkit
++                    this.minecraftServer.addMainThreadTask(waitable); // SportBukkit
                  } else {
                      waitable.run();
                  }
@@ -222,17 +222,23 @@ diff --git a/src/main/java/net/minecraft/server/ServerConnection.java b/src/main
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -95,6 +95,7 @@ import org.bukkit.inventory.ShapedRecipe;
+@@ -91,12 +91,7 @@ import org.bukkit.inventory.ShapedRecipe;
  import org.bukkit.inventory.ShapelessRecipe;
  import org.bukkit.permissions.Permissible;
  import org.bukkit.permissions.Permission;
-+import org.bukkit.plugin.IllegalPluginAccessException;
- import org.bukkit.plugin.Plugin;
- import org.bukkit.plugin.PluginLoadOrder;
- import org.bukkit.plugin.PluginManager;
-@@ -1811,4 +1812,44 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
-     public Set<Integer> getProtocolVersions() {
-         return ImmutableSet.of(315);
+-import org.bukkit.plugin.Plugin;
+-import org.bukkit.plugin.PluginLoadOrder;
+-import org.bukkit.plugin.PluginManager;
+-import org.bukkit.plugin.ServicesManager;
+-import org.bukkit.plugin.SimplePluginManager;
+-import org.bukkit.plugin.SimpleServicesManager;
++import org.bukkit.plugin.*;
+ import org.bukkit.plugin.java.JavaPluginLoader;
+ import org.bukkit.plugin.messaging.Messenger;
+ import org.bukkit.potion.Potion;
+@@ -1824,4 +1819,44 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
+             335, 338            // 1.12
+         );
      }
 +
 +    @Override
@@ -264,9 +270,9 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
 +                    task.run();
 +                } catch(Throwable throwable) {
 +                    plugin.getLogger().log(
-+                        Level.SEVERE,
-+                        "Exception running task from plugin " + plugin.getDescription().getFullName(),
-+                        throwable
++                            Level.SEVERE,
++                            "Exception running task from plugin " + plugin.getDescription().getFullName(),
++                            throwable
 +                    );
 +                }
 +            }

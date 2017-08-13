@@ -1,6 +1,13 @@
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
-@@ -40,6 +40,21 @@
+@@ -35,12 +35,27 @@
+ import java.util.concurrent.Callable;
+ import java.util.concurrent.Executors;
+ import java.util.concurrent.FutureTask;
++import java.util.concurrent.atomic.AtomicBoolean;
+ import java.util.function.Supplier;
+ import javax.annotation.Nullable;
+ import javax.imageio.ImageIO;
  import org.apache.commons.lang3.Validate;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -10,23 +17,22 @@
 +import org.bukkit.Bukkit;
 +import org.bukkit.craftbukkit.CraftServer;
 +import org.bukkit.craftbukkit.Main;
++import org.bukkit.event.EventBody;
++import org.bukkit.event.server.ServerSuspendEvent;
 +// CraftBukkit end
 +
 +// SportBukkit start
 +import java.time.Instant;
 +import java.util.Deque;
-+import java.util.concurrent.atomic.AtomicBoolean;
-+import org.bukkit.event.EventBody;
-+import org.bukkit.event.server.ServerSuspendEvent;
 +// SportBukkit end
  
- public abstract class MinecraftServer implements Runnable, ICommandListener, IAsyncTaskHandler, IMojangStatistics {
+ public abstract class MinecraftServer implements ICommandListener, Runnable, IAsyncTaskHandler, IMojangStatistics {
  
-@@ -94,22 +109,86 @@
+@@ -95,22 +110,87 @@
      private final UserCache Y;
      private long Z;
      protected final Queue<FutureTask<?>> j = Queues.newArrayDeque();
-+    protected final Deque<FutureTask<?>> taskQueue = (Deque<FutureTask<?>>) j; // SportBukkit - alias and downcast
++    public final Deque<FutureTask<?>> taskQueue = (Deque<FutureTask<?>>) j; // SportBukkit - alias and downcast
      private Thread serverThread;
 +    void setLastTickStart(long millis) { ab = millis; } // SportBukkit - alias
      private long ab = aw();
@@ -48,7 +54,7 @@
 +    private static final int TPS = 20;
 +    private static final int TICK_TIME = 1000000000 / TPS;
 +    private static final int SAMPLE_INTERVAL = 100;
-+    public final double[] recentTps = new double[ 3 ];
++    public final double[] recentTps = new double[3];
 +
 +    protected boolean abnormalTermination;
 +    // Sportbukkit end
@@ -59,6 +65,7 @@
 +    private int interruptions;
 +    protected Thread watchdogThread;
 +    // SportBukkit end
++
 +
 +    public MinecraftServer(OptionSet options, Proxy proxy, DataConverterManager dataconvertermanager, YggdrasilAuthenticationService yggdrasilauthenticationservice, MinecraftSessionService minecraftsessionservice, GameProfileRepository gameprofilerepository, UserCache usercache) {
          this.e = proxy;
@@ -112,7 +119,7 @@
      protected CommandDispatcher i() {
          return new CommandDispatcher(this);
      }
-@@ -147,6 +226,7 @@
+@@ -148,6 +228,7 @@
          this.a(s);
          this.b("menu.loadingLevel");
          this.worldServer = new WorldServer[3];
@@ -120,7 +127,7 @@
          this.i = new long[this.worldServer.length][100];
          IDataManager idatamanager = this.convertable.a(s, true);
  
-@@ -170,36 +250,109 @@
+@@ -171,36 +252,109 @@
              worlddata.a(s1);
              worldsettings = new WorldSettings(worlddata);
          }
@@ -241,7 +248,7 @@
          this.v.setPlayerFileData(this.worldServer);
          this.a(this.getDifficulty());
          this.l();
-@@ -215,25 +368,38 @@
+@@ -216,25 +370,38 @@
          this.b("menu.generatingTerrain");
          boolean flag4 = false;
  
@@ -295,7 +302,7 @@
          this.t();
      }
  
-@@ -273,14 +439,17 @@
+@@ -274,14 +441,17 @@
      protected void t() {
          this.f = null;
          this.g = 0;
@@ -315,7 +322,7 @@
  
              if (worldserver != null) {
                  if (!flag) {
-@@ -289,6 +458,7 @@
+@@ -290,6 +460,7 @@
  
                  try {
                      worldserver.save(true, (IProgressUpdate) null);
@@ -323,7 +330,7 @@
                  } catch (ExceptionWorldConflict exceptionworldconflict) {
                      MinecraftServer.LOGGER.warn(exceptionworldconflict.getMessage());
                  }
-@@ -297,8 +467,24 @@
+@@ -298,8 +469,24 @@
  
      }
  
@@ -349,7 +356,7 @@
          if (this.an() != null) {
              this.an().b();
          }
-@@ -307,6 +493,7 @@
+@@ -308,6 +495,7 @@
              MinecraftServer.LOGGER.info("Saving players");
              this.v.savePlayers();
              this.v.u();
@@ -357,7 +364,7 @@
          }
  
          if (this.worldServer != null) {
-@@ -328,12 +515,14 @@
+@@ -329,12 +517,14 @@
              aworldserver = this.worldServer;
              i = aworldserver.length;
  
@@ -372,7 +379,7 @@
          }
  
          if (this.m.d()) {
-@@ -356,52 +545,137 @@
+@@ -357,52 +547,140 @@
  
      public void safeShutdown() {
          this.isRunning = false;
@@ -451,6 +458,7 @@
 +                }
 +            }
 +        }
++
 +    }
 +
 +    private static double calcTps(double avg, double exp, double tps)
@@ -466,50 +474,51 @@
 -                long i = 0L;
 -
                  this.q.setMOTD(new ChatComponentText(this.motd));
-                 this.q.setServerInfo(new ServerPing.ServerData("1.11.1", 316));
+                 this.q.setServerInfo(new ServerPing.ServerData("1.12.1", 338));
                  this.a(this.q);
  
 +                // SportBukkit start
 +                Arrays.fill( recentTps, 20 );
 +                long lastTick = System.nanoTime(), catchupTime = 0, curTime, tickSection = lastTick;
++
                  while (this.isRunning) {
 -                    long j = aw();
 -                    long k = j - this.ab;
--
++                    setLastTickStart(realTimeMillis());
+ 
 -                    if (k > 2000L && this.ab - this.R >= 15000L) {
--                        MinecraftServer.LOGGER.warn("Can\'t keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)", new Object[] { Long.valueOf(k), Long.valueOf(k / 50L)});
+-                        MinecraftServer.LOGGER.warn("Can\'t keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)", Long.valueOf(k), Long.valueOf(k / 50L));
 -                        k = 2000L;
 -                        this.R = this.ab;
 -                    }
--
++                    curTime = System.nanoTime();
++                    final long wait = TICK_TIME - (curTime - lastTick) - catchupTime;
++                    if(wait < 0) {
++                        catchupTime = Math.min(1000000000, Math.abs(wait));
++                    } else {
++                        catchupTime = 0;
++                        if(doSuspension()) {
++                            tickSection = lastTick = curTime - TICK_TIME;
++                        } else {
++                            Thread.sleep(wait / 1000000);
++                        }
+ 
 -                    if (k < 0L) {
 -                        MinecraftServer.LOGGER.warn("Time ran backwards! Did the system time change?");
 -                        k = 0L;
--                    }
-+                    setLastTickStart(realTimeMillis());
++                        continue;
+                     }
  
 -                    i += k;
 -                    this.ab = j;
 -                    if (this.worldServer[0].everyoneDeeplySleeping()) {
 -                        this.C();
 -                        i = 0L;
-+                    curTime = System.nanoTime();
-+                    final long wait = TICK_TIME - (curTime - lastTick) - catchupTime;
-+                    if(wait < 0) {
-+                        catchupTime = Math.min(1000000000, Math.abs(wait));
-                     } else {
+-                    } else {
 -                        while (i > 50L) {
 -                            i -= 50L;
 -                            this.C();
-+                        catchupTime = 0;
-+                        if(doSuspension()) {
-+                            tickSection = lastTick = curTime - TICK_TIME;
-+                        } else {
-+                            Thread.sleep(wait / 1000000);
-                         }
-+                        continue;
-+                    }
-+
+-                        }
 +                    if ( MinecraftServer.currentTick++ % SAMPLE_INTERVAL == 0 )
 +                    {
 +                        double currentTps = 1E9 / ( curTime - tickSection ) * SAMPLE_INTERVAL;
@@ -536,7 +545,7 @@
              MinecraftServer.LOGGER.error("Encountered an unexpected exception", throwable);
              CrashReport crashreport = null;
  
-@@ -427,6 +701,12 @@
+@@ -428,6 +706,12 @@
              } catch (Throwable throwable1) {
                  MinecraftServer.LOGGER.error("Exception stopping the server", throwable1);
              } finally {
@@ -549,7 +558,7 @@
                  this.B();
              }
  
-@@ -470,7 +750,8 @@
+@@ -471,7 +755,8 @@
  
      public void B() {}
  
@@ -559,7 +568,7 @@
          long i = System.nanoTime();
  
          ++this.ticks;
-@@ -496,7 +777,7 @@
+@@ -497,7 +782,7 @@
              this.q.b().a(agameprofile);
          }
  
@@ -568,7 +577,7 @@
              this.methodProfiler.a("save");
              this.v.savePlayers();
              this.saveChunks(true);
-@@ -507,11 +788,11 @@
+@@ -508,11 +793,11 @@
          this.h[this.ticks % 100] = System.nanoTime() - i;
          this.methodProfiler.b();
          this.methodProfiler.a("snooper");
@@ -582,7 +591,7 @@
              this.m.b();
          }
  
-@@ -520,31 +801,59 @@
+@@ -521,33 +806,61 @@
      }
  
      public void D() {
@@ -632,9 +641,11 @@
 -                WorldServer worldserver = this.worldServer[i];
 +            // if (i == 0 || this.getAllowNether()) {
 +                WorldServer worldserver = this.worlds.get(i);
-+                if(!worldserver.getWorld().checkTicking()) continue; // SportBukkit
++            if(!worldserver.getWorld().checkTicking()) continue; // SportBukkit
  
-                 this.methodProfiler.a(worldserver.getWorldData().getName());
+                 this.methodProfiler.a(() -> {
+                     return worldserver.getWorldData().getName();
+                 });
 +                /* Drop global time updates
                  if (this.ticks % 20 == 0) {
                      this.methodProfiler.a("timeSync");
@@ -645,7 +656,7 @@
  
                  this.methodProfiler.a("tick");
  
-@@ -571,9 +880,9 @@
+@@ -574,9 +887,9 @@
                  worldserver.getTracker().updatePlayers();
                  this.methodProfiler.b();
                  this.methodProfiler.b();
@@ -657,7 +668,7 @@
          }
  
          this.methodProfiler.c("connection");
-@@ -597,10 +906,11 @@
+@@ -602,10 +915,11 @@
          this.o.add(itickable);
      }
  
@@ -670,7 +681,7 @@
              boolean flag = true;
              String s = null;
              String s1 = ".";
-@@ -645,13 +955,16 @@
+@@ -650,13 +964,16 @@
                      ++j;
                  }
              }
@@ -688,7 +699,7 @@
              if (s != null) {
                  dedicatedserver.i(s);
              }
-@@ -682,15 +995,37 @@
+@@ -687,15 +1004,37 @@
                      dedicatedserver.stop();
                  }
              });
@@ -726,7 +737,7 @@
      }
  
      public File d(String s) {
-@@ -706,7 +1041,14 @@
+@@ -711,7 +1050,14 @@
      }
  
      public WorldServer getWorldServer(int i) {
@@ -742,7 +753,7 @@
      }
  
      public String getVersion() {
-@@ -730,7 +1072,7 @@
+@@ -735,7 +1081,7 @@
      }
  
      public boolean isDebugging() {
@@ -751,7 +762,7 @@
      }
  
      public void g(String s) {
-@@ -745,7 +1087,7 @@
+@@ -750,7 +1096,7 @@
      }
  
      public String getServerModName() {
@@ -760,7 +771,7 @@
      }
  
      public CrashReport b(CrashReport crashreport) {
-@@ -774,6 +1116,7 @@
+@@ -779,6 +1125,7 @@
      }
  
      public List<String> tabCompleteCommand(ICommandListener icommandlistener, String s, @Nullable BlockPosition blockposition, boolean flag) {
@@ -768,12 +779,12 @@
          ArrayList arraylist = Lists.newArrayList();
          boolean flag1 = s.startsWith("/");
  
-@@ -816,10 +1159,13 @@
+@@ -821,10 +1168,13 @@
  
              return arraylist;
          }
 +        */
-+        return server.tabComplete(icommandlistener, s, blockposition);
++        return server.tabComplete(icommandlistener, s, blockposition, flag);
 +        // CraftBukkit end
      }
  
@@ -783,7 +794,7 @@
      }
  
      public String getName() {
-@@ -827,7 +1173,7 @@
+@@ -832,7 +1182,7 @@
      }
  
      public void sendMessage(IChatBaseComponent ichatbasecomponent) {
@@ -792,7 +803,7 @@
      }
  
      public boolean a(int i, String s) {
-@@ -842,6 +1188,7 @@
+@@ -847,6 +1197,7 @@
          return this.I;
      }
  
@@ -800,7 +811,7 @@
      public int P() {
          return this.u;
      }
-@@ -875,11 +1222,13 @@
+@@ -880,11 +1231,13 @@
      }
  
      public void a(EnumDifficulty enumdifficulty) {
@@ -817,7 +828,7 @@
  
              if (worldserver != null) {
                  if (worldserver.getWorldData().isHardcore()) {
-@@ -946,13 +1295,11 @@
+@@ -951,13 +1304,11 @@
          int i = 0;
  
          if (this.worldServer != null) {
@@ -835,7 +846,7 @@
                      WorldData worlddata = worldserver.getWorldData();
  
                      mojangstatisticsgenerator.a("world[" + i + "][dimension]", Integer.valueOf(worldserver.worldProvider.getDimensionManager().getDimensionID()));
-@@ -985,7 +1332,7 @@
+@@ -990,7 +1341,7 @@
      public abstract boolean aa();
  
      public boolean getOnlineMode() {
@@ -844,7 +855,7 @@
      }
  
      public void setOnlineMode(boolean flag) {
-@@ -1065,17 +1412,14 @@
+@@ -1070,17 +1421,14 @@
      }
  
      public void setGamemode(EnumGamemode enumgamemode) {
@@ -866,7 +877,7 @@
      public ServerConnection an() {
          return this.p;
      }
-@@ -1103,7 +1447,7 @@
+@@ -1100,7 +1448,7 @@
      }
  
      public World getWorld() {
@@ -874,8 +885,8 @@
 +        return this.worlds.get(0); // CraftBukkit
      }
  
-     public Entity f() {
-@@ -1130,6 +1474,7 @@
+     public int getSpawnProtection() {
+@@ -1123,6 +1471,7 @@
          return this.e;
      }
  
@@ -883,7 +894,7 @@
      public static long aw() {
          return System.currentTimeMillis();
      }
-@@ -1175,8 +1520,10 @@
+@@ -1160,8 +1509,10 @@
          WorldServer[] aworldserver = this.worldServer;
          int i = aworldserver.length;
  
@@ -896,7 +907,7 @@
  
              if (worldserver != null) {
                  Entity entity = worldserver.getEntity(uuid);
-@@ -1191,7 +1538,7 @@
+@@ -1176,7 +1527,7 @@
      }
  
      public boolean getSendCommandFeedback() {
@@ -904,8 +915,8 @@
 +        return worlds.get(0).getGameRules().getBoolean("sendCommandFeedback");
      }
  
-     public void a(CommandObjectiveExecutor.EnumCommandResult commandobjectiveexecutor_enumcommandresult, int i) {}
-@@ -1206,12 +1553,13 @@
+     public MinecraftServer C_() {
+@@ -1189,12 +1540,13 @@
  
      public <V> ListenableFuture<V> a(Callable<V> callable) {
          Validate.notNull(callable);
@@ -920,7 +931,7 @@
                  return listenablefuturetask;
              }
          } else {
-@@ -1232,6 +1580,48 @@
+@@ -1215,6 +1567,48 @@
          return Thread.currentThread() == this.serverThread;
      }
  
@@ -969,9 +980,30 @@
      public int aG() {
          return 256;
      }
-@@ -1251,4 +1641,11 @@
-     public int a(@Nullable WorldServer worldserver) {
-         return worldserver != null ? worldserver.getGameRules().c("spawnRadius") : 10;
+@@ -1232,17 +1626,17 @@
+     }
+ 
+     public AdvancementDataWorld getAdvancementData() {
+-        return this.worldServer[0].z();
++        return this.worlds.get(0).z(); // CraftBukkit
+     }
+ 
+     public CustomFunctionData aL() {
+-        return this.worldServer[0].A();
++        return this.worlds.get(0).A(); // CraftBukkit
+     }
+ 
+     public void reload() {
+         if (this.isMainThread()) {
+             this.getPlayerList().savePlayers();
+-            this.worldServer[0].getLootTableRegistry().reload();
++            this.worlds.get(0).getLootTableRegistry().reload(); // CraftBukkit
+             this.getAdvancementData().reload();
+             this.aL().f();
+             this.getPlayerList().reload();
+@@ -1251,4 +1645,11 @@
+         }
+ 
      }
 +
 +    // CraftBukkit start

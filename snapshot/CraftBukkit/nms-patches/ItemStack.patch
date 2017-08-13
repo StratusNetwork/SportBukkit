@@ -42,7 +42,17 @@
      public ItemStack(Block block) {
          this(block, 1);
      }
-@@ -46,28 +74,84 @@
+@@ -42,32 +70,102 @@
+         this(item, i, 0);
+     }
+ 
++    // CraftBukkit start
+     public ItemStack(Item item, int i, int j) {
++        this(item, i, j, true);
++    }
++
++    public ItemStack(Item item, int i, int j, boolean convert) {
++        // CraftBukkit end
          this.item = item;
          this.damage = j;
          this.count = i;
@@ -50,7 +60,9 @@
 +        if (MinecraftServer.getServer() != null) {
 +            this.setData(j);
 +        }
-+        this.convertStack();
++        if (convert) {
++            this.convertStack();
++        }
 +        // CraftBukkit end
          if (this.damage < 0) {
 -            this.damage = 0;
@@ -63,9 +75,15 @@
 +    // Called to run this stack through the data converter to handle older storage methods and serialized items
 +    public void convertStack() {
 +        if (MinecraftServer.getServer() != null) {
++            // Don't convert beds - both the old and new data values are valid
++            // Conversion would make getting white beds (data value 0) impossible
++            if (this.item == Items.BED) {
++                return;
++            }
++
 +            NBTTagCompound savedStack = new NBTTagCompound();
 +            this.save(savedStack);
-+            MinecraftServer.getServer().getDataConverterManager().a(DataConverterTypes.ITEM_INSTANCE, savedStack); // PAIL: convert
++            MinecraftServer.getServer().dataConverterManager.a(DataConverterTypes.ITEM_INSTANCE, savedStack); // PAIL: convert
 +            this.load(savedStack);
 +        }
 +    }
@@ -94,9 +112,9 @@
 -                this.item.a(nbttagcompound);
 +                this.item.a(this.tag);
 +                // CraftBukkit end
-+            }
-+        }
-+
+             }
+         }
+ 
 +        // SportBukkit start - convert legacy potions
 +        if(this.item == Items.POTION && this.damage != 0 && (tag == null || !tag.hasKey("Potion"))) {
 +            // Calculate a Potion from the damage value, and then set it to 0
@@ -121,18 +139,18 @@
 +                    key = type.baseKey();
 +                }
 +                tag.setString("Potion", key.toString());
-             }
-         }
++            }
++        }
 +        // SportBukkit end
 +    }
- 
++
 +    public ItemStack(NBTTagCompound nbttagcompound) {
 +        this.load(nbttagcompound);
 +        // CraftBukkit end
          this.F();
      }
  
-@@ -94,11 +178,138 @@
+@@ -94,11 +192,138 @@
      }
  
      public EnumInteractionResult placeItem(EntityHuman entityhuman, World world, BlockPosition blockposition, EnumHand enumhand, EnumDirection enumdirection, float f, float f1, float f2) {
@@ -272,7 +290,7 @@
  
          return enuminteractionresult;
      }
-@@ -122,7 +333,7 @@
+@@ -122,7 +347,7 @@
          nbttagcompound.setByte("Count", (byte) this.count);
          nbttagcompound.setShort("Damage", (short) this.damage);
          if (this.tag != null) {
@@ -281,7 +299,7 @@
          }
  
          return nbttagcompound;
-@@ -157,11 +368,30 @@
+@@ -157,11 +382,30 @@
      }
  
      public void setData(int i) {
@@ -314,9 +332,9 @@
      }
  
      public int k() {
-@@ -198,6 +428,11 @@
+@@ -202,6 +446,11 @@
              if (this.f()) {
-                 if (this.isDamaged(i, entityliving.getRandom())) {
+                 if (this.isDamaged(i, entityliving.getRandom(), entityliving instanceof EntityPlayer ? (EntityPlayer) entityliving : null)) {
                      entityliving.b(this);
 +                    // CraftBukkit start - Check for item breaking
 +                    if (this.count == 1 && entityliving instanceof EntityHuman) {
@@ -326,7 +344,16 @@
                      this.subtract(1);
                      if (entityliving instanceof EntityHuman) {
                          EntityHuman entityhuman = (EntityHuman) entityliving;
-@@ -509,6 +744,12 @@
+@@ -243,7 +492,7 @@
+     }
+ 
+     public ItemStack cloneItemStack() {
+-        ItemStack itemstack = new ItemStack(this.item, this.count, this.damage);
++        ItemStack itemstack = new ItemStack(this.item, this.count, this.damage, false); // CraftBukkit
+ 
+         itemstack.d(this.D());
+         if (this.tag != null) {
+@@ -513,6 +762,12 @@
          nbttaglist.add(nbttagcompound);
      }
  

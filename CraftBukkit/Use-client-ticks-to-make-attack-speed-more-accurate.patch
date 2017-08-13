@@ -6,33 +6,35 @@ Subject: [PATCH] Use client ticks to make attack speed more accurate
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
-@@ -65,6 +65,8 @@ public abstract class EntityHuman extends EntityLiving {
+@@ -65,7 +65,9 @@ public abstract class EntityHuman extends EntityLiving {
      @Nullable
      public EntityFishingHook hookedFish;
  
+-    Entity getRiding() { return this.bH(); } // SportBukkit - alias for following method@J+    // SportBukkit start - natural regen API
 +    public int clientTicksSinceLastAttack; // SportBukkit
 +
-     // SportBukkit start - natural regen API
++    // SportBukkit start - natural regen API
      public boolean fastNaturalRegeneration = true;
      public boolean slowNaturalRegeneration = true;
-@@ -1909,11 +1911,12 @@ public abstract class EntityHuman extends EntityLiving {
+     // SportBukkit end
+@@ -1913,11 +1915,12 @@ public abstract class EntityHuman extends EntityLiving {
      }
  
-     public float o(float f) {
--        return MathHelper.a(((float) this.aE + f) / this.dg(), 0.0F, 1.0F);
-+        return MathHelper.a(((float) Math.max(this.aE, this.clientTicksSinceLastAttack) + f) / this.dg(), 0.0F, 1.0F); // SportBukkit - check client and server ticks
+     public float n(float f) {
+-        return MathHelper.a(((float) this.aE + f) / this.dr(), 0.0F, 1.0F);
++        return MathHelper.a(((float) Math.max(this.aE, this.clientTicksSinceLastAttack) + f) / this.dr(), 0.0F, 1.0F); // SportBukkit - check client and server ticks
      }
  
-     public void dh() {
+     public void ds() {
          this.aE = 0;
 +        this.clientTicksSinceLastAttack = 0; // SportBukkit
      }
  
-     public ItemCooldown di() {
+     public ItemCooldown getCooldownTracker() {
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -496,6 +496,8 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -528,6 +528,8 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
                      this.syncPosition();
                  }
  
@@ -40,4 +42,4 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
 +
                  // SportBukkit start - velocity prediction
                  this.player.handleClientTick(
-                     packetplayinflying.hasPos ? new Vector(packetplayinflying.x,
+                         packetplayinflying.hasPos ? new Vector(packetplayinflying.x,

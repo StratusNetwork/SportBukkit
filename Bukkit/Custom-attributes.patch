@@ -6,7 +6,7 @@ Subject: [PATCH] Custom attributes
 diff --git a/src/main/java/org/bukkit/attribute/Attribute.java b/src/main/java/org/bukkit/attribute/Attribute.java
 --- a/src/main/java/org/bukkit/attribute/Attribute.java
 +++ b/src/main/java/org/bukkit/attribute/Attribute.java
-@@ -47,7 +47,13 @@ public enum Attribute {
+@@ -55,7 +55,13 @@ public enum Attribute {
      /**
       * Chance of a zombie to spawn reinforcements.
       */

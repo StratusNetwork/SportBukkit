@@ -6,7 +6,7 @@ Subject: [PATCH] Fix inverted team visibility
 diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
 --- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-@@ -188,11 +188,11 @@ public final class CraftTeam extends CraftScoreboardComponent implements Team {
+@@ -205,11 +205,11 @@ public final class CraftTeam extends CraftScoreboardComponent implements Team {
  
          switch (option) {
              case NAME_TAG_VISIBILITY:
@@ -21,7 +21,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java b/sr
              default:
                  throw new IllegalArgumentException("Unrecognised option " + option);
          }
-@@ -204,19 +204,64 @@ public final class CraftTeam extends CraftScoreboardComponent implements Team {
+@@ -221,19 +221,64 @@ public final class CraftTeam extends CraftScoreboardComponent implements Team {
  
          switch (option) {
              case NAME_TAG_VISIBILITY:

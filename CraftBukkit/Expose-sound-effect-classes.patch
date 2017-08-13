@@ -33,7 +33,7 @@ diff --git a/src/main/java/net/minecraft/server/SoundEffectType.java b/src/main/
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -922,6 +922,7 @@ public abstract class World implements IBlockAccess {
+@@ -926,6 +926,7 @@ public abstract class World implements IBlockAccess {
          this.a(entityhuman, (double) blockposition.getX() + 0.5D, (double) blockposition.getY() + 0.5D, (double) blockposition.getZ() + 0.5D, soundeffect, soundcategory, f, f1);
      }
  

@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/DedicatedServer.java
 +++ b/net/minecraft/server/DedicatedServer.java
-@@ -18,11 +18,21 @@
+@@ -19,11 +19,21 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -23,7 +23,7 @@
      private RemoteStatusListener n;
      public final RemoteControlCommandListener remoteControlCommandListener = new RemoteControlCommandListener(this);
      private RemoteControlListener p;
-@@ -32,8 +42,10 @@
+@@ -33,8 +43,10 @@
      private EnumGamemode t;
      private boolean u;
  
@@ -36,22 +36,22 @@
          Thread thread = new Thread("Server Infinisleeper") {
              {
                  this.setDaemon(true);
-@@ -52,16 +64,30 @@
+@@ -53,16 +65,30 @@
          };
      }
  
 -    protected boolean init() throws IOException {
-+    public boolean init() throws IOException {
++    public boolean init() throws IOException { // CraftBukkit - decompile error
          Thread thread = new Thread("Server console handler") {
              public void run() {
--                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in));
+-                BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 +                // CraftBukkit start
 +                if (!org.bukkit.craftbukkit.Main.useConsole) {
 +                    return;
 +                }
++                jline.console.ConsoleReader bufferedreader = reader;
 +                // CraftBukkit end
  
-+                jline.console.ConsoleReader bufferedreader = reader; // CraftBukkit
                  String s;
  
                  try {
@@ -71,7 +71,7 @@
                      }
                  } catch (IOException ioexception) {
                      DedicatedServer.LOGGER.error("Exception handling console input", ioexception);
-@@ -70,6 +96,27 @@
+@@ -71,6 +97,27 @@
              }
          };
  
@@ -98,8 +98,8 @@
 +
          thread.setDaemon(true);
          thread.start();
-         DedicatedServer.LOGGER.info("Starting minecraft server version 1.11.1");
-@@ -78,9 +125,9 @@
+         DedicatedServer.LOGGER.info("Starting minecraft server version 1.12.1");
+@@ -79,9 +126,9 @@
          }
  
          DedicatedServer.LOGGER.info("Loading properties");
@@ -111,7 +111,7 @@
              DedicatedServer.LOGGER.info("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.");
              this.r.b();
              return false;
-@@ -128,6 +175,11 @@
+@@ -129,6 +176,11 @@
  
              try {
                  this.an().a(inetaddress, this.P());
@@ -122,32 +122,45 @@
 +                // SportBukkit end
              } catch (IOException ioexception) {
                  DedicatedServer.LOGGER.warn("**** FAILED TO BIND TO PORT!");
-                 DedicatedServer.LOGGER.warn("The exception was: {}", new Object[] { ioexception.toString()});
-@@ -135,6 +187,8 @@
+                 DedicatedServer.LOGGER.warn("The exception was: {}", ioexception.toString());
+@@ -136,6 +188,12 @@
                  return false;
              }
  
-+            this.a((PlayerList) (new DedicatedPlayerList(this))); // CraftBukkit
++            // CraftBukkit start
++            this.a((PlayerList) (new DedicatedPlayerList(this)));
++            server.loadPlugins();
++            server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
++            // CraftBukkit end
 +
              if (!this.getOnlineMode()) {
                  DedicatedServer.LOGGER.warn("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
                  DedicatedServer.LOGGER.warn("The server will make no attempt to authenticate usernames. Beware.");
-@@ -149,7 +203,7 @@
+@@ -150,7 +208,7 @@
              if (!NameReferencingFileConverter.a(this.propertyManager)) {
                  return false;
              } else {
 -                this.a((PlayerList) (new DedicatedPlayerList(this)));
-+                this.convertable = new WorldLoaderServer(server.getWorldContainer(), this.getDataConverterManager()); // CraftBukkit - moved from MinecraftServer constructor
++                this.convertable = new WorldLoaderServer(server.getWorldContainer(), this.dataConverterManager); // CraftBukkit - moved from MinecraftServer constructor
                  long j = System.nanoTime();
  
                  if (this.S() == null) {
-@@ -207,7 +261,18 @@
+@@ -198,7 +256,7 @@
+ 
+                 DedicatedServer.LOGGER.info("Done ({})! For help, type \"help\" or \"?\"", s3);
+                 if (this.propertyManager.a("announce-player-achievements")) {
+-                    this.worldServer[0].getGameRules().set("announceAdvancements", this.propertyManager.getBoolean("announce-player-achievements", true) ? "true" : "false");
++                    this.worlds.get(0).getGameRules().set("announceAdvancements", this.propertyManager.getBoolean("announce-player-achievements", true) ? "true" : "false"); // CraftBukkit
+                     this.propertyManager.b("announce-player-achievements");
+                     this.propertyManager.savePropertiesFile();
+                 }
+@@ -213,14 +271,26 @@
                      DedicatedServer.LOGGER.info("Starting remote control listener");
                      this.p = new RemoteControlListener(this);
                      this.p.a();
 +                    this.remoteConsole = new org.bukkit.craftbukkit.command.CraftRemoteConsoleCommandSender(this.remoteControlCommandListener); // CraftBukkit
-+                }
-+
+                 }
+ 
 +                // CraftBukkit start
 +                if (this.server.getBukkitSpawnRadius() > -1) {
 +                    DedicatedServer.LOGGER.info("'settings.spawn-radius' in bukkit.yml has been moved to 'spawn-protection' in server.properties. I will move your config for you.");
@@ -155,20 +168,20 @@
 +                    this.propertyManager.getInt("spawn-protection", this.server.getBukkitSpawnRadius());
 +                    this.server.removeBukkitSpawnRadius();
 +                    this.propertyManager.savePropertiesFile();
-                 }
++                }
 +                // CraftBukkit end
- 
-                 if (this.aQ() > 0L) {
++
+                 if (this.aT() > 0L) {
                      Thread thread1 = new Thread(new ThreadWatchdog(this));
-@@ -215,6 +280,7 @@
+ 
                      thread1.setName("Server Watchdog");
                      thread1.setDaemon(true);
                      thread1.start();
 +                    watchdogThread = thread1; // SportBukkit
                  }
  
-                 return true;
-@@ -292,13 +358,13 @@
+                 Items.a.a(CreativeModeTab.g, NonNullList.a());
+@@ -299,13 +369,13 @@
          return crashreport;
      }
  
@@ -181,12 +194,12 @@
 -    protected void D() {
 +    public void D() { // CraftBukkit - fix decompile error
          super.D();
--        this.aM();
-+        // this.aM(); // SportBukkit - moved to processTasks()
+-        this.aP();
++        // this.aP(); // SportBukkit - moved to processTasks()
      }
  
      public boolean getAllowNether() {
-@@ -321,13 +387,31 @@
+@@ -328,13 +398,35 @@
  
      public void issueCommand(String s, ICommandListener icommandlistener) {
          this.serverCommandQueue.add(new ServerCommand(s, icommandlistener));
@@ -199,10 +212,14 @@
 +        super.processTasks();
 +        processCommands();
 +    }
++
++    public DataConverterManager getDataConverterManager() {
++        return this.dataConverterManager;
++    }
 +    // SportBukkit end
 +
-+    public void processCommands() { aM(); } // SportBukkit - alias
-     public void aM() {
++    public void processCommands() { aP(); } // SportBukkit - alias
+     public void aP() {
          while (!this.serverCommandQueue.isEmpty()) {
              ServerCommand servercommand = (ServerCommand) this.serverCommandQueue.remove(0);
  
@@ -219,7 +236,7 @@
          }
  
      }
-@@ -375,7 +459,7 @@
+@@ -382,7 +474,7 @@
      }
  
      public int e_() {
@@ -228,7 +245,7 @@
      }
  
      public String f_() {
-@@ -534,16 +618,70 @@
+@@ -537,16 +629,70 @@
      }
  
      public String getPlugins() {
@@ -295,7 +312,7 @@
      }
  
      public PlayerList getPlayerList() {
-         return this.aN();
+         return this.aQ();
      }
 +
 +    // CraftBukkit start

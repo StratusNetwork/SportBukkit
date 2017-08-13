@@ -6,10 +6,10 @@ Subject: [PATCH] Add getHostname to Player
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -67,6 +67,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
-     public boolean keepLevel = false;
+@@ -78,6 +78,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
      public double maxHealthCache;
      public boolean joining = true;
+     public boolean sentListPacket = false;
 +    public String hostname;
      // CraftBukkit end
  
@@ -17,7 +17,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/jav
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -463,6 +463,8 @@ public abstract class PlayerList {
+@@ -487,6 +487,8 @@ public abstract class PlayerList {
          SocketAddress socketaddress = loginlistener.networkManager.getSocketAddress();
  
          EntityPlayer entity = new EntityPlayer(server, server.getWorldServer(0), gameprofile, new PlayerInteractManager(server.getWorldServer(0)));
@@ -29,9 +29,9 @@ diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1487,4 +1487,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
-         getHandle().playerConnection.sendPacket(packetplayoutworldparticles);
- 
+@@ -1514,4 +1514,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+     public String getLocale() {
+         return getHandle().locale;
      }
 +
 +    @Override

@@ -1,12 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.common.collect.Lists;
 import net.minecraft.server.AttributeModifier;
@@ -97,6 +91,8 @@ public final class CraftItemFactory implements ItemFactory {
             return meta instanceof CraftMetaBanner ? meta : new CraftMetaBanner(meta);
         case MONSTER_EGG:
             return meta instanceof CraftMetaSpawnEgg ? meta : new CraftMetaSpawnEgg(meta);
+        case KNOWLEDGE_BOOK:
+            return meta instanceof CraftMetaKnowledgeBook ? meta : new CraftMetaKnowledgeBook(meta);
         case FURNACE:
         case CHEST:
         case TRAPPED_CHEST:
@@ -106,7 +102,6 @@ public final class CraftItemFactory implements ItemFactory {
         case SIGN:
         case MOB_SPAWNER:
         case NOTE_BLOCK:
-        case PISTON_BASE:
         case BREWING_STAND_ITEM:
         case ENCHANTMENT_TABLE:
         case COMMAND:
@@ -206,7 +201,7 @@ public final class CraftItemFactory implements ItemFactory {
         for(EnumItemSlot nmsSlot : EnumItemSlot.values()) {
             attributes.addAll(nmsItem.a(nmsSlot).keySet());
         }
-        return attributes;
+               return attributes;
     }
 
     @Override
@@ -223,7 +218,7 @@ public final class CraftItemFactory implements ItemFactory {
                     map.put(entry.getKey(), list);
                 }
                 list.add(new ItemAttributeModifier(CraftEquipmentSlot.getSlot(nmsSlot),
-                                                   CraftAttributeInstance.convert(entry.getValue())));
+                        CraftAttributeInstance.convert(entry.getValue())));
             }
         }
 
@@ -239,7 +234,7 @@ public final class CraftItemFactory implements ItemFactory {
         for(EnumItemSlot nmsSlot : EnumItemSlot.values()) {
             for(AttributeModifier nmsMod : nmsItem.a(nmsSlot).get(attribute)) {
                 mods.add(new ItemAttributeModifier(CraftEquipmentSlot.getSlot(nmsSlot),
-                                                   CraftAttributeInstance.convert(nmsMod)));
+                        CraftAttributeInstance.convert(nmsMod)));
             }
         }
         return mods;

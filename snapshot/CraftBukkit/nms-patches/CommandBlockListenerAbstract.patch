@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/CommandBlockListenerAbstract.java
 +++ b/net/minecraft/server/CommandBlockListenerAbstract.java
-@@ -4,6 +4,13 @@
+@@ -4,6 +4,15 @@
  import java.util.Date;
  import javax.annotation.Nullable;
  
@@ -9,31 +9,33 @@
 +import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
 +import com.google.common.base.Joiner;
 +import java.util.logging.Level;
++import org.bukkit.command.CommandSender;
++import org.bukkit.event.server.ServerCommandEvent;
 +// CraftBukkit end
 +
  public abstract class CommandBlockListenerAbstract implements ICommandListener {
  
      private static final SimpleDateFormat a = new SimpleDateFormat("HH:mm:ss");
-@@ -13,6 +20,7 @@
-     private String e = "";
-     private String f = "@";
-     private final CommandObjectiveExecutor g = new CommandObjectiveExecutor();
+@@ -15,6 +24,7 @@
+     private String g = "";
+     private String h = "@";
+     private final CommandObjectiveExecutor i = new CommandObjectiveExecutor();
 +    protected org.bukkit.command.CommandSender sender; // CraftBukkit - add sender
  
      public CommandBlockListenerAbstract() {}
  
-@@ -92,7 +100,9 @@
- 
-                 try {
-                     this.d = null;
--                    this.b = icommandhandler.a(this, this.e);
-+                    // CraftBukkit start - Handle command block commands using Bukkit dispatcher
-+                    this.b = executeSafely(this, sender, this.e);
-+                    // CraftBukkit end
-                 } catch (Throwable throwable) {
-                     CrashReport crashreport = CrashReport.a(throwable, "Executing command block");
-                     CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Command to be executed");
-@@ -124,6 +134,142 @@
+@@ -107,7 +117,9 @@
+                 if (minecraftserver != null && minecraftserver.M() && minecraftserver.getEnableCommandBlock()) {
+                     try {
+                         this.f = null;
+-                        this.d = minecraftserver.getCommandHandler().a(this, this.g);
++                        // CraftBukkit start - Handle command block commands using Bukkit dispatcher
++                        this.d = executeSafely(this, sender, this.g);
++                        // CraftBukkit end
+                     } catch (Throwable throwable) {
+                         CrashReport crashreport = CrashReport.a(throwable, "Executing command block");
+                         CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Command to be executed");
+@@ -149,6 +161,175 @@
          }
      }
  
@@ -57,6 +59,14 @@
 +        if (command.startsWith("/")) {
 +            command = command.substring(1);
 +        }
++
++        ServerCommandEvent event = new ServerCommandEvent(bSender, command);
++        org.bukkit.Bukkit.getPluginManager().callEvent(event);
++        if (event.isCancelled()) {
++            return 0;
++        }
++        command = event.getCommand();
++
 +        String[] args = command.split(" ");
 +        ArrayList<String[]> commands = new ArrayList<String[]>();
 +
@@ -171,8 +181,33 @@
 +
 +        return commands;
 +    }
++
++    public static CommandSender unwrapSender(ICommandListener listener) {
++        org.bukkit.command.CommandSender sender = null;
++        while (sender == null) {
++            if (listener instanceof DedicatedServer) {
++                sender = ((DedicatedServer) listener).console;
++            } else if (listener instanceof RemoteControlCommandListener) {
++                sender = ((DedicatedServer) listener).remoteConsole;
++            } else if (listener instanceof CommandBlockListenerAbstract) {
++                sender = ((CommandBlockListenerAbstract) listener).sender;
++            } else if (listener instanceof CustomFunctionData.CustomFunctionListener) {
++                sender = ((CustomFunctionData.CustomFunctionListener) listener).sender;
++            } else if (listener instanceof CommandListenerWrapper) {
++                listener = ((CommandListenerWrapper) listener).base; // Search deeper
++            } else if (VanillaCommandWrapper.lastSender != null) {
++                sender = VanillaCommandWrapper.lastSender;
++            } else if (listener.f() != null) {
++                sender = listener.f().getBukkitEntity();
++            } else {
++                throw new RuntimeException("Unhandled executor " + listener.getClass().getSimpleName());
++            }
++        }
++
++        return sender;
++    }
 +    // CraftBukkit end
 +
      public String getName() {
-         return this.f;
+         return this.h;
      }

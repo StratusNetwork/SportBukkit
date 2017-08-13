@@ -6,13 +6,12 @@ Subject: [PATCH] Add CanDestroy and CanPlaceOn to ItemMeta
 diff --git a/src/main/java/org/bukkit/inventory/meta/ItemMeta.java b/src/main/java/org/bukkit/inventory/meta/ItemMeta.java
 --- a/src/main/java/org/bukkit/inventory/meta/ItemMeta.java
 +++ b/src/main/java/org/bukkit/inventory/meta/ItemMeta.java
-@@ -5,12 +5,14 @@ import java.util.List;
+@@ -5,11 +5,13 @@ import java.util.List;
  import java.util.Map;
  import java.util.Set;
  
 +import org.bukkit.Material;
  import org.bukkit.attribute.Attribute;
- import org.bukkit.attribute.AttributeModifier;
  import org.bukkit.attribute.ItemAttributeModifier;
  import org.bukkit.configuration.serialization.ConfigurationSerializable;
  import org.bukkit.enchantments.Enchantment;
@@ -21,7 +20,7 @@ diff --git a/src/main/java/org/bukkit/inventory/meta/ItemMeta.java b/src/main/ja
  
  /**
   * This type represents the storage mechanism for auxiliary item data.
-@@ -198,6 +200,18 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable {
+@@ -221,6 +223,18 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable {
  
      void removeAttributeModifier(Attribute attribute, ItemAttributeModifier modifier);
  
@@ -42,7 +41,7 @@ diff --git a/src/main/java/org/bukkit/inventory/meta/ItemMeta.java b/src/main/ja
  }
 diff --git a/src/main/java/org/bukkit/util/EnumUtils.java b/src/main/java/org/bukkit/util/EnumUtils.java
 new file mode 100644
-index 0000000..27da631
+index 00000000..27da6315
 --- /dev/null
 +++ b/src/main/java/org/bukkit/util/EnumUtils.java
 @@ -0,0 +1,21 @@
@@ -69,7 +68,7 @@ index 0000000..27da631
 +}
 diff --git a/src/main/java/org/bukkit/util/ImmutableMaterialSet.java b/src/main/java/org/bukkit/util/ImmutableMaterialSet.java
 new file mode 100644
-index 0000000..bfbbc73
+index 00000000..53f56a96
 --- /dev/null
 +++ b/src/main/java/org/bukkit/util/ImmutableMaterialSet.java
 @@ -0,0 +1,78 @@
@@ -151,3 +150,4 @@ index 0000000..bfbbc73
 +        }
 +    }
 +}
+\ No newline at end of file

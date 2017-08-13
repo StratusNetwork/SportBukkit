@@ -12,7 +12,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java b/src
  
 -    private int a;
 +    private int a; public int getEntityId() { return a; } // SportBukkit - add accessor
-     private PacketPlayInUseEntity.EnumEntityUseAction action;
+     private EnumEntityUseAction action;
      private Vec3D c;
      private EnumHand d;
  
@@ -31,26 +31,41 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java b/src
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -42,6 +42,7 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
- import org.bukkit.event.player.AsyncPlayerChatEvent;
- import org.bukkit.event.player.PlayerAnimationEvent;
- import org.bukkit.event.player.PlayerAttackEntityEvent;
-+import org.bukkit.event.player.PlayerUseUnknownEntityEvent;
- import org.bukkit.event.player.PlayerChatEvent;
- import org.bukkit.event.player.PlayerCommandPreprocessEvent;
- import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-@@ -1685,7 +1686,16 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
-                 }
+@@ -38,22 +38,7 @@ import org.bukkit.event.inventory.InventoryAction;
+ import org.bukkit.event.inventory.InventoryClickEvent;
+ import org.bukkit.event.inventory.InventoryCreativeEvent;
+ import org.bukkit.event.inventory.InventoryType.SlotType;
+-import org.bukkit.event.player.AsyncPlayerChatEvent;
+-import org.bukkit.event.player.PlayerAnimationEvent;
+-import org.bukkit.event.player.PlayerAttackEntityEvent;
+-import org.bukkit.event.player.PlayerChatEvent;
+-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+-import org.bukkit.event.player.PlayerInteractEntityEvent;
+-import org.bukkit.event.player.PlayerItemHeldEvent;
+-import org.bukkit.event.player.PlayerKickEvent;
+-import org.bukkit.event.player.PlayerMoveEvent;
+-import org.bukkit.event.player.PlayerResourcePackStatusEvent;
+-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+-import org.bukkit.event.player.PlayerTeleportEvent;
+-import org.bukkit.event.player.PlayerToggleFlightEvent;
+-import org.bukkit.event.player.PlayerToggleSneakEvent;
+-import org.bukkit.event.player.PlayerToggleSprintEvent;
++import org.bukkit.event.player.*;
+ import org.bukkit.inventory.CraftingInventory;
+ import org.bukkit.inventory.EquipmentSlot;
+ import org.bukkit.inventory.InventoryView;
+@@ -1722,6 +1707,16 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
              }
          }
--
+ 
 +        // SportBukkit start - fire event
 +        else {
 +            this.server.getPluginManager().callEvent(new PlayerUseUnknownEntityEvent(
-+                this.getPlayer(),
-+                packetplayinuseentity.getEntityId(),
-+                packetplayinuseentity.a() == PacketPlayInUseEntity.EnumEntityUseAction.ATTACK,
-+                packetplayinuseentity.b() == EnumHand.MAIN_HAND ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND
++                    this.getPlayer(),
++                    packetplayinuseentity.getEntityId(),
++                    packetplayinuseentity.a() == PacketPlayInUseEntity.EnumEntityUseAction.ATTACK,
++                    packetplayinuseentity.b() == EnumHand.MAIN_HAND ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND
 +            ));
 +        }
 +        // SportBukkit end

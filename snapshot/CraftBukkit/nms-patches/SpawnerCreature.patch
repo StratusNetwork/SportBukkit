@@ -101,16 +101,21 @@
                                                      if (biomebase_biomemeta == null) {
                                                          biomebase_biomemeta = worldserver.a(enumcreaturetype, (BlockPosition) blockposition_mutableblockposition);
                                                          if (biomebase_biomemeta == null) {
-@@ -126,7 +161,7 @@
+@@ -125,8 +160,11 @@
+                                                         if (entityinsentient.P() && entityinsentient.canSpawn()) {
                                                              groupdataentity = entityinsentient.prepare(worldserver.D(new BlockPosition(entityinsentient)), groupdataentity);
                                                              if (entityinsentient.canSpawn()) {
-                                                                 ++l2;
+-                                                                ++l2;
 -                                                                worldserver.addEntity(entityinsentient);
-+                                                                worldserver.addEntity(entityinsentient, SpawnReason.NATURAL); // CraftBukkit - Added a reason for spawning this creature
++                                                                // CraftBukkit start
++                                                                if (worldserver.addEntity(entityinsentient, SpawnReason.NATURAL)) {
++                                                                    ++l2;
++                                                                }
++                                                                // CraftBukkit end
                                                              } else {
                                                                  entityinsentient.die();
                                                              }
-@@ -226,8 +261,10 @@
+@@ -226,8 +264,10 @@
                              }
  
                              entityinsentient.setPositionRotation((double) ((float) j1 + 0.5F), (double) blockposition.getY(), (double) ((float) k1 + 0.5F), random.nextFloat() * 360.0F, 0.0F);

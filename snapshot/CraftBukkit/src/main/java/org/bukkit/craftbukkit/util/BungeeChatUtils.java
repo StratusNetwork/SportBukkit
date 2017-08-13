@@ -1,27 +1,13 @@
 package org.bukkit.craftbukkit.util;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.*;
+import net.minecraft.server.*;
+import net.minecraft.server.ChatClickable.EnumClickAction;
+import net.minecraft.server.ChatHoverable.EnumHoverAction;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.ScoreComponent;
-import net.md_5.bungee.api.chat.SelectorComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.TranslatableComponent;
-import net.minecraft.server.ChatClickable;
-import net.minecraft.server.ChatClickable.EnumClickAction;
-import net.minecraft.server.ChatComponentScore;
-import net.minecraft.server.ChatComponentSelector;
-import net.minecraft.server.ChatComponentText;
-import net.minecraft.server.ChatHoverable;
-import net.minecraft.server.ChatHoverable.EnumHoverAction;
-import net.minecraft.server.ChatMessage;
-import net.minecraft.server.ChatModifier;
-import net.minecraft.server.EnumChatFormat;
-import net.minecraft.server.IChatBaseComponent;
 
 public final class BungeeChatUtils {
     private BungeeChatUtils() {}

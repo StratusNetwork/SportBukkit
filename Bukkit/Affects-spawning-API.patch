@@ -6,10 +6,10 @@ Subject: [PATCH] Affects spawning API
 diff --git a/src/main/java/org/bukkit/entity/HumanEntity.java b/src/main/java/org/bukkit/entity/HumanEntity.java
 --- a/src/main/java/org/bukkit/entity/HumanEntity.java
 +++ b/src/main/java/org/bukkit/entity/HumanEntity.java
-@@ -231,4 +231,17 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
-      * @return Experience required to level up
+@@ -325,4 +325,17 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, Permissible, Inv
       */
-     public int getExpToLevel();
+     @Deprecated
+     public void setShoulderEntityRight(Entity entity);
 +
 +    /**
 +     * Setting this to false prevents players from activating mob spawners and

@@ -58,43 +58,43 @@ public interface MutableVec3Coarse<V extends Vec3, M extends MutableVec3Coarse<V
     @Override
     default M set(double x, double y, double z) {
         return set(NumberConversions.floor(x),
-                   NumberConversions.floor(y),
-                   NumberConversions.floor(z));
+                NumberConversions.floor(y),
+                NumberConversions.floor(z));
     }
 
     @Override
     default M set(Vec3 v) {
         return set(v.coarseX(),
-                   v.coarseY(),
-                   v.coarseZ());
+                v.coarseY(),
+                v.coarseZ());
     }
 
     @Override
     default M modify(IntUnaryOperator op) {
         return set(op.applyAsInt(coarseX()),
-                   op.applyAsInt(coarseY()),
-                   op.applyAsInt(coarseZ()));
+                op.applyAsInt(coarseY()),
+                op.applyAsInt(coarseZ()));
     }
 
     @Override
     default M modify(DoubleUnaryOperator op) {
         return set(op.applyAsDouble(fineX()),
-                   op.applyAsDouble(fineY()),
-                   op.applyAsDouble(fineZ()));
+                op.applyAsDouble(fineY()),
+                op.applyAsDouble(fineZ()));
     }
 
     @Override
     default M modify(Vec3 v, IntBinaryOperator op) {
         return set(op.applyAsInt(coarseX(), v.coarseX()),
-                   op.applyAsInt(coarseY(), v.coarseY()),
-                   op.applyAsInt(coarseZ(), v.coarseZ()));
+                op.applyAsInt(coarseY(), v.coarseY()),
+                op.applyAsInt(coarseZ(), v.coarseZ()));
     }
 
     @Override
     default M modify(Vec3 v, DoubleBinaryOperator op) {
         return set(op.applyAsDouble(fineX(), v.fineX()),
-                   op.applyAsDouble(fineY(), v.fineY()),
-                   op.applyAsDouble(fineZ(), v.fineZ()));
+                op.applyAsDouble(fineY(), v.fineY()),
+                op.applyAsDouble(fineZ(), v.fineZ()));
     }
 
     @Override
@@ -111,29 +111,29 @@ public interface MutableVec3Coarse<V extends Vec3, M extends MutableVec3Coarse<V
     default M clamp(Vec3 min, Vec3 max) {
         Preconditions.checkArgument(min.coarseLessOrEqual(max));
         return set(NumberConversions.clamp(coarseX(), min.coarseX(), max.coarseX()),
-                   NumberConversions.clamp(coarseY(), min.coarseY(), max.coarseY()),
-                   NumberConversions.clamp(coarseZ(), min.coarseZ(), max.coarseZ()));
+                NumberConversions.clamp(coarseY(), min.coarseY(), max.coarseY()),
+                NumberConversions.clamp(coarseZ(), min.coarseZ(), max.coarseZ()));
     }
 
     @Override
     default M add(int x, int y, int z) {
         return set(coarseX() + x,
-                   coarseY() + y,
-                   coarseZ() + z);
+                coarseY() + y,
+                coarseZ() + z);
     }
 
     @Override
     default M add(double x, double y, double z) {
         return add(NumberConversions.floor(x),
-                   NumberConversions.floor(y),
-                   NumberConversions.floor(z));
+                NumberConversions.floor(y),
+                NumberConversions.floor(z));
     }
 
     @Override
     default M add(Vec3 v) {
         return add(v.coarseX(),
-                   v.coarseY(),
-                   v.coarseZ());
+                v.coarseY(),
+                v.coarseZ());
     }
 
     @Override
@@ -145,14 +145,14 @@ public interface MutableVec3Coarse<V extends Vec3, M extends MutableVec3Coarse<V
     @Override
     default M subtract(int x, int y, int z) {
         return set(coarseX() - x,
-                   coarseY() - y,
-                   coarseZ() - z);
+                coarseY() - y,
+                coarseZ() - z);
     }
 
     @Override
     default M subtract(Vec3 v) {
         return v.isFine() ? subtract(v.fineX(), v.fineY(), v.fineZ())
-                          : subtract(v.coarseX(), v.coarseY(), v.coarseZ());
+                : subtract(v.coarseX(), v.coarseY(), v.coarseZ());
     }
 
     @Override
@@ -168,7 +168,7 @@ public interface MutableVec3Coarse<V extends Vec3, M extends MutableVec3Coarse<V
     @Override
     default M multiply(Vec3 v) {
         return v.isFine() ? multiply(v.fineX(), v.fineY(), v.fineZ())
-                          : multiply(v.coarseX(), v.coarseY(), v.coarseZ());
+                : multiply(v.coarseX(), v.coarseY(), v.coarseZ());
     }
 
     @Override
@@ -184,6 +184,6 @@ public interface MutableVec3Coarse<V extends Vec3, M extends MutableVec3Coarse<V
     @Override
     default M divide(Vec3 v) {
         return v.isFine() ? divide(v.fineX(), v.fineY(), v.fineZ())
-                          : divide(v.coarseX(), v.coarseY(), v.coarseZ());
+                : divide(v.coarseX(), v.coarseY(), v.coarseZ());
     }
 }

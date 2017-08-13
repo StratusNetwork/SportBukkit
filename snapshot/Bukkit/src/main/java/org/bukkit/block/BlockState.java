@@ -6,13 +6,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.geometry.BlockRotoflection;
-import org.bukkit.geometry.BlockReflection;
-import org.bukkit.geometry.BlockRotation;
-import org.bukkit.geometry.CoarseTransform;
+import org.bukkit.geometry.*;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.geometry.Vec3;
 
 /**
  * Represents a captured state of a block, which will not change

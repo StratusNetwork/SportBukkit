@@ -6,26 +6,23 @@ Subject: [PATCH] Potion effect events
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -21,6 +21,7 @@ import org.bukkit.Location;
- import org.bukkit.craftbukkit.attribute.CraftAttributeMap;
+@@ -22,13 +22,11 @@ import org.bukkit.craftbukkit.attribute.CraftAttributeMap;
+ import org.bukkit.craftbukkit.entity.CraftLivingEntity;
  import org.bukkit.craftbukkit.event.CraftEventFactory;
  import org.bukkit.craftbukkit.inventory.CraftItemStack;
 +import org.bukkit.craftbukkit.potion.CraftPotionUtils;
  import org.bukkit.entity.LivingEntity;
  import org.bukkit.entity.Player;
- import org.bukkit.event.entity.EntityDamageEvent;
-@@ -28,6 +29,10 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
- import org.bukkit.event.entity.EntityRegainHealthEvent;
- import org.bukkit.event.entity.EntityResurrectEvent;
- import org.bukkit.event.entity.EntityTeleportEvent;
-+import org.bukkit.event.entity.PotionEffectAddEvent;
-+import org.bukkit.event.entity.PotionEffectExpireEvent;
-+import org.bukkit.event.entity.PotionEffectExtendEvent;
-+import org.bukkit.event.entity.PotionEffectRemoveEvent;
+-import org.bukkit.event.entity.EntityDamageEvent;
++import org.bukkit.event.entity.*;
+ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+-import org.bukkit.event.entity.EntityRegainHealthEvent;
+-import org.bukkit.event.entity.EntityResurrectEvent;
+-import org.bukkit.event.entity.EntityTeleportEvent;
  import org.bukkit.event.player.PlayerItemConsumeEvent;
- import org.bukkit.event.vehicle.VehicleExitEvent;
- import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-@@ -525,42 +530,35 @@ public abstract class EntityLiving extends Entity {
+ // CraftBukkit end
+ 
+@@ -526,43 +524,35 @@ public abstract class EntityLiving extends Entity {
  
      }
  
@@ -58,7 +55,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
 +                if (!this.world.isClientSide) {
 +                    // SportBukkit start - fire event
 +                    PotionEffectExpireEvent event = new PotionEffectExpireEvent((LivingEntity) this.getBukkitEntity(),
-+                                                                                CraftPotionUtils.toBukkit(mobeffect));
++                            CraftPotionUtils.toBukkit(mobeffect));
 +                    this.world.getServer().getPluginManager().callEvent(event);
 +                    if(event.isCancelled()) {
 +                        // Duration must be extended if event is cancelled
@@ -88,11 +85,12 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
 -                removeEffect((MobEffectList) e);
 -            }
 -        }
+-        effectsToProcess.clear();
 -        // CraftBukkit end
  
          if (this.updateEffects) {
              if (!this.world.isClientSide) {
-@@ -643,11 +641,14 @@ public abstract class EntityLiving extends Entity {
+@@ -642,11 +632,14 @@ public abstract class EntityLiving extends Entity {
  
      public void removeAllEffects() {
          if (!this.world.isClientSide) {
@@ -110,7 +108,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
              }
  
          }
-@@ -667,19 +668,26 @@ public abstract class EntityLiving extends Entity {
+@@ -670,19 +663,26 @@ public abstract class EntityLiving extends Entity {
      }
  
      public void addEffect(MobEffect mobeffect) {
@@ -126,7 +124,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
              if (mobeffect1 == null) {
 +                // SportBukkit start - fire event
 +                PotionEffectAddEvent event = new PotionEffectAddEvent((LivingEntity) this.getBukkitEntity(),
-+                                                                      CraftPotionUtils.toBukkit(mobeffect));
++                        CraftPotionUtils.toBukkit(mobeffect));
 +                this.world.getServer().getPluginManager().callEvent(event);
 +                if(event.isCancelled()) return;
 +                // SportBukkit end
@@ -135,15 +133,15 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
              } else {
 +                // SportBukkit start - fire event
 +                PotionEffectExtendEvent event = new PotionEffectExtendEvent((LivingEntity) this.getBukkitEntity(),
-+                                                                            CraftPotionUtils.toBukkit(mobeffect),
-+                                                                            CraftPotionUtils.toBukkit(this.effects.get(mobeffect.getMobEffect())));
++                        CraftPotionUtils.toBukkit(mobeffect),
++                        CraftPotionUtils.toBukkit(this.effects.get(mobeffect.getMobEffect())));
 +                this.world.getServer().getPluginManager().callEvent(event);
 +                if(event.isCancelled()) return;
 +                // SportBukkit end
                  mobeffect1.a(mobeffect);
                  this.a(mobeffect1, true);
              }
-@@ -705,12 +713,6 @@ public abstract class EntityLiving extends Entity {
+@@ -708,12 +708,6 @@ public abstract class EntityLiving extends Entity {
  
      @Nullable
      public MobEffect c(@Nullable MobEffectList mobeffectlist) {
@@ -156,13 +154,13 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
          return (MobEffect) this.effects.remove(mobeffectlist);
      }
  
-@@ -718,6 +720,16 @@ public abstract class EntityLiving extends Entity {
+@@ -721,6 +715,16 @@ public abstract class EntityLiving extends Entity {
          MobEffect mobeffect = this.c(mobeffectlist);
  
          if (mobeffect != null) {
 +            // SportBukkit start
 +            PotionEffectRemoveEvent event = new PotionEffectRemoveEvent((LivingEntity) this.getBukkitEntity(),
-+                                                                        CraftPotionUtils.toBukkit(mobeffect));
++                    CraftPotionUtils.toBukkit(mobeffect));
 +            this.world.getServer().getPluginManager().callEvent(event);
 +            if(event.isCancelled()) {
 +                this.effects.put(mobeffectlist, mobeffect);
@@ -175,7 +173,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtils.java b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtils.java
 new file mode 100644
-index 0000000..ef29a03
+index 00000000..ef29a034
 --- /dev/null
 +++ b/src/main/java/org/bukkit/craftbukkit/potion/CraftPotionUtils.java
 @@ -0,0 +1,42 @@
