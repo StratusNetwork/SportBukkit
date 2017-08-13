@@ -1325,7 +1325,7 @@ new file mode 100644
 index 00000000..1d04959e
 --- /dev/null
 +++ b/src/main/java/net/minecraft/server/EnumProtocol.java
-@@ -0,0 +1,242 @@
+@@ -0,0 +1,243 @@
 +package net.minecraft.server;
 +
 +import com.google.common.collect.BiMap;
@@ -1387,6 +1387,7 @@ index 00000000..1d04959e
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntity.PacketPlayOutEntityLook.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutVehicleMove.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutOpenSignEditor.class);
++        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutAutoRecipe.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutAbilities.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutCombatEvent.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutPlayerInfo.class);
@@ -1424,7 +1425,6 @@ index 00000000..1d04959e
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutUpdateAttributes.class);
 +        this.a(EnumProtocolDirection.CLIENTBOUND, PacketPlayOutEntityEffect.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInTeleportAccept.class);
-+        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInAutoRecipe.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInTabComplete.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInChat.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInClientCommand.class);
@@ -1442,6 +1442,7 @@ index 00000000..1d04959e
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInFlying.PacketPlayInLook.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInVehicleMove.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInBoatMove.class);
++        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInAutoRecipe.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInAbilities.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInBlockDig.class);
 +        this.a(EnumProtocolDirection.SERVERBOUND, PacketPlayInEntityAction.class);
