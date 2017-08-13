@@ -6,7 +6,7 @@ Subject: [PATCH] Change large getCubes error to warning
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -1133,6 +1133,10 @@ public abstract class World implements IBlockAccess {
+@@ -1135,6 +1135,10 @@ public abstract class World implements IBlockAccess {
          int l = MathHelper.f(axisalignedbb.e) + 1;
          int i1 = MathHelper.floor(axisalignedbb.c) - 1;
          int j1 = MathHelper.f(axisalignedbb.f) + 1;
@@ -15,5 +15,5 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
 +            return false;
 +        }
          WorldBorder worldborder = this.getWorldBorder();
-         boolean flag1 = entity != null && entity.bx();
+         boolean flag1 = entity != null && entity.bz();
          boolean flag2 = entity != null && this.g(entity);

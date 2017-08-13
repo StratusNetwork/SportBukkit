@@ -17,7 +17,7 @@ diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/j
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -84,10 +84,30 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -88,10 +88,30 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
      boolean clientOnGround; // SportBukkit - only set by client
  
@@ -49,7 +49,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
          this.player = entityplayer;
          entityplayer.playerConnection = this;
  
-@@ -1144,6 +1164,13 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1149,6 +1169,13 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
      }
  
      public void sendPacket(final Packet<?> packet) {
@@ -61,12 +61,12 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
 +        }
 +        // SportBukkit end
          Packet replacedPacket = packet; // SportBukkit
- 
          if (packet instanceof PacketPlayOutChat) {
+             PacketPlayOutChat packetplayoutchat = (PacketPlayOutChat) packet;
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -134,7 +134,14 @@ public abstract class PlayerList {
+@@ -138,7 +138,14 @@ public abstract class PlayerList {
          WorldData worlddata = worldserver.getWorldData();
  
          this.a(entityplayer, (EntityPlayer) null, worldserver);
@@ -82,7 +82,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/
  
          playerconnection.sendPacket(new PacketPlayOutLogin(entityplayer.getId(), entityplayer.playerInteractManager.getGameMode(), worlddata.isHardcore(), worldserver.worldProvider.getDimensionManager().getDimensionID(), worldserver.getDifficulty(), this.getMaxPlayers(), worlddata.getType(), worldserver.getGameRules().getBoolean("reducedDebugInfo")));
          entityplayer.getBukkitEntity().sendSupportedChannels(); // CraftBukkit
-@@ -148,6 +155,11 @@ public abstract class PlayerList {
+@@ -152,6 +159,11 @@ public abstract class PlayerList {
          entityplayer.F().a(entityplayer);
          this.sendScoreboard((ScoreboardServer) worldserver.getScoreboard(), entityplayer);
          this.server.aD();
@@ -94,7 +94,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/
          // CraftBukkit start - login message is handled in the event
          // ChatMessage chatmessage;
  
-@@ -489,6 +501,7 @@ public abstract class PlayerList {
+@@ -495,6 +507,7 @@ public abstract class PlayerList {
          SocketAddress socketaddress = loginlistener.networkManager.getSocketAddress();
  
          EntityPlayer entity = new EntityPlayer(server, server.getWorldServer(0), gameprofile, new PlayerInteractManager(server.getWorldServer(0)));

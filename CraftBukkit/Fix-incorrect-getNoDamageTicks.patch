@@ -6,7 +6,7 @@ Subject: [PATCH] Fix incorrect getNoDamageTicks
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1533,11 +1533,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1571,11 +1571,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
  
      @Override
      public int getNoDamageTicks() {

@@ -6,7 +6,7 @@ Subject: [PATCH] Fix no knockback from zero-damage projectiles
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -1418,7 +1418,7 @@ public abstract class EntityLiving extends Entity {
+@@ -1416,7 +1416,7 @@ public abstract class EntityLiving extends Entity {
  
                      return false;
                  } else {

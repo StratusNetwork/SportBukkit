@@ -65,7 +65,7 @@ class IdentityTransform implements CoarseTransform {
     @Override
     public boolean equals(Object that) {
         return that instanceof Transform &&
-               ((Transform) that).isIdentity();
+                ((Transform) that).isIdentity();
     }
 
     @Override

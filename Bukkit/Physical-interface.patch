@@ -29,9 +29,9 @@ index 00000000..1cb686db
 diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
 --- a/src/main/java/org/bukkit/Location.java
 +++ b/src/main/java/org/bukkit/Location.java
-@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
- /**
-  * Represents a 3-dimensional position in a world
+@@ -16,7 +16,7 @@ import org.bukkit.util.Vector;
+  * magnitude than 360 are valid, but may be normalized to any other equivalent
+  * representation by the implementation.
   */
 -public class Location implements Cloneable, ConfigurationSerializable {
 +public class Location implements Cloneable, ConfigurationSerializable, Physical {
@@ -43,8 +43,11 @@ new file mode 100644
 index 00000000..24a58ffd
 --- /dev/null
 +++ b/src/main/java/org/bukkit/Physical.java
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,55 @@
 +package org.bukkit;
++
++import java.util.UUID;
++import javax.annotation.Nullable;
 +
 +/**
 + * Common interface for any type of object that can be associated with a specific world.
@@ -53,10 +56,48 @@ index 00000000..24a58ffd
 +public interface Physical {
 +
 +    /**
-+     * Return the world this object is associated with. May return null if the world
-+     * is not available (i.e. not loaded), or this object does not have a world.
++     * Return the {@link UUID} of the {@link World} this object is associated with.
++     *
++     * Some types may make this value available even when the world is not
++     * e.g. because it is not currently loaded.
++     *
++     * May throw {@link IllegalStateException} if this particular object is
++     * not associated with any world.
++     */
++    default UUID getWorldId() {
++        return getWorld().getWorldId();
++    }
++
++    /**
++     * Return the same {@link UUID} as {@link #getWorldId()}, if it is available,
++     * otherwise return null.
++     *
++     * The default implementation just calls {@link #getWorldId()}, assuming
++     * that it never fails. If it can fail, then this method must be
++     * overridden to return null in that case.
++     */
++    default @Nullable UUID tryWorldId() {
++        return getWorldId();
++    }
++
++    /**
++     * Return the {@link World} this object is associated with.
++     *
++     * May throw an {@link IllegalStateException} if the world is unloaded,
++     * or unavailable for some other reason.
 +     */
 +    World getWorld();
++
++    /**
++     * Return the same {@link World} as {@link #getWorld()}, if it is available,
++     * otherwise return null.
++     *
++     * The default implementation tries to lookup the world by ID through {@link Bukkit#getWorld(UUID)}.
++     */
++    default @Nullable World tryWorld() {
++        final UUID id = tryWorldId();
++        return id == null ? null : Bukkit.getWorld(id);
++    }
 +}
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
 --- a/src/main/java/org/bukkit/World.java
@@ -147,7 +188,7 @@ diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/buk
  import org.bukkit.Location;
  import org.bukkit.EntityEffect;
  import org.bukkit.Nameable;
-@@ -18,7 +19,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+@@ -19,7 +20,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
  /**
   * Represents a base entity in the world
   */
@@ -162,8 +203,8 @@ diff --git a/src/main/java/org/bukkit/event/block/BlockEvent.java b/src/main/jav
 @@ -1,12 +1,14 @@
  package org.bukkit.event.block;
  
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.block.Block;
  import org.bukkit.event.Event;
  
@@ -191,8 +232,8 @@ diff --git a/src/main/java/org/bukkit/event/entity/EntityEvent.java b/src/main/j
 @@ -1,5 +1,7 @@
  package org.bukkit.event.entity;
  
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.entity.Entity;
  import org.bukkit.entity.EntityType;
  import org.bukkit.event.Event;
@@ -221,8 +262,8 @@ diff --git a/src/main/java/org/bukkit/event/entity/PlayerLeashEntityEvent.java b
 @@ -1,5 +1,7 @@
  package org.bukkit.event.entity;
  
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.entity.Entity;
  import org.bukkit.entity.Player;
  import org.bukkit.event.Cancellable;
@@ -276,8 +317,8 @@ diff --git a/src/main/java/org/bukkit/event/inventory/InventoryEvent.java b/src/
  
  import java.util.List;
  
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.event.HandlerList;
  import org.bukkit.entity.HumanEntity;
  import org.bukkit.event.Event;
@@ -309,8 +350,8 @@ diff --git a/src/main/java/org/bukkit/event/inventory/InventoryMoveItemEvent.jav
  package org.bukkit.event.inventory;
  
  import org.apache.commons.lang.Validate;
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.event.Cancellable;
  import org.bukkit.event.Event;
  import org.bukkit.event.HandlerList;
@@ -341,8 +382,8 @@ diff --git a/src/main/java/org/bukkit/event/inventory/InventoryPickupItemEvent.j
 @@ -1,5 +1,7 @@
  package org.bukkit.event.inventory;
  
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.entity.Item;
  import org.bukkit.event.Cancellable;
  import org.bukkit.event.Event;
@@ -373,8 +414,8 @@ diff --git a/src/main/java/org/bukkit/event/player/PlayerEvent.java b/src/main/j
 @@ -1,12 +1,14 @@
  package org.bukkit.event.player;
  
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.entity.Player;
  import org.bukkit.event.Event;
  
@@ -402,8 +443,8 @@ diff --git a/src/main/java/org/bukkit/event/server/MapInitializeEvent.java b/src
 @@ -1,12 +1,14 @@
  package org.bukkit.event.server;
  
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.event.HandlerList;
  import org.bukkit.map.MapView;
  
@@ -433,8 +474,8 @@ diff --git a/src/main/java/org/bukkit/event/vehicle/VehicleEvent.java b/src/main
 @@ -1,12 +1,14 @@
  package org.bukkit.event.vehicle;
  
-+import org.bukkit.World;
 +import org.bukkit.Physical;
++import org.bukkit.World;
  import org.bukkit.entity.Vehicle;
  import org.bukkit.event.Event;
  
@@ -462,8 +503,8 @@ diff --git a/src/main/java/org/bukkit/event/weather/WeatherEvent.java b/src/main
 @@ -1,12 +1,13 @@
  package org.bukkit.event.weather;
  
- import org.bukkit.World;
 +import org.bukkit.Physical;
+ import org.bukkit.World;
  import org.bukkit.event.Event;
  
  /**
@@ -480,8 +521,8 @@ diff --git a/src/main/java/org/bukkit/event/world/WorldEvent.java b/src/main/jav
 @@ -1,12 +1,13 @@
  package org.bukkit.event.world;
  
- import org.bukkit.World;
 +import org.bukkit.Physical;
+ import org.bukkit.World;
  import org.bukkit.event.Event;
  
  /**
@@ -528,11 +569,12 @@ diff --git a/src/main/java/org/bukkit/inventory/InventoryHolder.java b/src/main/
 diff --git a/src/main/java/org/bukkit/map/MapView.java b/src/main/java/org/bukkit/map/MapView.java
 --- a/src/main/java/org/bukkit/map/MapView.java
 +++ b/src/main/java/org/bukkit/map/MapView.java
-@@ -2,11 +2,12 @@ package org.bukkit.map;
+@@ -1,12 +1,13 @@
+ package org.bukkit.map;
  
  import java.util.List;
- import org.bukkit.World;
 +import org.bukkit.Physical;
+ import org.bukkit.World;
  
  /**
   * Represents a map item.

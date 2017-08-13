@@ -31,40 +31,10 @@
      public EntityBoat(World world) {
          super(world);
          this.f = new float[2];
-@@ -48,6 +65,7 @@
-         this.lastX = d0;
-         this.lastY = d1;
-         this.lastZ = d2;
-+        this.world.getServer().getPluginManager().callEvent(new org.bukkit.event.vehicle.VehicleCreateEvent((Vehicle) this.getBukkitEntity())); // CraftBukkit
-     }
- 
-     protected boolean playStepSound() {
-@@ -76,7 +94,7 @@
-     }
- 
-     @Nullable
--    public AxisAlignedBB al() {
-+    public AxisAlignedBB ag() {
-         return this.getBoundingBox();
-     }
- 
-@@ -84,7 +102,7 @@
-         return true;
-     }
- 
--    public double aE() {
-+    public double ay() {
-         return -0.1D;
-     }
- 
-@@ -95,13 +113,35 @@
+@@ -95,6 +112,19 @@
              if (damagesource instanceof EntityDamageSourceIndirect && damagesource.getEntity() != null && this.w(damagesource.getEntity())) {
                  return false;
              } else {
--                this.d(-this.r());
--                this.c(10);
--                this.setDamage(this.p() + f * 10.0F);
--                this.av();
 +                // CraftBukkit start
 +                Vehicle vehicle = (Vehicle) this.getBukkitEntity();
 +                org.bukkit.entity.Entity attacker = (damagesource.getEntity() == null) ? null : damagesource.getEntity().getBukkitEntity();
@@ -78,14 +48,13 @@
 +                // f = event.getDamage(); // TODO Why don't we do this?
 +                // CraftBukkit end
 +
-+                this.d(-this.q());
-+                this.b(10);
-+                this.setDamage(this.n() + f * 10.0F);
-+                this.ap();
+                 this.d(-this.r());
+                 this.c(10);
+                 this.setDamage(this.p() + f * 10.0F);
+@@ -102,6 +132,15 @@
                  boolean flag = damagesource.getEntity() instanceof EntityHuman && ((EntityHuman) damagesource.getEntity()).abilities.canInstantlyBuild;
  
--                if (flag || this.p() > 40.0F) {
-+                if (flag || this.n() > 40.0F) {
+                 if (flag || this.p() > 40.0F) {
 +                    // CraftBukkit start
 +                    VehicleDestroyEvent destroyEvent = new VehicleDestroyEvent(vehicle, attacker);
 +                    this.world.getServer().getPluginManager().callEvent(destroyEvent);
@@ -98,7 +67,7 @@
                      if (!flag && this.world.getGameRules().getBoolean("doEntityDrops")) {
                          this.a(this.j(), 1, 0.0F);
                      }
-@@ -119,9 +159,25 @@
+@@ -119,9 +158,25 @@
      public void collide(Entity entity) {
          if (entity instanceof EntityBoat) {
              if (entity.getBoundingBox().b < this.getBoundingBox().e) {
@@ -124,91 +93,35 @@
              super.collide(entity);
          }
  
-@@ -154,13 +210,14 @@
-         return !this.dead;
-     }
- 
--    public EnumDirection bs() {
-+    public EnumDirection bm() {
+@@ -158,6 +213,7 @@
          return this.getDirection().e();
      }
  
--    public void B_() {
 +    private Location lastLocation; // CraftBukkit
-+    public void A_() {
+     public void B_() {
          this.aH = this.aG;
--        this.aG = this.u();
-+        this.aG = this.t();
-         if (this.aG != EntityBoat.EnumStatus.UNDER_WATER && this.aG != EntityBoat.EnumStatus.UNDER_FLOWING_WATER) {
-             this.h = 0.0F;
-         } else {
-@@ -168,30 +225,29 @@
-         }
- 
-         if (!this.world.isClientSide && this.h >= 60.0F) {
--            this.ejectPassengers();
-+            this.az();
-         }
- 
--        if (this.q() > 0) {
--            this.c(this.q() - 1);
-+        if (this.o() > 0) {
-+            this.b(this.o() - 1);
-         }
- 
--        if (this.p() > 0.0F) {
--            this.setDamage(this.p() - 1.0F);
-+        if (this.n() > 0.0F) {
-+            this.setDamage(this.n() - 1.0F);
+         this.aG = this.u();
+@@ -178,7 +234,6 @@
+         if (this.p() > 0.0F) {
+             this.setDamage(this.p() - 1.0F);
          }
 -
          this.lastX = this.locX;
          this.lastY = this.locY;
          this.lastZ = this.locZ;
--        super.B_();
--        this.t();
--        if (this.bG()) {
--            if (this.bD().isEmpty() || !(this.bD().get(0) instanceof EntityHuman)) {
-+        super.A_();
-+        this.s();
-+        if (this.bA()) {
-+            if (this.bx().size() == 0 || !(this.bx().get(0) instanceof EntityHuman)) {
-                 this.a(false, false);
-             }
- 
--            this.x();
-+            this.w();
-             if (this.world.isClientSide) {
--                this.y();
-+                this.x();
-                 this.world.a((Packet) (new PacketPlayInBoatMove(this.a(0), this.a(1))));
-             }
- 
-@@ -202,21 +258,25 @@
+@@ -202,6 +257,22 @@
              this.motZ = 0.0D;
          }
  
--        for (int i = 0; i <= 1; ++i) {
--            if (this.a(i)) {
--                if (!this.isSilent() && (double) (this.f[i] % 6.2831855F) <= 0.7853981852531433D && ((double) this.f[i] + 0.39269909262657166D) % 6.2831854820251465D >= 0.7853981852531433D) {
--                    SoundEffect soundeffect = this.k();
 +        // CraftBukkit start
 +        org.bukkit.Server server = this.world.getServer();
 +        org.bukkit.World bworld = this.world.getWorld();
- 
--                    if (soundeffect != null) {
--                        Vec3D vec3d = this.g(1.0F);
--                        double d0 = i == 1 ? -vec3d.z : vec3d.z;
--                        double d1 = i == 1 ? vec3d.x : -vec3d.x;
++
 +        Location to = new Location(bworld, this.locX, this.locY, this.locZ, this.yaw, this.pitch);
 +        Vehicle vehicle = (Vehicle) this.getBukkitEntity();
- 
--                        this.world.a((EntityHuman) null, this.locX + d0, this.locY, this.locZ + d1, soundeffect, this.bI(), 1.0F, 0.8F + 0.4F * this.random.nextFloat());
--                    }
--                }
++
 +        server.getPluginManager().callEvent(new org.bukkit.event.vehicle.VehicleUpdateEvent(vehicle));
- 
--                this.f[i] = (float) ((double) this.f[i] + 0.39269909262657166D);
++
 +        if (lastLocation != null && !lastLocation.equals(to)) {
 +            VehicleMoveEvent event = new VehicleMoveEvent(vehicle, lastLocation, to);
 +            server.getPluginManager().callEvent(event);
@@ -216,224 +129,10 @@
 +        lastLocation = vehicle.getLocation();
 +        // CraftBukkit end
 +
-+        for (int i = 0; i <= 1; ++i) {
-+            if (this.a(i)) {
-+                this.f[i] = (float) ((double) this.f[i] + 0.01D);
-             } else {
-                 this.f[i] = 0.0F;
-             }
-@@ -226,13 +286,13 @@
-         List list = this.world.getEntities(this, this.getBoundingBox().grow(0.20000000298023224D, -0.009999999776482582D, 0.20000000298023224D), IEntitySelector.a(this));
- 
-         if (!list.isEmpty()) {
--            boolean flag = !this.world.isClientSide && !(this.bC() instanceof EntityHuman);
-+            boolean flag = !this.world.isClientSide && !(this.bw() instanceof EntityHuman);
- 
-             for (int j = 0; j < list.size(); ++j) {
-                 Entity entity = (Entity) list.get(j);
- 
-                 if (!entity.w(this)) {
--                    if (flag && this.bD().size() < 2 && !entity.isPassenger() && entity.width < this.width && entity instanceof EntityLiving && !(entity instanceof EntityWaterAnimal) && !(entity instanceof EntityHuman)) {
-+                    if (flag && this.bx().size() < 2 && !entity.isPassenger() && entity.width < this.width && entity instanceof EntityLiving && !(entity instanceof EntityWaterAnimal) && !(entity instanceof EntityHuman)) {
-                         entity.startRiding(this);
-                     } else {
-                         this.collide(entity);
-@@ -243,25 +303,8 @@
- 
-     }
- 
--    @Nullable
--    protected SoundEffect k() {
--        switch (this.u()) {
--        case IN_WATER:
--        case UNDER_WATER:
--        case UNDER_FLOWING_WATER:
--            return SoundEffects.I;
--
--        case ON_LAND:
--            return SoundEffects.H;
--
--        case IN_AIR:
--        default:
--            return null;
--        }
--    }
--
--    private void t() {
--        if (this.au > 0 && !this.bG()) {
-+    private void s() {
-+        if (this.au > 0 && !this.bA()) {
-             double d0 = this.locX + (this.av - this.locX) / (double) this.au;
-             double d1 = this.locY + (this.aw - this.locY) / (double) this.au;
-             double d2 = this.locZ + (this.ax - this.locZ) / (double) this.au;
-@@ -280,16 +323,16 @@
-         this.datawatcher.set(EntityBoat.e[1], Boolean.valueOf(flag1));
-     }
- 
--    private EntityBoat.EnumStatus u() {
--        EntityBoat.EnumStatus entityboat_enumstatus = this.w();
-+    private EntityBoat.EnumStatus t() {
-+        EntityBoat.EnumStatus entityboat_enumstatus = this.v();
- 
-         if (entityboat_enumstatus != null) {
-             this.aE = this.getBoundingBox().e;
-             return entityboat_enumstatus;
--        } else if (this.v()) {
-+        } else if (this.u()) {
-             return EntityBoat.EnumStatus.IN_WATER;
-         } else {
--            float f = this.n();
-+            float f = this.l();
- 
-             if (f > 0.0F) {
-                 this.aF = f;
-@@ -300,7 +343,7 @@
-         }
-     }
- 
--    public float l() {
-+    public float k() {
-         AxisAlignedBB axisalignedbb = this.getBoundingBox();
-         int i = MathHelper.floor(axisalignedbb.a);
-         int j = MathHelper.f(axisalignedbb.d);
-@@ -321,7 +364,7 @@
-                         IBlockData iblockdata = this.world.getType(blockposition_pooledblockposition);
- 
-                         if (iblockdata.getMaterial() == Material.WATER) {
--                            f = Math.max(f, BlockFluids.g(iblockdata, this.world, blockposition_pooledblockposition));
-+                            f = Math.max(f, BlockFluids.f(iblockdata, this.world, blockposition_pooledblockposition));
-                         }
- 
-                         if (f >= 1.0F) {
-@@ -345,7 +388,7 @@
-         }
-     }
- 
--    public float n() {
-+    public float l() {
-         AxisAlignedBB axisalignedbb = this.getBoundingBox();
-         AxisAlignedBB axisalignedbb1 = new AxisAlignedBB(axisalignedbb.a, axisalignedbb.b - 0.001D, axisalignedbb.c, axisalignedbb.d, axisalignedbb.b, axisalignedbb.f);
-         int i = MathHelper.floor(axisalignedbb1.a) - 1;
-@@ -389,7 +432,7 @@
-         return f / (float) k1;
-     }
- 
--    private boolean v() {
-+    private boolean u() {
-         AxisAlignedBB axisalignedbb = this.getBoundingBox();
-         int i = MathHelper.floor(axisalignedbb.a);
-         int j = MathHelper.f(axisalignedbb.d);
-@@ -410,7 +453,7 @@
-                         IBlockData iblockdata = this.world.getType(blockposition_pooledblockposition);
- 
-                         if (iblockdata.getMaterial() == Material.WATER) {
--                            float f = BlockFluids.h(iblockdata, this.world, blockposition_pooledblockposition);
-+                            float f = BlockFluids.g(iblockdata, this.world, blockposition_pooledblockposition);
- 
-                             this.aE = Math.max((double) f, this.aE);
-                             flag |= axisalignedbb.b < (double) f;
-@@ -426,7 +469,7 @@
-     }
- 
-     @Nullable
--    private EntityBoat.EnumStatus w() {
-+    private EntityBoat.EnumStatus v() {
-         AxisAlignedBB axisalignedbb = this.getBoundingBox();
-         double d0 = axisalignedbb.e + 0.001D;
-         int i = MathHelper.floor(axisalignedbb.a);
-@@ -445,7 +488,7 @@
-                         blockposition_pooledblockposition.f(k1, l1, i2);
-                         IBlockData iblockdata = this.world.getType(blockposition_pooledblockposition);
- 
--                        if (iblockdata.getMaterial() == Material.WATER && d0 < (double) BlockFluids.h(iblockdata, this.world, blockposition_pooledblockposition)) {
-+                        if (iblockdata.getMaterial() == Material.WATER && d0 < (double) BlockFluids.g(iblockdata, this.world, blockposition_pooledblockposition)) {
-                             if (((Integer) iblockdata.get(BlockFluids.LEVEL)).intValue() != 0) {
-                                 EntityBoat.EnumStatus entityboat_enumstatus = EntityBoat.EnumStatus.UNDER_FLOWING_WATER;
- 
-@@ -464,7 +507,7 @@
-         }
-     }
- 
--    private void x() {
-+    private void w() {
-         double d0 = -0.03999999910593033D;
-         double d1 = this.isNoGravity() ? 0.0D : -0.03999999910593033D;
-         double d2 = 0.0D;
-@@ -472,7 +515,7 @@
-         this.g = 0.05F;
-         if (this.aH == EntityBoat.EnumStatus.IN_AIR && this.aG != EntityBoat.EnumStatus.IN_AIR && this.aG != EntityBoat.EnumStatus.ON_LAND) {
-             this.aE = this.getBoundingBox().b + (double) this.length;
--            this.setPosition(this.locX, (double) (this.l() - this.length) + 0.101D, this.locZ);
-+            this.setPosition(this.locX, (double) (this.k() - this.length) + 0.101D, this.locZ);
-             this.motY = 0.0D;
-             this.aI = 0.0D;
-             this.aG = EntityBoat.EnumStatus.IN_WATER;
-@@ -490,7 +533,7 @@
-                 this.g = 0.9F;
-             } else if (this.aG == EntityBoat.EnumStatus.ON_LAND) {
-                 this.g = this.aF;
--                if (this.bC() instanceof EntityHuman) {
-+                if (this.bw() instanceof EntityHuman) {
-                     this.aF /= 2.0F;
-                 }
-             }
-@@ -511,7 +554,7 @@
- 
-     }
- 
--    private void y() {
-+    private void x() {
-         if (this.isVehicle()) {
-             float f = 0.0F;
- 
-@@ -545,10 +588,10 @@
-     public void k(Entity entity) {
-         if (this.w(entity)) {
-             float f = 0.0F;
--            float f1 = (float) ((this.dead ? 0.009999999776482582D : this.aE()) + entity.aD());
-+            float f1 = (float) ((this.dead ? 0.009999999776482582D : this.ay()) + entity.ax());
- 
--            if (this.bD().size() > 1) {
--                int i = this.bD().indexOf(entity);
-+            if (this.bx().size() > 1) {
-+                int i = this.bx().indexOf(entity);
- 
-                 if (i == 0) {
-                     f = 0.2F;
-@@ -565,26 +608,26 @@
- 
-             entity.setPosition(this.locX + vec3d.x, this.locY + (double) f1, this.locZ + vec3d.z);
-             entity.yaw += this.at;
--            entity.setHeadRotation(entity.getHeadRotation() + this.at);
-+            entity.h(entity.getHeadRotation() + this.at);
-             this.a(entity);
--            if (entity instanceof EntityAnimal && this.bD().size() > 1) {
-+            if (entity instanceof EntityAnimal && this.bx().size() > 1) {
-                 int j = entity.getId() % 2 == 0 ? 90 : 270;
- 
--                entity.j(((EntityAnimal) entity).aN + (float) j);
--                entity.setHeadRotation(entity.getHeadRotation() + (float) j);
-+                entity.i(((EntityAnimal) entity).aN + (float) j);
-+                entity.h(entity.getHeadRotation() + (float) j);
-             }
- 
-         }
-     }
- 
-     protected void a(Entity entity) {
--        entity.j(this.yaw);
-+        entity.i(this.yaw);
-         float f = MathHelper.g(entity.yaw - this.yaw);
-         float f1 = MathHelper.a(f, -105.0F, 105.0F);
- 
-         entity.lastYaw += f1 - f;
-         entity.yaw += f1 - f;
--        entity.setHeadRotation(entity.yaw);
-+        entity.h(entity.yaw);
-     }
- 
-     protected void b(NBTTagCompound nbttagcompound) {
-@@ -622,6 +665,11 @@
+         for (int i = 0; i <= 1; ++i) {
+             if (this.a(i)) {
+                 if (!this.isSilent() && (double) (this.f[i] % 6.2831855F) <= 0.7853981852531433D && ((double) this.f[i] + 0.39269909262657166D) % 6.2831854820251465D >= 0.7853981852531433D) {
+@@ -622,6 +693,11 @@
  
                      this.e(this.fallDistance, 1.0F);
                      if (!this.world.isClientSide && !this.dead) {
@@ -445,7 +144,7 @@
                          this.die();
                          if (this.world.getGameRules().getBoolean("doEntityDrops")) {
                              int i;
-@@ -635,6 +683,7 @@
+@@ -635,6 +711,7 @@
                              }
                          }
                      }
@@ -453,55 +152,3 @@
                  }
  
                  this.fallDistance = 0.0F;
-@@ -646,22 +695,22 @@
-     }
- 
-     public boolean a(int i) {
--        return ((Boolean) this.datawatcher.get(EntityBoat.e[i])).booleanValue() && this.bC() != null;
-+        return ((Boolean) this.datawatcher.get(EntityBoat.e[i])).booleanValue() && this.bw() != null;
-     }
- 
-     public void setDamage(float f) {
-         this.datawatcher.set(EntityBoat.c, Float.valueOf(f));
-     }
- 
--    public float p() {
-+    public float n() {
-         return ((Float) this.datawatcher.get(EntityBoat.c)).floatValue();
-     }
- 
--    public void c(int i) {
-+    public void b(int i) {
-         this.datawatcher.set(EntityBoat.a, Integer.valueOf(i));
-     }
- 
--    public int q() {
-+    public int o() {
-         return ((Integer) this.datawatcher.get(EntityBoat.a)).intValue();
-     }
- 
-@@ -669,7 +718,7 @@
-         this.datawatcher.set(EntityBoat.b, Integer.valueOf(i));
-     }
- 
--    public int r() {
-+    public int q() {
-         return ((Integer) this.datawatcher.get(EntityBoat.b)).intValue();
-     }
- 
-@@ -682,12 +731,12 @@
-     }
- 
-     protected boolean q(Entity entity) {
--        return this.bD().size() < 2;
-+        return this.bx().size() < 2;
-     }
- 
-     @Nullable
--    public Entity bC() {
--        List list = this.bD();
-+    public Entity bw() {
-+        List list = this.bx();
- 
-         return list.isEmpty() ? null : (Entity) list.get(0);
-     }

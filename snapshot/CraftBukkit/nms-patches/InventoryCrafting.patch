@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/InventoryCrafting.java
 +++ b/net/minecraft/server/InventoryCrafting.java
-@@ -1,17 +1,72 @@
+@@ -1,6 +1,14 @@
  package net.minecraft.server;
  
  import java.util.Iterator;
@@ -15,12 +15,10 @@
  
  public class InventoryCrafting implements IInventory {
  
-     private final NonNullList<ItemStack> items;
-     private final int b;
+@@ -9,6 +17,53 @@
      private final int c;
--    public final Container container;
-+    private final Container d;
-+
+     public final Container container;
+ 
 +    // CraftBukkit start - add fields
 +    public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 +    public IRecipe currentRecipe;
@@ -67,38 +65,7 @@
 +        this.owner = player;
 +    }
 +    // CraftBukkit end
- 
++
      public InventoryCrafting(Container container, int i, int j) {
          this.items = NonNullList.a(i * j, ItemStack.a);
--        this.container = container;
-+        this.d = container;
-         this.b = i;
-         this.c = j;
-     }
-@@ -20,7 +75,7 @@
-         return this.items.size();
-     }
- 
--    public boolean x_() {
-+    public boolean w_() {
-         Iterator iterator = this.items.iterator();
- 
-         ItemStack itemstack;
-@@ -64,7 +119,7 @@
-         ItemStack itemstack = ContainerUtil.a(this.items, i, j);
- 
-         if (!itemstack.isEmpty()) {
--            this.container.a((IInventory) this);
-+            this.d.a((IInventory) this);
-         }
- 
-         return itemstack;
-@@ -72,7 +127,7 @@
- 
-     public void setItem(int i, ItemStack itemstack) {
-         this.items.set(i, itemstack);
--        this.container.a((IInventory) this);
-+        this.d.a((IInventory) this);
-     }
- 
-     public int getMaxStackSize() {
+         this.container = container;

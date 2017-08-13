@@ -6,7 +6,7 @@ Subject: [PATCH] Fix NPE in Player.playEffect
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -357,7 +357,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -387,7 +387,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
              Validate.isTrue(effect.getData() == null, "Wrong kind of data for this effect!");
          }
  

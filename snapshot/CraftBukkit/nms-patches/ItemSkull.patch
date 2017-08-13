@@ -1,26 +1,6 @@
 --- a/net/minecraft/server/ItemSkull.java
 +++ b/net/minecraft/server/ItemSkull.java
-@@ -9,7 +9,7 @@
-     private static final String[] a = new String[] { "skeleton", "wither", "zombie", "char", "creeper", "dragon"};
- 
-     public ItemSkull() {
--        this.b(CreativeModeTab.c);
-+        this.a(CreativeModeTab.c);
-         this.setMaxDurability(0);
-         this.a(true);
-     }
-@@ -70,10 +70,6 @@
-                         Blocks.SKULL.a(world, blockposition, tileentityskull);
-                     }
- 
--                    if (entityhuman instanceof EntityPlayer) {
--                        CriterionTriggers.x.a((EntityPlayer) entityhuman, blockposition, itemstack);
--                    }
--
-                     itemstack.subtract(1);
-                     return EnumInteractionResult.SUCCESS;
-                 }
-@@ -124,6 +120,15 @@
+@@ -133,6 +133,15 @@
              nbttagcompound.set("SkullOwner", GameProfileSerializer.serialize(new NBTTagCompound(), gameprofile));
              return true;
          } else {

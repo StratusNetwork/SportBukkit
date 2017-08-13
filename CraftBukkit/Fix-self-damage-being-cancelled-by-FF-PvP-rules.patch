@@ -6,7 +6,7 @@ Subject: [PATCH] Fix self-damage being cancelled by FF/PvP rules
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
-@@ -771,6 +771,9 @@ public abstract class EntityHuman extends EntityLiving {
+@@ -777,6 +777,9 @@ public abstract class EntityHuman extends EntityLiving {
      public boolean a(EntityHuman entityhuman) {
          // CraftBukkit start - Change to check OTHER player's scoreboard team according to API
          // To summarize this method's logic, it's "Can parameter hurt this"

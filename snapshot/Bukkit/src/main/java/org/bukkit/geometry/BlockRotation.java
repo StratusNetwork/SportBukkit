@@ -38,9 +38,9 @@ public enum BlockRotation {
 
     private static CoarseTransform makeTransform(int turns) {
         return new BlockTransform(
-            cos(turns), -sin(turns),
-            sin(turns), cos(turns),
-            0, 0, 0
+                cos(turns), -sin(turns),
+                sin(turns), cos(turns),
+                0, 0, 0
         );
     }
 

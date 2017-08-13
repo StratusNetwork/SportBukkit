@@ -9,23 +9,7 @@
  public class PropertyManager {
  
      private static final Logger a = LogManager.getLogger();
-@@ -23,7 +25,7 @@
-                 fileinputstream = new FileInputStream(file);
-                 this.properties.load(fileinputstream);
-             } catch (Exception exception) {
--                PropertyManager.a.warn("Failed to load {}", file, exception);
-+                PropertyManager.a.warn("Failed to load {}", new Object[] { file, exception});
-                 this.a();
-             } finally {
-                 if (fileinputstream != null) {
-@@ -36,12 +38,30 @@
- 
-             }
-         } else {
--            PropertyManager.a.warn("{} does not exist", file);
-+            PropertyManager.a.warn("{} does not exist", new Object[] { file});
-             this.a();
-         }
+@@ -42,6 +44,24 @@
  
      }
  
@@ -50,7 +34,7 @@
      public void a() {
          PropertyManager.a.info("Generating new properties file");
          this.savePropertiesFile();
-@@ -51,10 +71,16 @@
+@@ -51,6 +71,12 @@
          FileOutputStream fileoutputstream = null;
  
          try {
@@ -63,11 +47,6 @@
              fileoutputstream = new FileOutputStream(this.file);
              this.properties.store(fileoutputstream, "Minecraft server properties");
          } catch (Exception exception) {
--            PropertyManager.a.warn("Failed to save {}", this.file, exception);
-+            PropertyManager.a.warn("Failed to save {}", new Object[] { this.file, exception});
-             this.a();
-         } finally {
-             if (fileoutputstream != null) {
 @@ -80,36 +106,36 @@
              this.savePropertiesFile();
          }

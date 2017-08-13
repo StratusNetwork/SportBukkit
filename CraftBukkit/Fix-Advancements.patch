@@ -20,16 +20,16 @@ diff --git a/src/main/java/net/minecraft/server/Advancement.java b/src/main/java
 -import java.util.function.Function;
  import javax.annotation.Nullable;
  import org.apache.commons.lang3.ArrayUtils;
-
+ 
 diff --git a/src/main/java/net/minecraft/server/Advancements.java b/src/main/java/net/minecraft/server/Advancements.java
 --- a/src/main/java/net/minecraft/server/Advancements.java
 +++ b/src/main/java/net/minecraft/server/Advancements.java
 @@ -37,7 +37,7 @@ public class Advancements {
                  MinecraftKey minecraftkey = (MinecraftKey) entry.getKey();
                  Advancement.SerializedAdvancement advancement_serializedadvancement = (Advancement.SerializedAdvancement) entry.getValue();
-
+ 
 -                if (advancement_serializedadvancement.a((java.util.function.Function) function)) {
 +                if (advancement_serializedadvancement.a(function)) {
                      Advancement advancement = advancement_serializedadvancement.a(minecraftkey);
-
+ 
                      this.advancements.put(minecraftkey, advancement);

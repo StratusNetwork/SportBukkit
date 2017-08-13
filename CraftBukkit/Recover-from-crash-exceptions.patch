@@ -38,7 +38,7 @@ diff --git a/src/main/java/net/minecraft/server/CrashReport.java b/src/main/java
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
+@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
  // CraftBukkit start
  import com.google.common.base.Preconditions;
  import org.bukkit.Bukkit;
@@ -46,7 +46,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/jav
  import org.bukkit.GameMode;
  import org.bukkit.WeatherType;
  import org.bukkit.craftbukkit.CraftWorld;
-@@ -543,7 +544,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -552,7 +553,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
              CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Player being ticked");
  
              this.appendEntityCrashDetails(crashreportsystemdetails);
@@ -73,7 +73,7 @@ diff --git a/src/main/java/net/minecraft/server/TileEntity.java b/src/main/java/
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
+@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
  import com.google.common.collect.Maps;
  import java.util.Map;
  import org.bukkit.Bukkit;
@@ -81,7 +81,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
  import org.bukkit.block.BlockState;
  import org.bukkit.craftbukkit.CraftServer;
  import org.bukkit.craftbukkit.CraftWorld;
-@@ -1313,7 +1314,11 @@ public abstract class World implements IBlockAccess {
+@@ -1315,7 +1316,11 @@ public abstract class World implements IBlockAccess {
                      entity.appendEntityCrashDetails(crashreportsystemdetails);
                  }
  
@@ -94,7 +94,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
              }
  
              if (entity.dead) {
-@@ -1369,7 +1374,11 @@ public abstract class World implements IBlockAccess {
+@@ -1371,7 +1376,11 @@ public abstract class World implements IBlockAccess {
                      crashreport1 = CrashReport.a(throwable1, "Ticking entity");
                      crashreportsystemdetails1 = crashreport1.a("Entity being ticked");
                      entity.appendEntityCrashDetails(crashreportsystemdetails1);
@@ -107,7 +107,7 @@ diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/m
                  }
              }
  
-@@ -1416,7 +1425,11 @@ public abstract class World implements IBlockAccess {
+@@ -1420,7 +1429,11 @@ public abstract class World implements IBlockAccess {
                          crashreport1 = CrashReport.a(throwable2, "Ticking block entity");
                          crashreportsystemdetails1 = crashreport1.a("Block entity being ticked");
                          tileentity.a(crashreportsystemdetails1);

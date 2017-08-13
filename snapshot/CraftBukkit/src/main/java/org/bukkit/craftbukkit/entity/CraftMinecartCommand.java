@@ -170,7 +170,7 @@ public class CraftMinecartCommand extends CraftMinecart implements CommandMineca
     @Override
     public Collection<PermissionAttachmentInfo> getAttachments(Plugin plugin) {
         return perm.getAttachments(plugin);
-    }
+            }
 
     @Override
     public Collection<PermissionAttachmentInfo> getAttachments(String name) {

@@ -1,31 +1,6 @@
 --- a/net/minecraft/server/EntitySkeleton.java
 +++ b/net/minecraft/server/EntitySkeleton.java
-@@ -17,24 +17,24 @@
-         return LootTables.ao;
-     }
- 
--    protected SoundEffect F() {
--        return SoundEffects.gQ;
-+    protected SoundEffect G() {
-+        return SoundEffects.fP;
-     }
- 
--    protected SoundEffect d(DamageSource damagesource) {
--        return SoundEffects.gV;
-+    protected SoundEffect bW() {
-+        return SoundEffects.fU;
-     }
- 
--    protected SoundEffect cd() {
--        return SoundEffects.gR;
-+    protected SoundEffect bX() {
-+        return SoundEffects.fQ;
-     }
- 
--    SoundEffect p() {
--        return SoundEffects.gX;
-+    SoundEffect o() {
-+        return SoundEffects.fW;
+@@ -34,7 +34,7 @@
      }
  
      public void die(DamageSource damagesource) {

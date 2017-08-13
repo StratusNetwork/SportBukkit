@@ -351,12 +351,10 @@ diff --git a/src/main/java/org/bukkit/block/BlockState.java b/src/main/java/org/
      /**
       * Gets the metadata for this block
       *
-@@ -95,6 +104,12 @@ public interface BlockState extends Metadatable, Locatable {
+@@ -95,6 +104,10 @@ public interface BlockState extends Metadatable, Locatable {
       */
      World getWorld();
- 
-+    World tryWorld();
-+
+
 +    Vec3 getPosition();
 +
 +    Vec3 tryPosition();
@@ -364,7 +362,7 @@ diff --git a/src/main/java/org/bukkit/block/BlockState.java b/src/main/java/org/
      /**
       * Gets the x-coordinate of this block
       *
-@@ -241,4 +256,6 @@ public interface BlockState extends Metadatable, Locatable {
+@@ -241,4 +254,6 @@ public interface BlockState extends Metadatable, Locatable {
       *         or 'virtual' (e.g. on an itemstack)
       */
      boolean isPlaced();

@@ -1,28 +1,21 @@
 package org.bukkit.craftbukkit.block;
 
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
-import net.minecraft.server.BlockPosition;
-import net.minecraft.server.Blocks;
-import net.minecraft.server.IBlockData;
-import net.minecraft.server.IInventory;
-import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.NextTickListEntry;
-import net.minecraft.server.StructureBoundingBox;
-import net.minecraft.server.TileEntity;
+import net.minecraft.server.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.BlockImage;
-import org.bukkit.geometry.BlockRotoflection;
-import org.bukkit.geometry.CoarseTransform;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.geometry.BlockRotoflection;
+import org.bukkit.geometry.CoarseTransform;
+import org.bukkit.geometry.Vec3;
 import org.bukkit.material.MaterialData;
 import org.bukkit.region.BlockRegion;
-import org.bukkit.geometry.Vec3;
+
+import java.util.List;
 
 /**
  * Read/write algorithms are derived from the code for the /clone command,
@@ -123,7 +116,7 @@ public class CraftBlockImage implements BlockImage {
                 } else {
                     block = new BlockRecord(mutablePosition, blockData, null);
                     if (!block.blockData.b() && // flammable
-                        !block.blockData.h()) { // full-sized
+                        !block.blockData.g()) { // full-sized
                         lateBlocks.add(block);
                     } else {
                         earlyBlocks.add(block);

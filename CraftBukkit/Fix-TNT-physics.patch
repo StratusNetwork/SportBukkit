@@ -12,7 +12,7 @@ diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/
  
 -    public boolean aq() {
 +    public boolean aq() { // SportBukkit - method overridden in EntityTNTPrimed (use this comment to find the base method if it gets renamed)
-         if (this.bH() instanceof EntityBoat) {
+         if (this.bJ() instanceof EntityBoat) {
              this.inWater = false;
          } else if (this.world.a(this.getBoundingBox().grow(0.0D, -0.4000000059604645D, 0.0D).shrink(0.001D), Material.WATER, this)) {
 diff --git a/src/main/java/net/minecraft/server/EntityTNTPrimed.java b/src/main/java/net/minecraft/server/EntityTNTPrimed.java
@@ -74,7 +74,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityTNTPrimed.java b/src/main/
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -606,6 +606,11 @@ public final class CraftServer implements Server {
+@@ -605,6 +605,11 @@ public final class CraftServer implements Server {
      }
  
      @Override

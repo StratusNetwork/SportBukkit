@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.server.EntityArrow;
 
 import org.apache.commons.lang.Validate;
@@ -43,7 +44,7 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
     }
 
     public ProjectileSource getShooter() {
-        return getHandle().projectileSource;   
+        return getHandle().projectileSource;
     }
 
     public void setShooter(ProjectileSource shooter) {
@@ -56,25 +57,25 @@ public class CraftArrow extends AbstractProjectile implements Arrow {
     }
 
     @Override
-    public PickupRule getPickupRule() {
-        return convertPickupRule(getHandle().fromPlayer);
+    public PickupStatus getPickupStatus() {
+        return convertPickupStatus(getHandle().fromPlayer);
     }
 
     @Override
-    public void setPickupRule(PickupRule rule) {
-        getHandle().fromPlayer = convertPickupRule(rule);
+    public void setPickupStatus(PickupStatus status) {
+        getHandle().fromPlayer = convertPickupStatus(status);
     }
 
-    public static PickupRule convertPickupRule(EntityArrow.PickupStatus nms) {
+    public static PickupStatus convertPickupStatus(EntityArrow.PickupStatus nms) {
         switch(nms) {
-            case DISALLOWED: return PickupRule.DISALLOWED;
-            case ALLOWED: return PickupRule.ALLOWED;
-            case CREATIVE_ONLY: return PickupRule.CREATIVE_ONLY;
+            case DISALLOWED: return PickupStatus.DISALLOWED;
+            case ALLOWED: return PickupStatus.ALLOWED;
+            case CREATIVE_ONLY: return PickupStatus.CREATIVE_ONLY;
             default: throw new IllegalStateException();
         }
     }
 
-    public static EntityArrow.PickupStatus convertPickupRule(PickupRule bukkit) {
+    public static EntityArrow.PickupStatus convertPickupStatus(PickupStatus bukkit) {
         switch(bukkit) {
             case DISALLOWED: return EntityArrow.PickupStatus.DISALLOWED;
             case ALLOWED: return EntityArrow.PickupStatus.ALLOWED;

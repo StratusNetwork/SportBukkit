@@ -8,17 +8,6 @@
  
  public class BlockCauldron extends Block {
  
-@@ -14,8 +15,8 @@
-     protected static final AxisAlignedBB f = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.125D, 1.0D, 1.0D);
- 
-     public BlockCauldron() {
--        super(Material.ORE, MaterialMapColor.n);
--        this.w(this.blockStateList.getBlockData().set(BlockCauldron.LEVEL, Integer.valueOf(0)));
-+        super(Material.ORE, MaterialMapColor.m);
-+        this.y(this.blockStateList.getBlockData().set(BlockCauldron.LEVEL, Integer.valueOf(0)));
-     }
- 
-     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, AxisAlignedBB axisalignedbb, List<AxisAlignedBB> list, @Nullable Entity entity, boolean flag) {
 @@ -43,8 +44,13 @@
          float f = (float) blockposition.getY() + (6.0F + (float) (3 * i)) / 16.0F;
  
@@ -48,10 +37,9 @@
  
                      entityhuman.b(StatisticList.I);
 -                    this.a(world, blockposition, iblockdata, 3);
--                    world.a((EntityHuman) null, blockposition, SoundEffects.Q, SoundCategory.BLOCKS, 1.0F, 1.0F);
 +                    // this.a(world, blockposition, iblockdata, 3);
 +                    // CraftBukkit end
-+                    world.a((EntityHuman) null, blockposition, SoundEffects.N, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                     world.a((EntityHuman) null, blockposition, SoundEffects.Q, SoundCategory.BLOCKS, 1.0F, 1.0F);
                  }
  
                  return true;
@@ -64,18 +52,16 @@
                      if (!entityhuman.abilities.canInstantlyBuild) {
                          itemstack.subtract(1);
                          if (itemstack.isEmpty()) {
-@@ -82,8 +97,9 @@
+@@ -82,7 +97,8 @@
                      }
  
                      entityhuman.b(StatisticList.J);
 -                    this.a(world, blockposition, iblockdata, 0);
--                    world.a((EntityHuman) null, blockposition, SoundEffects.S, SoundCategory.BLOCKS, 1.0F, 1.0F);
 +                    // this.a(world, blockposition, iblockdata, 0);
 +                    // CraftBukkit end
-+                    world.a((EntityHuman) null, blockposition, SoundEffects.P, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                     world.a((EntityHuman) null, blockposition, SoundEffects.S, SoundCategory.BLOCKS, 1.0F, 1.0F);
                  }
  
-                 return true;
 @@ -92,6 +108,10 @@
  
                  if (item == Items.GLASS_BOTTLE) {
@@ -87,13 +73,11 @@
                          if (!entityhuman.abilities.canInstantlyBuild) {
                              itemstack1 = PotionUtil.a(new ItemStack(Items.POTION), Potions.b);
                              entityhuman.b(StatisticList.J);
-@@ -105,13 +125,18 @@
-                             }
+@@ -106,12 +126,17 @@
                          }
  
--                        world.a((EntityHuman) null, blockposition, SoundEffects.N, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                         world.a((EntityHuman) null, blockposition, SoundEffects.N, SoundCategory.BLOCKS, 1.0F, 1.0F);
 -                        this.a(world, blockposition, iblockdata, i - 1);
-+                        world.a((EntityHuman) null, blockposition, SoundEffects.K, SoundCategory.BLOCKS, 1.0F, 1.0F);
 +                        // this.a(world, blockposition, iblockdata, i - 1);
 +                        // CraftBukkit end
                      }
@@ -108,13 +92,11 @@
                          if (!entityhuman.abilities.canInstantlyBuild) {
                              itemstack1 = new ItemStack(Items.GLASS_BOTTLE);
                              entityhuman.b(StatisticList.J);
-@@ -121,8 +146,9 @@
-                             }
+@@ -122,7 +147,8 @@
                          }
  
--                        world.a((EntityHuman) null, blockposition, SoundEffects.M, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                         world.a((EntityHuman) null, blockposition, SoundEffects.M, SoundCategory.BLOCKS, 1.0F, 1.0F);
 -                        this.a(world, blockposition, iblockdata, i + 1);
-+                        world.a((EntityHuman) null, blockposition, SoundEffects.J, SoundCategory.BLOCKS, 1.0F, 1.0F);
 +                        // this.a(world, blockposition, iblockdata, i + 1);
 +                        // CraftBukkit end
                      }
@@ -191,12 +173,3 @@
                  }
  
              }
-@@ -218,8 +270,4 @@
-     public boolean b(IBlockAccess iblockaccess, BlockPosition blockposition) {
-         return true;
-     }
--
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return enumdirection == EnumDirection.UP ? EnumBlockFaceShape.BOWL : (enumdirection == EnumDirection.DOWN ? EnumBlockFaceShape.UNDEFINED : EnumBlockFaceShape.SOLID);
--    }
- }

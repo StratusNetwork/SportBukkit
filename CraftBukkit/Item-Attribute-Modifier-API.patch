@@ -78,7 +78,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemFactory.jav
  
  public final class CraftItemFactory implements ItemFactory {
      static final Color DEFAULT_LEATHER_COLOR = Color.fromRGB(0xA06540);
-@@ -195,4 +204,77 @@ public final class CraftItemFactory implements ItemFactory {
+@@ -194,4 +203,77 @@ public final class CraftItemFactory implements ItemFactory {
      public Color getDefaultLeatherColor() {
          return DEFAULT_LEATHER_COLOR;
      }
@@ -338,7 +338,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
      CraftMetaItem(Map<String, Object> map) {
          setDisplayName(SerializableMeta.getString(map, NAME.BUKKIT, true));
          setLocalizedName(SerializableMeta.getString(map, LOCNAME.BUKKIT, true));
-@@ -464,6 +446,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -469,6 +451,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
              itemTag.setInt(REPAIR.NBT, repairCost);
          }
  
@@ -347,7 +347,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
          if (isUnbreakable()) {
              itemTag.setBoolean(UNBREAKABLE.NBT, unbreakable);
          }
-@@ -505,6 +489,30 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -510,6 +494,30 @@ class CraftMetaItem implements ItemMeta, Repairable {
          tag.set(key.NBT, list);
      }
  
@@ -378,7 +378,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
      void setDisplayTag(NBTTagCompound tag, String key, NBTBase value) {
          final NBTTagCompound display = tag.getCompound(DISPLAY.NBT);
  
-@@ -522,7 +530,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -527,7 +535,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
  
      @Overridden
      boolean isEmpty() {
@@ -387,7 +387,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
      }
  
      public String getDisplayName() {
-@@ -601,6 +609,69 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -610,6 +618,69 @@ class CraftMetaItem implements ItemMeta, Repairable {
      }
  
      @Override
@@ -457,7 +457,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
      public void addItemFlags(ItemFlag... hideFlags) {
          for (ItemFlag f : hideFlags) {
              this.hideFlag |= getBitModifier(f);
-@@ -696,6 +767,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -705,6 +776,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
          return ((this.hasDisplayName() ? that.hasDisplayName() && this.displayName.equals(that.displayName) : !that.hasDisplayName()))
                  && (this.hasLocalizedName()? that.hasLocalizedName()&& this.locName.equals(that.locName) : !that.hasLocalizedName())
                  && (this.hasEnchants() ? that.hasEnchants() && this.enchantments.equals(that.enchantments) : !that.hasEnchants())
@@ -465,7 +465,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
                  && (this.hasLore() ? that.hasLore() && this.lore.equals(that.lore) : !that.hasLore())
                  && (this.hasRepairCost() ? that.hasRepairCost() && this.repairCost == that.repairCost : !that.hasRepairCost())
                  && (this.unhandledTags.equals(that.unhandledTags))
-@@ -725,6 +797,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -734,6 +806,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
          hash = 61 * hash + (hasLocalizedName()? this.locName.hashCode() : 0);
          hash = 61 * hash + (hasLore() ? this.lore.hashCode() : 0);
          hash = 61 * hash + (hasEnchants() ? this.enchantments.hashCode() : 0);
@@ -473,7 +473,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
          hash = 61 * hash + (hasRepairCost() ? this.repairCost : 0);
          hash = 61 * hash + unhandledTags.hashCode();
          hash = 61 * hash + hideFlag;
-@@ -743,6 +816,9 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -752,6 +825,9 @@ class CraftMetaItem implements ItemMeta, Repairable {
              if (this.enchantments != null) {
                  clone.enchantments = new HashMap<Enchantment, Integer>(this.enchantments);
              }
@@ -483,7 +483,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
              clone.hideFlag = this.hideFlag;
              clone.unbreakable = this.unbreakable;
              return clone;
-@@ -874,6 +950,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -883,6 +959,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
                          DISPLAY.NBT,
                          REPAIR.NBT,
                          ENCHANTMENTS.NBT,

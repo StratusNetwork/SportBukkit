@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/BlockDragonEgg.java
 +++ b/net/minecraft/server/BlockDragonEgg.java
-@@ -2,12 +2,14 @@
+@@ -2,6 +2,8 @@
  
  import java.util.Random;
  
@@ -9,31 +9,6 @@
  public class BlockDragonEgg extends Block {
  
      protected static final AxisAlignedBB a = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 1.0D, 0.9375D);
- 
-     public BlockDragonEgg() {
--        super(Material.DRAGON_EGG, MaterialMapColor.F);
-+        super(Material.DRAGON_EGG, MaterialMapColor.E);
-     }
- 
-     public AxisAlignedBB b(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
-@@ -27,7 +29,7 @@
-     }
- 
-     private void b(World world, BlockPosition blockposition) {
--        if (BlockFalling.x(world.getType(blockposition.down())) && blockposition.getY() >= 0) {
-+        if (BlockFalling.i(world.getType(blockposition.down())) && blockposition.getY() >= 0) {
-             boolean flag = true;
- 
-             if (!BlockFalling.instaFall && world.areChunksLoadedBetween(blockposition.a(-32, -32, -32), blockposition.a(32, 32, 32))) {
-@@ -37,7 +39,7 @@
- 
-                 BlockPosition blockposition1;
- 
--                for (blockposition1 = blockposition; BlockFalling.x(world.getType(blockposition1)) && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
-+                for (blockposition1 = blockposition; BlockFalling.i(world.getType(blockposition1)) && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
-                     ;
-                 }
- 
 @@ -66,6 +68,18 @@
                  BlockPosition blockposition1 = blockposition.a(world.random.nextInt(16) - world.random.nextInt(16), world.random.nextInt(8) - world.random.nextInt(8), world.random.nextInt(16) - world.random.nextInt(16));
  
@@ -53,12 +28,3 @@
                      if (world.isClientSide) {
                          for (int j = 0; j < 128; ++j) {
                              double d0 = world.random.nextDouble();
-@@ -101,8 +115,4 @@
-     public boolean c(IBlockData iblockdata) {
-         return false;
-     }
--
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return EnumBlockFaceShape.UNDEFINED;
--    }
- }

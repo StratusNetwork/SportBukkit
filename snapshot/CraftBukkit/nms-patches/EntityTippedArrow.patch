@@ -1,68 +1,9 @@
 --- a/net/minecraft/server/EntityTippedArrow.java
 +++ b/net/minecraft/server/EntityTippedArrow.java
-@@ -11,7 +11,7 @@
-     private static final DataWatcherObject<Integer> f = DataWatcher.a(EntityTippedArrow.class, DataWatcherRegistry.b);
-     private PotionRegistry potionRegistry;
-     public final Set<MobEffect> effects;
--    private boolean hasColor;
-+    private boolean at;
- 
-     public EntityTippedArrow(World world) {
-         super(world);
-@@ -51,7 +51,7 @@
-             if (i == -1) {
-                 this.q();
-             } else {
--                this.setColor(i);
-+                this.d(i);
-             }
-         } else if (itemstack.getItem() == Items.ARROW) {
-             this.potionRegistry = Potions.EMPTY;
-@@ -68,7 +68,7 @@
-     }
- 
-     private void q() {
--        this.hasColor = false;
-+        this.at = false;
-         this.datawatcher.set(EntityTippedArrow.f, Integer.valueOf(PotionUtil.a((Collection) PotionUtil.a(this.potionRegistry, (Collection) this.effects))));
-     }
- 
-@@ -82,15 +82,15 @@
-         this.datawatcher.register(EntityTippedArrow.f, Integer.valueOf(-1));
-     }
- 
--    public void B_() {
--        super.B_();
-+    public void A_() {
-+        super.A_();
-         if (this.world.isClientSide) {
-             if (this.inGround) {
-                 if (this.b % 5 == 0) {
--                    this.c(1);
-+                    this.b(1);
-                 }
-             } else {
--                this.c(2);
-+                this.b(2);
-             }
-         } else if (this.inGround && this.b != 0 && !this.effects.isEmpty() && this.b >= 600) {
-             this.world.broadcastEntityEffect(this, (byte) 0);
-@@ -101,8 +101,8 @@
- 
-     }
- 
--    private void c(int i) {
--        int j = this.getColor();
-+    private void b(int i) {
-+        int j = this.o();
- 
-         if (j != -1 && i > 0) {
-             double d0 = (double) (j >> 16 & 255) / 255.0D;
-@@ -116,12 +116,31 @@
+@@ -116,6 +116,25 @@
          }
      }
  
--    public int getColor() {
 +    // CraftBukkit start accessor methods
 +    public void refreshEffects() {
 +        this.getDataWatcher().set(EntityTippedArrow.f, Integer.valueOf(PotionUtil.a((Collection) PotionUtil.a(this.potionRegistry, (Collection) this.effects))));
@@ -82,52 +23,6 @@
 +    }
 +    // CraftBukkit end
 +
-+    public int o() {
+     public int getColor() {
          return ((Integer) this.datawatcher.get(EntityTippedArrow.f)).intValue();
      }
- 
--    public void setColor(int i) {
--        this.hasColor = true;
-+    private void d(int i) {
-+        this.at = true;
-         this.datawatcher.set(EntityTippedArrow.f, Integer.valueOf(i));
-     }
- 
-@@ -135,8 +154,8 @@
-             nbttagcompound.setString("Potion", ((MinecraftKey) PotionRegistry.a.b(this.potionRegistry)).toString());
-         }
- 
--        if (this.hasColor) {
--            nbttagcompound.setInt("Color", this.getColor());
-+        if (this.at) {
-+            nbttagcompound.setInt("Color", this.o());
-         }
- 
-         if (!this.effects.isEmpty()) {
-@@ -169,7 +188,7 @@
-         }
- 
-         if (nbttagcompound.hasKeyOfType("Color", 99)) {
--            this.setColor(nbttagcompound.getInt("Color"));
-+            this.d(nbttagcompound.getInt("Color"));
-         } else {
-             this.q();
-         }
-@@ -206,7 +225,7 @@
- 
-             PotionUtil.a(itemstack, this.potionRegistry);
-             PotionUtil.a(itemstack, (Collection) this.effects);
--            if (this.hasColor) {
-+            if (this.at) {
-                 NBTTagCompound nbttagcompound = itemstack.getTag();
- 
-                 if (nbttagcompound == null) {
-@@ -214,7 +233,7 @@
-                     itemstack.setTag(nbttagcompound);
-                 }
- 
--                nbttagcompound.setInt("CustomPotionColor", this.getColor());
-+                nbttagcompound.setInt("CustomPotionColor", this.o());
-             }
- 
-             return itemstack;

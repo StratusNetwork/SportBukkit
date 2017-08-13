@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/BlockDispenser.java
 +++ b/net/minecraft/server/BlockDispenser.java
-@@ -8,10 +8,11 @@
+@@ -8,6 +8,7 @@
      public static final BlockStateBoolean TRIGGERED = BlockStateBoolean.of("triggered");
      public static final RegistryDefault<Item, IDispenseBehavior> REGISTRY = new RegistryDefault(new DispenseBehaviorItem());
      protected Random d = new Random();
@@ -8,11 +8,6 @@
  
      protected BlockDispenser() {
          super(Material.STONE);
--        this.w(this.blockStateList.getBlockData().set(BlockDispenser.FACING, EnumDirection.NORTH).set(BlockDispenser.TRIGGERED, Boolean.valueOf(false)));
-+        this.y(this.blockStateList.getBlockData().set(BlockDispenser.FACING, EnumDirection.NORTH).set(BlockDispenser.TRIGGERED, Boolean.valueOf(false)));
-         this.a(CreativeModeTab.d);
-     }
- 
 @@ -82,6 +83,7 @@
                  IDispenseBehavior idispensebehavior = this.a(itemstack);
  
@@ -20,13 +15,4 @@
 +                    eventFired = false; // CraftBukkit - reset event status
                      tileentitydispenser.setItem(i, idispensebehavior.a(sourceblock, itemstack));
                  }
- 
-@@ -127,7 +129,7 @@
-             TileEntity tileentity = world.getTileEntity(blockposition);
- 
-             if (tileentity instanceof TileEntityDispenser) {
--                ((TileEntityDispenser) tileentity).setCustomName(itemstack.getName());
-+                ((TileEntityDispenser) tileentity).a(itemstack.getName());
-             }
-         }
  

@@ -37,7 +37,7 @@ public class ImVector extends Vector {
 
     public static ImVector copyOf(Vec3 v) {
         return v instanceof ImVector ? (ImVector) v
-                                     : new ImVector(v.fineX(), v.fineY(), v.fineZ());
+                : new ImVector(v.fineX(), v.fineY(), v.fineZ());
     }
 
     private static class Corner extends ImVector {
@@ -92,14 +92,14 @@ public class ImVector extends Vector {
 
     public static ImVector minimum(Vec3 a, Vec3 b) {
         return of(Math.min(a.fineX(), b.fineX()),
-                  Math.min(a.fineY(), b.fineY()),
-                  Math.min(a.fineZ(), b.fineZ()));
+                Math.min(a.fineY(), b.fineY()),
+                Math.min(a.fineZ(), b.fineZ()));
     }
 
     public static ImVector maximum(Vec3 a, Vec3 b) {
         return of(Math.max(a.fineX(), b.fineX()),
-                  Math.max(a.fineY(), b.fineY()),
-                  Math.max(a.fineZ(), b.fineZ()));
+                Math.max(a.fineY(), b.fineY()),
+                Math.max(a.fineZ(), b.fineZ()));
     }
 
     public static ImVector min(Vec3... a) {
@@ -126,8 +126,8 @@ public class ImVector extends Vector {
 
     public static ImVector interpolate(Vec3 a, Vec3 b, double n) {
         return of(NumberConversions.interpolate(a.fineX(), b.fineX(), n),
-                  NumberConversions.interpolate(a.fineY(), b.fineY(), n),
-                  NumberConversions.interpolate(a.fineZ(), b.fineZ(), n));
+                NumberConversions.interpolate(a.fineY(), b.fineY(), n),
+                NumberConversions.interpolate(a.fineZ(), b.fineZ(), n));
     }
 
     @Override
@@ -168,15 +168,15 @@ public class ImVector extends Vector {
     @Override
     public ImVector getCrossProduct(Vector v) {
         return of(this.fineY() * v.fineZ() - v.fineY() * this.fineZ(),
-                  this.fineZ() * v.fineX() - v.fineZ() * this.fineX(),
-                  this.fineX() * v.fineY() - v.fineX() * this.fineY());
+                this.fineZ() * v.fineX() - v.fineZ() * this.fineX(),
+                this.fineX() * v.fineY() - v.fineX() * this.fineY());
     }
 
     @Override
     public ImVector getMidpoint(Vector v) {
         return of((fineX() + v.getX()) / 2,
-                  (fineY() + v.getY()) / 2,
-                  (fineZ() + v.getZ()) / 2);
+                (fineY() + v.getY()) / 2,
+                (fineZ() + v.getZ()) / 2);
     }
 
     private UnsupportedOperationException ex() {

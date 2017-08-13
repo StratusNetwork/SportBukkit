@@ -20,23 +20,7 @@
  
      protected WorldData() {
          this.f = WorldType.NORMAL;
-@@ -307,11 +313,11 @@
-     private void a(NBTTagCompound nbttagcompound, NBTTagCompound nbttagcompound1) {
-         NBTTagCompound nbttagcompound2 = new NBTTagCompound();
- 
--        nbttagcompound2.setString("Name", "1.12-pre6");
--        nbttagcompound2.setInt("Id", 1137);
--        nbttagcompound2.setBoolean("Snapshot", true);
-+        nbttagcompound2.setString("Name", "1.11.1");
-+        nbttagcompound2.setInt("Id", 921);
-+        nbttagcompound2.setBoolean("Snapshot", false);
-         nbttagcompound.set("Version", nbttagcompound2);
--        nbttagcompound.setInt("DataVersion", 1137);
-+        nbttagcompound.setInt("DataVersion", 921);
-         nbttagcompound.setLong("RandomSeed", this.e);
-         nbttagcompound.setString("generatorName", this.f.name());
-         nbttagcompound.setInt("generatorVersion", this.f.getVersion());
-@@ -437,6 +443,18 @@
+@@ -437,6 +443,16 @@
      }
  
      public void setThundering(boolean flag) {
@@ -48,14 +32,12 @@
 +            if (thunder.isCancelled()) {
 +                return;
 +            }
-+
-+            setThunderDuration(0); // Will force a time reset
 +        }
 +        // CraftBukkit end
          this.v = flag;
      }
  
-@@ -453,6 +471,18 @@
+@@ -453,6 +469,16 @@
      }
  
      public void setStorm(boolean flag) {
@@ -67,14 +49,12 @@
 +            if (weather.isCancelled()) {
 +                return;
 +            }
-+
-+            setWeatherDuration(0); // Will force a time reset
 +        }
 +        // CraftBukkit end
          this.t = flag;
      }
  
-@@ -598,6 +628,12 @@
+@@ -598,6 +624,12 @@
  
      public void setDifficulty(EnumDifficulty enumdifficulty) {
          this.C = enumdifficulty;
@@ -87,7 +67,7 @@
      }
  
      public boolean isDifficultyLocked() {
-@@ -716,4 +752,12 @@
+@@ -716,4 +748,12 @@
      public void a(DimensionManager dimensionmanager, NBTTagCompound nbttagcompound) {
          this.N.put(dimensionmanager, nbttagcompound);
      }

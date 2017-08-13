@@ -6,7 +6,7 @@ Subject: [PATCH] Fix /kill command overflowing damage calculations
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -814,6 +814,7 @@ public abstract class EntityLiving extends Entity {
+@@ -812,6 +812,7 @@ public abstract class EntityLiving extends Entity {
          } else if (this.world.isClientSide) {
              return false;
          } else {

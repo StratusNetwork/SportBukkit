@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityAreaEffectCloud.java
 +++ b/net/minecraft/server/EntityAreaEffectCloud.java
-@@ -8,17 +8,26 @@
+@@ -8,6 +8,10 @@
  import java.util.List;
  import java.util.Map;
  import java.util.UUID;
@@ -11,25 +11,7 @@
  import java.util.Map.Entry;
  import javax.annotation.Nullable;
  
-+// SportBukkit start
-+import com.google.common.collect.Range;
-+import org.bukkit.craftbukkit.protocol.MetadataKey;
-+// SportBukkit end
-+
- public class EntityAreaEffectCloud extends Entity {
- 
-     private static final DataWatcherObject<Float> a = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.c);
-     private static final DataWatcherObject<Integer> b = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.b);
-     private static final DataWatcherObject<Boolean> c = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.h);
-     private static final DataWatcherObject<Integer> d = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.b);
--    private static final DataWatcherObject<Integer> e = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.b);
--    private static final DataWatcherObject<Integer> f = DataWatcher.a(EntityAreaEffectCloud.class, DataWatcherRegistry.b);
-+    private static final DataWatcherObject<Integer> e = MetadataKey.auto(EntityAreaEffectCloud.class, DataWatcherRegistry.b, Range.lessThan(201)); // SportBukkit
-+    private static final DataWatcherObject<Integer> f = MetadataKey.auto(EntityAreaEffectCloud.class, DataWatcherRegistry.b, Range.lessThan(201)); // SportBukkit
-     private PotionRegistry potionRegistry;
-     public List<MobEffect> effects;
-     private final Map<Entity, Integer> at;
-@@ -101,6 +110,22 @@
+@@ -101,6 +105,22 @@
  
      }
  
@@ -52,41 +34,7 @@
      public int getColor() {
          return ((Integer) this.getDataWatcher().get(EntityAreaEffectCloud.b)).intValue();
      }
-@@ -122,11 +147,11 @@
-         return ((Integer) this.getDataWatcher().get(EntityAreaEffectCloud.e)).intValue();
-     }
- 
--    public void c(int i) {
-+    public void b(int i) {
-         this.getDataWatcher().set(EntityAreaEffectCloud.e, Integer.valueOf(i));
-     }
- 
--    public int p() {
-+    public int o() {
-         return ((Integer) this.getDataWatcher().get(EntityAreaEffectCloud.f)).intValue();
-     }
- 
-@@ -150,8 +175,8 @@
-         this.au = i;
-     }
- 
--    public void B_() {
--        super.B_();
-+    public void A_() {
-+        super.A_();
-         boolean flag = this.q();
-         float f = this.getRadius();
- 
-@@ -164,7 +189,7 @@
-             }
- 
-             if (aint.length > 1) {
--                aint[1] = this.p();
-+                aint[1] = this.o();
-             }
- 
-             float f1;
-@@ -270,15 +295,27 @@
+@@ -270,6 +290,7 @@
                      if (!list.isEmpty()) {
                          Iterator iterator2 = list.iterator();
  
@@ -94,10 +42,7 @@
                          while (iterator2.hasNext()) {
                              EntityLiving entityliving = (EntityLiving) iterator2.next();
  
--                            if (!this.at.containsKey(entityliving) && entityliving.cP()) {
-+                            if (!this.at.containsKey(entityliving) && entityliving.cJ()) {
-                                 double d0 = entityliving.locX - this.locX;
-                                 double d1 = entityliving.locZ - this.locZ;
+@@ -279,6 +300,17 @@
                                  double d2 = d0 * d0 + d1 * d1;
  
                                  if (d2 <= (double) (f * f)) {
@@ -115,21 +60,3 @@
                                      this.at.put(entityliving, Integer.valueOf(this.ticksLived + this.reapplicationDelay));
                                      Iterator iterator3 = arraylist.iterator();
  
-@@ -364,7 +401,7 @@
- 
-             if (enumparticle != null) {
-                 this.setParticle(enumparticle);
--                this.c(nbttagcompound.getInt("ParticleParam1"));
-+                this.b(nbttagcompound.getInt("ParticleParam1"));
-                 this.d(nbttagcompound.getInt("ParticleParam2"));
-             }
-         }
-@@ -404,7 +441,7 @@
-         nbttagcompound.setFloat("Radius", this.getRadius());
-         nbttagcompound.setString("Particle", this.getParticle().b());
-         nbttagcompound.setInt("ParticleParam1", this.n());
--        nbttagcompound.setInt("ParticleParam2", this.p());
-+        nbttagcompound.setInt("ParticleParam2", this.o());
-         if (this.aC != null) {
-             nbttagcompound.a("OwnerUUID", this.aC);
-         }

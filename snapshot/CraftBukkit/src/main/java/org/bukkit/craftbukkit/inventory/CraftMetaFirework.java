@@ -17,6 +17,7 @@ import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.ItemMetaKey.Specific;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.ItemMetaKey.Specific.To;
 import org.bukkit.craftbukkit.inventory.CraftMetaItem.SerializableMeta;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import com.google.common.collect.ImmutableList;
@@ -88,7 +89,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
             return;
         }
 
-        NBTTagList fireworkEffects = fireworks.getList(EXPLOSIONS.NBT, 10);
+        NBTTagList fireworkEffects = fireworks.getList(EXPLOSIONS.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND);
         List<FireworkEffect> effects = this.effects = new ArrayList<FireworkEffect>(fireworkEffects.size());
 
         for (int i = 0; i < fireworkEffects.size(); i++) {
@@ -102,7 +103,15 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
                 .trail(explosion.getBoolean(EXPLOSION_TRAIL.NBT))
                 .with(getEffectType(0xff & explosion.getByte(EXPLOSION_TYPE.NBT)));
 
-        for (int color : explosion.getIntArray(EXPLOSION_COLORS.NBT)) {
+        int[] colors = explosion.getIntArray(EXPLOSION_COLORS.NBT);
+        // People using buggy command generators specify a list rather than an int here, so recover with dummy data.
+        // Wrong: Colors: [1234]
+        // Right: Colors: [I;1234]
+        if (colors.length == 0) {
+            effect.withColor(Color.WHITE);
+        }
+
+        for (int color : colors) {
             effect.withColor(Color.fromRGB(color));
         }
 

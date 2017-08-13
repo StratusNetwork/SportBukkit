@@ -6,7 +6,7 @@ Subject: [PATCH] This is SportBukkit!
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -134,7 +134,7 @@ import org.bukkit.event.server.TabCompleteEvent;
+@@ -135,7 +135,7 @@ import org.bukkit.event.server.TabCompleteEvent;
  
  public final class CraftServer implements Server {
      private static final Player[] EMPTY_PLAYER_ARRAY = new Player[0];

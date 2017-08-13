@@ -37,20 +37,6 @@
          d0 += this.random.nextGaussian() * 0.4D;
          d1 += this.random.nextGaussian() * 0.4D;
          d2 += this.random.nextGaussian() * 0.4D;
-@@ -47,11 +58,11 @@
-         this.dirZ = d2 / d3 * 0.1D;
-     }
- 
--    public void B_() {
-+    public void A_() {
-         if (!this.world.isClientSide && (this.shooter != null && this.shooter.dead || !this.world.isLoaded(new BlockPosition(this)))) {
-             this.die();
-         } else {
--            super.B_();
-+            super.A_();
-             if (this.k()) {
-                 this.setOnFire(1);
-             }
 @@ -61,6 +72,12 @@
  
              if (movingobjectposition != null) {
@@ -64,57 +50,18 @@
              }
  
              this.locX += this.motX;
-@@ -118,18 +135,18 @@
-         if (nbttagcompound.hasKeyOfType("power", 9)) {
-             nbttaglist = nbttagcompound.getList("power", 6);
-             if (nbttaglist.size() == 3) {
--                this.dirX = nbttaglist.f(0);
--                this.dirY = nbttaglist.f(1);
--                this.dirZ = nbttaglist.f(2);
-+                this.dirX = nbttaglist.e(0);
-+                this.dirY = nbttaglist.e(1);
-+                this.dirZ = nbttaglist.e(2);
-             }
-         }
- 
-         this.e = nbttagcompound.getInt("life");
-         if (nbttagcompound.hasKeyOfType("direction", 9) && nbttagcompound.getList("direction", 6).size() == 3) {
-             nbttaglist = nbttagcompound.getList("direction", 6);
--            this.motX = nbttaglist.f(0);
--            this.motY = nbttaglist.f(1);
--            this.motZ = nbttaglist.f(2);
-+            this.motX = nbttaglist.e(0);
-+            this.motY = nbttaglist.e(1);
-+            this.motZ = nbttaglist.e(2);
+@@ -150,6 +167,11 @@
          } else {
-             this.die();
-         }
-@@ -140,7 +157,7 @@
-         return true;
-     }
- 
--    public float aG() {
-+    public float aA() {
-         return 1.0F;
-     }
- 
-@@ -148,9 +165,14 @@
-         if (this.isInvulnerable(damagesource)) {
-             return false;
-         } else {
--            this.av();
-+            this.ap();
+             this.ax();
              if (damagesource.getEntity() != null) {
--                Vec3D vec3d = damagesource.getEntity().aH();
 +                // CraftBukkit start
 +                if (CraftEventFactory.handleNonLivingEntityDamageEvent(this, damagesource, f)) {
 +                    return false;
 +                }
 +                // CraftBukkit end
-+                Vec3D vec3d = damagesource.getEntity().aB();
+                 Vec3D vec3d = damagesource.getEntity().aJ();
  
                  if (vec3d != null) {
-                     this.motX = vec3d.x;
 @@ -163,6 +185,7 @@
  
                  if (damagesource.getEntity() instanceof EntityLiving) {
@@ -123,12 +70,3 @@
                  }
  
                  return true;
-@@ -172,7 +195,7 @@
-         }
-     }
- 
--    public float f(float f) {
-+    public float e(float f) {
-         return 1.0F;
-     }
- }

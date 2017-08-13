@@ -55,7 +55,7 @@ diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/
  
              this.au = null;
 @@ -1926,24 +1960,6 @@ public abstract class Entity implements ICommandListener {
-         if (entity.bH() != this) {
+         if (entity.bJ() != this) {
              throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
          } else {
 -            // CraftBukkit start
@@ -76,11 +76,11 @@ diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/
 -                }
 -            }
 -            // CraftBukkit end
-             if (!this.world.isClientSide && entity instanceof EntityHuman && !(this.bC() instanceof EntityHuman)) {
+             if (!this.world.isClientSide && entity instanceof EntityHuman && !(this.bE() instanceof EntityHuman)) {
                  this.passengers.add(0, entity);
              } else {
 @@ -1957,22 +1973,6 @@ public abstract class Entity implements ICommandListener {
-         if (entity.bH() == this) {
+         if (entity.bJ() == this) {
              throw new IllegalStateException("Use x.stopRiding(y), not y.removePassenger(x)");
          } else {
 -            // CraftBukkit start
@@ -102,12 +102,12 @@ diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/
              this.passengers.remove(entity);
              entity.j = 60;
          }
-@@ -2838,6 +2838,8 @@ public abstract class Entity implements ICommandListener {
+@@ -2843,6 +2843,8 @@ public abstract class Entity implements ICommandListener {
      }
  
      @Nullable
-+    Entity getRiding() { return this.bH(); } // SportBukkit - alias for following method
++    Entity getRiding() { return this.bJ(); } // SportBukkit - alias for following method
 +    @Nullable
-     public Entity bH() {
+     public Entity bJ() {
          return this.au;
      }

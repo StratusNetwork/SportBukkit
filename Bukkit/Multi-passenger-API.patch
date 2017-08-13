@@ -6,7 +6,7 @@ Subject: [PATCH] Multi-passenger API
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
-@@ -294,6 +294,23 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+@@ -295,6 +295,23 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
      public boolean eject();
  
      /**
@@ -30,7 +30,7 @@ diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/buk
       * Returns the distance this entity has fallen
       *
       * @return The distance.
-@@ -373,6 +390,12 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
+@@ -374,6 +391,12 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Locatable
      public boolean isInsideVehicle();
  
      /**

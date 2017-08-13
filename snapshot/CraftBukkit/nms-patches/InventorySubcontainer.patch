@@ -62,12 +62,3 @@
          this.a = s;
          this.e = flag;
          this.b = i;
-@@ -103,7 +150,7 @@
-         return this.b;
-     }
- 
--    public boolean x_() {
-+    public boolean w_() {
-         Iterator iterator = this.items.iterator();
- 
-         ItemStack itemstack;

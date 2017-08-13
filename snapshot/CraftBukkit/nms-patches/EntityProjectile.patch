@@ -8,20 +8,15 @@
      }
  
      protected void i() {}
-@@ -77,11 +78,11 @@
-         this.au = 0;
-     }
- 
--    public void B_() {
-+    public void A_() {
-         this.M = this.locX;
-         this.N = this.locY;
-         this.O = this.locZ;
--        super.B_();
-+        super.A_();
-         if (this.shake > 0) {
-             --this.shake;
-         }
+@@ -127,7 +128,7 @@
+             if (entity1.isInteractable()) {
+                 if (entity1 == this.c) {
+                     flag = true;
+-                } else if (this.shooter != null && this.ticksLived < 2 && this.c == null) {
++                } else if (this.shooter != null && this.ticksLived < 2 && this.c == null && this.shooter == entity1) { // CraftBukkit - MC-88491
+                     this.c = entity1;
+                     flag = true;
+                 } else {
 @@ -164,6 +165,11 @@
                  this.e(movingobjectposition.a());
              } else {

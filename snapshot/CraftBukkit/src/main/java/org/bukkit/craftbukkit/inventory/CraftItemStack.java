@@ -41,9 +41,12 @@ public final class CraftItemStack extends ItemStack {
             return net.minecraft.server.ItemStack.a;
         }
 
-        net.minecraft.server.ItemStack stack = new net.minecraft.server.ItemStack(item, original.getAmount(), original.getDurability());
+        net.minecraft.server.ItemStack stack = new net.minecraft.server.ItemStack(item, original.getAmount(), original.getDurability(), false);
         if (original.hasItemMeta()) {
             setItemMeta(stack, original.getItemMeta());
+        } else {
+            // Converted after setItemMeta
+            stack.convertStack();
         }
         return stack;
     }
@@ -151,6 +154,7 @@ public final class CraftItemStack extends ItemStack {
         if (handle == null) {
             return;
         }
+
         handle.setCount(amount);
     }
 
@@ -364,6 +368,8 @@ public final class CraftItemStack extends ItemStack {
                 return new CraftMetaBanner(item.getTag());
             case MONSTER_EGG:
                 return new CraftMetaSpawnEgg(item.getTag());
+            case KNOWLEDGE_BOOK:
+                return new CraftMetaKnowledgeBook(item.getTag());
             case FURNACE:
             case CHEST:
             case TRAPPED_CHEST:
@@ -373,7 +379,6 @@ public final class CraftItemStack extends ItemStack {
             case SIGN:
             case MOB_SPAWNER:
             case NOTE_BLOCK:
-            case PISTON_BASE:
             case BREWING_STAND_ITEM:
             case ENCHANTMENT_TABLE:
             case COMMAND:

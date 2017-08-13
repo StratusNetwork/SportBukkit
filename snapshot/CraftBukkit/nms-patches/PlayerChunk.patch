@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/PlayerChunk.java
 +++ b/net/minecraft/server/PlayerChunk.java
-@@ -8,49 +8,109 @@
+@@ -8,32 +8,48 @@
  import javax.annotation.Nullable;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -34,33 +34,6 @@
 +    };
 +    // CraftBukkit end
 +
-+    // SportBukkit start
-+    private List<Packet> getTileEntityPackets(int sectionMask) {
-+        final List<Packet> packets = new java.util.ArrayList<Packet>();
-+        for(TileEntity tile : chunk.getTileEntities().values()) {
-+            if((sectionMask & (1 << (tile.getPosition().getY() >> 4))) != 0) {
-+                final Packet packet = tile.getUpdatePacket();
-+                if(packet != null) packets.add(packet);
-+            }
-+        }
-+        return packets;
-+    }
-+
-+    private void sendLegacyTileEntityUpdates(int sectionMask, java.util.Collection<EntityPlayer> players) {
-+        if(sectionMask == 0 || players.isEmpty()) return;
-+        List<Packet> packets = null;
-+        for(EntityPlayer viewer : players) {
-+            if(viewer.protocolVersion < 110) {
-+                if(packets == null) {
-+                    packets = getTileEntityPackets(sectionMask);
-+                    if(packets.isEmpty()) return;
-+                }
-+                for(Packet packet : packets) viewer.playerConnection.sendPacket(packet);
-+            }
-+        }
-+    }
-+    // SportBukkit end
-+
      public PlayerChunk(PlayerChunkMap playerchunkmap, int i, int j) {
          this.playerChunkMap = playerchunkmap;
          this.location = new ChunkCoordIntPair(i, j);
@@ -78,11 +51,9 @@
 -    public void a(EntityPlayer entityplayer) {
 +    public void a(final EntityPlayer entityplayer) { // CraftBukkit - added final to argument
          if (this.c.contains(entityplayer)) {
--            PlayerChunk.a.debug("Failed to add player. {} already is in chunk {}, {}", entityplayer, Integer.valueOf(this.location.x), Integer.valueOf(this.location.z));
-+            PlayerChunk.a.debug("Failed to add player. {} already is in chunk {}, {}", new Object[] { entityplayer, Integer.valueOf(this.location.x), Integer.valueOf(this.location.z)});
+             PlayerChunk.a.debug("Failed to add player. {} already is in chunk {}, {}", entityplayer, Integer.valueOf(this.location.x), Integer.valueOf(this.location.z));
          } else {
-             if (this.c.isEmpty()) {
-                 this.i = this.playerChunkMap.getWorld().getTime();
+@@ -42,15 +58,32 @@
              }
  
              this.c.add(entityplayer);
@@ -115,7 +86,7 @@
              if (this.done) {
                  entityplayer.playerConnection.sendPacket(new PacketPlayOutUnloadChunk(this.location.x, this.location.z));
              }
-@@ -67,11 +127,18 @@
+@@ -67,11 +100,18 @@
          if (this.chunk != null) {
              return true;
          } else {
@@ -134,27 +105,3 @@
  
              return this.chunk != null;
          }
-@@ -98,6 +165,7 @@
-                 this.playerChunkMap.getWorld().getTracker().a(entityplayer, this.chunk);
-             }
- 
-+            sendLegacyTileEntityUpdates(0xffff, this.c); // SportBukkit
-             return true;
-         }
-     }
-@@ -106,6 +174,7 @@
-         if (this.done) {
-             entityplayer.playerConnection.sendPacket(new PacketPlayOutMapChunk(this.chunk, '\uffff'));
-             this.playerChunkMap.getWorld().getTracker().a(entityplayer, this.chunk);
-+            sendLegacyTileEntityUpdates(0xffff, java.util.Collections.singleton(entityplayer)); // SportBukkit
-         }
-     }
- 
-@@ -169,6 +238,7 @@
-                     }
-                 } else if (this.dirtyCount == 64) {
-                     this.a((Packet) (new PacketPlayOutMapChunk(this.chunk, this.h)));
-+                    sendLegacyTileEntityUpdates(this.h, this.c); // SportBukkit
-                 } else {
-                     this.a((Packet) (new PacketPlayOutMultiBlockChange(this.dirtyCount, this.dirtyBlocks, this.chunk)));
- 

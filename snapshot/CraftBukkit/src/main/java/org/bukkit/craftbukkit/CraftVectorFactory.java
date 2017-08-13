@@ -1,12 +1,12 @@
-package org.bukkit.craftbukkit.util;
+package org.bukkit.craftbukkit;
 
 import net.minecraft.server.BlockPosition;
-import org.bukkit.util.ImVector;
 import org.bukkit.geometry.MutableVec3;
-import org.bukkit.util.NumberConversions;
 import org.bukkit.geometry.Vec3;
-import org.bukkit.util.Vector;
 import org.bukkit.geometry.VectorFactory;
+import org.bukkit.util.ImVector;
+import org.bukkit.util.NumberConversions;
+import org.bukkit.util.Vector;
 
 public class CraftVectorFactory implements VectorFactory {
 

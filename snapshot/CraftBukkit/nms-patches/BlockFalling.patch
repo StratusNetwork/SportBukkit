@@ -9,23 +9,6 @@
  public class BlockFalling extends Block {
  
      public static boolean instaFall;
-@@ -25,13 +27,13 @@
- 
-     public void b(World world, BlockPosition blockposition, IBlockData iblockdata, Random random) {
-         if (!world.isClientSide) {
--            this.b(world, blockposition);
-+            this.c(world, blockposition);
-         }
- 
-     }
- 
--    private void b(World world, BlockPosition blockposition) {
--        if (x(world.getType(blockposition.down())) && blockposition.getY() >= 0) {
-+    private void c(World world, BlockPosition blockposition) {
-+        if (i(world.getType(blockposition.down())) && blockposition.getY() >= 0) {
-             boolean flag = true;
- 
-             if (!BlockFalling.instaFall && world.areChunksLoadedBetween(blockposition.a(-32, -32, -32), blockposition.a(32, 32, 32))) {
 @@ -39,6 +41,18 @@
                      EntityFallingBlock entityfallingblock = new EntityFallingBlock(world, (double) blockposition.getX() + 0.5D, (double) blockposition.getY(), (double) blockposition.getZ() + 0.5D, world.getType(blockposition));
  
@@ -45,30 +28,3 @@
                      world.addEntity(entityfallingblock);
                  }
              } else {
-@@ -46,7 +60,7 @@
- 
-                 BlockPosition blockposition1;
- 
--                for (blockposition1 = blockposition.down(); x(world.getType(blockposition1)) && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
-+                for (blockposition1 = blockposition.down(); i(world.getType(blockposition1)) && blockposition1.getY() > 0; blockposition1 = blockposition1.down()) {
-                     ;
-                 }
- 
-@@ -64,14 +78,14 @@
-         return 2;
-     }
- 
--    public static boolean x(IBlockData iblockdata) {
-+    public static boolean i(IBlockData iblockdata) {
-         Block block = iblockdata.getBlock();
-         Material material = iblockdata.getMaterial();
- 
-         return block == Blocks.FIRE || material == Material.AIR || material == Material.WATER || material == Material.LAVA;
-     }
- 
--    public void a(World world, BlockPosition blockposition, IBlockData iblockdata, IBlockData iblockdata1) {}
--
-     public void a_(World world, BlockPosition blockposition) {}
-+
-+    public void b(World world, BlockPosition blockposition) {}
- }

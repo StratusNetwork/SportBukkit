@@ -17,7 +17,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/jav
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
-@@ -481,6 +481,8 @@ public abstract class PlayerList {
+@@ -487,6 +487,8 @@ public abstract class PlayerList {
          SocketAddress socketaddress = loginlistener.networkManager.getSocketAddress();
  
          EntityPlayer entity = new EntityPlayer(server, server.getWorldServer(0), gameprofile, new PlayerInteractManager(server.getWorldServer(0)));
@@ -29,7 +29,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1484,4 +1484,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1514,4 +1514,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      public String getLocale() {
          return getHandle().locale;
      }

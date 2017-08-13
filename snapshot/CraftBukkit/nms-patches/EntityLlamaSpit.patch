@@ -9,14 +9,11 @@
      private NBTTagCompound b;
  
      public EntityLlamaSpit(World world) {
-@@ -21,8 +21,8 @@
-         this.setSize(0.25F, 0.25F);
+@@ -143,6 +143,7 @@
      }
  
--    public void B_() {
--        super.B_();
-+    public void A_() {
-+        super.A_();
-         if (this.b != null) {
-             this.j();
+     public void a(MovingObjectPosition movingobjectposition) {
++        org.bukkit.craftbukkit.event.CraftEventFactory.callProjectileHitEvent(this, movingobjectposition); // Craftbukkit - Call event
+         if (movingobjectposition.entity != null && this.shooter != null) {
+             movingobjectposition.entity.damageEntity(DamageSource.a(this, this.shooter).b(), 1.0F);
          }

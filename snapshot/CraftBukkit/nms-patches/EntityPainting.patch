@@ -1,14 +1,6 @@
 --- a/net/minecraft/server/EntityPainting.java
 +++ b/net/minecraft/server/EntityPainting.java
-@@ -2,7 +2,6 @@
- 
- import com.google.common.collect.Lists;
- import java.util.ArrayList;
--import java.util.Iterator;
- import javax.annotation.Nullable;
- 
- public class EntityPainting extends EntityHanging {
-@@ -11,41 +10,26 @@
+@@ -11,6 +11,7 @@
  
      public EntityPainting(World world) {
          super(world);
@@ -16,61 +8,3 @@
      }
  
      public EntityPainting(World world, BlockPosition blockposition, EnumDirection enumdirection) {
-         super(world, blockposition);
-         ArrayList arraylist = Lists.newArrayList();
--        int i = 0;
-         EntityPainting.EnumArt[] aentitypainting_enumart = EntityPainting.EnumArt.values();
--        int j = aentitypainting_enumart.length;
-+        int i = aentitypainting_enumart.length;
- 
--        for (int k = 0; k < j; ++k) {
--            EntityPainting.EnumArt entitypainting_enumart = aentitypainting_enumart[k];
-+        for (int j = 0; j < i; ++j) {
-+            EntityPainting.EnumArt entitypainting_enumart = aentitypainting_enumart[j];
- 
-             this.art = entitypainting_enumart;
-             this.setDirection(enumdirection);
-             if (this.survives()) {
-                 arraylist.add(entitypainting_enumart);
--                int l = entitypainting_enumart.C * entitypainting_enumart.D;
--
--                if (l > i) {
--                    i = l;
--                }
-             }
-         }
- 
-         if (!arraylist.isEmpty()) {
--            Iterator iterator = arraylist.iterator();
--
--            while (iterator.hasNext()) {
--                EntityPainting.EnumArt entitypainting_enumart1 = (EntityPainting.EnumArt) iterator.next();
--
--                if (entitypainting_enumart1.C * entitypainting_enumart1.D < i) {
--                    iterator.remove();
--                }
--            }
--
-             this.art = (EntityPainting.EnumArt) arraylist.get(this.random.nextInt(arraylist.size()));
-         }
- 
-@@ -87,7 +71,7 @@
- 
-     public void a(@Nullable Entity entity) {
-         if (this.world.getGameRules().getBoolean("doEntityDrops")) {
--            this.a(SoundEffects.eF, 1.0F, 1.0F);
-+            this.a(SoundEffects.en, 1.0F, 1.0F);
-             if (entity instanceof EntityHuman) {
-                 EntityHuman entityhuman = (EntityHuman) entity;
- 
-@@ -100,8 +84,8 @@
-         }
-     }
- 
--    public void p() {
--        this.a(SoundEffects.eG, 1.0F, 1.0F);
-+    public void o() {
-+        this.a(SoundEffects.eo, 1.0F, 1.0F);
-     }
- 
-     public void setPositionRotation(double d0, double d1, double d2, float f, float f1) {

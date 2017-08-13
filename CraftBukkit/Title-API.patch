@@ -43,7 +43,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutTitle.java b/src/ma
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1801,4 +1801,48 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1839,4 +1839,48 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          this.setPlayerListHeaderFooter(header == null ? null : new BaseComponent[]{ header },
                                         footer == null ? null : new BaseComponent[]{ footer });
      }

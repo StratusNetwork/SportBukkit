@@ -1,17 +1,17 @@
 package org.bukkit.support;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.BukkitRuntime;
 import org.bukkit.CraftBukkitRuntime;
 import org.bukkit.Server;
 import org.bukkit.craftbukkit.inventory.CraftItemFactory;
 import org.bukkit.craftbukkit.util.Versioning;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class DummyServer implements InvocationHandler {
     private static interface MethodHandler {

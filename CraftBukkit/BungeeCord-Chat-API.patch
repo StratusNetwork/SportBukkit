@@ -65,7 +65,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  import net.minecraft.server.*;
  
  import org.bukkit.BanList;
-@@ -1753,4 +1754,18 @@ public final class CraftServer implements Server {
+@@ -1761,4 +1762,18 @@ public final class CraftServer implements Server {
      public UnsafeValues getUnsafe() {
          return CraftMagicNumbers.INSTANCE;
      }
@@ -87,7 +87,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -15,6 +15,7 @@ import java.util.*;
+@@ -24,6 +24,7 @@ import java.util.WeakHashMap;
  import java.util.logging.Level;
  import java.util.logging.Logger;
  
@@ -95,7 +95,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/
  import net.minecraft.server.*;
  import net.minecraft.server.PacketPlayOutTitle.EnumTitleAction;
  
-@@ -1750,4 +1751,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1787,4 +1788,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      public void setLocale(String locale) {
          getHandle().locale = locale;
      }

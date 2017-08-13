@@ -6,12 +6,12 @@ Subject: [PATCH] Attack cooldown info API
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
-@@ -965,7 +965,7 @@ public abstract class EntityHuman extends EntityLiving {
+@@ -971,7 +971,7 @@ public abstract class EntityHuman extends EntityLiving {
  
                  f *= 0.2F + f2 * f2 * 0.8F;
                  f1 *= f2;
--                this.dq();
-+                // this.dq();   SportBukkit - don't reset cooldown here, let the arm swing packet do it
+-                this.ds();
++                // this.ds();   SportBukkit - don't reset cooldown here, let the arm swing packet do it
                  if (f > 0.0F || f1 > 0.0F) {
                      boolean flag = f2 > 0.9F;
                      boolean flag1 = false;

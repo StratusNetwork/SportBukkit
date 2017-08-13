@@ -14,7 +14,7 @@
  public class TileEntityBeacon extends TileEntityContainer implements ITickable, IWorldInventory {
  
      public static final MobEffectList[][] a = new MobEffectList[][] { { MobEffects.FASTER_MOVEMENT, MobEffects.FASTER_DIG}, { MobEffects.RESISTANCE, MobEffects.JUMP}, { MobEffects.INCREASE_DAMAGE}, { MobEffects.REGENERATION}};
-@@ -22,12 +29,44 @@
+@@ -22,6 +29,38 @@
      public MobEffectList secondaryEffect;
      private ItemStack inventorySlot;
      private String o;
@@ -53,14 +53,7 @@
  
      public TileEntityBeacon() {
          this.inventorySlot = ItemStack.a;
-     }
- 
--    public void e() {
-+    public void F_() {
-         if (this.world.getTime() % 80L == 0L) {
-             this.n();
-         }
-@@ -42,52 +81,90 @@
+@@ -42,41 +81,79 @@
  
      }
  
@@ -148,110 +141,4 @@
 +    // CraftBukkit end
  
      private void F() {
--        int i = this.position.getX();
--        int j = this.position.getY();
--        int k = this.position.getZ();
--        int l = this.levels;
-+        int i = this.levels;
-+        int j = this.position.getX();
-+        int k = this.position.getY();
-+        int l = this.position.getZ();
- 
-         this.levels = 0;
-         this.g.clear();
-         this.j = true;
--        TileEntityBeacon.BeaconColorTracker tileentitybeacon_beaconcolortracker = new TileEntityBeacon.BeaconColorTracker(EnumColor.WHITE.f());
-+        TileEntityBeacon.BeaconColorTracker tileentitybeacon_beaconcolortracker = new TileEntityBeacon.BeaconColorTracker(EntitySheep.a(EnumColor.WHITE));
- 
-         this.g.add(tileentitybeacon_beaconcolortracker);
-         boolean flag = true;
-@@ -95,12 +172,12 @@
- 
-         int i1;
- 
--        for (i1 = j + 1; i1 < 256; ++i1) {
--            IBlockData iblockdata = this.world.getType(blockposition_mutableblockposition.c(i, i1, k));
-+        for (i1 = k + 1; i1 < 256; ++i1) {
-+            IBlockData iblockdata = this.world.getType(blockposition_mutableblockposition.c(j, i1, l));
-             float[] afloat;
- 
-             if (iblockdata.getBlock() == Blocks.STAINED_GLASS) {
--                afloat = ((EnumColor) iblockdata.get(BlockStainedGlass.COLOR)).f();
-+                afloat = EntitySheep.a((EnumColor) iblockdata.get(BlockStainedGlass.COLOR));
-             } else {
-                 if (iblockdata.getBlock() != Blocks.STAINED_GLASS_PANE) {
-                     if (iblockdata.c() >= 15 && iblockdata.getBlock() != Blocks.BEDROCK) {
-@@ -113,7 +190,7 @@
-                     continue;
-                 }
- 
--                afloat = ((EnumColor) iblockdata.get(BlockStainedGlassPane.COLOR)).f();
-+                afloat = EntitySheep.a((EnumColor) iblockdata.get(BlockStainedGlassPane.COLOR));
-             }
- 
-             if (!flag) {
-@@ -132,7 +209,7 @@
- 
-         if (this.j) {
-             for (i1 = 1; i1 <= 4; this.levels = i1++) {
--                int j1 = j - i1;
-+                int j1 = k - i1;
- 
-                 if (j1 < 0) {
-                     break;
-@@ -140,8 +217,8 @@
- 
-                 boolean flag1 = true;
- 
--                for (int k1 = i - i1; k1 <= i + i1 && flag1; ++k1) {
--                    for (int l1 = k - i1; l1 <= k + i1; ++l1) {
-+                for (int k1 = j - i1; k1 <= j + i1 && flag1; ++k1) {
-+                    for (int l1 = l - i1; l1 <= l + i1; ++l1) {
-                         Block block = this.world.getType(new BlockPosition(k1, j1, l1)).getBlock();
- 
-                         if (block != Blocks.EMERALD_BLOCK && block != Blocks.GOLD_BLOCK && block != Blocks.DIAMOND_BLOCK && block != Blocks.IRON_BLOCK) {
-@@ -161,22 +238,18 @@
-             }
-         }
- 
--        if (!this.world.isClientSide && l < this.levels) {
--            Iterator iterator = this.world.a(EntityPlayer.class, (new AxisAlignedBB((double) i, (double) j, (double) k, (double) i, (double) (j - 4), (double) k)).grow(10.0D, 5.0D, 10.0D)).iterator();
-+        if (!this.world.isClientSide && this.levels == 4 && i < this.levels) {
-+            Iterator iterator = this.world.a(EntityHuman.class, (new AxisAlignedBB((double) j, (double) k, (double) l, (double) j, (double) (k - 4), (double) l)).grow(10.0D, 5.0D, 10.0D)).iterator();
- 
-             while (iterator.hasNext()) {
--                EntityPlayer entityplayer = (EntityPlayer) iterator.next();
-+                EntityHuman entityhuman = (EntityHuman) iterator.next();
- 
--                CriterionTriggers.k.a(entityplayer, this);
-+                entityhuman.b((Statistic) AchievementList.K);
-             }
-         }
- 
-     }
- 
--    public int s() {
--        return this.levels;
--    }
--
-     @Nullable
-     public PacketPlayOutTileEntityData getUpdatePacket() {
-         return new PacketPlayOutTileEntityData(this.position, 3, this.d());
-@@ -212,7 +285,7 @@
-         return 1;
-     }
- 
--    public boolean x_() {
-+    public boolean w_() {
-         return this.inventorySlot.isEmpty();
-     }
- 
-@@ -261,7 +334,7 @@
-         return this.o != null && !this.o.isEmpty();
-     }
- 
--    public void setCustomName(String s) {
-+    public void a(String s) {
-         this.o = s;
-     }
- 
+         int i = this.position.getX();

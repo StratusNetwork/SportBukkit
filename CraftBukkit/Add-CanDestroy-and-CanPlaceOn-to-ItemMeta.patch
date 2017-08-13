@@ -95,7 +95,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
      static Map<Enchantment, Integer> buildEnchantments(NBTTagCompound tag, ItemMetaKey key) {
          if (!tag.hasKey(key.NBT)) {
              return null;
-@@ -452,6 +481,14 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -457,6 +486,14 @@ class CraftMetaItem implements ItemMeta, Repairable {
              itemTag.setBoolean(UNBREAKABLE.NBT, unbreakable);
          }
  
@@ -110,7 +110,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
          for (Map.Entry<String, NBTBase> e : unhandledTags.entrySet()) {
              itemTag.set(e.getKey(), e.getValue());
          }
-@@ -470,6 +507,19 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -475,6 +512,19 @@ class CraftMetaItem implements ItemMeta, Repairable {
          return tagList;
      }
  
@@ -130,7 +130,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
      static void applyEnchantments(Map<Enchantment, Integer> enchantments, NBTTagCompound tag, ItemMetaKey key) {
          if (enchantments == null || enchantments.size() == 0) {
              return;
-@@ -530,7 +580,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -535,7 +585,7 @@ class CraftMetaItem implements ItemMeta, Repairable {
  
      @Overridden
      boolean isEmpty() {
@@ -139,7 +139,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
      }
  
      public String getDisplayName() {
-@@ -744,6 +794,36 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -753,6 +803,36 @@ class CraftMetaItem implements ItemMeta, Repairable {
      }
  
      @Override
@@ -176,7 +176,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
      public final boolean equals(Object object) {
          if (object == null) {
              return false;
-@@ -770,6 +850,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -779,6 +859,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
                  && (this.hasAttributeModifiers() ? that.hasAttributeModifiers() && this.attributeModifiers.equals(that.attributeModifiers) : !that.hasAttributeModifiers())
                  && (this.hasLore() ? that.hasLore() && this.lore.equals(that.lore) : !that.hasLore())
                  && (this.hasRepairCost() ? that.hasRepairCost() && this.repairCost == that.repairCost : !that.hasRepairCost())
@@ -185,7 +185,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
                  && (this.unhandledTags.equals(that.unhandledTags))
                  && (this.hideFlag == that.hideFlag)
                  && (this.isUnbreakable() == that.isUnbreakable());
-@@ -799,6 +881,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -808,6 +890,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
          hash = 61 * hash + (hasEnchants() ? this.enchantments.hashCode() : 0);
          hash = 61 * hash + (hasAttributeModifiers() ? this.attributeModifiers.hashCode() : 0);
          hash = 61 * hash + (hasRepairCost() ? this.repairCost : 0);
@@ -194,7 +194,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
          hash = 61 * hash + unhandledTags.hashCode();
          hash = 61 * hash + hideFlag;
          hash = 61 * hash + (isUnbreakable() ? 1231 : 1237);
-@@ -821,6 +905,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -830,6 +914,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
              }
              clone.hideFlag = this.hideFlag;
              clone.unbreakable = this.unbreakable;
@@ -203,7 +203,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b
              return clone;
          } catch (CloneNotSupportedException e) {
              throw new Error(e);
-@@ -953,6 +1039,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
+@@ -962,6 +1048,8 @@ class CraftMetaItem implements ItemMeta, Repairable {
                          ATTRIBUTES.NBT,
                          HIDEFLAGS.NBT,
                          UNBREAKABLE.NBT,

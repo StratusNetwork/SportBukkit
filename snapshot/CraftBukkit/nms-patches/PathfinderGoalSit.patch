@@ -9,12 +9,3 @@
          } else if (this.entity.isInWater()) {
              return false;
          } else if (!this.entity.onGround) {
-@@ -25,7 +25,7 @@
-     }
- 
-     public void c() {
--        this.entity.getNavigation().p();
-+        this.entity.getNavigation().o();
-         this.entity.setSitting(true);
-     }
- 

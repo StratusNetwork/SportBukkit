@@ -7,7 +7,7 @@ import org.bukkit.geometry.VectorFactory;
 import org.bukkit.support.BukkitRuntimeTest;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BlockRotationTest extends BukkitRuntimeTest {
     @Test

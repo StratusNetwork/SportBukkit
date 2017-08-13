@@ -61,34 +61,21 @@ diff --git a/src/main/java/net/minecraft/server/BlockTNT.java b/src/main/java/ne
          }
      }
  
-@@ -45,6 +64,13 @@ public class BlockTNT extends Block {
-             if (((Boolean) iblockdata.get(BlockTNT.EXPLODE)).booleanValue()) {
-                 EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (double) ((float) blockposition.getX() + 0.5F), (double) blockposition.getY(), (double) ((float) blockposition.getZ() + 0.5F), entityliving);
- 
-+                // SportBukkit start - fire ExplosionPrimeEvent
-+                org.bukkit.event.entity.ExplosionPrimeEvent event = new org.bukkit.event.entity.ExplosionPrimeEvent((org.bukkit.entity.Explosive) entitytntprimed.getBukkitEntity());
-+                world.getServer().getPluginManager().callEvent(event);
-+                if(event.isCancelled()) return;
-+                isPrimed = true;
-+                // SportBukkit end
-+
-                 world.addEntity(entitytntprimed);
-                 world.a((EntityHuman) null, entitytntprimed.locX, entitytntprimed.locY, entitytntprimed.locZ, SoundEffects.hW, SoundCategory.BLOCKS, 1.0F, 1.0F);
-             }
-@@ -57,7 +83,11 @@ public class BlockTNT extends Block {
+@@ -57,7 +76,12 @@ public class BlockTNT extends Block {
  
          if (!itemstack.isEmpty() && (itemstack.getItem() == Items.FLINT_AND_STEEL || itemstack.getItem() == Items.FIRE_CHARGE)) {
              this.a(world, blockposition, iblockdata.set(BlockTNT.EXPLODE, Boolean.valueOf(true)), (EntityLiving) entityhuman);
 -            world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 11);
-+            // SportBukkit start - don't remove block if TNT priming is cancelled
-+            if (isPrimed) {
-+                world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 11);
-+            }
++            // SportBukkit start - fire ExplosionPrimeEvent
++            org.bukkit.event.entity.ExplosionPrimeEvent event = new org.bukkit.event.entity.ExplosionPrimeEvent((org.bukkit.entity.Explosive) entitytntprimed.getBukkitEntity());
++            world.getServer().getPluginManager().callEvent(event);
++            if(event.isCancelled()) return;
++            isPrimed = true;
 +            // SportBukkit end
              if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
                  itemstack.damage(1, entityhuman);
              } else if (!entityhuman.abilities.canInstantlyBuild) {
-@@ -81,7 +111,11 @@ public class BlockTNT extends Block {
+@@ -81,7 +105,11 @@ public class BlockTNT extends Block {
                  }
                  // CraftBukkit end
                  this.a(world, blockposition, world.getType(blockposition).set(BlockTNT.EXPLODE, Boolean.valueOf(true)), entityarrow.shooter instanceof EntityLiving ? (EntityLiving) entityarrow.shooter : null);
@@ -105,7 +92,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityCreeper.java b/src/main/ja
 --- a/src/main/java/net/minecraft/server/EntityCreeper.java
 +++ b/src/main/java/net/minecraft/server/EntityCreeper.java
 @@ -103,7 +103,16 @@ public class EntityCreeper extends EntityMonster {
-             int i = this.dk();
+             int i = this.dm();
  
              if (i > 0 && this.fuseTicks == 0) {
 -                this.a(SoundEffects.ay, 1.0F, 0.5F);

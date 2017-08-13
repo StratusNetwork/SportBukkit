@@ -107,7 +107,7 @@
          boolean flag1 = true;
          Object object = BlockPosition.ZERO;
          long k = ChunkCoordIntPair.a(i, j);
-@@ -66,13 +129,13 @@
+@@ -66,12 +129,12 @@
              portaltravelagent_chunkcoordinatesportal.b = this.world.getTime();
              flag1 = false;
          } else {
@@ -119,12 +119,10 @@
                  BlockPosition blockposition1;
  
 -                for (int i1 = -128; i1 <= 128; ++i1) {
--                    for (BlockPosition blockposition2 = blockposition.a(l, this.world.ab() - 1 - blockposition.getY(), i1); blockposition2.getY() >= 0; blockposition2 = blockposition1) {
 +                for (int i1 = -radius; i1 <= radius; ++i1) {
-+                    for (BlockPosition blockposition2 = blockposition.a(l, this.world.Z() - 1 - blockposition.getY(), i1); blockposition2.getY() >= 0; blockposition2 = blockposition1) {
+                     for (BlockPosition blockposition2 = blockposition.a(l, this.world.ab() - 1 - blockposition.getY(), i1); blockposition2.getY() >= 0; blockposition2 = blockposition1) {
                          blockposition1 = blockposition2.down();
                          if (this.world.getType(blockposition2).getBlock() == Blocks.PORTAL) {
-                             for (blockposition1 = blockposition2.down(); this.world.getType(blockposition1).getBlock() == Blocks.PORTAL; blockposition1 = blockposition1.down()) {
 @@ -95,6 +158,29 @@
              if (flag1) {
                  this.c.put(k, new PortalTravelAgent.ChunkCoordinatesPortal((BlockPosition) object, this.world.getTime()));
@@ -233,7 +231,7 @@
          int l = i;
          int i1 = j;
          int j1 = k;
-@@ -180,13 +295,13 @@
+@@ -180,10 +295,10 @@
          double d4;
  
          for (i2 = i - 16; i2 <= i + 16; ++i2) {
@@ -245,11 +243,7 @@
 +                d2 = (double) j2 + 0.5D - z; // CraftBukkit
  
                  label271:
--                for (k2 = this.world.ab() - 1; k2 >= 0; --k2) {
-+                for (k2 = this.world.Z() - 1; k2 >= 0; --k2) {
-                     if (this.world.isEmpty(blockposition_mutableblockposition.c(i2, k2, j2))) {
-                         while (k2 > 0 && this.world.isEmpty(blockposition_mutableblockposition.c(i2, k2 - 1, j2))) {
-                             --k2;
+                 for (k2 = this.world.ab() - 1; k2 >= 0; --k2) {
 @@ -215,7 +330,7 @@
                                  }
                              }
@@ -259,7 +253,7 @@
                              d4 = d1 * d1 + d3 * d3 + d2 * d2;
                              if (d0 < 0.0D || d4 < d0) {
                                  d0 = d4;
-@@ -232,13 +347,13 @@
+@@ -232,10 +347,10 @@
  
          if (d0 < 0.0D) {
              for (i2 = i - 16; i2 <= i + 16; ++i2) {
@@ -271,11 +265,7 @@
 +                    d2 = (double) j2 + 0.5D - z; // CraftBukkit
  
                      label219:
--                    for (k2 = this.world.ab() - 1; k2 >= 0; --k2) {
-+                    for (k2 = this.world.Z() - 1; k2 >= 0; --k2) {
-                         if (this.world.isEmpty(blockposition_mutableblockposition.c(i2, k2, j2))) {
-                             while (k2 > 0 && this.world.isEmpty(blockposition_mutableblockposition.c(i2, k2 - 1, j2))) {
-                                 --k2;
+                     for (k2 = this.world.ab() - 1; k2 >= 0; --k2) {
 @@ -260,7 +375,7 @@
                                      }
                                  }
@@ -285,15 +275,6 @@
                                  d4 = d1 * d1 + d3 * d3 + d2 * d2;
                                  if (d0 < 0.0D || d4 < d0) {
                                      d0 = d4;
-@@ -289,7 +404,7 @@
-         }
- 
-         if (d0 < 0.0D) {
--            i1 = MathHelper.clamp(i1, 70, this.world.ab() - 10);
-+            i1 = MathHelper.clamp(i1, 70, this.world.Z() - 10);
-             j5 = i1;
- 
-             for (k2 = -1; k2 <= 1; ++k2) {
 @@ -359,5 +474,10 @@
              super(blockposition.getX(), blockposition.getY(), blockposition.getZ());
              this.b = i;

@@ -22,7 +22,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
  import org.bukkit.event.player.PlayerItemConsumeEvent;
  // CraftBukkit end
  
-@@ -525,43 +523,35 @@ public abstract class EntityLiving extends Entity {
+@@ -526,43 +524,35 @@ public abstract class EntityLiving extends Entity {
  
      }
  
@@ -90,7 +90,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
  
          if (this.updateEffects) {
              if (!this.world.isClientSide) {
-@@ -644,11 +634,14 @@ public abstract class EntityLiving extends Entity {
+@@ -642,11 +632,14 @@ public abstract class EntityLiving extends Entity {
  
      public void removeAllEffects() {
          if (!this.world.isClientSide) {
@@ -108,7 +108,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
              }
  
          }
-@@ -672,19 +665,26 @@ public abstract class EntityLiving extends Entity {
+@@ -670,19 +663,26 @@ public abstract class EntityLiving extends Entity {
      }
  
      public void addEffect(MobEffect mobeffect) {
@@ -141,7 +141,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
                  mobeffect1.a(mobeffect);
                  this.a(mobeffect1, true);
              }
-@@ -710,12 +710,6 @@ public abstract class EntityLiving extends Entity {
+@@ -708,12 +708,6 @@ public abstract class EntityLiving extends Entity {
  
      @Nullable
      public MobEffect c(@Nullable MobEffectList mobeffectlist) {
@@ -154,7 +154,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/jav
          return (MobEffect) this.effects.remove(mobeffectlist);
      }
  
-@@ -723,6 +717,16 @@ public abstract class EntityLiving extends Entity {
+@@ -721,6 +715,16 @@ public abstract class EntityLiving extends Entity {
          MobEffect mobeffect = this.c(mobeffectlist);
  
          if (mobeffect != null) {

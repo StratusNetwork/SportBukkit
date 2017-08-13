@@ -24,30 +24,24 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
-import javax.inject.Inject;
 import javax.inject.Provider;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Stage;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.*;
 
-import org.bukkit.BanList;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.CraftBukkitRuntime;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Server;
-import org.bukkit.ServerInstanceModule;
-import org.bukkit.UnsafeValues;
+import net.minecraft.server.WorldType;
+import org.bukkit.*;
 import org.bukkit.Warning.WarningState;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.WorldCreator;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -81,20 +75,21 @@ import org.bukkit.craftbukkit.metadata.EntityMetadataStore;
 import org.bukkit.craftbukkit.metadata.PlayerMetadataStore;
 import org.bukkit.craftbukkit.metadata.WorldMetadataStore;
 import org.bukkit.craftbukkit.potion.CraftPotionBrewer;
-import org.bukkit.craftbukkit.protocol.Protocol;
 import org.bukkit.craftbukkit.scheduler.CraftScheduler;
 import org.bukkit.craftbukkit.scoreboard.CraftScoreboardManager;
+import org.bukkit.craftbukkit.util.CaseInsensitiveNameMap;
 import org.bukkit.craftbukkit.util.CraftIconCache;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.util.DatFileFilter;
-import org.bukkit.craftbukkit.util.CaseInsensitiveNameMap;
 import org.bukkit.craftbukkit.util.Versioning;
 import org.bukkit.craftbukkit.util.permissions.CraftDefaultPermissions;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventBus;
 import org.bukkit.event.SimpleEventBus;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
+import org.bukkit.event.server.BroadcastMessageEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
@@ -110,13 +105,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
-import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginLoadOrder;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.ServicesManager;
-import org.bukkit.plugin.SimplePluginManager;
-import org.bukkit.plugin.SimpleServicesManager;
+import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.potion.Potion;
@@ -130,13 +119,9 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
 import org.apache.commons.lang.Validate;
 
-import com.avaje.ebean.config.DataSourceConfig;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.config.dbplatform.SQLitePlatform;
-import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
@@ -144,8 +129,8 @@ import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.base64.Base64;
 import jline.console.ConsoleReader;
+import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.event.server.TabCompleteEvent;
-import net.md_5.bungee.api.chat.BaseComponent;
 import tc.oc.inject.Providers;
 import tc.oc.minecraft.api.configuration.InvalidConfigurationException;
 import tc.oc.minecraft.api.plugin.PluginFinder;
@@ -163,7 +148,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
     private final SimpleCommandMap commandMap = new SimpleCommandMap(this);
     private final SimpleHelpMap helpMap = new SimpleHelpMap(this);
     private final StandardMessenger messenger = new StandardMessenger();
-    private final PluginManager pluginManager = new SimplePluginManager(this, commandMap);
+    private final SimplePluginManager pluginManager = new SimplePluginManager(this, commandMap);
     private final EventBus eventBus;
     protected final MinecraftServer console;
     protected final DedicatedPlayerList playerList;
@@ -215,7 +200,6 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
     public CraftServer(MinecraftServer console, PlayerList playerList) {
         this.console = console;
         this.root = Paths.get(".").toAbsolutePath();
-
         this.eventBus = new SimpleEventBus(this.console.primaryThread, task -> {
             if(console.isMainThread()) {
                 task.run();
@@ -223,7 +207,6 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
                 console.addMainThreadTask(task);
             }
         });
-
         this.playerList = (DedicatedPlayerList) playerList;
         this.playerView = Collections.unmodifiableList(Lists.transform(playerList.players, EntityPlayer::getBukkitEntity));
         this.playersById = Collections.unmodifiableMap(Maps.transformValues(playerList.playersById(), EntityPlayer::getBukkitEntity));
@@ -293,9 +276,6 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
         chunkGCPeriod = configuration.getInt("chunk-gc.period-in-ticks");
         chunkGCLoadThresh = configuration.getInt("chunk-gc.load-threshold");
         loadIcon();
-
-        loadPlugins();
-        enablePlugins(PluginLoadOrder.STARTUP);
     }
 
     public boolean getCommandBlockOverride(String command) {
@@ -345,9 +325,9 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
 
             try {
                 injector = Guice.createInjector(
-                    stage,
-                    new CraftServerModule(),
-                    new ServerInstanceModule(this, Arrays.asList(plugins))
+                        stage,
+                        new CraftServerModule(),
+                        new ServerInstanceModule(this, Arrays.asList(plugins))
                 );
             } catch(RuntimeException ex) {
                 logger.log(Level.SEVERE, "Injector creation failed, server will shut down", ex);
@@ -411,18 +391,19 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
 
             for (Permission perm : perms) {
                 try {
-                    pluginManager.addPermission(perm);
+                    pluginManager.addPermission(perm, false);
                 } catch (IllegalArgumentException ex) {
                     getLogger().log(Level.WARNING, "Plugin " + plugin.getDescription().getFullName() + " tried to register permission '" + perm.getName() + "' but it's already registered", ex);
                 }
             }
+            pluginManager.dirtyPermissibles();
 
             pluginManager.enablePlugin(plugin);
         } catch (RuntimeException ex) {
             Logger.getLogger(CraftServer.class.getName()).log(Level.SEVERE, ex.getMessage() + " loading " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
         }
 
-        if(!plugin.isEnabled()) {
+        if (!plugin.isEnabled()) {
             pluginFailedToLoad(plugin);
         }
     }
@@ -440,13 +421,6 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
     @Override
     public String getBukkitVersion() {
         return bukkitVersion;
-    }
-
-    @Override
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public Player[] _INVALID_getOnlinePlayers() {
-        return getOnlinePlayers().toArray(EMPTY_PLAYER_ARRAY);
     }
 
     @Override
@@ -706,7 +680,8 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
     }
 
     @Override
-    public @Nullable Duration getEmptyServerSuspendDelay() {
+    public @Nullable
+    Duration getEmptyServerSuspendDelay() {
         try {
             return this.configuration.getDuration("settings.empty-server-suspend");
         } catch(InvalidConfigurationException e) {
@@ -857,6 +832,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
         pluginManager.clearPlugins();
         commandMap.clearCommands();
         resetRecipes();
+        reloadData();
         overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
 
         int pollCount = 0;
@@ -886,6 +862,11 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
         loadPlugins();
         enablePlugins(PluginLoadOrder.STARTUP);
         enablePlugins(PluginLoadOrder.POSTWORLD);
+    }
+
+    @Override
+    public void reloadData() {
+        console.reload();
     }
 
     private void loadIcon() {
@@ -958,11 +939,11 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
         if(worldData == null) return null;
 
         return new WorldCreator(worldName)
-            .generateStructures(worldData.shouldGenerateMapFeatures())
-            .generatorSettings(worldData.getGeneratorOptions())
-            .seed(worldData.getSeed())
-            .type(org.bukkit.WorldType.getByName(worldData.getType().name()))
-            .hardcore(worldData.isHardcore());
+                .generateStructures(worldData.shouldGenerateMapFeatures())
+                .generatorSettings(worldData.getGeneratorOptions())
+                .seed(worldData.getSeed())
+                .type(org.bukkit.WorldType.getByName(worldData.getType().name()))
+                .hardcore(worldData.isHardcore());
     }
 
     @Override
@@ -1010,7 +991,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
             generator = getGenerator(name);
         }
 
-        Convertable converter = new WorldLoaderServer(getWorldContainer(), getHandle().getServer().getDataConverterManager());
+        Convertable converter = new WorldLoaderServer(getWorldContainer(), getHandle().getServer().dataConverterManager);
         if (converter.isConvertable(name)) {
             getLogger().info("Converting world '" + name + "'");
             converter.convert(name, new IProgressUpdate() {
@@ -1042,12 +1023,13 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
             }
         } while(used);
 
+
         // SportBukkit start - moved from below
         WorldSettings worldSettings = new WorldSettings(creator.seed(), EnumGamemode.getById(getDefaultGameMode().getValue()), generateStructures, creator.hardcore(), type);
         worldSettings.setGeneratorSettings(creator.generatorSettings());
         // SportBukkit end
 
-        IDataManager sdm = new ServerNBTManager(getWorldContainer(), name, true, getHandle().getServer().getDataConverterManager());
+        IDataManager sdm = new ServerNBTManager(getWorldContainer(), name, true, getHandle().getServer().dataConverterManager);
         WorldData worlddata = sdm.getWorldData();
         if (worlddata == null) {
             /* SportBukkit - moved above
@@ -1192,7 +1174,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
 
     @Override
     public World getWorld(UUID uid) {
-        return worldsById.get(uid);
+        return worldsById().get(uid);
     }
 
     @Override
@@ -1241,25 +1223,6 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
     }
 
     @Override
-    public void configureDbConfig(ServerConfig config) {
-        Validate.notNull(config, "Config cannot be null");
-
-        DataSourceConfig ds = new DataSourceConfig();
-        ds.setDriver(configuration.getString("database.driver"));
-        ds.setUrl(configuration.getString("database.url"));
-        ds.setUsername(configuration.getString("database.username"));
-        ds.setPassword(configuration.getString("database.password"));
-        ds.setIsolationLevel(TransactionIsolation.getLevel(configuration.getString("database.isolation")));
-
-        if (ds.getDriver().contains("sqlite")) {
-            config.setDatabasePlatform(new SQLitePlatform());
-            config.getDatabasePlatform().getDbDdlSyntax().setIdentity("");
-        }
-
-        config.setDataSourceConfig(ds);
-    }
-
-    @Override
     public boolean addRecipe(Recipe recipe) {
         CraftRecipe toAdd;
         if (recipe instanceof CraftRecipe) {
@@ -1276,7 +1239,6 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
             }
         }
         toAdd.addToCraftingManager();
-        CraftingManager.getInstance().sort();
         return true;
     }
 
@@ -1306,7 +1268,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
 
     @Override
     public void clearRecipes() {
-        CraftingManager.getInstance().recipes.clear();
+        CraftingManager.recipes = new RegistryMaterials();
         RecipesFurnace.getInstance().recipes.clear();
         RecipesFurnace.getInstance().customRecipes.clear();
         RecipesFurnace.getInstance().customExperience.clear();
@@ -1314,7 +1276,8 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
 
     @Override
     public void resetRecipes() {
-        CraftingManager.getInstance().recipes = new CraftingManager().recipes;
+        CraftingManager.recipes = new RegistryMaterials();
+        CraftingManager.init();
         RecipesFurnace.getInstance().recipes = new RecipesFurnace().recipes;
         RecipesFurnace.getInstance().customRecipes.clear();
         RecipesFurnace.getInstance().customExperience.clear();
@@ -1457,18 +1420,27 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
 
     @Override
     public int broadcast(String message, String permission) {
-        int count = 0;
-        Set<Permissible> permissibles = getPluginManager().getPermissionSubscriptions(permission);
-
-        for (Permissible permissible : permissibles) {
+        Set<CommandSender> recipients = new HashSet<>();
+        for (Permissible permissible : getPluginManager().getPermissionSubscriptions(permission)) {
             if (permissible instanceof CommandSender && permissible.hasPermission(permission)) {
-                CommandSender user = (CommandSender) permissible;
-                user.sendMessage(message);
-                count++;
+                recipients.add((CommandSender) permissible);
             }
         }
 
-        return count;
+        BroadcastMessageEvent broadcastMessageEvent = new BroadcastMessageEvent(message, recipients);
+        getPluginManager().callEvent(broadcastMessageEvent);
+
+        if (broadcastMessageEvent.isCancelled()) {
+            return 0;
+        }
+
+        message = broadcastMessageEvent.getMessage();
+
+        for (CommandSender recipient : recipients) {
+            recipient.sendMessage(message);
+        }
+
+        return recipients.size();
     }
 
     @Override
@@ -1610,7 +1582,6 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
         return container;
     }
 
-    @Override
     public Set<OfflinePlayer> getSavedPlayers() {
         final Set<OfflinePlayer> players = new HashSet<>();
         for (String file : ((WorldNBTStorage) console.worlds.get(0).getDataManager()).getPlayerDir().list(new DatFileFilter())) {
@@ -1620,6 +1591,7 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
                 // Who knows what is in this directory, just ignore invalid files
             }
         }
+
         players.addAll(getOnlinePlayers());
         return players;
     }
@@ -1733,14 +1705,14 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
         return pluginProfiling;
     }
 
-    public List<String> tabComplete(net.minecraft.server.ICommandListener sender, String message, BlockPosition pos) {
+    public List<String> tabComplete(net.minecraft.server.ICommandListener sender, String message, BlockPosition pos, boolean forceCommand) {
         if (!(sender instanceof EntityPlayer)) {
             return ImmutableList.of();
         }
 
         List<String> offers;
         Player player = ((EntityPlayer) sender).getBukkitEntity();
-        if (message.startsWith("/")) {
+        if (message.startsWith("/") || forceCommand) {
             offers = tabCompleteCommand(player, message, pos);
         } else {
             offers = tabCompleteChat(player, message);
@@ -1755,10 +1727,14 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
     public List<String> tabCompleteCommand(Player player, String message, BlockPosition pos) {
         List<String> completions = null;
         try {
+            if (message.startsWith("/")) {
+                // Trim leading '/' if present (won't always be present in command blocks)
+                message = message.substring(1);
+            }
             if (pos == null) {
-                completions = getCommandMap().tabComplete(player, message.substring(1));
+                completions = getCommandMap().tabComplete(player, message);
             } else {
-                completions = getCommandMap().tabComplete(player, message.substring(1), new Location(player.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
+                completions = getCommandMap().tabComplete(player, message, new Location(player.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
             }
         } catch (CommandException ex) {
             player.sendMessage(ChatColor.RED + "An internal error occurred while attempting to tab-complete this command");
@@ -1864,6 +1840,31 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
         return new CraftBossBar(title, color, style, flags);
     }
 
+    @Override
+    public Entity getEntity(UUID uuid) {
+        Validate.notNull(uuid, "UUID cannot be null");
+        net.minecraft.server.Entity entity = console.a(uuid); // PAIL: getEntity
+        return entity == null ? null : entity.getBukkitEntity();
+    }
+
+    @Override
+    public org.bukkit.advancement.Advancement getAdvancement(NamespacedKey key) {
+        Preconditions.checkArgument(key != null, "key");
+
+        Advancement advancement = console.getAdvancementData().a(CraftNamespacedKey.toMinecraft(key));
+        return (advancement == null) ? null : advancement.bukkit;
+    }
+
+    @Override
+    public Iterator<org.bukkit.advancement.Advancement> advancementIterator() {
+        return Iterators.unmodifiableIterator(Iterators.transform(console.getAdvancementData().c().iterator(), new Function<Advancement, org.bukkit.advancement.Advancement>() { // PAIL: rename
+            @Override
+            public org.bukkit.advancement.Advancement apply(Advancement advancement) {
+                return advancement.bukkit;
+            }
+        }));
+    }
+
     @Deprecated
     @Override
     public UnsafeValues getUnsafe() {
@@ -1886,7 +1887,14 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
 
     @Override
     public Set<Integer> getProtocolVersions() {
-        return Protocol.SUPPORTED;
+        return ImmutableSet.of(
+            4, 5,               // 1.7
+            47,                 // 1.8
+            107, 108, 109, 110, // 1.9
+            210,                // 1.10
+            315, 316,           // 1.11
+            335                 // 1.12
+        );
     }
 
     @Override
@@ -1923,9 +1931,9 @@ public final class CraftServer extends CraftBukkitRuntime implements Server {
                     task.run();
                 } catch(Throwable throwable) {
                     plugin.getLogger().log(
-                        Level.SEVERE,
-                        "Exception running task from plugin " + plugin.getDescription().getFullName(),
-                        throwable
+                            Level.SEVERE,
+                            "Exception running task from plugin " + plugin.getDescription().getFullName(),
+                            throwable
                     );
                 }
             }

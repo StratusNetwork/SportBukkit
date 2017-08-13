@@ -22,6 +22,7 @@ import net.minecraft.server.TileEntityBrewingStand;
 import net.minecraft.server.TileEntityDispenser;
 import net.minecraft.server.TileEntityDropper;
 import net.minecraft.server.TileEntityFurnace;
+import net.minecraft.server.TileEntityShulkerBox;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
@@ -77,6 +78,18 @@ public class CraftInventory implements Inventory {
     public ItemStack getItem(int index) {
         net.minecraft.server.ItemStack item = getInventory().getItem(index);
         return item.isEmpty() ? null : CraftItemStack.asCraftMirror(item);
+    }
+
+    protected ItemStack[] asCraftMirror(List<net.minecraft.server.ItemStack> mcItems) {
+        int size = mcItems.size();
+        ItemStack[] items = new ItemStack[size];
+
+        for (int i = 0; i < size; i++) {
+            net.minecraft.server.ItemStack mcItem = mcItems.get(i);
+            items[i] = (mcItem.isEmpty()) ? null : CraftItemStack.asCraftMirror(mcItem);
+        }
+
+        return items;
     }
 
     @Override
@@ -226,14 +239,14 @@ public class CraftInventory implements Inventory {
     }
 
     public int firstEmpty() {
-        return ListUtils.indexOf(storage(), Objects::isNull);
+        return ListUtils.indexOf(storage(), item -> item == null || Material.AIR.equals(item.getType()));
     }
 
     public int firstPartial(int materialId) {
         return ListUtils.indexOf(storage(), item ->
-            item != null &&
-            item.getTypeId() == materialId &&
-            item.getAmount() < item.getMaxStackSize()
+                item != null &&
+                        item.getTypeId() == materialId &&
+                        item.getAmount() < item.getMaxStackSize()
         );
     }
 
@@ -245,9 +258,9 @@ public class CraftInventory implements Inventory {
     protected int firstPartial(ItemStack item) {
         final ItemStack filteredItem = CraftItemStack.asCraftCopy(item);
         return ListUtils.indexOf(storage(), cItem ->
-            cItem != null &&
-            cItem.getAmount() < cItem.getMaxStackSize() &&
-            cItem.isSimilar(filteredItem)
+                cItem != null &&
+                        cItem.getAmount() < cItem.getMaxStackSize() &&
+                        cItem.isSimilar(filteredItem)
         );
     }
 
@@ -444,6 +457,8 @@ public class CraftInventory implements Inventory {
            return InventoryType.ANVIL;
         } else if (inventory instanceof IHopper) {
             return InventoryType.HOPPER;
+        } else if (inventory instanceof TileEntityShulkerBox) {
+            return InventoryType.SHULKER_BOX;
         } else {
             return InventoryType.CHEST;
         }

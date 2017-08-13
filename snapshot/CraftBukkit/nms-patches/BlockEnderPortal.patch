@@ -9,32 +9,14 @@
  public class BlockEnderPortal extends BlockTileEntity {
  
      protected static final AxisAlignedBB a = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D);
-@@ -36,8 +38,12 @@
-     }
+@@ -37,6 +39,10 @@
  
      public void a(World world, BlockPosition blockposition, IBlockData iblockdata, Entity entity) {
--        if (!entity.isPassenger() && !entity.isVehicle() && entity.bd() && !world.isClientSide && entity.getBoundingBox().c(iblockdata.e(world, blockposition).a(blockposition))) {
--            entity.b(1);
-+        if (!entity.isPassenger() && !entity.isVehicle() && entity.aX() && !world.isClientSide && entity.getBoundingBox().c(iblockdata.d(world, blockposition).a(blockposition))) {
+         if (!entity.isPassenger() && !entity.isVehicle() && entity.bf() && !world.isClientSide && entity.getBoundingBox().c(iblockdata.e(world, blockposition).a(blockposition))) {
 +            // CraftBukkit start - Entity in portal
 +            EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
 +            world.getServer().getPluginManager().callEvent(event);
 +            // CraftBukkit end
-+            entity.c(1);
+             entity.b(1);
          }
  
-     }
-@@ -46,11 +52,7 @@
-         return ItemStack.a;
-     }
- 
--    public MaterialMapColor c(IBlockData iblockdata, IBlockAccess iblockaccess, BlockPosition blockposition) {
--        return MaterialMapColor.F;
--    }
--
--    public EnumBlockFaceShape a(IBlockAccess iblockaccess, IBlockData iblockdata, BlockPosition blockposition, EnumDirection enumdirection) {
--        return EnumBlockFaceShape.UNDEFINED;
-+    public MaterialMapColor r(IBlockData iblockdata) {
-+        return MaterialMapColor.E;
-     }
- }

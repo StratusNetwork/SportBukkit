@@ -107,10 +107,10 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
     public ItemStack(final int type, final int amount, final short damage, final Byte data) {
         this.type = type;
         this.amount = amount;
-        if(data == null) {
+        if (data == null) {
             this.durability = damage;
         } else {
-            if(damage != 0 && damage != data) {
+            if (damage != 0 && damage != data) {
                 throw new IllegalArgumentException("Item cannot have both damage and data value");
             }
             createData(data);
@@ -282,7 +282,7 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
      */
     public void setDurability(final short durability) {
         this.durability = durability;
-        if(data != null && data.getItemType().getMaxDurability() == 0) {
+        if (data != null && data.getItemType().getMaxDurability() == 0) {
             data.setData((byte) durability);
         }
     }
@@ -734,12 +734,12 @@ public class ItemStack implements Cloneable, ConfigurationSerializable {
 
         public ImItemStack immutable() {
             return data != null ? ImItemStack.of(data, amount, meta)
-                                : ImItemStack.of(material, damage, amount, meta);
+                    : ImItemStack.of(material, damage, amount, meta);
         }
 
         public ItemStack mutable() {
             final ItemStack stack = data != null ? new ItemStack(data, amount)
-                                                 : new ItemStack(material, amount, damage);
+                    : new ItemStack(material, amount, damage);
             if(meta != null) {
                 stack.setItemMeta(meta);
             }

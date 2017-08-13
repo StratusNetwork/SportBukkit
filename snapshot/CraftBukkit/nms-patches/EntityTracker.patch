@@ -15,12 +15,3 @@
                          s = "Maximum (" + s + ")";
                      }
  
-@@ -259,7 +260,7 @@
-                     arraylist.add(entity);
-                 }
- 
--                if (!entity.bD().isEmpty()) {
-+                if (!entity.bx().isEmpty()) {
-                     arraylist1.add(entity);
-                 }
-             }

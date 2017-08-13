@@ -1,16 +1,18 @@
 package org.bukkit.craftbukkit;
 
-import java.time.Instant;
-import java.util.Optional;
-import java.util.UUID;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-
 import com.mojang.authlib.GameProfile;
+import org.bukkit.craftbukkit.CraftOfflinePlayer;
+import org.bukkit.craftbukkit.CraftServer;
 import tc.oc.minecraft.api.user.User;
 import tc.oc.minecraft.api.user.UserFactory;
 import tc.oc.minecraft.api.user.UserUtils;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,7 +21,8 @@ public class CraftOfflinePlayerFactory implements UserFactory {
 
     private final Provider<CraftServer> server;
 
-    @Inject CraftOfflinePlayerFactory(Provider<CraftServer> server) {
+    @Inject
+    CraftOfflinePlayerFactory(Provider<CraftServer> server) {
         this.server = server;
     }
 
@@ -45,7 +48,7 @@ public class CraftOfflinePlayerFactory implements UserFactory {
     @Override
     public CraftOfflinePlayer copyUser(User user) {
         return user instanceof CraftOfflinePlayer
-               ? (CraftOfflinePlayer) user
-               : (CraftOfflinePlayer) UserFactory.super.copyUser(user);
+                ? (CraftOfflinePlayer) user
+                : (CraftOfflinePlayer) UserFactory.super.copyUser(user);
     }
 }

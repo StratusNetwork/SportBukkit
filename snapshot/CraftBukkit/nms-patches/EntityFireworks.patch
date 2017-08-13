@@ -1,60 +1,21 @@
 --- a/net/minecraft/server/EntityFireworks.java
 +++ b/net/minecraft/server/EntityFireworks.java
-@@ -3,11 +3,17 @@
+@@ -2,12 +2,13 @@
+ 
  import java.util.Iterator;
  import java.util.List;
++import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
  
-+// SportBukkit start
-+import com.google.common.collect.Range;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
-+import org.bukkit.craftbukkit.protocol.MetadataKey;
-+// SportBukkit end
-+
  public class EntityFireworks extends Entity {
  
      public static final DataWatcherObject<ItemStack> FIREWORK_ITEM = DataWatcher.a(EntityFireworks.class, DataWatcherRegistry.f);
--    private static final DataWatcherObject<Integer> b = DataWatcher.a(EntityFireworks.class, DataWatcherRegistry.b);
+     private static final DataWatcherObject<Integer> b = DataWatcher.a(EntityFireworks.class, DataWatcherRegistry.b);
 -    private int ticksFlown;
-+    private static final DataWatcherObject<Integer> b = MetadataKey.auto(EntityFireworks.class, DataWatcherRegistry.b, Range.atLeast(316)); // SportBukkit - boosting entity ID
 +    public int ticksFlown; // SportBukkit - private -> public
      public int expectedLifespan;
      private EntityLiving e;
  
-@@ -48,11 +54,11 @@
-         this.e = entityliving;
-     }
- 
--    public void B_() {
-+    public void A_() {
-         this.M = this.locX;
-         this.N = this.locY;
-         this.O = this.locZ;
--        super.B_();
-+        super.A_();
-         if (this.j()) {
-             if (this.e == null) {
-                 Entity entity = this.world.getEntity(((Integer) this.datawatcher.get(EntityFireworks.b)).intValue());
-@@ -63,8 +69,8 @@
-             }
- 
-             if (this.e != null) {
--                if (this.e.cN()) {
--                    Vec3D vec3d = this.e.aH();
-+                if (this.e.cH()) {
-+                    Vec3D vec3d = this.e.aB();
-                     double d0 = 1.5D;
-                     double d1 = 0.1D;
- 
-@@ -108,7 +114,7 @@
-         this.pitch = this.lastPitch + (this.pitch - this.lastPitch) * 0.2F;
-         this.yaw = this.lastYaw + (this.yaw - this.lastYaw) * 0.2F;
-         if (this.ticksFlown == 0 && !this.isSilent()) {
--            this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, SoundEffects.bI, SoundCategory.AMBIENT, 3.0F, 1.0F);
-+            this.world.a((EntityHuman) null, this.locX, this.locY, this.locZ, SoundEffects.bC, SoundCategory.AMBIENT, 3.0F, 1.0F);
-         }
- 
-         ++this.ticksFlown;
-@@ -117,8 +123,12 @@
+@@ -117,8 +118,12 @@
          }
  
          if (!this.world.isClientSide && this.ticksFlown > this.expectedLifespan) {
@@ -69,22 +30,23 @@
              this.die();
          }
  
-@@ -162,7 +172,9 @@
+@@ -136,7 +141,9 @@
+ 
+         if (f > 0.0F) {
+             if (this.e != null) {
++                CraftEventFactory.entityDamage = this; // CraftBukkit
+                 this.e.damageEntity(DamageSource.t, (float) (5 + nbttaglist.size() * 2));
++                CraftEventFactory.entityDamage = null; // CraftBukkit
+             }
+ 
+             double d0 = 5.0D;
+@@ -162,7 +169,9 @@
                      if (flag) {
                          float f1 = f * (float) Math.sqrt((5.0D - (double) this.g(entityliving)) / 5.0D);
  
-+                        CraftEventFactory.entityDamage = this; try { // SportBukkit
++                        CraftEventFactory.entityDamage = this; // CraftBukkit
                          entityliving.damageEntity(DamageSource.t, f1);
-+                        } finally { CraftEventFactory.entityDamage = null; } // SportBukkit
++                        CraftEventFactory.entityDamage = null; // CraftBukkit
                      }
                  }
              }
-@@ -204,7 +216,7 @@
- 
-     }
- 
--    public boolean bb() {
-+    public boolean aV() {
-         return false;
-     }
- }

@@ -6,18 +6,18 @@ Subject: [PATCH] Fix wrong potion particles after respawn
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -627,6 +627,7 @@ public abstract class EntityLiving extends Entity {
+@@ -628,6 +628,7 @@ public abstract class EntityLiving extends Entity {
          return false;
      }
  
-+    public void clearPotionEffectMetadata() { this.bW(); } // SportBukkit - alias for following method
-     protected void bW() {
++    public void clearPotionEffectMetadata() { this.bY(); } // SportBukkit - alias for following method
+     protected void bY() {
          this.datawatcher.set(EntityLiving.h, Boolean.valueOf(false));
          this.datawatcher.set(EntityLiving.g, Integer.valueOf(0));
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1464,6 +1464,14 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1470,6 +1470,14 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          this.f(0); // PAIL: setArrowCount
          this.removeAllEffects();
          this.updateEffects = true;

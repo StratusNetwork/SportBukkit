@@ -468,7 +468,7 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * @return This vector.
      */
     public Vector setX(double x) {
-        super.setX(x);
+        setX(x);
         return this;
     }
 
@@ -534,7 +534,7 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * @return This vector.
      */
     public Vector setZ(double z) {
-        super.setZ(z);
+        setZ(z);
         return this;
     }
 
@@ -600,7 +600,7 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
      * Gets a Location version of this vector.
      *
      * @param world The world to link the location to.
-     * @param yaw The desired yaw.
+     * @param yaw   The desired yaw.
      * @param pitch The desired pitch.
      * @return the location
      */
@@ -669,6 +669,7 @@ public class Vector extends VectorBase<Vector> implements Cloneable, Configurati
         return new Vector(Math.max(a.fineX(), b.fineX()),
                 Math.max(a.fineY(), b.fineY()),
                 Math.max(a.fineZ(), b.fineZ()));
+
     }
 
     /**

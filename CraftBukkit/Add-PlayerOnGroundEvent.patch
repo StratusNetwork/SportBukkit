@@ -8,15 +8,15 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -98,6 +98,8 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
      private int processedMovePackets;
-     private boolean processedDisconnect; // CraftBukkit - Added
+     private AutoRecipe H = new AutoRecipe();
  
 +    boolean clientOnGround; // SportBukkit - only set by client
 +
      public PlayerConnection(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
          this.minecraftServer = minecraftserver;
          this.networkManager = networkmanager;
-@@ -663,6 +665,13 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
-                             this.B &= !this.player.hasEffect(MobEffects.LEVITATION) && !this.player.cN() && !worldserver.c(this.player.getBoundingBox().g(0.0625D).b(0.0D, -0.55D, 0.0D));
+@@ -664,6 +666,13 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+                             this.B &= !this.player.hasEffect(MobEffects.LEVITATION) && !this.player.cP() && !worldserver.c(this.player.getBoundingBox().g(0.0625D).b(0.0D, -0.55D, 0.0D));
                              this.player.onGround = packetplayinflying.a();
                              this.minecraftServer.getPlayerList().d(this.player);
 +                            // SportBukkit start

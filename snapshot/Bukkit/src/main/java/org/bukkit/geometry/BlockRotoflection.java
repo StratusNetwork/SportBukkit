@@ -13,17 +13,17 @@ import org.bukkit.util.NumberConversions;
 public class BlockRotoflection {
 
     private static final BlockRotoflection[] NORMAL = new BlockRotoflection[] {
-        new BlockRotoflection(false, 0),
-        new BlockRotoflection(false, 1),
-        new BlockRotoflection(false, 2),
-        new BlockRotoflection(false, 3)
+            new BlockRotoflection(false, 0),
+            new BlockRotoflection(false, 1),
+            new BlockRotoflection(false, 2),
+            new BlockRotoflection(false, 3)
     };
 
     private static final BlockRotoflection[] INVERTED = new BlockRotoflection[] {
-        new BlockRotoflection(true, 0),
-        new BlockRotoflection(true, 1),
-        new BlockRotoflection(true, 2),
-        new BlockRotoflection(true, 3)
+            new BlockRotoflection(true, 0),
+            new BlockRotoflection(true, 1),
+            new BlockRotoflection(true, 2),
+            new BlockRotoflection(true, 3)
     };
 
     public static BlockRotoflection identity() {
@@ -128,22 +128,22 @@ public class BlockRotoflection {
     @Override
     public int hashCode() {
         return reflection.ordinal() * 4 +
-               rotation.ordinal();
+                rotation.ordinal();
     }
 
     @Override
     public boolean equals(Object that) {
         return this == that || (
-            that instanceof BlockRotoflection &&
-            this.reflection.equals(((BlockRotoflection) that).reflection) &&
-            this.rotation.equals(((BlockRotoflection) that).rotation)
+                that instanceof BlockRotoflection &&
+                        this.reflection.equals(((BlockRotoflection) that).reflection) &&
+                        this.rotation.equals(((BlockRotoflection) that).rotation)
         );
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() +
-               "{reflection=" + reflection +
-               " rotation=" + rotation + "}";
+                "{reflection=" + reflection +
+                " rotation=" + rotation + "}";
     }
 }

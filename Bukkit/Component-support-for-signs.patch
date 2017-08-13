@@ -113,9 +113,9 @@ diff --git a/src/main/java/org/bukkit/event/block/SignChangeEvent.java b/src/mai
       * @param index index of the line to get
 -     * @return the String containing the line of text associated with the
 +     * @return the BaseComponent containing the line of text associated with the
-      *     provided index
+      * provided index
       * @throws IndexOutOfBoundsException thrown when the provided index is {@literal > 3
-      *     or < 0}
+      *                                   or < 0}
       */
 -    public String getLine(int index) throws IndexOutOfBoundsException {
 +    public BaseComponent line(int index) throws IndexOutOfBoundsException {
@@ -132,7 +132,7 @@ diff --git a/src/main/java/org/bukkit/event/block/SignChangeEvent.java b/src/mai
       *
 @@ -67,10 +79,15 @@ public class SignChangeEvent extends BlockEvent implements Cancellable, PlayerAc
       * @throws IndexOutOfBoundsException thrown when the provided index is {@literal > 3
-      *     or < 0}
+      *                                   or < 0}
       */
 -    public void setLine(int index, String line) throws IndexOutOfBoundsException {
 +    public void setLine(int index, BaseComponent line) {

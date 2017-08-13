@@ -74,7 +74,7 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  import org.bukkit.boss.BarColor;
  import org.bukkit.boss.BarFlag;
  import org.bukkit.boss.BarStyle;
-@@ -126,12 +119,11 @@ import io.netty.buffer.ByteBufOutputStream;
+@@ -127,12 +120,11 @@ import io.netty.buffer.ByteBufOutputStream;
  import io.netty.buffer.Unpooled;
  import io.netty.handler.codec.base64.Base64;
  import jline.console.ConsoleReader;

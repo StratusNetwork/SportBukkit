@@ -8,10 +8,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Called when an entity has made another entity decide to explode, specifically when:
- *  - a player activates a TNT block or Creeper with Flint & Steel
- *  - an entity's explosion chains to a TNT block
- *  - a flaming arrow activates a TNT block
- *  - an entity damages an Ender Crystal
+ * - a player activates a TNT block or Creeper with Flint & Steel
+ * - an entity's explosion chains to a TNT block
+ * - a flaming arrow activates a TNT block
+ * - an entity damages an Ender Crystal
  */
 public class ExplosionPrimeByEntityEvent extends ExplosionPrimeEvent implements EntityAction {
 

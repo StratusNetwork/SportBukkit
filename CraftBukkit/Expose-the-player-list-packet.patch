@@ -6,7 +6,7 @@ Subject: [PATCH] Expose the player list packet
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
 --- a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
-@@ -144,6 +144,15 @@ public class PacketPlayOutPlayerInfo implements Packet<PacketListenerPlayOut> {
+@@ -145,6 +145,15 @@ public class PacketPlayOutPlayerInfo implements Packet<PacketListenerPlayOut> {
  
                  packetdataserializer.d(packetplayoutplayerinfo_playerinfodata.c().getId());
                  packetdataserializer.d(packetplayoutplayerinfo_playerinfodata.b());
@@ -22,7 +22,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java b/s
                  if (packetplayoutplayerinfo_playerinfodata.d() == null) {
                      packetdataserializer.writeBoolean(false);
                  } else {
-@@ -164,6 +173,15 @@ public class PacketPlayOutPlayerInfo implements Packet<PacketListenerPlayOut> {
+@@ -165,6 +174,15 @@ public class PacketPlayOutPlayerInfo implements Packet<PacketListenerPlayOut> {
  
              case UPDATE_DISPLAY_NAME:
                  packetdataserializer.a(packetplayoutplayerinfo_playerinfodata.a().getId());
@@ -38,7 +38,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java b/s
                  if (packetplayoutplayerinfo_playerinfodata.d() == null) {
                      packetdataserializer.writeBoolean(false);
                  } else {
-@@ -189,6 +207,8 @@ public class PacketPlayOutPlayerInfo implements Packet<PacketListenerPlayOut> {
+@@ -190,6 +208,8 @@ public class PacketPlayOutPlayerInfo implements Packet<PacketListenerPlayOut> {
  
      public class PlayerInfoData {
  

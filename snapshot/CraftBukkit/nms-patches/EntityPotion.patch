@@ -13,30 +13,7 @@
  
  public class EntityPotion extends EntityProjectile {
  
-@@ -47,7 +53,7 @@
- 
-         if (itemstack.getItem() != Items.SPLASH_POTION && itemstack.getItem() != Items.LINGERING_POTION) {
-             if (this.world != null) {
--                EntityPotion.f.error("ThrownPotion entity {} has no item?!", Integer.valueOf(this.getId()));
-+                EntityPotion.f.error("ThrownPotion entity {} has no item?!", new Object[] { Integer.valueOf(this.getId())});
-             }
- 
-             return new ItemStack(Items.SPLASH_POTION);
-@@ -75,19 +81,19 @@
-             if (movingobjectposition.type == MovingObjectPosition.EnumMovingObjectType.BLOCK && flag) {
-                 BlockPosition blockposition = movingobjectposition.a().shift(movingobjectposition.direction);
- 
--                this.a(blockposition, movingobjectposition.direction);
-+                this.a(blockposition);
-                 Iterator iterator = EnumDirection.EnumDirectionLimit.HORIZONTAL.iterator();
- 
-                 while (iterator.hasNext()) {
-                     EnumDirection enumdirection = (EnumDirection) iterator.next();
- 
--                    this.a(blockposition.shift(enumdirection), enumdirection);
-+                    this.a(blockposition.shift(enumdirection));
-                 }
-             }
+@@ -87,7 +93,7 @@
  
              if (flag) {
                  this.n();
@@ -53,15 +30,6 @@
  
          if (!list1.isEmpty()) {
              Iterator iterator = list1.iterator();
-@@ -131,7 +138,7 @@
-             while (iterator.hasNext()) {
-                 EntityLiving entityliving = (EntityLiving) iterator.next();
- 
--                if (entityliving.cP()) {
-+                if (entityliving.cJ()) {
-                     double d0 = this.h(entityliving);
- 
-                     if (d0 < 16.0D) {
 @@ -141,21 +148,46 @@
                              d1 = 1.0D;
                          }
@@ -123,15 +91,7 @@
                          }
                      }
                  }
-@@ -167,6 +199,7 @@
-     private void a(ItemStack itemstack, PotionRegistry potionregistry) {
-         EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.world, this.locX, this.locY, this.locZ);
- 
-+        entityareaeffectcloud.projectileSource = this.projectileSource; // CraftBukkit
-         entityareaeffectcloud.setSource(this.getShooter());
-         entityareaeffectcloud.setRadius(3.0F);
-         entityareaeffectcloud.setRadiusOnUse(-0.5F);
-@@ -187,16 +220,23 @@
+@@ -187,7 +219,14 @@
              entityareaeffectcloud.setColor(nbttagcompound.getInt("CustomPotionColor"));
          }
  
@@ -147,14 +107,3 @@
      }
  
      public boolean isLingering() {
-         return this.getItem().getItem() == Items.LINGERING_POTION;
-     }
- 
--    private void a(BlockPosition blockposition, EnumDirection enumdirection) {
-+    private void a(BlockPosition blockposition) {
-         if (this.world.getType(blockposition).getBlock() == Blocks.FIRE) {
--            this.world.douseFire((EntityHuman) null, blockposition.shift(enumdirection), enumdirection.opposite());
-+            this.world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 2);
-         }
- 
-     }

@@ -11,17 +11,12 @@
  public class ContainerAnvil extends Container {
  
      private static final Logger f = LogManager.getLogger();
-@@ -18,12 +22,17 @@
-     };
-     private final World i;
-     private final BlockPosition j;
--    public int levelCost;
-+    public int a;
+@@ -22,8 +26,14 @@
      private int k;
--    public String renameText;
-+    public String l; // PAIL: private -> public
+     public String renameText;
      private final EntityHuman m;
 +    // CraftBukkit start
++    private int lastLevelCost;
 +    private CraftInventoryView bukkitEntity;
 +    private PlayerInventory player;
 +    // CraftBukkit end
@@ -31,159 +26,43 @@
          this.j = blockposition;
          this.i = world;
          this.m = entityhuman;
-@@ -35,21 +44,28 @@
-             }
- 
-             public boolean isAllowed(EntityHuman entityhuman) {
--                return (entityhuman.abilities.canInstantlyBuild || entityhuman.expLevel >= ContainerAnvil.this.levelCost) && ContainerAnvil.this.levelCost > 0 && this.hasItem();
-+                return (entityhuman.abilities.canInstantlyBuild || entityhuman.expLevel >= ContainerAnvil.this.a) && ContainerAnvil.this.a > 0 && this.hasItem();
-             }
- 
-             public ItemStack a(EntityHuman entityhuman, ItemStack itemstack) {
-                 if (!entityhuman.abilities.canInstantlyBuild) {
--                    entityhuman.levelDown(-ContainerAnvil.this.levelCost);
-+                    entityhuman.levelDown(-ContainerAnvil.this.a);
-+                }
-+
-+                ItemStack itemstack1 = ContainerAnvil.this.h.getItem(0);
-+
-+                if (itemstack1.getCount() != 1 && !entityhuman.abilities.canInstantlyBuild && !(itemstack1.getItem() instanceof ItemNameTag)) {
-+                    itemstack1.setCount(itemstack1.getCount() - 1);
-+                } else {
-+                    ContainerAnvil.this.h.setItem(0, ItemStack.a);
-                 }
- 
--                ContainerAnvil.this.h.setItem(0, ItemStack.a);
-                 if (ContainerAnvil.this.k > 0) {
--                    ItemStack itemstack1 = ContainerAnvil.this.h.getItem(1);
-+                    ItemStack itemstack2 = ContainerAnvil.this.h.getItem(1);
- 
--                    if (!itemstack1.isEmpty() && itemstack1.getCount() > ContainerAnvil.this.k) {
--                        itemstack1.subtract(ContainerAnvil.this.k);
--                        ContainerAnvil.this.h.setItem(1, itemstack1);
-+                    if (!itemstack2.isEmpty() && itemstack2.getCount() > ContainerAnvil.this.k) {
-+                        itemstack2.subtract(ContainerAnvil.this.k);
-+                        ContainerAnvil.this.h.setItem(1, itemstack2);
-                     } else {
-                         ContainerAnvil.this.h.setItem(1, ItemStack.a);
-                     }
-@@ -57,7 +73,7 @@
-                     ContainerAnvil.this.h.setItem(1, ItemStack.a);
-                 }
- 
--                ContainerAnvil.this.levelCost = 0;
-+                ContainerAnvil.this.a = 0;
-                 IBlockData iblockdata = world.getType(blockposition);
- 
-                 if (!entityhuman.abilities.canInstantlyBuild && !world.isClientSide && iblockdata.getBlock() == Blocks.ANVIL && entityhuman.getRandom().nextFloat() < 0.12F) {
-@@ -104,23 +120,28 @@
-     public void e() {
-         ItemStack itemstack = this.h.getItem(0);
- 
--        this.levelCost = 1;
-+        this.a = 1;
-         int i = 0;
-         byte b0 = 0;
+@@ -110,7 +120,7 @@
          byte b1 = 0;
  
          if (itemstack.isEmpty()) {
 -            this.g.setItem(0, ItemStack.a);
--            this.levelCost = 0;
 +            org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.a); // CraftBukkit
-+            this.a = 0;
+             this.levelCost = 0;
          } else {
              ItemStack itemstack1 = itemstack.cloneItemStack();
-+
-+            if (itemstack1.getCount() > 1 && !this.m.abilities.canInstantlyBuild && !(itemstack1.getItem() instanceof ItemNameTag)) {
-+                itemstack1.setCount(1);
-+            }
-+
-             ItemStack itemstack2 = this.h.getItem(1);
-             Map map = EnchantmentManager.a(itemstack1);
-             int j = b0 + itemstack.getRepairCost() + (itemstack2.isEmpty() ? 0 : itemstack2.getRepairCost());
- 
-             this.k = 0;
-             if (!itemstack2.isEmpty()) {
--                boolean flag = itemstack2.getItem() == Items.ENCHANTED_BOOK && !ItemEnchantedBook.h(itemstack2).isEmpty();
-+                boolean flag = itemstack2.getItem() == Items.ENCHANTED_BOOK && !Items.ENCHANTED_BOOK.h(itemstack2).isEmpty();
-                 int k;
-                 int l;
-                 int i1;
-@@ -128,8 +149,8 @@
+@@ -128,7 +138,7 @@
                  if (itemstack1.f() && itemstack1.getItem().a(itemstack, itemstack2)) {
                      k = Math.min(itemstack1.i(), itemstack1.k() / 4);
                      if (k <= 0) {
 -                        this.g.setItem(0, ItemStack.a);
--                        this.levelCost = 0;
 +                        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.a); // CraftBukkit
-+                        this.a = 0;
+                         this.levelCost = 0;
                          return;
                      }
- 
-@@ -143,8 +164,8 @@
+@@ -143,7 +153,7 @@
                      this.k = l;
                  } else {
                      if (!flag && (itemstack1.getItem() != itemstack2.getItem() || !itemstack1.f())) {
 -                        this.g.setItem(0, ItemStack.a);
--                        this.levelCost = 0;
 +                        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.a); // CraftBukkit
-+                        this.a = 0;
+                         this.levelCost = 0;
                          return;
                      }
- 
-@@ -228,43 +249,40 @@
-                                 }
- 
-                                 i += j2 * i2;
--                                if (itemstack.getCount() > 1) {
--                                    i = 40;
--                                }
-                             }
-                         }
+@@ -236,7 +246,7 @@
                      }
  
                      if (flag2 && !flag1) {
-                         this.g.setItem(0, ItemStack.a);
--                        this.levelCost = 0;
-+                        this.a = 0;
+-                        this.g.setItem(0, ItemStack.a);
++                        org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(getBukkitView(), ItemStack.a); // CraftBukkit
+                         this.levelCost = 0;
                          return;
                      }
-                 }
-             }
- 
--            if (StringUtils.isBlank(this.renameText)) {
-+            if (StringUtils.isBlank(this.l)) {
-                 if (itemstack.hasName()) {
-                     b1 = 1;
-                     i += b1;
-                     itemstack1.s();
-                 }
--            } else if (!this.renameText.equals(itemstack.getName())) {
-+            } else if (!this.l.equals(itemstack.getName())) {
-                 b1 = 1;
-                 i += b1;
--                itemstack1.g(this.renameText);
-+                itemstack1.g(this.l);
-             }
- 
--            this.levelCost = j + i;
-+            this.a = j + i;
-             if (i <= 0) {
-                 itemstack1 = ItemStack.a;
-             }
- 
--            if (b1 == i && b1 > 0 && this.levelCost >= 40) {
--                this.levelCost = 39;
-+            if (b1 == i && b1 > 0 && this.a >= 40) {
-+                this.a = 39;
-             }
- 
--            if (this.levelCost >= 40 && !this.m.abilities.canInstantlyBuild) {
-+            if (this.a >= 40 && !this.m.abilities.canInstantlyBuild) {
-                 itemstack1 = ItemStack.a;
-             }
- 
-@@ -283,24 +301,32 @@
+@@ -283,7 +293,7 @@
                  EnchantmentManager.a(map, itemstack1);
              }
  
@@ -192,26 +71,7 @@
              this.b();
          }
      }
- 
-     public void addSlotListener(ICrafting icrafting) {
-         super.addSlotListener(icrafting);
--        icrafting.setContainerData(this, 0, this.levelCost);
-+        icrafting.setContainerData(this, 0, this.a);
-     }
- 
-     public void b(EntityHuman entityhuman) {
-         super.b(entityhuman);
-         if (!this.i.isClientSide) {
--            this.a(entityhuman, this.i, this.h);
-+            for (int i = 0; i < this.h.getSize(); ++i) {
-+                ItemStack itemstack = this.h.splitWithoutUpdate(i);
-+
-+                if (!itemstack.isEmpty()) {
-+                    entityhuman.drop(itemstack, false);
-+                }
-+            }
-+
-         }
+@@ -301,6 +311,7 @@
      }
  
      public boolean a(EntityHuman entityhuman) {
@@ -219,22 +79,7 @@
          return this.i.getType(this.j).getBlock() != Blocks.ANVIL ? false : entityhuman.d((double) this.j.getX() + 0.5D, (double) this.j.getY() + 0.5D, (double) this.j.getZ() + 0.5D) <= 64.0D;
      }
  
-@@ -343,17 +369,42 @@
-     }
- 
-     public void a(String s) {
--        this.renameText = s;
-+        this.l = s;
-         if (this.getSlot(2).hasItem()) {
-             ItemStack itemstack = this.getSlot(2).getItem();
- 
-             if (StringUtils.isBlank(s)) {
-                 itemstack.s();
-             } else {
--                itemstack.g(this.renameText);
-+                itemstack.g(this.l);
-             }
-         }
+@@ -356,4 +367,33 @@
  
          this.e();
      }
@@ -247,8 +92,12 @@
 +        for (int i = 0; i < this.listeners.size(); ++i) {
 +            ICrafting icrafting = (ICrafting) this.listeners.get(i);
 +
-+            icrafting.setContainerData(this, 0, this.a);
++            if (this.lastLevelCost != this.levelCost) {
++                icrafting.setContainerData(this, 0, this.levelCost);
++            }
 +        }
++
++        this.lastLevelCost = this.levelCost;
 +    }
 +
 +    @Override

@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/ItemBow.java
 +++ b/net/minecraft/server/ItemBow.java
-@@ -1,11 +1,13 @@
+@@ -1,5 +1,7 @@
  package net.minecraft.server;
  
 +import org.bukkit.event.entity.EntityCombustEvent; // CraftBukkit
@@ -8,13 +8,6 @@
  public class ItemBow extends Item {
  
      public ItemBow() {
-         this.maxStackSize = 1;
-         this.setMaxDurability(384);
--        this.b(CreativeModeTab.j);
-+        this.a(CreativeModeTab.j);
-         this.a(new MinecraftKey("pull"), new IDynamicTexture() {
-         });
-         this.a(new MinecraftKey("pulling"), new IDynamicTexture() {
 @@ -73,7 +75,20 @@
                          }
  
@@ -37,7 +30,7 @@
                          }
  
                          itemstack.damage(1, entityhuman);
-@@ -81,14 +96,22 @@
+@@ -81,7 +96,15 @@
                              entityarrow.fromPlayer = EntityArrow.PickupStatus.CREATIVE_ONLY;
                          }
  
@@ -54,11 +47,3 @@
                      }
  
                      world.a((EntityHuman) null, entityhuman.locX, entityhuman.locY, entityhuman.locZ, SoundEffects.w, SoundCategory.PLAYERS, 1.0F, 1.0F / (ItemBow.j.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
-                     if (!flag1 && !entityhuman.abilities.canInstantlyBuild) {
-                         itemstack1.subtract(1);
-                         if (itemstack1.isEmpty()) {
--                            entityhuman.inventory.f(itemstack1);
-+                            entityhuman.inventory.d(itemstack1);
-                         }
-                     }
- 

@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityCreeper.java
 +++ b/net/minecraft/server/EntityCreeper.java
-@@ -3,17 +3,23 @@
+@@ -3,6 +3,11 @@
  import java.util.Collection;
  import java.util.Iterator;
  import javax.annotation.Nullable;
@@ -12,50 +12,16 @@
  
  public class EntityCreeper extends EntityMonster {
  
-     private static final DataWatcherObject<Integer> a = DataWatcher.a(EntityCreeper.class, DataWatcherRegistry.b);
-     private static final DataWatcherObject<Boolean> b = DataWatcher.a(EntityCreeper.class, DataWatcherRegistry.h);
-     private static final DataWatcherObject<Boolean> c = DataWatcher.a(EntityCreeper.class, DataWatcherRegistry.h);
--    private int bx;
-+    private int bw;
-     private int fuseTicks;
+@@ -14,6 +19,7 @@
      private int maxFuseTicks = 30;
      private int explosionRadius = 3;
--    private int bB;
-+    private int bA;
+     private int bB;
 +    private Entity primer; // SportBukkit
  
      public EntityCreeper(World world) {
          super(world);
-@@ -37,7 +43,7 @@
-         this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.25D);
-     }
- 
--    public int be() {
-+    public int aY() {
-         return this.getGoalTarget() == null ? 3 : 3 + (int) (this.getHealth() - 1.0F);
-     }
- 
-@@ -84,22 +90,37 @@
-         }
- 
-         if (nbttagcompound.getBoolean("ignited")) {
--            this.dm();
-+            this.dk();
-         }
- 
-     }
- 
--    public void B_() {
-+    public void A_() {
-         if (this.isAlive()) {
--            this.bx = this.fuseTicks;
-+            this.bw = this.fuseTicks;
-             if (this.isIgnited()) {
-                 this.a(1);
-             }
- 
--            int i = this.dk();
-+            int i = this.di();
+@@ -99,7 +105,23 @@
+             int i = this.dm();
  
              if (i > 0 && this.fuseTicks == 0) {
 -                this.a(SoundEffects.ay, 1.0F, 0.5F);
@@ -67,40 +33,19 @@
 +                } else {
 +                    event = new ExplosionPrimeEvent(this.getBukkitEntity(), radius, false);
 +                }
++
 +                this.world.getServer().getPluginManager().callEvent(event);
 +
 +                if (event.isCancelled()) {
 +                    i = 0;
 +                } else {
-+                    this.a(SoundEffects.av, 1.0F, 0.5F);
++                    this.a(SoundEffects.ay, 1.0F, 0.5F);
 +                }
 +                // SportBukkit end
              }
  
              this.fuseTicks += i;
-@@ -109,23 +130,23 @@
- 
-             if (this.fuseTicks >= this.maxFuseTicks) {
-                 this.fuseTicks = this.maxFuseTicks;
--                this.dp();
-+                this.dn();
-             }
-         }
- 
--        super.B_();
-+        super.A_();
-     }
- 
--    protected SoundEffect d(DamageSource damagesource) {
--        return SoundEffects.ax;
-+    protected SoundEffect bW() {
-+        return SoundEffects.au;
-     }
- 
--    protected SoundEffect cd() {
--        return SoundEffects.aw;
-+    protected SoundEffect bX() {
-+        return SoundEffects.at;
+@@ -125,7 +147,7 @@
      }
  
      public void die(DamageSource damagesource) {
@@ -109,7 +54,7 @@
          if (this.world.getGameRules().getBoolean("doMobLoot")) {
              if (damagesource.getEntity() instanceof EntitySkeleton) {
                  int i = Item.getId(Items.RECORD_13);
-@@ -138,6 +159,7 @@
+@@ -138,6 +160,7 @@
                  this.a(new ItemStack(Items.SKULL, 1, 4), 0.0F);
              }
          }
@@ -117,16 +62,7 @@
  
      }
  
-@@ -154,7 +176,7 @@
-         return LootTables.r;
-     }
- 
--    public int dk() {
-+    public int di() {
-         return ((Integer) this.datawatcher.get(EntityCreeper.a)).intValue();
-     }
- 
-@@ -164,17 +186,28 @@
+@@ -164,8 +187,18 @@
  
      public void onLightningStrike(EntityLightning entitylightning) {
          super.onLightningStrike(entitylightning);
@@ -146,32 +82,22 @@
  
      protected boolean a(EntityHuman entityhuman, EnumHand enumhand) {
          ItemStack itemstack = entityhuman.b(enumhand);
- 
-         if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
--            this.world.a(entityhuman, this.locX, this.locY, this.locZ, SoundEffects.bO, this.bI(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
-+            this.world.a(entityhuman, this.locX, this.locY, this.locZ, SoundEffects.bI, this.bC(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+@@ -174,6 +207,7 @@
+             this.world.a(entityhuman, this.locX, this.locY, this.locZ, SoundEffects.bO, this.bK(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
              entityhuman.a(enumhand);
              if (!this.world.isClientSide) {
--                this.dm();
 +                this.primer = entityhuman; // SportBukkit
-+                this.dk();
+                 this.do_();
                  itemstack.damage(1, entityhuman);
                  return true;
-             }
-@@ -183,20 +216,33 @@
-         return super.a(entityhuman, enumhand);
-     }
- 
--    private void dp() {
-+    private void dn() {
-         if (!this.world.isClientSide) {
+@@ -188,10 +222,23 @@
              boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
              float f = this.isPowered() ? 2.0F : 1.0F;
  
 -            this.aU = true;
 -            this.world.explode(this, this.locX, this.locY, this.locZ, (float) this.explosionRadius * f, flag);
 -            this.die();
--            this.dq();
+-            this.ds();
 +            // CraftBukkit start
 +            final ExplosionPrimeEvent event;
 +            if(primer != null) {
@@ -184,7 +110,7 @@
 +                this.aU = true;
 +                this.world.createExplosion(this, this.locX, this.locY, this.locZ, event.getRadius(), event.getFire(), flag);
 +                this.die();
-+                this.do_();
++                this.ds();
 +            } else {
 +                fuseTicks = 0;
 +            }
@@ -192,28 +118,11 @@
          }
  
      }
- 
--    private void dq() {
-+    private void do_() {
-         Collection collection = this.getEffects();
- 
+@@ -202,6 +249,7 @@
          if (!collection.isEmpty()) {
-@@ -224,15 +270,15 @@
-         return ((Boolean) this.datawatcher.get(EntityCreeper.c)).booleanValue();
-     }
+             EntityAreaEffectCloud entityareaeffectcloud = new EntityAreaEffectCloud(this.world, this.locX, this.locY, this.locZ);
  
--    public void dm() {
-+    public void dk() {
-         this.datawatcher.set(EntityCreeper.c, Boolean.valueOf(true));
-     }
- 
-     public boolean canCauseHeadDrop() {
--        return this.bB < 1 && this.world.getGameRules().getBoolean("doMobLoot");
-+        return this.bA < 1 && this.world.getGameRules().getBoolean("doMobLoot");
-     }
- 
-     public void setCausedHeadDrop() {
--        ++this.bB;
-+        ++this.bA;
-     }
- }
++            entityareaeffectcloud.setSource(this); // CraftBukkit
+             entityareaeffectcloud.setRadius(2.5F);
+             entityareaeffectcloud.setRadiusOnUse(-0.5F);
+             entityareaeffectcloud.setWaitTime(10);

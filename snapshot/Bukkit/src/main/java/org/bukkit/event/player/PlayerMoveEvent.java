@@ -26,9 +26,9 @@ public class PlayerMoveEvent extends PlayerActionBase implements Cancellable {
 
     public PlayerMoveEvent(final Player player, final Location from, final Location to) {
         this(
-            player,
-            EntityLocation.coerce(from, player.getEntityLocation()),
-            EntityLocation.coerce(to, player.getEntityLocation())
+                player,
+                EntityLocation.coerce(from, player.getEntityLocation()),
+                EntityLocation.coerce(to, player.getEntityLocation())
         );
     }
 
@@ -60,16 +60,16 @@ public class PlayerMoveEvent extends PlayerActionBase implements Cancellable {
         this.cancel = cancel;
     }
 
+    public EntityLocation getEntityFrom() {
+        return from;
+    }
+
     /**
      * Gets the location this player moved from
      *
      * @return Location the player moved from
      */
     public Location getFrom() {
-        return from;
-    }
-
-    public EntityLocation getEntityFrom() {
         return from;
     }
 

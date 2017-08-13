@@ -4,19 +4,15 @@ import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TileEntitySkull;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 
-import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.util.Skins;
 
 import java.util.UUID;
-import org.bukkit.Skin;
-import org.bukkit.craftbukkit.util.Skins;
 
 public class CraftSkull extends CraftBlockState implements Skull {
     private static final int MAX_OWNER_LENGTH = 16;

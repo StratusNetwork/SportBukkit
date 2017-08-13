@@ -1,19 +1,13 @@
 package org.bukkit.block;
 
-import java.util.Random;
-
 import net.minecraft.server.BlockPosition;
-import org.bukkit.geometry.Axis;
-import org.bukkit.geometry.BlockRotoflection;
-import org.bukkit.geometry.BlockReflection;
-import org.bukkit.geometry.BlockRotation;
-import org.bukkit.geometry.CoarseTransform;
-import org.bukkit.geometry.Transform;
-import org.bukkit.geometry.Vec3;
+import org.bukkit.geometry.*;
 import org.bukkit.support.BukkitRuntimeTest;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
 
 public class TransformTest extends BukkitRuntimeTest {
 

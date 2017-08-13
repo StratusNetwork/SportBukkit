@@ -6,7 +6,7 @@ Subject: [PATCH] Absorption API
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -274,6 +274,16 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -237,6 +237,16 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
      }
  
      @Override

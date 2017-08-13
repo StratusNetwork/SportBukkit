@@ -6,7 +6,7 @@ Subject: [PATCH] Stop server on failed port binding
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -568,7 +568,8 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
+@@ -570,7 +570,8 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IAs
                  }
                  // SportBukkit end
              } else {

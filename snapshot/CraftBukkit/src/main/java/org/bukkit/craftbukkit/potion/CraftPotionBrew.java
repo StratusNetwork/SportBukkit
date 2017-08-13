@@ -1,15 +1,15 @@
 package org.bukkit.craftbukkit.potion;
 
-import java.util.List;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.minecraft.server.MobEffect;
 import net.minecraft.server.PotionRegistry;
 import org.bukkit.craftbukkit.registry.CraftKey;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionBrew;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.registry.Key;
+
+import java.util.List;
 
 public class CraftPotionBrew implements PotionBrew {
 

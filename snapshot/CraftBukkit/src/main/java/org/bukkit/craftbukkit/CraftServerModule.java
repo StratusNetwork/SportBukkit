@@ -1,7 +1,5 @@
 package org.bukkit.craftbukkit;
 
-import javax.inject.Singleton;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.OptionalBinder;
@@ -17,6 +15,8 @@ import org.bukkit.craftbukkit.user.UserUpdateListener;
 import tc.oc.minecraft.api.user.UserFactory;
 import tc.oc.minecraft.api.user.UserSourceBinder;
 
+import javax.inject.Singleton;
+
 public class CraftServerModule extends AbstractModule {
 
     @Override
@@ -28,10 +28,10 @@ public class CraftServerModule extends AbstractModule {
         bind(UserUpdateListener.class).asEagerSingleton();
 
         OptionalBinder.newOptionalBinder(binder(), UserFactory.class)
-                      .setBinding().to(CraftOfflinePlayerFactory.class);
+                .setBinding().to(CraftOfflinePlayerFactory.class);
 
         new UserSourceBinder(binder())
-            .addBinding().to(MojangUserSource.class);
+                .addBinding().to(MojangUserSource.class);
     }
 
     @Provides

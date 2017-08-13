@@ -345,7 +345,7 @@ public class Location implements Cloneable, ConfigurationSerializable, Locatable
     /**
      * Sets the {@link #getYaw() yaw} and {@link #getPitch() pitch} to point
      * in the direction of the vector.
-     * 
+     *
      * @param vector the direction vector
      * @return the same location
      */

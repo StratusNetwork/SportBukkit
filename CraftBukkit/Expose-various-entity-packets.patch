@@ -28,7 +28,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntityTeleport.java
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMount.java b/src/main/java/net/minecraft/server/PacketPlayOutMount.java
 --- a/src/main/java/net/minecraft/server/PacketPlayOutMount.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutMount.java
-@@ -8,6 +8,13 @@ public class PacketPlayOutMount implements Packet<PacketListenerPlayOut> {
+@@ -8,11 +8,18 @@ public class PacketPlayOutMount implements Packet<PacketListenerPlayOut> {
      private int a;
      private int[] b;
  
@@ -42,6 +42,12 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMount.java b/src/ma
      public PacketPlayOutMount() {}
  
      public PacketPlayOutMount(Entity entity) {
+         this.a = entity.getId();
+-        List list = entity.bD();
++        List list = entity.bF();
+
+         this.b = new int[list.size()];
+
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
 --- a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java

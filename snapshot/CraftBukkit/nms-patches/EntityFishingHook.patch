@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/EntityFishingHook.java
 +++ b/net/minecraft/server/EntityFishingHook.java
-@@ -2,12 +2,17 @@
+@@ -2,6 +2,11 @@
  
  import java.util.Iterator;
  import java.util.List;
@@ -12,55 +12,6 @@
  
  public class EntityFishingHook extends Entity {
  
-     private static final DataWatcherObject<Integer> b = DataWatcher.a(EntityFishingHook.class, DataWatcherRegistry.b);
-     private boolean isInGround;
--    private int d;
-+    private int d = 0;
-     public EntityHuman owner;
-     private int f;
-     private int g;
-@@ -37,7 +42,7 @@
-         this.ax = i;
-     }
- 
--    public void c(int i) {
-+    public void b(int i) {
-         this.aw = i;
-     }
- 
-@@ -83,11 +88,11 @@
-         super.a(datawatcherobject);
-     }
- 
--    public void B_() {
--        super.B_();
-+    public void A_() {
-+        super.A_();
-         if (this.owner == null) {
-             this.die();
--        } else if (this.world.isClientSide || !this.p()) {
-+        } else if (this.world.isClientSide || !this.o()) {
-             if (this.isInGround) {
-                 ++this.d;
-                 if (this.d >= 1200) {
-@@ -101,7 +106,7 @@
-             IBlockData iblockdata = this.world.getType(blockposition);
- 
-             if (iblockdata.getMaterial() == Material.WATER) {
--                f = BlockFluids.g(iblockdata, this.world, blockposition);
-+                f = BlockFluids.f(iblockdata, this.world, blockposition);
-             }
- 
-             double d0;
-@@ -183,7 +188,7 @@
-         }
-     }
- 
--    private boolean p() {
-+    private boolean o() {
-         ItemStack itemstack = this.owner.getItemInMainHand();
-         ItemStack itemstack1 = this.owner.getItemInOffHand();
-         boolean flag = itemstack.getItem() == Items.FISHING_ROD;
 @@ -261,6 +266,7 @@
          }
  
@@ -80,7 +31,7 @@
              } else {
                  this.motY -= 0.2D * (double) this.random.nextFloat() * (double) this.random.nextFloat();
              }
-@@ -328,8 +338,15 @@
+@@ -328,6 +338,13 @@
                          worldserver.a(EnumParticle.WATER_WAKE, d0, d1, d2, 0, (double) (-f4), 0.01D, (double) f3, 1.0D, new int[0]);
                      }
                  } else {
@@ -92,12 +43,9 @@
 +                    }
 +                    // CraftBukkit end
                      this.motY = (double) (-0.4F * MathHelper.a(this.random, 0.6F, 1.0F));
--                    this.a(SoundEffects.K, 0.25F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-+                    this.a(SoundEffects.H, 0.25F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+                     this.a(SoundEffects.K, 0.25F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
                      double d3 = this.getBoundingBox().b + 0.5D;
- 
-                     worldserver.a(EnumParticle.WATER_BUBBLE, this.locX, d3, this.locZ, (int) (1.0F + this.width * 20.0F), (double) this.width, 0.0D, (double) this.width, 0.20000000298023224D, new int[0]);
-@@ -384,18 +401,35 @@
+@@ -384,6 +401,14 @@
              int i = 0;
  
              if (this.hooked != null) {
@@ -112,14 +60,7 @@
                  this.k();
                  this.world.broadcastEntityEffect(this, (byte) 31);
                  i = this.hooked instanceof EntityItem ? 3 : 5;
-             } else if (this.g > 0) {
-                 LootTableInfo.a loottableinfo_a = new LootTableInfo.a((WorldServer) this.world);
- 
--                loottableinfo_a.a((float) this.aw + this.owner.ds());
--                Iterator iterator = this.world.getLootTableRegistry().a(LootTables.aA).a(this.random, loottableinfo_a.a()).iterator();
-+                loottableinfo_a.a((float) this.aw + this.owner.dj());
-+                Iterator iterator = this.world.ak().a(LootTables.az).a(this.random, loottableinfo_a.a()).iterator();
- 
+@@ -396,6 +421,15 @@
                  while (iterator.hasNext()) {
                      ItemStack itemstack = (ItemStack) iterator.next();
                      EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY, this.locZ, itemstack);

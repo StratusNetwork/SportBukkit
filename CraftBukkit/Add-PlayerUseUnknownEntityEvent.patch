@@ -31,7 +31,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketPlayInUseEntity.java b/src
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -34,22 +34,7 @@ import org.bukkit.event.inventory.InventoryAction;
+@@ -38,22 +38,7 @@ import org.bukkit.event.inventory.InventoryAction;
  import org.bukkit.event.inventory.InventoryClickEvent;
  import org.bukkit.event.inventory.InventoryCreativeEvent;
  import org.bukkit.event.inventory.InventoryType.SlotType;
@@ -55,7 +55,7 @@ diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main
  import org.bukkit.inventory.CraftingInventory;
  import org.bukkit.inventory.EquipmentSlot;
  import org.bukkit.inventory.InventoryView;
-@@ -1719,6 +1704,16 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1722,6 +1707,16 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
              }
          }
  

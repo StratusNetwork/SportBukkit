@@ -40,10 +40,11 @@ diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/mai
 diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/java/net/minecraft/server/LoginListener.java
 --- a/src/main/java/net/minecraft/server/LoginListener.java
 +++ b/src/main/java/net/minecraft/server/LoginListener.java
-@@ -276,6 +276,22 @@ public class LoginListener implements PacketLoginInListener, ITickable {
+@@ -276,6 +276,23 @@ public class LoginListener implements PacketLoginInListener, ITickable {
  
          this.g = LoginListener.EnumProtocolState.READY_TO_ACCEPT;
      }
++
 +
 +    public GameProfile completeOfflineProfile(GameProfile profile) {
 +        if (networkManager.spoofedUUID != null) {
@@ -94,7 +95,7 @@ diff --git a/src/main/java/net/minecraft/server/PacketHandshakingInSetProtocol.j
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -172,6 +172,8 @@ public final class CraftServer implements Server {
+@@ -173,6 +173,8 @@ public final class CraftServer implements Server {
      private final UUID invalidUserUUID = UUID.nameUUIDFromBytes("InvalidUsername".getBytes(Charsets.UTF_8));
      private final List<CraftPlayer> playerView;
      public int reloadCount;
@@ -103,13 +104,13 @@ diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/ja
  
      private final class BooleanWrapper {
          private boolean value = true;
-@@ -245,6 +247,7 @@ public final class CraftServer implements Server {
+@@ -246,6 +248,7 @@ public final class CraftServer implements Server {
          }
  
          saveCommandsConfig();
 +        bungee = configuration.getBoolean("settings.bungeecord");
          overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
-         ((SimplePluginManager) pluginManager).useTimings(configuration.getBoolean("settings.plugin-profiling"));
+         pluginManager.useTimings(configuration.getBoolean("settings.plugin-profiling"));
          monsterSpawn = configuration.getInt("spawn-limits.monsters");
 diff --git a/src/main/resources/configurations/bukkit.yml b/src/main/resources/configurations/bukkit.yml
 --- a/src/main/resources/configurations/bukkit.yml

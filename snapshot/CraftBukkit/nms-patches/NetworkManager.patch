@@ -1,15 +1,6 @@
 --- a/net/minecraft/server/NetworkManager.java
 +++ b/net/minecraft/server/NetworkManager.java
-@@ -28,6 +28,8 @@
- import org.apache.logging.log4j.Marker;
- import org.apache.logging.log4j.MarkerManager;
- 
-+import org.bukkit.craftbukkit.protocol.Protocol; // SportBukkit
-+
- public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
- 
-     private static final Logger g = LogManager.getLogger();
-@@ -65,7 +67,12 @@
+@@ -65,7 +65,12 @@
      private final Queue<NetworkManager.QueuedPacket> i = Queues.newConcurrentLinkedQueue();
      private final ReentrantReadWriteLock j = new ReentrantReadWriteLock();
      public Channel channel;
@@ -19,11 +10,11 @@
 +    public java.util.UUID spoofedUUID;
 +    public com.mojang.authlib.properties.Property[] spoofedProfile;
 +    // SportBukkit End
-+    public int protocolVersion = Protocol.LATEST; // SportBukkit
++    public int protocolVersion; // SportBukkit
      private PacketListener m;
      private IChatBaseComponent n;
      private boolean o;
-@@ -83,7 +90,7 @@
+@@ -83,7 +88,7 @@
          try {
              this.setProtocol(EnumProtocol.HANDSHAKING);
          } catch (Throwable throwable) {
@@ -32,7 +23,7 @@
          }
  
      }
-@@ -103,18 +110,19 @@
+@@ -103,18 +108,19 @@
  
          if (throwable instanceof TimeoutException) {
              chatmessage = new ChatMessage("disconnect.timeout", new Object[0]);
@@ -54,41 +45,7 @@
              } catch (CancelledPacketHandleException cancelledpackethandleexception) {
                  ;
              }
-@@ -124,7 +132,7 @@
- 
-     public void setPacketListener(PacketListener packetlistener) {
-         Validate.notNull(packetlistener, "packetListener", new Object[0]);
--        NetworkManager.g.debug("Set listener of {} to {}", this, packetlistener);
-+        NetworkManager.g.debug("Set listener of {} to {}", new Object[] { this, packetlistener});
-         this.m = packetlistener;
-     }
- 
-@@ -136,7 +144,7 @@
-             this.j.writeLock().lock();
- 
-             try {
--                this.i.add(new NetworkManager.QueuedPacket(packet, new GenericFutureListener[0]));
-+                this.i.add(new NetworkManager.QueuedPacket(packet, (GenericFutureListener[]) null));
-             } finally {
-                 this.j.writeLock().unlock();
-             }
-@@ -221,13 +229,10 @@
-     public void a() {
-         this.m();
-         if (this.m instanceof ITickable) {
--            ((ITickable) this.m).e();
--        }
--
--        if (this.channel != null) {
--            this.channel.flush();
-+            ((ITickable) this.m).F_();
-         }
- 
-+        this.channel.flush();
-     }
- 
-     public SocketAddress getSocketAddress() {
-@@ -236,7 +241,7 @@
+@@ -236,7 +242,7 @@
  
      public void close(IChatBaseComponent ichatbasecomponent) {
          if (this.channel.isOpen()) {
@@ -97,7 +54,7 @@
              this.n = ichatbasecomponent;
          }
  
-@@ -260,6 +265,7 @@
+@@ -260,6 +266,7 @@
          return this.channel == null;
      }
  
@@ -105,15 +62,7 @@
      public PacketListener i() {
          return this.m;
      }
-@@ -306,14 +312,14 @@
-                 if (this.j() != null) {
-                     this.i().a(this.j());
-                 } else if (this.i() != null) {
--                    this.i().a(new ChatMessage("multiplayer.disconnect.banned", new Object[0]));
-+                    this.i().a(new ChatComponentText("Disconnected"));
-                 }
-             }
- 
+@@ -313,7 +320,7 @@
          }
      }
  

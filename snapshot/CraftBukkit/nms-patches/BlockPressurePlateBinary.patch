@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/BlockPressurePlateBinary.java
 +++ b/net/minecraft/server/BlockPressurePlateBinary.java
-@@ -3,14 +3,17 @@
+@@ -3,10 +3,13 @@
  import java.util.Iterator;
  import java.util.List;
  
@@ -14,34 +14,6 @@
  
      protected BlockPressurePlateBinary(Material material, BlockPressurePlateBinary.EnumMobType blockpressureplatebinary_enummobtype) {
          super(material);
--        this.w(this.blockStateList.getBlockData().set(BlockPressurePlateBinary.POWERED, Boolean.valueOf(false)));
-+        this.y(this.blockStateList.getBlockData().set(BlockPressurePlateBinary.POWERED, Boolean.valueOf(false)));
-         this.e = blockpressureplatebinary_enummobtype;
-     }
- 
-@@ -24,18 +27,18 @@
- 
-     protected void b(World world, BlockPosition blockposition) {
-         if (this.material == Material.WOOD) {
--            world.a((EntityHuman) null, blockposition, SoundEffects.jd, SoundCategory.BLOCKS, 0.3F, 0.8F);
-+            world.a((EntityHuman) null, blockposition, SoundEffects.ic, SoundCategory.BLOCKS, 0.3F, 0.8F);
-         } else {
--            world.a((EntityHuman) null, blockposition, SoundEffects.hP, SoundCategory.BLOCKS, 0.3F, 0.6F);
-+            world.a((EntityHuman) null, blockposition, SoundEffects.gO, SoundCategory.BLOCKS, 0.3F, 0.6F);
-         }
- 
-     }
- 
-     protected void c(World world, BlockPosition blockposition) {
-         if (this.material == Material.WOOD) {
--            world.a((EntityHuman) null, blockposition, SoundEffects.jc, SoundCategory.BLOCKS, 0.3F, 0.7F);
-+            world.a((EntityHuman) null, blockposition, SoundEffects.ib, SoundCategory.BLOCKS, 0.3F, 0.7F);
-         } else {
--            world.a((EntityHuman) null, blockposition, SoundEffects.hO, SoundCategory.BLOCKS, 0.3F, 0.5F);
-+            world.a((EntityHuman) null, blockposition, SoundEffects.gN, SoundCategory.BLOCKS, 0.3F, 0.5F);
-         }
- 
-     }
 @@ -57,12 +60,50 @@
              return 0;
          }

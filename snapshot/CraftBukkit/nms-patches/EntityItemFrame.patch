@@ -1,15 +1,6 @@
 --- a/net/minecraft/server/EntityItemFrame.java
 +++ b/net/minecraft/server/EntityItemFrame.java
-@@ -22,7 +22,7 @@
-         this.getDataWatcher().register(EntityItemFrame.d, Integer.valueOf(0));
-     }
- 
--    public float aG() {
-+    public float aA() {
-         return 0.0F;
-     }
- 
-@@ -31,8 +31,13 @@
+@@ -31,6 +31,11 @@
              return false;
          } else if (!damagesource.isExplosion() && !this.getItem().isEmpty()) {
              if (!this.world.isClientSide) {
@@ -19,42 +10,5 @@
 +                }
 +                // CraftBukkit end
                  this.b(damagesource.getEntity(), false);
--                this.a(SoundEffects.du, 1.0F, 1.0F);
-+                this.a(SoundEffects.dh, 1.0F, 1.0F);
+                 this.a(SoundEffects.du, 1.0F, 1.0F);
                  this.setItem(ItemStack.a);
-             }
- 
-@@ -51,12 +56,12 @@
-     }
- 
-     public void a(@Nullable Entity entity) {
--        this.a(SoundEffects.ds, 1.0F, 1.0F);
-+        this.a(SoundEffects.df, 1.0F, 1.0F);
-         this.b(entity, true);
-     }
- 
--    public void p() {
--        this.a(SoundEffects.dt, 1.0F, 1.0F);
-+    public void o() {
-+        this.a(SoundEffects.dg, 1.0F, 1.0F);
-     }
- 
-     public void b(@Nullable Entity entity, boolean flag) {
-@@ -115,7 +120,7 @@
-         this.getDataWatcher().set(EntityItemFrame.c, itemstack);
-         this.getDataWatcher().markDirty(EntityItemFrame.c);
-         if (!itemstack.isEmpty()) {
--            this.a(SoundEffects.dr, 1.0F, 1.0F);
-+            this.a(SoundEffects.de, 1.0F, 1.0F);
-         }
- 
-         if (flag && this.blockPosition != null) {
-@@ -191,7 +196,7 @@
-                     }
-                 }
-             } else {
--                this.a(SoundEffects.dv, 1.0F, 1.0F);
-+                this.a(SoundEffects.di, 1.0F, 1.0F);
-                 this.setRotation(this.getRotation() + 1);
-             }
-         }

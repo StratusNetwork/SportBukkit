@@ -19,7 +19,7 @@
  public class PacketStatusListener implements PacketStatusInListener {
  
      private static final IChatBaseComponent a = new ChatComponentText("Status request has been handled.");
-@@ -19,8 +32,97 @@
+@@ -19,8 +32,96 @@
              this.networkManager.close(PacketStatusListener.a);
          } else {
              this.d = true;
@@ -110,7 +110,6 @@
 +            ping.setPlayerSample(playerSample);
 +            int version = minecraftServer.getServerPing().getServerData().getProtocolVersion();
 +            ping.setServerInfo(new ServerPing.ServerData(minecraftServer.getServerModName() + " " + minecraftServer.getVersion(), version));
-+            event.getExtra().forEach((name, value) -> ping.put(name, CraftServer.gson.toJsonTree(value)));
 +
 +            this.networkManager.sendPacket(new PacketStatusOutServerInfo(ping));
          }

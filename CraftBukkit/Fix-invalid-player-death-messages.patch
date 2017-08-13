@@ -18,7 +18,7 @@ diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/jav
          org.bukkit.event.entity.PlayerDeathEvent event = CraftEventFactory.callPlayerDeathEvent(this, loot, deathmessage, keepInventory);
 @@ -464,7 +464,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
-         EntityLiving entityliving = this.cg();
+         EntityLiving entityliving = this.ci();
  
 -        if (entityliving != null) {
 +        if (entityliving != null && damagesource != DamageSource.GENERIC) { // SportBukkit - can't have a combat tracked killer with a generic damage source

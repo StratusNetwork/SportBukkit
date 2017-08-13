@@ -10,33 +10,13 @@
 -    public RecipeTippedArrow() {}
 +    // CraftBukkit start
 +    public RecipeTippedArrow() {
-+        super(3, 3, new ItemStack[]{
-+            new ItemStack(Items.ARROW, 0), new ItemStack(Items.ARROW, 0), new ItemStack(Items.ARROW, 0),
-+            new ItemStack(Items.ARROW, 0), new ItemStack(Items.LINGERING_POTION, 0), new ItemStack(Items.ARROW, 0),
-+            new ItemStack(Items.ARROW, 0), new ItemStack(Items.ARROW, 0), new ItemStack(Items.ARROW, 0)
-+        }, new ItemStack(Items.TIPPED_ARROW, 8));
++        super("", 3, 3, NonNullList.a(RecipeItemStack.a,
++                RecipeItemStack.a(Items.ARROW), RecipeItemStack.a(Items.ARROW), RecipeItemStack.a(Items.ARROW),
++                RecipeItemStack.a(Items.ARROW), RecipeItemStack.a(Items.LINGERING_POTION), RecipeItemStack.a(Items.ARROW),
++                RecipeItemStack.a(Items.ARROW), RecipeItemStack.a(Items.ARROW), RecipeItemStack.a(Items.ARROW)),
++                new ItemStack(Items.TIPPED_ARROW, 8));
 +    }
 +    // CraftBukkit end
  
      public boolean a(InventoryCrafting inventorycrafting, World world) {
          if (inventorycrafting.j() == 3 && inventorycrafting.i() == 3) {
-@@ -48,6 +56,10 @@
-         }
-     }
- 
-+    public int a() {
-+        return 9;
-+    }
-+
-     public ItemStack b() {
-         return ItemStack.a;
-     }
-@@ -55,8 +67,4 @@
-     public NonNullList<ItemStack> b(InventoryCrafting inventorycrafting) {
-         return NonNullList.a(inventorycrafting.getSize(), ItemStack.a);
-     }
--
--    public boolean c() {
--        return true;
--    }
- }
