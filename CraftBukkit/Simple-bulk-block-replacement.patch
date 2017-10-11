@@ -1,4 +1,4 @@
-From 3cd8064a0398d0472a3a8c5727184067c6abe4f4 Mon Sep 17 00:00:00 2001
+From 58a58b57d0c3e4b7414843d9e86855dc64113ba7 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Sun, 28 Sep 2014 05:48:35 -0400
 Subject: [PATCH] Simple bulk block replacement

@@ -1,4 +1,4 @@
-From 509c452c0f0c4a19e6ea41a34803502857ece640 Mon Sep 17 00:00:00 2001
+From 80ff360aa861f2af1597a3744877d431dece0766 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Wed, 16 Mar 2016 22:03:58 -0400
 Subject: [PATCH] Fix incorrect getNoDamageTicks

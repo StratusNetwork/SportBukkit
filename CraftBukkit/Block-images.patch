@@ -1,4 +1,4 @@
-From 1e5f34ef76cf9ca5b1a9af22aa5f6d13b63ed960 Mon Sep 17 00:00:00 2001
+From 924e53dd7b4237851b8fe7dc98d68ebeedc0a9af Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Mon, 10 Oct 2016 04:53:27 -0400
 Subject: [PATCH] Block images
@@ -54,7 +54,7 @@ index 4bf8e953..4fdd56ca 100644
          return scoreboardManager;
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index b4bfe45c..2171c57a 100644
+index 2b41af2d..9883caa0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -11,6 +11,7 @@ import java.util.Iterator;
@@ -150,8 +150,8 @@ index b4bfe45c..2171c57a 100644
          return getHighestBlockAt(location.getBlockX(), location.getBlockZ());
      }
  
-@@ -1171,7 +1182,7 @@ public class CraftWorld implements World {
-                 entity.setLocation(x, y, z, yaw, pitch);
+@@ -1172,7 +1183,7 @@ public class CraftWorld implements World {
+                 entity.setHeadRotation(yaw); // SPIGOT-3587
              }
          } else if (Hanging.class.isAssignableFrom(clazz)) {
 -            Block block = getBlockAt(location);
@@ -159,7 +159,7 @@ index b4bfe45c..2171c57a 100644
              BlockFace face = BlockFace.SELF;
  
              int width = 16; // 1 full block, also painting smallest size.
-@@ -1622,4 +1633,48 @@ public class CraftWorld implements World {
+@@ -1623,4 +1634,48 @@ public class CraftWorld implements World {
              cps.unload(chunk);
          }
      }

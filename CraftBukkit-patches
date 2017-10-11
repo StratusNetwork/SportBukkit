@@ -166,3 +166,4 @@ Fix-player-leak-through-map-items
 Change-large-getCubes-error-to-warning
 Fix-respawning
 SportBukkit
+Nerf-Shields

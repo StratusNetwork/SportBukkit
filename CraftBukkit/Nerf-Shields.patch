@@ -1,0 +1,37 @@
+From 587300bc80da903bb65c36c409b8a49d309f5135 Mon Sep 17 00:00:00 2001
+From: cswhite2000 <18whitechristop@gmail.com>
+Date: Mon, 2 Oct 2017 23:08:02 -0700
+Subject: [PATCH] Nerf Shields
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index d33fc7ca..cebaf890 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -36,7 +36,7 @@ public abstract class EntityLiving extends Entity {
+     // SportBukkit start - add archery attributes
+     public static final IAttribute ARROW_ACCURACY = new AttributeRanged(null, Attribute.ARROW_ACCURACY.getName(), 1, 0, Double.MAX_VALUE);
+     public static final IAttribute ARROW_VELOCITY_TRANSFER = new AttributeRanged(null, Attribute.ARROW_VELOCITY_TRANSFER.getName(), 1, Double.MIN_VALUE, Double.MAX_VALUE);
+-    public static final IAttribute SHIELD_STRENGTH = new AttributeRanged(null, Attribute.SHIELD_STRENGTH.getName(), 1, 0, 1);
++    public static final IAttribute SHIELD_STRENGTH = new AttributeRanged(null, Attribute.SHIELD_STRENGTH.getName(), 0.6, 0, 1);
+     // SportBukkit end
+ 
+     private static final Logger a = LogManager.getLogger();
+@@ -1380,7 +1380,7 @@ public abstract class EntityLiving extends Entity {
+                 Entity entity = damagesource.i();
+ 
+                 if (entity instanceof EntityLiving) {
+-                    this.c((EntityLiving) entity);
++                    //this.c((EntityLiving) entity);
+                 }
+             }
+ 
+@@ -1389,7 +1389,7 @@ public abstract class EntityLiving extends Entity {
+             if (f > 0 || !human) {
+                 if (human) {
+                     // PAIL: Be sure to drag all this code from the EntityHuman subclass each update.
+-                    ((EntityHuman) this).applyExhaustion(damagesource.getExhaustionCost());
++                    //((EntityHuman) this).applyExhaustion(damagesource.getExhaustionCost());
+                     if (f < 3.4028235E37F) {
+                         ((EntityHuman) this).a(StatisticList.z, Math.round(f * 10.0F));
+                     }

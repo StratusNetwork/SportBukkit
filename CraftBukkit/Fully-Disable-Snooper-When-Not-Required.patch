@@ -1,4 +1,4 @@
-From 71a0cf7a5c3960bfeedec0556c5ef53538b43bd8 Mon Sep 17 00:00:00 2001
+From 80ca0c0f6195911d58b61a5c049c8ed0b7565cc8 Mon Sep 17 00:00:00 2001
 From: agentk20 <agentkid20@gmail.com>
 Date: Sat, 3 Aug 2013 19:28:48 +1000
 Subject: [PATCH] Fully Disable Snooper When Not Required

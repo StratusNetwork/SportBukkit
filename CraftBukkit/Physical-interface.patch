@@ -1,11 +1,11 @@
-From 065a2676fcbe8fafd0d39058abe958e2e3386627 Mon Sep 17 00:00:00 2001
+From 510e32812fdad00db8e3b39ffe579026bd73fa44 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Fri, 3 Jul 2015 01:08:46 -0400
 Subject: [PATCH] Physical interface
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index e218353f..b4bfe45c 100644
+index 960215d5..2b41af2d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -92,6 +92,11 @@ public class CraftWorld implements World {

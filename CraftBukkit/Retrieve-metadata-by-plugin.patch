@@ -1,14 +1,14 @@
-From df1184fbac9528a38049000536a691bcee144496 Mon Sep 17 00:00:00 2001
+From bafc41b748b4b9caa3ceb28693fe46a7850fb711 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Fri, 19 Jun 2015 15:02:55 -0400
 Subject: [PATCH] Retrieve metadata by plugin
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 4c9cbf6b..e218353f 100644
+index 4d3ef712..960215d5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -1389,6 +1389,11 @@ public class CraftWorld implements World {
+@@ -1390,6 +1390,11 @@ public class CraftWorld implements World {
          server.getWorldMetadata().setMetadata(this, metadataKey, newMetadataValue);
      }
  

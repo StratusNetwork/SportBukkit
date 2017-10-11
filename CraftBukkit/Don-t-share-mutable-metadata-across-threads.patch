@@ -1,4 +1,4 @@
-From cd15d29a8b595ad254be323cc3de5fe09a915918 Mon Sep 17 00:00:00 2001
+From eeddcf597dd3f08e3e0418bac2f6b863c03e46be Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Fri, 20 Mar 2015 01:21:22 -0400
 Subject: [PATCH] Don't share mutable metadata across threads

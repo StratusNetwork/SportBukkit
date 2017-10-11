@@ -1,4 +1,4 @@
-From 183d524133eebb50c51d1ac6a223d095c0b47b33 Mon Sep 17 00:00:00 2001
+From 6fba9dbd0bb9b75df398fef66b6f1e328a0ca183 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Thu, 23 Jan 2014 00:17:31 -0500
 Subject: [PATCH] Fake name and skin API

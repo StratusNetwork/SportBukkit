@@ -1,4 +1,4 @@
-From 23b821aea2372c9f370f964fb7db97e7f8adc336 Mon Sep 17 00:00:00 2001
+From 4cfbe75e516dd8dca9e690de9f82be3f4756d341 Mon Sep 17 00:00:00 2001
 From: Steve Anton <anxuiz.nx@gmail.com>
 Date: Fri, 31 Aug 2012 12:30:14 -0700
 Subject: [PATCH] More complex logic when looking for nearby players

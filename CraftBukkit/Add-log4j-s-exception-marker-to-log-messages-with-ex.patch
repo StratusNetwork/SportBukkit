@@ -1,4 +1,4 @@
-From b3575dba8cac113f4d433974e1eff0c71ca77496 Mon Sep 17 00:00:00 2001
+From 2ef53476504bf01439e11972ccd7367a94244222 Mon Sep 17 00:00:00 2001
 From: mrapple <tony@oc.tc>
 Date: Fri, 27 Jun 2014 21:53:44 -0500
 Subject: [PATCH] Add log4j's exception marker to log messages with exceptions

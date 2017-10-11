@@ -1,4 +1,4 @@
-From 83065dfc25b3e6ef426011c34cef0e20358f7900 Mon Sep 17 00:00:00 2001
+From 82045d4b80877b2f9dbcee8c838dea56b0b06ae6 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Fri, 13 Feb 2015 02:34:42 -0500
 Subject: [PATCH] Expose the player list packet

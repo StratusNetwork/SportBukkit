@@ -1,4 +1,4 @@
-From dd23937e2fb1e95714db8616955703769ead5aec Mon Sep 17 00:00:00 2001
+From 49bac1081d9db582260a2950b5b1c1c28f4dc966 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Tue, 11 Feb 2014 22:12:50 -0600
 Subject: [PATCH] Fake name and skin API
@@ -132,7 +132,7 @@ index 549d4e89..6ecd7036 100644
          this.e = ScoreboardTeamBase.EnumNameTagVisibility.ALWAYS.e;
          this.f = ScoreboardTeamBase.EnumTeamPush.ALWAYS.e;
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 37e444a9..302e078e 100644
+index 9acc7400..786ef90e 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -8,6 +8,7 @@ import io.netty.util.concurrent.Future;

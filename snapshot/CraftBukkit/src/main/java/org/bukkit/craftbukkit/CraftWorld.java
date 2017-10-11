@@ -1226,6 +1226,7 @@ public class CraftWorld implements World {
 
             if (entity != null) {
                 entity.setLocation(x, y, z, yaw, pitch);
+                entity.setHeadRotation(yaw); // SPIGOT-3587
             }
         } else if (Hanging.class.isAssignableFrom(clazz)) {
             org.bukkit.block.Block block = getBlockAt(location);

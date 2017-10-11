@@ -1,4 +1,4 @@
-From 1a9119832dde91f9aee51105f0ab32427f8badfc Mon Sep 17 00:00:00 2001
+From 03d620ebb9ba3381ca68c3fcf47b42d160c9e8bf Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Fri, 4 Mar 2016 05:57:57 -0500
 Subject: [PATCH] Absorption API

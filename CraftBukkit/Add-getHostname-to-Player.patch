@@ -1,4 +1,4 @@
-From db7710ea2125bb27d35a2989cded351a72ae342e Mon Sep 17 00:00:00 2001
+From dddd6543f219ee81d8b9364e0651680d8ed52ab7 Mon Sep 17 00:00:00 2001
 From: Marcos Vives Del Sol <socram8888@gmail.com>
 Date: Sun, 28 Jul 2013 21:57:34 +0200
 Subject: [PATCH] Add getHostname to Player

@@ -1,4 +1,4 @@
-From 0ce7d4a9bef0d4047224257f9fd9be3eac0c6331 Mon Sep 17 00:00:00 2001
+From 591183ee9574c6f905e98420aaf9d0e0c581e74e Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Sat, 14 Feb 2015 08:18:40 -0500
 Subject: [PATCH] Add invis override API
