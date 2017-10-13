@@ -1,11 +1,11 @@
-From 08a5c17b38aaff085f3e0ce4a6ade7cd157a1b6c Mon Sep 17 00:00:00 2001
+From 95ab455798985ed00e69cf8b136ee51dccf4e5ae Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Tue, 26 May 2015 04:01:46 -0400
 Subject: [PATCH] Accurate block hit checking
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index af76a1f3..4c9cbf6b 100644
+index b06d67ec..4d3ef712 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -59,6 +59,7 @@ import org.bukkit.plugin.messaging.StandardMessenger;

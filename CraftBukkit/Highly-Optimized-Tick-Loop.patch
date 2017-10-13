@@ -1,4 +1,4 @@
-From e1e70c1e103ed2d80d72943a26e037ce330202cf Mon Sep 17 00:00:00 2001
+From 228c5cbbc694ca99f2ff7666af29e696b0d426c2 Mon Sep 17 00:00:00 2001
 From: md_5 <git@md-5.net>
 Date: Sat, 25 Jan 2014 14:08:35 +1100
 Subject: [PATCH] Highly Optimized Tick Loop

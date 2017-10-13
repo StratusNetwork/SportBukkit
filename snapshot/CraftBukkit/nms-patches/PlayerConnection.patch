@@ -160,6 +160,15 @@
      public void e() {
          this.syncPosition();
          this.player.playerTick();
+@@ -104,7 +225,7 @@
+         this.minecraftServer.methodProfiler.a("keepAlive");
+         long i = this.d();
+ 
+-        if (i - this.f >= 15000L) {
++        if (i - this.f >= 25000L) { // CraftBukkit
+             if (this.g) {
+                 this.disconnect(new ChatMessage("disconnect.timeout", new Object[0]));
+             } else {
 @@ -116,15 +237,21 @@
          }
  
@@ -349,6 +358,15 @@
                  this.minecraftServer.getPlayerList().d(this.player);
                  this.player.checkMovement(this.player.locX - d0, this.player.locY - d1, this.player.locZ - d2);
                  this.D = d11 >= -0.03125D && !this.minecraftServer.getAllowFlight() && !worldserver.c(entity.getBoundingBox().g(0.0625D).b(0.0D, -0.55D, 0.0D));
+@@ -244,7 +497,7 @@
+ 
+     public void a(PacketPlayInTeleportAccept packetplayinteleportaccept) {
+         PlayerConnectionUtils.ensureMainThread(packetplayinteleportaccept, this, this.player.x());
+-        if (packetplayinteleportaccept.a() == this.teleportAwait) {
++        if (packetplayinteleportaccept.a() == this.teleportAwait && this.teleportPos != null) { // CraftBukkit
+             this.player.setLocation(this.teleportPos.x, this.teleportPos.y, this.teleportPos.z, this.player.yaw, this.player.pitch);
+             if (this.player.L()) {
+                 this.o = this.teleportPos.x;
 @@ -289,23 +542,43 @@
          } else {
              WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);

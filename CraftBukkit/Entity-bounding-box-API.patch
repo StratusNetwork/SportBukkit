@@ -1,4 +1,4 @@
-From fa4036eb4f065127f23adf6a92c05ae2fc480568 Mon Sep 17 00:00:00 2001
+From edd12c1e2437f73540d3943005b52279242bf03d Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Tue, 29 Mar 2016 02:12:39 -0400
 Subject: [PATCH] Entity bounding box API

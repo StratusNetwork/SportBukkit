@@ -137,12 +137,12 @@ public class CraftWorld implements World {
         return this;
     }
 
-    public org.bukkit.block.Block getBlockAt(int x, int y, int z) {
+    public Block getBlockAt(int x, int y, int z) {
         return getChunkAt(x >> 4, z >> 4).getBlock(x & 0xF, y, z & 0xF);
     }
 
     @Override
-    public org.bukkit.block.Block getBlockAt(Vec3 position) {
+    public Block getBlockAt(Vec3 position) {
         return new CraftBlock((CraftChunk) getChunkAt(position), position);
     }
 
@@ -182,7 +182,7 @@ public class CraftWorld implements World {
         return this.world.getChunkProviderServer().getChunkAt(x, z).bukkitChunk;
     }
 
-    public Chunk getChunkAt(org.bukkit.block.Block block) {
+    public Chunk getChunkAt(Block block) {
         return getChunkAt(block.getX() >> 4, block.getZ() >> 4);
     }
 
@@ -610,7 +610,7 @@ public class CraftWorld implements World {
         }
     }
 
-    public org.bukkit.block.Block getBlockAt(Location location) {
+    public Block getBlockAt(Location location) {
         return getBlockAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
@@ -634,11 +634,11 @@ public class CraftWorld implements World {
         return populators;
     }
 
-    public org.bukkit.block.Block getHighestBlockAt(int x, int z) {
+    public Block getHighestBlockAt(int x, int z) {
         return getBlockAt(x, getHighestBlockYAt(x, z), z);
     }
 
-    public org.bukkit.block.Block getHighestBlockAt(Location location) {
+    public Block getHighestBlockAt(Location location) {
         return getHighestBlockAt(location.getBlockX(), location.getBlockZ());
     }
 
@@ -1226,9 +1226,10 @@ public class CraftWorld implements World {
 
             if (entity != null) {
                 entity.setLocation(x, y, z, yaw, pitch);
+                entity.setHeadRotation(yaw); // SPIGOT-3587
             }
         } else if (Hanging.class.isAssignableFrom(clazz)) {
-            org.bukkit.block.Block block = getBlockAt(location);
+            Block block = getBlockAt(location);
             BlockFace face = BlockFace.SELF;
 
             int width = 16; // 1 full block, also painting smallest size.

@@ -1,4 +1,4 @@
-From 7be297aa4af083466250026b12fedd49ed609290 Mon Sep 17 00:00:00 2001
+From c6374a7a19177c897e35558dcd8b2c627820e094 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Sun, 14 Jun 2015 04:13:52 -0400
 Subject: [PATCH] Add ExplosionPrimeByEntityEvent

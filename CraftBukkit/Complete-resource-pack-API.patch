@@ -1,11 +1,11 @@
-From 5d63ecce372556e4f6c15547da8b4509dde0493a Mon Sep 17 00:00:00 2001
+From 2571f1046f9cc75a27ee21a21d0fcae6e612c28f Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Sat, 4 Apr 2015 23:17:52 -0400
 Subject: [PATCH] Complete resource pack API
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 71ec20da..4f452e8a 100644
+index 6e4e4878..915af252 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -1079,7 +1079,9 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {

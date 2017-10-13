@@ -1,4 +1,4 @@
-From 2a68cd76c290c91c68cebcce2b32f82c090b8d9c Mon Sep 17 00:00:00 2001
+From de4477a5b17eea3483ba734394242fcf17f53117 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Thu, 29 Dec 2016 23:23:45 -0500
 Subject: [PATCH] Don't tick empty worlds
@@ -59,7 +59,7 @@ index c2a9040c..e5c256b3 100644
          return this.configuration.getBoolean("settings.allow-end");
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 1c8ef188..e17d1261 100644
+index 9d0227be..f8a8e261 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -96,6 +96,40 @@ public class CraftWorld implements World {

@@ -1,4 +1,4 @@
-From b3108b3d76fe0cb648a141580371dbef7dfecef0 Mon Sep 17 00:00:00 2001
+From 087779b4f60ff37f05afdcf679dbb7b03f6607df Mon Sep 17 00:00:00 2001
 From: thinkofdeath <purggames@gmail.com>
 Date: Fri, 12 Apr 2013 18:19:11 +0100
 Subject: [PATCH] Allow playEffect to spawn particles
@@ -18,7 +18,7 @@ index 16721835..582d7bfb 100644
              datavalue = 0;
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index b3276695..f187d4a8 100644
+index 1941e3a2..611166e2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -815,6 +815,10 @@ public class CraftWorld implements World {

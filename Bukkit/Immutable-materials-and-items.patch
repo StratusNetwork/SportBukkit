@@ -1,4 +1,4 @@
-From c301310b3e96993bfac5e5cc12bc422d1b1af021 Mon Sep 17 00:00:00 2001
+From d91aab5673a28fc63690bb86443ce64d7bc88227 Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Wed, 4 Jan 2017 14:01:56 -0500
 Subject: [PATCH] Immutable materials and items

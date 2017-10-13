@@ -1,4 +1,4 @@
-From 8c4cbb015d560795b1eee3b45a1ac13d90b4dad4 Mon Sep 17 00:00:00 2001
+From 5f78f867fccb95dbdcc4976a4c499b02cec9e2ec Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Sun, 20 Mar 2016 07:50:16 -0400
 Subject: [PATCH] Fix item pickup in off-hand

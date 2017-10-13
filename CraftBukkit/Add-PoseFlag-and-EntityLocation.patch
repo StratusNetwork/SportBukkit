@@ -1,4 +1,4 @@
-From 34c500f3574f036797755dfed5a849af61496e75 Mon Sep 17 00:00:00 2001
+From 5c93f7b15ef713a05df3749c8780682af2d7ca8e Mon Sep 17 00:00:00 2001
 From: Jedediah Smith <jedediah@silencegreys.com>
 Date: Fri, 1 Jul 2016 03:36:25 -0400
 Subject: [PATCH] Add PoseFlag and EntityLocation
@@ -79,7 +79,7 @@ index 3726d8fe..ebfdc98f 100644
          // CraftBukkit end
  
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 26cae7b9..506137da 100644
+index 05456680..e3a51f74 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -22,7 +22,9 @@ import org.apache.logging.log4j.Logger;
